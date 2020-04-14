@@ -6,15 +6,18 @@
 
 ### 1.用户会员表
 
-|字段 | 类型 | 为空 | 默认值 | 注释 | 其他 |
-| ------------- |:-------------:| -----:|
-|id 		| int 		| 否 | Auto | 会员ID |
-|nickname 	| string 	| 是 | Null | 会员昵称 |
-|account 	| string 	| 否 | 无 	| 会员账号 |
-|password 	| string 	| 否 | 无 	| 会员密码 |
-|avatar 	| string 	| 是 | URl  | 会员头像 |
-|user_group | int 		| 否 | 1		| 会员用户组 |
-|created_at | timestamp 	| 是 | Null | 添加时间 |
-|updated_at | timestamp 	| 是 | Null | 修改时间 |
+字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
+-----|----- | -----|------|-----|-----
+id 		| int 		| 否 | Auto | 会员ID |
+nickname 	| string 	| 是 | Null | 会员昵称
+account 	| string 	| 否 | 无 	| 会员账号
+password 	| string 	| 否 | 无 	| 会员密码
+avatar 	| string 	| 是 | URl  | 会员头像
+user_group | int 		| 否 | 1		| 会员用户组
+created_at | timestamp 	| 是 | Null | 添加时间 
+updated_at | timestamp 	| 是 | Null | 修改时间
 
-
+第一格表头 | 第二格表头
+--------- | -------------
+内容单元格 第一列第一格 | 内容单元格第二列第一格
+内容单元格 第一列第二格 多加文字 | 内容单元格第二列第二格 
