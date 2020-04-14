@@ -69,6 +69,7 @@ updated_at | timestamp 	| 是 | Null | 修改时间
 id 			| int 		| 否 | Auto | ID 
 title 		| string 	| 是 | null 	| 轮播标题 
 active		| int 		| 否 | 1 	| 开启状态
+type_id		| int 		| 否 | 	 	| 类型ID
 images		| string	| 否 | null 	| 图片地址 
 sort		| int 		| 否 | 0 	| 排序权重 
 href		| string	| 否 | # 	| 链接地址   
@@ -92,7 +93,8 @@ updated_at | timestamp 	| 是 | Null | 修改时间
 id 			| int 		| 否 | Auto | 分享ID 
 title 		| string 	| 是 | null 	| 分享标题 
 active		| int 		| 否 | 1 	| 开启状态
-images		| string	| 否 | null 	| 素材地址 
+images		| string	| 否 | null 	| 素材地址
+type_id		| int 		| 否 | 	 	| 类型ID 
 sort		| int 		| 否 | 0 	| 排序权重 
 code_size	| int		| 否 | 100 	| 二维码大小
 code_x		| int		| 否 | 100 	| 二维码X轴位置
