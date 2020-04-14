@@ -41,7 +41,7 @@ level		| int 		| 否 | 0 	| 组级别 | 越大级别越高且唯一
 created_at | timestamp 	| 是 | Null | 添加时间 
 updated_at | timestamp 	| 是 | Null | 修改时间
 
-### 4.用户实名表 (user_realname)
+### 4.用户实名表 (user_realnames)
 
 字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
 -----|----- | -----|------|-----|-----
