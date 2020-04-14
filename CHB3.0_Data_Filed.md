@@ -14,6 +14,9 @@ account 	| string 	| 否 | 无 	| 会员账号
 password 	| string 	| 否 | 无 	| 会员密码 | 加密方式
 avatar 		| string 	| 是 | URl  	| 会员头像
 user_group 	| int 		| 否 | 1		| 会员用户组 | 关联user_groups表ID
+parent 		| int	 	| 否 | 0  	| 会员上级ID
+last_ip		| string 	| 是 | null 	| 最后登录IP
+las_time	| timestamp 	| 是 | URl  	| 最后登录时间
 created_at 	| timestamp 	| 是 | Null | 添加时间 
 updated_at 	| timestamp 	| 是 | Null | 修改时间 
 
@@ -32,7 +35,7 @@ updated_at | timestamp 	| 是 | Null | 修改时间
 
 字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
 -----|----- | -----|------|-----|-----
-id 			| int 		| 否 | Auto | 钱包ID 
+id 			| int 		| 否 | Auto | 组ID 
 name 		| string 	| 否 | 无 	| 组名称 
 level		| int 		| 否 | 0 	| 组级别 | 越大级别越高且唯一
 created_at | timestamp 	| 是 | Null | 添加时间 
@@ -42,7 +45,7 @@ updated_at | timestamp 	| 是 | Null | 修改时间
 
 字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
 -----|----- | -----|------|-----|-----
-id 			| int 		| 否 | Auto | 钱包ID 
+id 			| int 		| 否 | Auto |  实名ID 
 user_id 	| int 		| 否 | 无 	| 会员ID | 关联User表ID,同步删除
 status		| int 		| 否 | 0 	| 实名状态
 name		| string	| 否 | null 	| 真实姓名
@@ -53,7 +56,7 @@ updated_at | timestamp 	| 是 | Null | 修改时间
 
 字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
 -----|----- | -----|------|-----|-----
-id 			| int 		| 否 | Auto | 钱包ID 
+id 			| int 		| 否 | Auto | 类型ID 
 name 		| string 	| 否 | 无 	| 分类名称 
 active		| int 		| 否 | 1 	| 开启状态 
 created_at | timestamp 	| 是 | Null | 添加时间 
@@ -63,7 +66,7 @@ updated_at | timestamp 	| 是 | Null | 修改时间
 
 字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
 -----|----- | -----|------|-----|-----
-id 			| int 		| 否 | Auto | 钱包ID 
+id 			| int 		| 否 | Auto | ID 
 title 		| string 	| 是 | null 	| 轮播标题 
 active		| int 		| 否 | 1 	| 开启状态
 images		| string	| 否 | null 	| 图片地址 
@@ -76,7 +79,7 @@ updated_at | timestamp 	| 是 | Null | 修改时间
 
 字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
 -----|----- | -----|------|-----|-----
-id 			| int 		| 否 | Auto | 钱包ID 
+id 			| int 		| 否 | Auto | 类型ID 
 name 		| string 	| 否 | 无 	| 分类名称 
 active		| int 		| 否 | 1 	| 开启状态 
 created_at | timestamp 	| 是 | Null | 添加时间 
