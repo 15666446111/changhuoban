@@ -19,6 +19,8 @@ class CreateWithdrawsTable extends Migration
 
             $table->integer('user_id')->comment('用户ID');
 
+            $table->string('order_no')->comment('订单号');
+
             $table->integer('money')->default(0)->comment('提现金额');
 
             $table->integer('real_money')->default(0)->comment('实际打款金额');

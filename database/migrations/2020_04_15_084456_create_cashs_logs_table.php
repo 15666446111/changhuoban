@@ -25,7 +25,9 @@ class CreateCashsLogsTable extends Migration
 
             $table->integer('money')->default(0)->comment('分润金额，单位：分');
 
-            $table->tinyInteger('is_cash')->comment('类型，1分润，2返现');
+            $table->tinyInteger('is_run')->comment('1分润，2返现');
+
+            $table->tinyInteger('type')->comment('类型，1直营分润，2团队分润，3激活返现，4间推激活返现，5间间推激活返现，6达标返现，7二次达标返现，8三次达标返现，9财商学院推荐奖励');
 
             $table->timestamps();
 

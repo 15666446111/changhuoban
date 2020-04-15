@@ -169,7 +169,7 @@ sn			| string 	| 是 | 	 	| 机器序列号
 merchant_code		| int 		| 否 | 	 	| 商户号
 amount		| int  		| 否 | 0	 	| 交易金额，单位：分
 settle_amount		| int 		| 否 | 0 	| 结算金额，单位：分
-cardType	| tinyint	| 是 | 	 	| 交易卡类型，0贷记卡，1借记卡
+cardType	| int 		| 是 | 	 	| 交易卡类型，0贷记卡，1借记卡
 created_at | timestamp 	| 是 | Null | 添加时间 
 updated_at | timestamp 	| 是 | Null | 修改时间
 
@@ -182,7 +182,8 @@ user_id		| int 		| 否 | 	 	| 用户ID
 machine_id	| int 		| 否 | 	 	| 机器ID
 trade_id	| int 		| 否 | 0	 	| 交易ID
 money		| int 		| 否 | 0	 	| 分润金额，单位：分
-is_cash		| int 		| 否 | 	 	| 类型，1分润，2返现
+is_run		| int 		| 否 | 	 	| 1分润，2返现
+type		| int 		| 否 | 	 	| 类型，1直营分润，2团队分润，3激活返现，4间推激活返现，5间间推激活返现，6达标返现，7二次达标返现，8三次达标返现，9财商学院推荐奖励
 created_at | timestamp 	| 是 | Null | 添加时间 
 updated_at | timestamp 	| 是 | Null | 修改时间
 
@@ -192,7 +193,7 @@ updated_at | timestamp 	| 是 | Null | 修改时间
 -----|----- | -----|------|-----|-----
 id 			| int 		| 否 | Auto | 提现ID
 user_id		| int 		| 否 | 	 	| 用户ID
-order_no	| varchar 	| 否 | 	 	| 订单号
+order_no	| string 	| 否 | 	 	| 订单号
 money		| int		| 否 | 0	 	| 提现金额
 real_money	| int		| 否 | 0	 	| 实际打款金额
 type		| int 		| 否 | 	 	| 类型，1分润提现，2返现提现
@@ -207,16 +208,15 @@ updated_at | timestamp 	| 是 | Null | 修改时间
 字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
 -----|----- | -----|------|-----|-----
 id 			| int 		| 否 | Auto | ID
-order_no	| varchar 	| 否 | 	 	| 提现订单号
+order_no	| string 	| 否 | 	 	| 提现订单号
 phone		| int 		| 否 | 	 	| 预留手机号
-username	| varchar	| 否 | 	 	| 用户姓名
-idcard		| char		| 否 | 	 	| 身份证号
-bank		| varchar	| 否 | 	 	| 银行名称
-bank_open	| varchar	| 是 | 	 	| 开户行
-banklink	| varchar	| 否 | 	 	| 联行号
-numbers		| varchar	| 否 | 	 	| 请求流水号
+username	| string	| 否 | 	 	| 用户姓名
+idcard		| string	| 否 | 	 	| 身份证号
+bank		| string	| 否 | 	 	| 银行名称
+bank_open	| string	| 是 | 	 	| 开户行
+banklink	| string	| 是 | 	 	| 联行号
 repay_money	| int		| 是 | 0	 	| 代付系统打款金额
-repay_wallet| tinyint	| 是 | 	 	| 代付系统打款钱包
-reason		| varchar	| 是 | 	 	| 说明
+repay_wallet| int		| 是 | 	 	| 代付系统打款钱包
+reason		| string	| 是 | 	 	| 说明
 created_at | timestamp 	| 是 | Null | 添加时间 
 updated_at | timestamp 	| 是 | Null | 修改时间
