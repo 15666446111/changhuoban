@@ -14,8 +14,19 @@ class CreateCashsLogsTable extends Migration
     public function up()
     {
         Schema::create('cashs_logs', function (Blueprint $table) {
+
             $table->id();
+
+            $table->integer('user_id')->comment('用户ID');
+
+            $table->integer('machine_id')->comment('机器ID');
+
+            $table->integer('trade_id')->default(0)->comment('交易ID');
+
+            $table->integer('money')->default(0)->comment('分润金额，单位：分');
+
             $table->timestamps();
+
         });
     }
 

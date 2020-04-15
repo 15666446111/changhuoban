@@ -164,6 +164,7 @@ updated_at | timestamp 	| 是 | Null | 修改时间
 id 			| int 		| 否 | Auto | 交易ID
 user_id		| int 		| 是 | 	 	| 用户ID
 machine_id	| int 		| 是 | 	 	| 机器ID
+is_send		| int 		| 否 | 	 	| 分润发放状态
 sn			| string 	| 是 | 	 	| 机器序列号
 merchant_code		| bigint 	| 否 | 	 	| 商户号
 amount		| int  		| 否 | 0	 	| 交易金额，单位：分
@@ -178,8 +179,8 @@ updated_at | timestamp 	| 是 | Null | 修改时间
 -----|----- | -----|------|-----|-----
 id 			| int 		| 否 | Auto | 分润ID
 user_id		| int 		| 否 | 	 	| 用户ID
-machine_id	| int 		| 是 | 	 	| 机器ID
-trade_id	| int 		| 是 | 	 	| 交易ID
+machine_id	| int 		| 否 | 	 	| 机器ID
+trade_id	| int 		| 是 | 0	 	| 交易ID
 money		| int 		| 否 | 0	 	| 分润金额，单位：分
 is_cash		| tinyint 	| 否 | 	 	| 类型，1分润，2返现
 created_at | timestamp 	| 是 | Null | 添加时间 
