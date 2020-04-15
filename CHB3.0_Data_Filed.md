@@ -15,7 +15,6 @@ password 	| string 	| 否 | 无 	| 会员密码 | 加密方式
 avatar 		| string 	| 是 | URl  	| 会员头像
 user_group 	| int 		| 否 | 1		| 会员用户组 | 关联user_groups表ID
 parent 		| int	 	| 否 | 0  	| 会员上级ID
-parent_set	| string 	| 否 | ','  	| 会员上级ID集合
 last_ip		| string 	| 是 | null 	| 最后登录IP
 las_time	| timestamp 	| 是 | URl  	| 最后登录时间
 created_at 	| timestamp 	| 是 | Null | 添加时间 
@@ -129,7 +128,19 @@ is_self	 	| tinyint	| 否 | 1	 	| 是否是自备机，1不是，2是
 created_at | timestamp 	| 是 | Null | 添加时间 
 updated_at | timestamp 	| 是 | Null | 修改时间
 
-### 11.商户表 (merchants)
+### 11.机器划拨记录表 (transfers)
+
+字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
+-----|----- | -----|------|-----|-----
+id 			| int 		| 否 | Auto | 划拨记录ID
+machine_id	| int 		| 否 | 	 	| 划拨机器ID
+old_user_id	| int 		| 否 | 	 	| 划拨前归属用户
+new_user_id	| int 		| 否 | 	 	| 划拨后归属用户
+state	 	| tinyint	| 否 |   	| 类型，1划拨，2回拨
+created_at | timestamp 	| 是 | Null | 添加时间 
+updated_at | timestamp 	| 是 | Null | 修改时间
+
+### 12.商户表 (merchants)
 
 字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
 -----|----- | -----|------|-----|-----
@@ -143,7 +154,7 @@ state		| char		| 否 | 1	 	| 商户状态 0:无效, 1:有效, X：注销
 created_at | timestamp 	| 是 | Null | 添加时间 
 updated_at | timestamp 	| 是 | Null | 修改时间
 
-### 12.交易表 (trades)
+### 13.交易表 (trades)
 
 字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
 -----|----- | -----|------|-----|-----
@@ -156,15 +167,49 @@ cardType	| tinyint	| 是 | 	 	| 交易卡类型，0贷记卡，1借记卡
 created_at | timestamp 	| 是 | Null | 添加时间 
 updated_at | timestamp 	| 是 | Null | 修改时间
 
-### 13.分润表 (cashs_logs)
+### 14.分润表 (cashs_logs)
 
 字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
 -----|----- | -----|------|-----|-----
 id 			| int 		| 否 | Auto | 分润ID
-user_id		| int 		| 是 | 	 	| 用户ID
+user_id		| int 		| 否 | 	 	| 用户ID
 machine_id	| int 		| 是 | 	 	| 机器ID
 trade_id	| int 		| 是 | 	 	| 交易ID
 money		| int 		| 否 | 0	 	| 分润金额，单位：分
 is_cash		| tinyint 	| 否 | 	 	| 类型，1分润，2返现
+created_at | timestamp 	| 是 | Null | 添加时间 
+updated_at | timestamp 	| 是 | Null | 修改时间
+
+### 15.提现表 (withdraws)
+
+字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
+-----|----- | -----|------|-----|-----
+id 			| int 		| 否 | Auto | 提现ID
+user_id		| int 		| 否 | 	 	| 用户ID
+wallet_id	| int 		| 否 | 	 	| 提现钱包
+money		| int		| 否 | 0	 	| 提现金额
+real_money	| int		| 否 | 0	 	| 实际打款金额
+state		| tinyint	| 否 | 1	 	| 状态，1待审核，2通过，3驳回
+make_state  | tinyint	| 否 | 1	 	| 打款状态：1成功，2失败
+check_at	| timestamp | 是 | 	 	| 审核时间
+created_at | timestamp 	| 是 | Null | 添加时间 
+updated_at | timestamp 	| 是 | Null | 修改时间
+
+### 16.提现详细表 (withdraws_datas)
+
+字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
+-----|----- | -----|------|-----|-----
+id 			| int 		| 否 | Auto | ID
+withdraws	| int 		| 否 | 	 	| 提现ID
+phone		| int 		| 否 | 	 	| 预留手机号
+username	| varchar	| 否 | 	 	| 用户姓名
+idcard		| char		| 否 | 	 	| 身份证号
+bank		| varchar	| 否 | 	 	| 银行名称
+bank_open	| varchar	| 是 | 	 	| 开户行
+banklink	| varchar	| 否 | 	 	| 联行号
+numbers		| varchar	| 否 | 	 	| 请求流水号
+repay_money	| int		| 是 | 0	 	| 代付系统打款金额
+repay_wallet| tinyint	| 是 | 	 	| 代付系统打款钱包
+reason		| varchar	| 是 | 	 	| 说明
 created_at | timestamp 	| 是 | Null | 添加时间 
 updated_at | timestamp 	| 是 | Null | 修改时间
