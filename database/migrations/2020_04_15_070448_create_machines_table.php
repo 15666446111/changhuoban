@@ -14,8 +14,23 @@ class CreateMachinesTable extends Migration
     public function up()
     {
         Schema::create('machines', function (Blueprint $table) {
+
             $table->id();
+
+            $table->integer('type_id')->comment('型号id');
+
+            $table->integer('user_id')->nullable()->comment('归属人');
+
+            $table->string('sn')->comment('机器序列号');
+
+            $table->integer('agent_id')->nullable()->comment('代理商');
+
+            $table->tinyInteger('open_state')->default(0)->comment('开通状态');
+
+            $table->tinyInteger('is_self')->default(0)->comment('是否是自备机');
+
             $table->timestamps();
+
         });
     }
 

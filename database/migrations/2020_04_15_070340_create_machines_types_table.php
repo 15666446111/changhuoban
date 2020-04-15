@@ -19,7 +19,7 @@ class CreateMachinesTypesTable extends Migration
 
             $table->string('name')->comment('型号名称');
 
-            $table->tinyInteger('state')->default(1)->comment('状态');
+            $table->tinyInteger('state')->default(1)->comment('开启状态');
 
             $table->integer('sort')->default(0)->comment('排序权重');
 

@@ -112,7 +112,7 @@ updated_at | timestamp 	| 是 | Null | 修改时间
 -----|----- | -----|------|-----|-----
 id 			| int 		| 否 | Auto | 型号ID
 name 		| string 	| 否 | 	 	| 型号名称
-state 		| tinyint 	| 否 | 1	 	| 状态
+state 		| tinyint 	| 否 | 1	 	| 开启状态
 sort		| int 		| 否 | 0 	| 排序权重   
 created_at | timestamp 	| 是 | Null | 添加时间 
 updated_at | timestamp 	| 是 | Null | 修改时间
@@ -122,13 +122,12 @@ updated_at | timestamp 	| 是 | Null | 修改时间
 字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
 -----|----- | -----|------|-----|-----
 id 			| int 		| 否 | Auto | 机器ID
-type		| int 		| 否 | 	 	| 型号
-policy		| int 		| 否 | 	 	| 政策
+type_id		| int 		| 否 | 	 	| 型号
 user_id		| int 		| 是 | 	 	| 归属人
 sn			| string	| 否 | 	 	| 机器序列号
 agent_id	| int		| 是 | 	 	| 代理商
-open_state	| tinyint	| 否 | 1	 	| 开通状态，1未开通，2已开通
-is_self	 	| tinyint	| 否 | 1	 	| 是否是自备机，1不是，2是
+open_state	| tinyint	| 否 | 0	 	| 开通状态
+is_self	 	| tinyint	| 否 | 0	 	| 是否是自备机
 created_at | timestamp 	| 是 | Null | 添加时间 
 updated_at | timestamp 	| 是 | Null | 修改时间
 
