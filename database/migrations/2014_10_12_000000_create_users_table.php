@@ -13,14 +13,31 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
+
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+
+            $table->engine = 'InnoDB';
+
+            $table->bigIncrements('id');
+
+            $table->string('nickname')->nullable()->comment('会员昵称');
+
+            $table->string('account')->comment('会员账号');
+
+            $table->string('avatar')->nullable()->comment('会员头像')->default('images/avatar.png');
+
+            $table->string('password')->comment('会员密码');
+
+            $table->tinyInteger('user_group')->comment('用户组');
+
+            $table->integer('parent')->comment('上级ID')->default(0);
+
+            $table->string('last_ip')->nullable()->comment('最后登录地址');
+
+            $table->timeStamp('last_time')->nullable()->comment('最后登录时间');
+
             $table->timestamps();
+
         });
     }
 

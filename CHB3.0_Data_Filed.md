@@ -15,6 +15,7 @@ password 	| string 	| 否 | 无 	| 会员密码 | 加密方式
 avatar 		| string 	| 是 | URl  	| 会员头像
 user_group 	| int 		| 否 | 1		| 会员用户组 | 关联user_groups表ID
 parent 		| int	 	| 否 | 0  	| 会员上级ID
+active 		| int	 	| 否 | 1  	| 活动状态
 last_ip		| string 	| 是 | null 	| 最后登录IP
 las_time	| timestamp 	| 是 | URl  	| 最后登录时间
 created_at 	| timestamp 	| 是 | Null | 添加时间 
@@ -48,7 +49,10 @@ updated_at | timestamp 	| 是 | Null | 修改时间
 id 			| int 		| 否 | Auto |  实名ID 
 user_id 	| int 		| 否 | 无 	| 会员ID | 关联User表ID,同步删除
 status		| int 		| 否 | 0 	| 实名状态
-name		| string	| 否 | null 	| 真实姓名
+name		| string	| 是 | null 	| 真实姓名
+idcard		| string	| 是 | null 	| 身份证号
+card_before	| string	| 是 | null 	| 身份证正面照片
+card_after	| string	| 是 | null 	| 身份证反面照片
 created_at | timestamp 	| 是 | Null | 添加时间 
 updated_at | timestamp 	| 是 | Null | 修改时间
 
@@ -70,7 +74,7 @@ id 			| int 		| 否 | Auto | ID
 title 		| string 	| 是 | null 	| 轮播标题 
 active		| int 		| 否 | 1 	| 开启状态
 type_id		| int 		| 否 | 	 	| 类型ID
-images		| string	| 否 | null 	| 图片地址 
+images		| string	| 是 | null 	| 图片地址 
 sort		| int 		| 否 | 0 	| 排序权重 
 href		| string	| 否 | # 	| 链接地址   
 created_at | timestamp 	| 是 | Null | 添加时间 
