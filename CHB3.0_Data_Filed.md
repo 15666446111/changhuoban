@@ -213,3 +213,22 @@ repay_wallet| tinyint	| 是 | 	 	| 代付系统打款钱包
 reason		| varchar	| 是 | 	 	| 说明
 created_at | timestamp 	| 是 | Null | 添加时间 
 updated_at | timestamp 	| 是 | Null | 修改时间
+
+### 16.政策表 (policys)
+
+字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
+-----|----- | -----|------|-----|-----
+id 			| int 		| 否 | Auto | ID
+withdraws	| int 		| 否 | 	 	| 提现ID
+phone		| int 		| 否 | 	 	| 预留手机号
+username	| varchar	| 否 | 	 	| 用户姓名
+idcard		| char		| 否 | 	 	| 身份证号
+bank		| varchar	| 否 | 	 	| 银行名称
+bank_open	| varchar	| 是 | 	 	| 开户行
+banklink	| varchar	| 否 | 	 	| 联行号
+numbers		| varchar	| 否 | 	 	| 请求流水号
+repay_money	| int		| 是 | 0	 	| 代付系统打款金额
+repay_wallet| tinyint	| 是 | 	 	| 代付系统打款钱包
+reason		| varchar	| 是 | 	 	| 说明
+created_at | timestamp 	| 是 | Null | 添加时间 
+updated_at | timestamp 	| 是 | Null | 修改时间
