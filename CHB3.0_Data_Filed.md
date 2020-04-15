@@ -15,6 +15,7 @@ password 	| string 	| 否 | 无 	| 会员密码 | 加密方式
 avatar 		| string 	| 是 | URl  	| 会员头像
 user_group 	| int 		| 否 | 1		| 会员用户组 | 关联user_groups表ID
 parent 		| int	 	| 否 | 0  	| 会员上级ID
+parent_set	| string 	| 否 | ','  	| 会员上级ID集合
 last_ip		| string 	| 是 | null 	| 最后登录IP
 las_time	| timestamp 	| 是 | URl  	| 最后登录时间
 created_at 	| timestamp 	| 是 | Null | 添加时间 
@@ -99,5 +100,45 @@ sort		| int 		| 否 | 0 	| 排序权重
 code_size	| int		| 否 | 100 	| 二维码大小
 code_x		| int		| 否 | 100 	| 二维码X轴位置
 code_y		| int		| 否 | 100 	| 二维码Y轴位置        
+created_at | timestamp 	| 是 | Null | 添加时间 
+updated_at | timestamp 	| 是 | Null | 修改时间
+
+### 9.机器型号表 (machines_types)
+
+字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
+-----|----- | -----|------|-----|-----
+id 			| int 		| 否 | Auto | 型号ID
+name 		| string 	| 否 | 	 	| 型号名称
+state 		| tinyint 	| 否 | 	 	| 状态：1上线，2下线
+sort		| int 		| 否 | 0 	| 排序权重   
+created_at | timestamp 	| 是 | Null | 添加时间 
+updated_at | timestamp 	| 是 | Null | 修改时间
+
+### 10.机器表 (machines)
+
+字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
+-----|----- | -----|------|-----|-----
+id 			| int 		| 否 | Auto | 机器ID
+type		| int 		| 否 | 	 	| 型号
+policy		| int 		| 否 | 	 	| 政策
+user_id		| int 		| 是 | 	 	| 归属人
+sn			| string	| 否 | 	 	| 机器序列号
+agent_id	| int		| 是 | 	 	| 代理商
+created_at | timestamp 	| 是 | Null | 添加时间 
+updated_at | timestamp 	| 是 | Null | 修改时间
+
+### 11.交易表 (trades)
+
+字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
+-----|----- | -----|------|-----|-----
+id 			| int 		| 否 | Auto | 交易ID
+user_id		| int 		| 是 | 	 	| 用户ID
+machine_id	| int 		| 是 | 	 	| 机器ID
+amount		| int  		| 否 | 0	 	| 交易金额
+settle_amount		| int 		| 否 | 0 	| 结算金额
+type	| int		| 是 | 	 	| 代理商
+
+
+
 created_at | timestamp 	| 是 | Null | 添加时间 
 updated_at | timestamp 	| 是 | Null | 修改时间
