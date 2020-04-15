@@ -21,6 +21,8 @@ class CreateTradesTable extends Migration
 
             $table->integer('machine_id')->nullable()->comment('机器ID');
 
+            $table->integer('is_send')->default(0)->comment('分润发放状态');
+
             $table->integer('sn')->nullable()->comment('机器序列号');
 
             $table->integer('merchant_code')->comment('商户号');

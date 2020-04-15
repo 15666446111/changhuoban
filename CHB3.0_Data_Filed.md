@@ -149,7 +149,7 @@ updated_at | timestamp 	| 是 | Null | 修改时间
 -----|----- | -----|------|-----|-----
 id 			| int 		| 否 | Auto | 商户ID
 user_id		| int 		| 否 | 	 	| 用户ID
-code		| bigint 	| 否 | 	 	| 商户号
+code		| int 		| 否 | 	 	| 商户号
 name		| string 	| 是 | 	 	| 商户名称
 phone		| string  	| 是 | 	 	| 商户电话
 trade_amount| int 	 	| 否 | 0	 	| 商户累计交易金额，单位：分
@@ -164,9 +164,9 @@ updated_at | timestamp 	| 是 | Null | 修改时间
 id 			| int 		| 否 | Auto | 交易ID
 user_id		| int 		| 是 | 	 	| 用户ID
 machine_id	| int 		| 是 | 	 	| 机器ID
-is_send		| int 		| 否 | 	 	| 分润发放状态
+is_send		| int 		| 否 | 0	 	| 分润发放状态
 sn			| string 	| 是 | 	 	| 机器序列号
-merchant_code		| bigint 	| 否 | 	 	| 商户号
+merchant_code		| int 		| 否 | 	 	| 商户号
 amount		| int  		| 否 | 0	 	| 交易金额，单位：分
 settle_amount		| int 		| 否 | 0 	| 结算金额，单位：分
 cardType	| tinyint	| 是 | 	 	| 交易卡类型，0贷记卡，1借记卡
@@ -180,9 +180,9 @@ updated_at | timestamp 	| 是 | Null | 修改时间
 id 			| int 		| 否 | Auto | 分润ID
 user_id		| int 		| 否 | 	 	| 用户ID
 machine_id	| int 		| 否 | 	 	| 机器ID
-trade_id	| int 		| 是 | 0	 	| 交易ID
+trade_id	| int 		| 否 | 0	 	| 交易ID
 money		| int 		| 否 | 0	 	| 分润金额，单位：分
-is_cash		| tinyint 	| 否 | 	 	| 类型，1分润，2返现
+is_cash		| int 		| 否 | 	 	| 类型，1分润，2返现
 created_at | timestamp 	| 是 | Null | 添加时间 
 updated_at | timestamp 	| 是 | Null | 修改时间
 
@@ -192,11 +192,12 @@ updated_at | timestamp 	| 是 | Null | 修改时间
 -----|----- | -----|------|-----|-----
 id 			| int 		| 否 | Auto | 提现ID
 user_id		| int 		| 否 | 	 	| 用户ID
-wallet_id	| int 		| 否 | 	 	| 提现钱包
+order_no	| varchar 	| 否 | 	 	| 订单号
 money		| int		| 否 | 0	 	| 提现金额
 real_money	| int		| 否 | 0	 	| 实际打款金额
-state		| tinyint	| 否 | 1	 	| 状态，1待审核，2通过，3驳回
-make_state  | tinyint	| 否 | 1	 	| 打款状态：1成功，2失败
+type		| int 		| 否 | 	 	| 类型，1分润提现，2返现提现
+state		| int		| 否 | 1	 	| 状态，1待审核，2通过，3驳回
+make_state  | int		| 否 | 	 	| 打款状态：1成功，2失败
 check_at	| timestamp | 是 | 	 	| 审核时间
 created_at | timestamp 	| 是 | Null | 添加时间 
 updated_at | timestamp 	| 是 | Null | 修改时间
@@ -206,7 +207,7 @@ updated_at | timestamp 	| 是 | Null | 修改时间
 字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
 -----|----- | -----|------|-----|-----
 id 			| int 		| 否 | Auto | ID
-withdraws	| int 		| 否 | 	 	| 提现ID
+order_no	| varchar 	| 否 | 	 	| 提现订单号
 phone		| int 		| 否 | 	 	| 预留手机号
 username	| varchar	| 否 | 	 	| 用户姓名
 idcard		| char		| 否 | 	 	| 身份证号

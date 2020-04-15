@@ -25,6 +25,8 @@ class CreateCashsLogsTable extends Migration
 
             $table->integer('money')->default(0)->comment('分润金额，单位：分');
 
+            $table->tinyInteger('is_cash')->comment('类型，1分润，2返现');
+
             $table->timestamps();
 
         });
