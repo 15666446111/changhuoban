@@ -112,7 +112,7 @@ updated_at | timestamp 	| 是 | Null | 修改时间
 -----|----- | -----|------|-----|-----
 id 			| int 		| 否 | Auto | 型号ID
 name 		| string 	| 否 | 	 	| 型号名称
-state 		| tinyint 	| 否 | 	 	| 状态：1上线，2下线
+state 		| tinyint 	| 否 | 1	 	| 状态
 sort		| int 		| 否 | 0 	| 排序权重   
 created_at | timestamp 	| 是 | Null | 添加时间 
 updated_at | timestamp 	| 是 | Null | 修改时间
