@@ -149,8 +149,9 @@ updated_at | timestamp 	| 是 | Null | 修改时间
 -----|----- | -----|------|-----|-----
 id 			| int 		| 否 | Auto | 商户ID
 user_id		| int 		| 否 | 	 	| 用户ID
-code		| bigint 	| 否 | 	 	| 商户名称
-phone		| varchar  	| 是 | 	 	| 商户电话
+code		| bigint 	| 否 | 	 	| 商户号
+name		| string 	| 是 | 	 	| 商户名称
+phone		| string  	| 是 | 	 	| 商户电话
 trade_amount| int 	 	| 否 | 0	 	| 商户累计交易金额
 money		| int 		| 否 | 0	 	| 分润金额，单位：分
 state		| char		| 否 | 1	 	| 商户状态 0:无效, 1:有效, X：注销

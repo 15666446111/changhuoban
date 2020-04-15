@@ -14,10 +14,10 @@ class CreateMachinesTable extends Migration
     public function up()
     {
         Schema::create('machines', function (Blueprint $table) {
+            
+            $table->engine = 'InnoDB';
 
-            $table->id();
-
-            $table->integer('type_id')->comment('型号id');
+            $table->bigIncrements('id');
 
             $table->integer('user_id')->nullable()->comment('归属人');
 
