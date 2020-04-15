@@ -124,10 +124,26 @@ policy		| int 		| 否 | 	 	| 政策
 user_id		| int 		| 是 | 	 	| 归属人
 sn			| string	| 否 | 	 	| 机器序列号
 agent_id	| int		| 是 | 	 	| 代理商
+open_state	| tinyint	| 否 | 1	 	| 开通状态，1未开通，2已开通
+is_self	 	| tinyint	| 否 | 1	 	| 是否是自备机，1不是，2是
 created_at | timestamp 	| 是 | Null | 添加时间 
 updated_at | timestamp 	| 是 | Null | 修改时间
 
-### 11.交易表 (trades)
+### 11.商户表 (merchants)
+
+字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
+-----|----- | -----|------|-----|-----
+id 			| int 		| 否 | Auto | 商户ID
+user_id		| int 		| 否 | 	 	| 用户ID
+code		| bigint 	| 否 | 	 	| 商户名称
+phone		| varchar  	| 是 | 	 	| 商户电话
+trade_amount| int 	 	| 否 | 0	 	| 商户累计交易金额
+money		| int 		| 否 | 0	 	| 分润金额，单位：分
+state		| char		| 否 | 1	 	| 商户状态 0:无效, 1:有效, X：注销
+created_at | timestamp 	| 是 | Null | 添加时间 
+updated_at | timestamp 	| 是 | Null | 修改时间
+
+### 12.交易表 (trades)
 
 字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
 -----|----- | -----|------|-----|-----
@@ -136,9 +152,19 @@ user_id		| int 		| 是 | 	 	| 用户ID
 machine_id	| int 		| 是 | 	 	| 机器ID
 amount		| int  		| 否 | 0	 	| 交易金额
 settle_amount		| int 		| 否 | 0 	| 结算金额
-type	| int		| 是 | 	 	| 代理商
+cardType	| tinyint	| 是 | 	 	| 交易卡类型，0贷记卡，1借记卡
+created_at | timestamp 	| 是 | Null | 添加时间 
+updated_at | timestamp 	| 是 | Null | 修改时间
 
+### 13.分润表 (cashs_logs)
 
-
+字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
+-----|----- | -----|------|-----|-----
+id 			| int 		| 否 | Auto | 分润ID
+user_id		| int 		| 是 | 	 	| 用户ID
+machine_id	| int 		| 是 | 	 	| 机器ID
+trade_id	| int 		| 是 | 	 	| 交易ID
+money		| int 		| 否 | 0	 	| 分润金额，单位：分
+is_cash		| tinyint 	| 否 | 	 	| 类型，1分润，2返现
 created_at | timestamp 	| 是 | Null | 添加时间 
 updated_at | timestamp 	| 是 | Null | 修改时间
