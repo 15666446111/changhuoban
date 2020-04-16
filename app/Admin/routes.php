@@ -12,4 +12,9 @@ Route::group([
 
     $router->get('/', 'HomeController@index')->name('admin.home');
 
+
+    // 轮播图类型管理
+    $router->resource('plug-types', PlugTypeController::class);
+    // 轮播图管理
+    $router->resource('plugs', PlugController::class);
 });

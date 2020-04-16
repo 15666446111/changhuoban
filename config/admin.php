@@ -396,6 +396,17 @@ return [
     |
     */
     'extensions' => [
-
+        // 后台设置
+        'configx' => [
+            // Set to `false` if you want to disable this extension
+            'enable' => true,
+            'tabs' => [
+                'base'      => '系统设置',
+                'draw'      => '提现设置',
+            ],
+            // Whether check group permissions. 
+            //if (!Admin::user()->can('confix.tab.base')) {/*hide base tab*/ } .
+            'check_permission' => false
+        ],
     ],
 ];

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMerchantsTabel extends Migration
+class CreateMerchantsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateMerchantsTabel extends Migration
      */
     public function up()
     {
-        Schema::create('merchants_tabel', function (Blueprint $table) {
+        Schema::create('merchants_table', function (Blueprint $table) {
 
             $table->engine = 'InnoDB';
 
@@ -42,6 +42,6 @@ class CreateMerchantsTabel extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('merchants_tabel');
+        Schema::dropIfExists('merchants_table');
     }
 }
