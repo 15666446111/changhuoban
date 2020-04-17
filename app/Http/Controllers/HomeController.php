@@ -14,4 +14,17 @@ class HomeController extends Controller
     {
     	return view('login');
     }
+
+
+    /**
+     * [home 项目主页面]
+     * @author Pudding
+     * @DateTime 2020-04-17T14:29:43+0800
+     * @param    Request                  $request [description]
+     * @return   [type]                            [description]
+     */
+    public function home(Request $request)
+    {
+    	return view('home');
+    }
 }

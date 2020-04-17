@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Share;
+use App\ShareType;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -109,7 +110,7 @@ class ShareController extends AdminController
 
         $form->image('images', __('图片'));
 
-        $form->select('type_id', __('类型'))->options('/getShareType');
+        $form->select('type_id', __('类型'))->options(ShareType::where('active', '1')->get()->pluck('name', 'id'));
 
         $form->number('sort', __('排序'))->default(0)->help('数值越大,越靠前');
 

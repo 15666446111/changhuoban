@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Plug;
+use \App\PlugType;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -102,8 +103,8 @@ class PlugController extends AdminController
         $form->image('images', __('图片'));
 
         $form->switch('active', __('状态'))->default(1);
-
-        $form->select('type_id', __('类型'))->options('/getPlugType');
+        //'/getPlugType'
+        $form->select('type_id', __('类型'))->options(PlugType::where('active', '1')->get()->pluck('name', 'id'));
 
         $form->number('sort', __('排序'))->default(0)->help('数值越大越靠前');
 

@@ -12,6 +12,7 @@ Route::group([
 
     $router->get('/', 'HomeController@index')->name('admin.home');
 
+    $router->resource('admin-users', AdminUserController::class);
 
     // 轮播图类型管理
     $router->resource('plug-types', PlugTypeController::class);

@@ -19,24 +19,5 @@ Route::get('/', 		'HomeController@index');
 // 忘记密码地址
 Route::get('/forget', 	'RegisterController@forget');
 
-/**
- * @version [<vector>] [< Admin 后端使用数据接口>]
- * @author  <[< 755969423@qq.com >]>
- */
-
-
-
-
-
-
-
-
-
-/**
- * @version [<vector>] [< 获取轮播图类型>]
- */
-Route::get('/getPlugType', 'AdminApiController@getPlugType');
-/**
- * @version [<vector>] [< 获取分享类型 >]
- */
-Route::get('/getShareType', 'AdminApiController@getShareType');
+// 项目登录之后的主页面
+Route::get('/home', 	'HomeController@home');

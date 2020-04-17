@@ -16,8 +16,20 @@ avatar 		| string 	| 是 | URl  	| 会员头像
 user_group 	| int 		| 否 | 1		| 会员用户组 | 关联user_groups表ID
 parent 		| int	 	| 否 | 0  	| 会员上级ID
 active 		| int	 	| 否 | 1  	| 活动状态
+operate 	| string 	| 是 | 无  	| 所属操盘方操盘号
 last_ip		| string 	| 是 | null 	| 最后登录IP
-las_time	| timestamp 	| 是 | URl  	| 最后登录时间
+last_time	| timestamp 	| 是 | URl  	| 最后登录时间
+created_at 	| timestamp 	| 是 | Null | 添加时间 
+updated_at 	| timestamp 	| 是 | Null | 修改时间 
+
+### 1.1用户关系表 (user_relations)
+
+字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
+-----|----- | -----|------|-----|-----
+id 		| int 		| 否 | Auto | 会员ID |
+user_id 	| int 		| 否 | Null | 会员ID
+parents 	| longText	| 是 | 无 	| 会员上级集合
+last_time	| timestamp 	| 是 | URl  	| 最后登录时间
 created_at 	| timestamp 	| 是 | Null | 添加时间 
 updated_at 	| timestamp 	| 是 | Null | 修改时间 
 

@@ -27,6 +27,12 @@ body {
 
 
 /**
+ * [color Send Button Color]
+ * @type {[type]}
+ */
+.SendButton{color:#ccc!important;}
+
+/**
  * @version Login && Register Page Style 
  */
 .logo_box{width: 100%; padding: 2rem 0; text-align: center;}
