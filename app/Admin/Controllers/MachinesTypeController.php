@@ -1,0 +1,95 @@
+<?php
+
+namespace App\Admin\Controllers;
+
+use App\MachinesType;
+use Encore\Admin\Controllers\AdminController;
+use Encore\Admin\Form;
+use Encore\Admin\Grid;
+use Encore\Admin\Show;
+
+class MachinesTypeController extends AdminController
+{
+    /**
+     * Title for current resource.
+     *
+     * @var string
+     */
+    protected $title = '机器类型';
+
+    /**
+     * Make a grid builder.
+     *
+     * @return Grid
+     */
+    protected function grid()
+    {
+        $grid = new Grid(new MachinesType());
+
+        $grid->column('id', __('索引'))->sortable();
+
+        $grid->column('name', __('类型名称'));
+
+        $grid->column('state', __('状态'))->sortable()->switch();
+
+        $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s');
+
+        $grid->column('updated_at', __('修改时间'))->date('Y-m-d H:i:s');
+
+        return $grid;
+    }
+
+    /**
+     * Make a show builder.
+     *
+     * @param mixed $id
+     * @return Show
+     */
+    protected function detail($id)
+    {
+        $show = new Show(MachinesType::findOrFail($id));
+
+        $show->field('name', __('类型名称'));
+
+        $show->field('state', __('类型状态'))->using([0 => '关闭', 1 => '开启'])->label('info');
+
+        $show->field('created_at', __('创建时间'));
+
+        $show->field('updated_at', __('修改时间'));
+
+        $show->machines_factorys('厂商列表', function ($factorys) {
+
+            $factorys->model()->latest();
+            
+            $factorys->id('索引')->sortable();
+
+            $factorys->factory_name('厂商');
+
+            $factorys->created_at('创建时间')->date('Y-m-d H:i:s');
+
+            $factorys->filter(function ($filter) {
+                $filter->like('factory_name');
+            });
+        });
+
+        return $show;
+    }
+
+    /**
+     * Make a form builder.
+     *
+     * @return Form
+     */
+    protected function form()
+    {
+        $form = new Form(new MachinesType());
+
+        $form->text('name', __('类型名称'));
+
+        $form->switch('state', __('类型状态'))->default(1);
+
+        $form->number('sort', __('类型排序'))->default(1);
+
+        return $form;
+    }
+}

@@ -37,3 +37,9 @@ body {
  */
 .logo_box{width: 100%; padding: 2rem 0; text-align: center;}
 .logo_box img{width: 8rem; margin: 0 auto;}
+
+/**
+ * @version Tabbar
+ */
+.weui-tab{position: fixed; bottom: 0; width: 100%}
+.weui-bar__item--on .weui-tabbar__label,.weui-bar__item--on i {color: #fe695a!important;}

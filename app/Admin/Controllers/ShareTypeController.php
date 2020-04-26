@@ -68,8 +68,10 @@ class ShareTypeController extends AdminController
 
         $show->field('updated_at', __('修改时间'));
 
-        /* 展示该驾校的订单 */
-        $show->shares('订单信息', function ($shares) {
+        /* 展示该分享类型的素材 */
+        $show->shares('分享素材', function ($shares) {
+
+            $shares->setResource('/admin/shares');
 
             $shares->model()->latest();
 
@@ -77,24 +79,19 @@ class ShareTypeController extends AdminController
 
             $shares->title('标题');
 
-            $shares->active('状态')->switch();
+            $shares->active('状态')->bool();
 
-            $shares->sort('排序')->sortable();
+            $shares->sort('排序')->sortable()->label();
 
-            $shares->code_size('二维码大小');
+            $shares->code_size('二维码大小')->label();
 
-            $shares->code_x('X轴位置');
+            $shares->code_x('X轴位置')->label();
 
-            $shares->code_y('Y轴位置');
+            $shares->code_y('Y轴位置')->label();
 
-            $shares->disableCreateButton();
+            $shares->operate('所属操盘')->label('info');
 
-            $shares->actions(function ($actions) {
-                // 去掉删除
-                $actions->disableDelete();
-                // 去掉编辑
-                $actions->disableEdit();
-            });
+            $shares->created_at('创建时间')->date('Y-m-d H:i:s');
         });
 
 

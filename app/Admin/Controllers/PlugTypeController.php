@@ -3,10 +3,10 @@
 namespace App\Admin\Controllers;
 
 use App\PlugType;
-use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Controllers\AdminController;
 
 class PlugTypeController extends AdminController
 {
@@ -66,8 +66,10 @@ class PlugTypeController extends AdminController
 
         $show->field('updated_at', __('修改时间'));
 
-        /* 展示该驾校的订单 */
-        $show->plugs('订单信息', function ($plugs) {
+        /* 展示该类型的轮播图 */
+        $show->plugs('轮播图列表', function ($plugs) {
+
+            $plugs->setResource('/admin/plugs');
 
             $plugs->model()->latest();
 
@@ -75,20 +77,15 @@ class PlugTypeController extends AdminController
 
             $plugs->name('标题');
 
-            $plugs->active('状态')->switch();
+            $plugs->active('状态')->bool();
 
-            $plugs->sort('排序')->sortable();
+            $plugs->sort('排序')->sortable()->label();
 
             $plugs->href('链接')->link()->copyable();
 
-            $plugs->disableCreateButton();
+            $plugs->operate('所属操盘')->label('info');
 
-            $plugs->actions(function ($actions) {
-                // 去掉删除
-                $actions->disableDelete();
-                // 去掉编辑
-                $actions->disableEdit();
-            });
+            $plugs->created_at('创建时间')->date('Y-m-d H:i:s');
         });
 
         return $show;

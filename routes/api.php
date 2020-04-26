@@ -17,3 +17,88 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+
+/**
+ * @author  [Pudding]  [<755969423@qq.com>]
+ * @version [<API路由的1.0版本>] [<description>]
+ */
+Route::prefix('V1')->group(function () {
+
+	/**
+	 * @version [<用户登录接口>] [<description>]
+	 * @return  [<返回用户认证的hash令牌>]
+	 * @version [<在所有请求之前请求>] [<所有接口都需使用此接口返回的令牌>]
+	 */
+    Route::post('/login', 'V1\LoginController@login');
+
+    /**
+     * @version [<获取轮播图接口>] [<description>]
+     * @return  [<返回显示中的轮播图>]
+     * @version [<首页轮播图>] 
+     */
+	Route::middleware('AuthToken')->get('/plug', 'V1\PlugController@index');
+
+    /**
+     * @version [<团队扩展分享二维码>] [<description>]
+     * @return  [带二维码的分享海报]   [<description>]
+     * @version [<分享二维码] [<description>]
+     */
+    Route::middleware('AuthToken')->get('/team_share', 'V1\ShareController@team');
+
+    /**
+     * @version [<团队扩展分享二维码>] [<description>]
+     * @return  [带二维码的分享海报]   [<description>]
+     * @version [<分享二维码] [<description>]
+     */
+    Route::middleware('AuthToken')->get('/merchant_share', 'V1\ShareController@merchant');
+
+    /**
+     * @version [<APP 首页 伙伴管理>] [<description>]
+     * @return  [首页的伙伴管理直接下级列表]   [<description>]
+     * @version [<伙伴管理] [<description>]
+     */
+    Route::middleware('AuthToken')->get('/my_team', 'V1\TeamController@index');
+
+    /**
+     * @version [<APP 首页 统计信息>] [<description>]
+     * @return  [返回 首页中间模块统计信息]   [<description>]
+     * @version [<统计信息] [<description>]
+     */
+    Route::middleware('AuthToken')->get('/index_info', 'V1\IndexController@info');
+
+
+    /**
+     * @version [<APP 团队数据>] [<description>]
+     * @return  [团队栏位 团队首页统计数据 日 月 总]   [<description>]
+     * @version [<团队首页统计数据] [<description>]
+     */
+    Route::middleware('AuthToken')->get('/team_data', 'V1\TeamController@data');
+
+
+
+    /**
+     * @version [<APP 我的栏位>] [<description>]
+     * @return  [个人信息 获取个人信息]   [<description>]
+     * @version [<个人信息接口] [<description>]
+     */
+    Route::middleware('AuthToken')->get('/mine', 'V1\MineController@info');
+
+
+
+    /**
+     * @version [<APP 提现记录>] [<description>]
+     * @return  [个人信息 获取提现记录]   [<description>]
+     * @version [<提现记录信息接口] [<description>]
+     */
+    Route::middleware('AuthToken')->get('/draw', 'V1\MineController@draw_log');
+
+
+
+
+});
+
+Route::fallback(function(){ 
+    return response()->json(['error'=>['message' => 'Request Error!']], 404);
+});

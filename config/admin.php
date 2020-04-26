@@ -408,5 +408,15 @@ return [
             //if (!Admin::user()->can('confix.tab.base')) {/*hide base tab*/ } .
             'check_permission' => false
         ],
+        // 文章内容编辑器 Ueditor
+        'ueditor' => [
+            // 如果要关掉这个扩展，设置为false
+            'enable' => true,
+            'config' => [
+                'initialFrameHeight' => 400,
+            ],
+            'field_type' => 'ueditor'
+        ],
+
     ],
 ];

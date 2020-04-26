@@ -45,6 +45,51 @@ class User extends Authenticatable
 
 
     /**
+     * Relation To UserGroup
+     *
+     * @var array
+     */
+    public function group()
+    {
+        return $this->belongsTo('\App\UserGroup', 'user_group', 'id');
+    }
+
+
+    /**
+     * Relation To UserGroup
+     *
+     * @var array
+     */
+    public function wallets()
+    {
+        return $this->hasOne('\App\UserWallet', 'user_id', 'id');
+    }
+
+
+    /**
+     * Relation To UserRealname
+     *
+     * @var array
+     */
+    public function realname()
+    {
+        return $this->hasOne('\App\UserRealname', 'user_id', 'id');
+    }
+
+
+    /**
+     * [machines 用户关联机具列表]
+     * @author Pudding
+     * @DateTime 2020-04-22T17:38:09+0800
+     * @return   [type]                   [description]
+     */
+    public function machines()
+    {
+        return $this->hasMany('\App\Machine', 'user_id', 'id');
+    }
+
+
+    /**
      * [getParentStr 获取会员的所有上级]
      * @author Pudding
      * @DateTime 2020-04-13T16:47:17+0800

@@ -28,4 +28,27 @@ Route::group([
     $router->resource('users', UserController::class);
     // 用户组管理
     $router->resource('user-groups', UserGroupController::class);
+
+    // 文章类型管理
+    $router->resource('article-types', ArticleTypeController::class);
+
+    // 文章列表管理
+    $router->resource('articles', ArticleController::class);
+
+    /**
+     * 机器仓库管理Route
+     */
+    $router->resource('machines-types', MachinesTypeController::class); // 机器类型
+    $router->resource('machines-factories', MachinesFactoryController::class); // 机器厂商
+    $router->resource('machines-styles', MachinesStyleController::class); // 机器型号
+    $router->resource('machines', MachineController::class);  // 仓库管理
+
+
+
+    // 交易列表
+    $router->resource('trades', TradeController::class);
+
+
+    // 提現管理
+    $router->resource('withdraws', WithdrawController::class);
 });

@@ -17,6 +17,7 @@ user_group 	| int 		| 否 | 1		| 会员用户组 | 关联user_groups表ID
 parent 		| int	 	| 否 | 0  	| 会员上级ID
 active 		| int	 	| 否 | 1  	| 活动状态
 operate 	| string 	| 是 | 无  	| 所属操盘方操盘号
+api_token 	| string 	| 是 | 无  	| API登录令牌
 last_ip		| string 	| 是 | null 	| 最后登录IP
 last_time	| timestamp 	| 是 | URl  	| 最后登录时间
 created_at 	| timestamp 	| 是 | Null | 添加时间 
@@ -88,7 +89,9 @@ active		| int 		| 否 | 1 	| 开启状态
 type_id		| int 		| 否 | 	 	| 类型ID
 images		| string	| 是 | null 	| 图片地址 
 sort		| int 		| 否 | 0 	| 排序权重 
-href		| string	| 否 | # 	| 链接地址   
+href		| string	| 否 | # 	| 链接地址
+verify		| int		| 否 | 0 	| 是否审核  
+operate		| string	| 否 | 	 	| 所属操盘号     
 created_at | timestamp 	| 是 | Null | 添加时间 
 updated_at | timestamp 	| 是 | Null | 修改时间
 
@@ -114,34 +117,56 @@ type_id		| int 		| 否 | 	 	| 类型ID
 sort		| int 		| 否 | 0 	| 排序权重 
 code_size	| int		| 否 | 100 	| 二维码大小
 code_x		| int		| 否 | 100 	| 二维码X轴位置
-code_y		| int		| 否 | 100 	| 二维码Y轴位置        
+code_y		| int		| 否 | 100 	| 二维码Y轴位置
+verify		| int		| 否 | 0 	| 是否审核  
+operate		| string	| 否 | 	 	| 所属操盘号        
 created_at | timestamp 	| 是 | Null | 添加时间 
 updated_at | timestamp 	| 是 | Null | 修改时间
 
-### 9.机器型号表 (machines_types)
+### 9 机器类型表 (machines_types)
+
+字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
+-----|----- | -----|------|-----|-----
+id 			| int 		| 否 | Auto | 类型ID
+name 		| string 	| 否 | Null 	| 类型名称 
+created_at  | timestamp | 是 | Null | 添加时间 
+updated_at  | timestamp | 是 | Null | 修改时间
+
+### 9.1 机器厂商表 (machines_factories)
+
+字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
+-----|----- | -----|------|-----|-----
+id 			| int 		| 否 | Auto | 厂家ID
+factory_name| string 	| 否 | Null 	| 厂家名称
+type_id     | int 		| 否 | Null 	| 所属类型 
+created_at  | timestamp | 是 | Null | 添加时间 
+updated_at  | timestamp | 是 | Null | 修改时间
+
+### 9.2 机器型号表 (machines_styles)
 
 字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
 -----|----- | -----|------|-----|-----
 id 			| int 		| 否 | Auto | 型号ID
-name 		| string 	| 否 | 	 	| 型号名称
-state 		| tinyint 	| 否 | 1	 	| 开启状态
-sort		| int 		| 否 | 0 	| 排序权重   
-created_at | timestamp 	| 是 | Null | 添加时间 
-updated_at | timestamp 	| 是 | Null | 修改时间
+style_name 	| string 	| 否 | Null 	| 型号名称
+factory_id  | int 		| 否 | Null 	| 所属厂商 
+created_at  | timestamp | 是 | Null | 添加时间 
+updated_at  | timestamp | 是 | Null | 修改时间
+
 
 ### 10.机器表 (machines)
 
 字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
 -----|----- | -----|------|-----|-----
 id 			| int 		| 否 | Auto | 机器ID
-type_id		| int 		| 否 | 	 	| 型号
+style_id	| int 		| 否 | 	 	| 型号
 user_id		| int 		| 是 | 	 	| 归属人
 sn			| string	| 否 | 	 	| 机器序列号
-agent_id	| int		| 是 | 	 	| 代理商
 open_state	| tinyint	| 否 | 0	 	| 开通状态
 is_self	 	| tinyint	| 否 | 0	 	| 是否是自备机
-created_at | timestamp 	| 是 | Null | 添加时间 
-updated_at | timestamp 	| 是 | Null | 修改时间
+created_at  | timestamp 	| 是 | Null | 添加时间 
+updated_at  | timestamp 	| 是 | Null | 修改时间
+
+
 
 ### 11.机器划拨记录表 (transfers)
 
@@ -155,12 +180,12 @@ state	 	| tinyint	| 否 |   	| 类型，1划拨，2回拨
 created_at | timestamp 	| 是 | Null | 添加时间 
 updated_at | timestamp 	| 是 | Null | 修改时间
 
+
 ### 12.商户表 (merchants)
 
 字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
 -----|----- | -----|------|-----|-----
 id 			| int 		| 否 | Auto | 商户ID
-user_id		| int 		| 否 | 	 	| 用户ID
 code		| int 		| 否 | 	 	| 商户号
 name		| string 	| 是 | 	 	| 商户名称
 phone		| string  	| 是 | 	 	| 商户电话
@@ -169,11 +194,19 @@ state		| char		| 否 | 1	 	| 商户状态 0:无效, 1:有效, X：注销
 created_at | timestamp 	| 是 | Null | 添加时间 
 updated_at | timestamp 	| 是 | Null | 修改时间
 
+
+
+
+
+
+
 ### 13.交易表 (trades)
 
 字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
 -----|----- | -----|------|-----|-----
 id 			| int 		| 否 | Auto | 交易ID
+trade_no	| string	| 否 | 		| 交易流水号
+rrn 		| string	| 否 |  		| 参考号
 user_id		| int 		| 是 | 	 	| 用户ID
 machine_id	| int 		| 是 | 	 	| 机器ID
 is_send		| int 		| 否 | 0	 	| 分润发放状态
@@ -182,6 +215,8 @@ merchant_code		| int 		| 否 | 	 	| 商户号
 amount		| int  		| 否 | 0	 	| 交易金额，单位：分
 settle_amount		| int 		| 否 | 0 	| 结算金额，单位：分
 cardType	| int 		| 是 | 	 	| 交易卡类型，0贷记卡，1借记卡
+trade_time | timestamp	| 是 | Null | 交易时间
+trade_post | json 		| 是 | Null | 推送报文
 created_at | timestamp 	| 是 | Null | 添加时间 
 updated_at | timestamp 	| 是 | Null | 修改时间
 
@@ -230,5 +265,32 @@ banklink	| string	| 是 | 	 	| 联行号
 repay_money	| int		| 是 | 0	 	| 代付系统打款金额
 repay_wallet| int		| 是 | 	 	| 代付系统打款钱包
 reason		| string	| 是 | 	 	| 说明
+created_at | timestamp 	| 是 | Null | 添加时间 
+updated_at | timestamp 	| 是 | Null | 修改时间
+
+
+
+### 17.文章型表 (article_types)
+
+字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
+-----|----- | -----|------|-----|-----
+id 			| int 		| 否 | Auto | 类型ID 
+name 		| string 	| 否 | 无 	| 分类名称 
+active		| int 		| 否 | 1 	| 开启状态 
+created_at  | timestamp 	| 是 | Null | 添加时间 
+updated_at  | timestamp 	| 是 | Null | 修改时间
+
+### 18.文章列表表 (articles)
+
+字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
+-----|----- | -----|------|-----|-----
+id 			| int 		| 否 | Auto | 文章ID 
+title 		| string 	| 是 | null 	| 文章标题 
+active		| int 		| 否 | 1 	| 开启状态
+images		| string	| 否 | null 	| 文章主图
+type_id		| int 		| 否 | 	 	| 文章类型
+verify		| int		| 否 | 0 	| 是否审核  
+operate		| string	| 否 | 	 	| 所属操盘号
+content		| longtext	| 否 | Null	| 文章内容          
 created_at | timestamp 	| 是 | Null | 添加时间 
 updated_at | timestamp 	| 是 | Null | 修改时间

@@ -12,6 +12,9 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-        //
+        /**
+         * @version [<vector>] [< 过滤助代通(畅捷方)的通知接口 ， 此接口不需要验证CSRF>]
+         */
+       	'/trade',
     ];
 }
