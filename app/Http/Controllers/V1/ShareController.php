@@ -22,7 +22,7 @@ class ShareController extends Controller
     {
     	try{
             /** 获取分享类型的素材  */
-            $list = \App\Share::where('active', '1')->where('type', '1')->first();
+            $list = \App\Share::where('operate', $request->user->operate)->where('type_id', '1')->ApiGet()->first();
 
             if(!$list or empty($list))
                 return response()->json(['success'=>['message' => '获取成功!', 'data' => array()]]);
@@ -77,7 +77,7 @@ class ShareController extends Controller
     {
         try{
             /** 获取分享类型的素材  */
-            $list = \App\Share::where('active', '1')->where('type', '2')->first();
+            $list = \App\Share::where('operate', $request->user->operate)->where('type_id', '2')->ApiGet()->first();
 
             if(!$list or empty($list))
                 return response()->json(['success'=>['message' => '获取成功!', 'data' => array()]]);

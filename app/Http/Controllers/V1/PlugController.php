@@ -19,7 +19,10 @@ class PlugController extends Controller
     {
     	try{
             // 获取展示的轮播图
-            $Plug = \App\Plug::where('active', '1')->ApiGet()->get();
+            $Plug = \App\Plug::where('operate', $request->user->operate)->ApiGet()->get();
+
+            if(empty($Plug) or !$Plug)
+                $Plug = \App\Plug::where('operate', 'All')->ApiGet()->get();
 
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $Plug]]);
 

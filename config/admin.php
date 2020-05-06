@@ -418,5 +418,24 @@ return [
             'field_type' => 'ueditor'
         ],
 
+        // ENV 文件管理
+        'env-manager' => [
+            // If the value is set to false, this extension will be disabled
+            'enable' => true
+        ],
+
+        // 媒体文件管理
+        'media-manager' => [
+        
+            // Select a local disk that you configured in `config/filesystem.php`
+            'disk' => 'public'
+        ],
+
+        // 列表灯箱效果
+        'grid-lightbox' => [
+        
+            // Set to `false` if you want to disable this extension
+            'enable' => true,
+        ]
     ],
 ];

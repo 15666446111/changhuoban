@@ -38,7 +38,7 @@ class PlugController extends AdminController
         //倒叙
         //$grid->column('id', __('索引'))->sortable();
 
-        $grid->column('images', __('图片'))->image('', 100, 30);
+        $grid->column('images', __('图片'))->lightbox(['width' => 100, 'height' => 30]);
 
         $grid->column('name', __('标题'))->filter();
 
