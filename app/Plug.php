@@ -27,6 +27,11 @@ class Plug extends Model
 	 */
     public function scopeApiGet($query)
     {
-    	return $query->where('active', '1')->where('verify', '1')->orderBy('sort', 'desc')->limit('3')->select(['images', 'link', 'href']);
+    	return $query->where('active', '1')->where('verify', '1')->orderBy('sort', 'desc')->limit('3')->select([
+    		'id',
+    		'name',
+    		'images', 
+    		'href'
+    	]);
     }
 }

@@ -294,3 +294,13 @@ operate		| string	| 否 | 	 	| 所属操盘号
 content		| longtext	| 否 | Null	| 文章内容          
 created_at | timestamp 	| 是 | Null | 添加时间 
 updated_at | timestamp 	| 是 | Null | 修改时间
+
+
+### 19.操盘方设置表 (settings)
+
+字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
+-----|----- | -----|------|-----|-----
+id 			| int 			| 否 | Auto | 类型ID 
+operate 	| string 		| 否 | 无    | 操盘方 
+created_at  | timestamp 	| 是 | Null | 添加时间 
+updated_at  | timestamp 	| 是 | Null | 修改时间

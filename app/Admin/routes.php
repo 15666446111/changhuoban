@@ -14,6 +14,9 @@ Route::group([
 
     $router->resource('admin-users', AdminUserController::class);
 
+    // 操盘方设置表
+    $router->resource('settings', SettingController::class);
+    
     // 轮播图类型管理
     $router->resource('plug-types', PlugTypeController::class);
     // 轮播图管理
