@@ -15,7 +15,7 @@ class CreatePlugsTable extends Migration
     {
         Schema::create('plugs', function (Blueprint $table) {
 
-            $table->id();
+            $table->bigIncrements('id');
             
             $table->string('name')->nullable()->comment('轮播标题');
 

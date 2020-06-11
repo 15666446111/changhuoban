@@ -15,7 +15,7 @@ class CreateSharesTable extends Migration
     {
         Schema::create('shares', function (Blueprint $table) {
 
-            $table->id();
+            $table->bigIncrements('id');
 
             $table->string('title')->nullable()->comment('分享标题');
 

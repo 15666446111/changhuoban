@@ -15,7 +15,7 @@ class CreateWithdrawsDatasTable extends Migration
     {
         Schema::create('withdraws_datas', function (Blueprint $table) {
 
-            $table->id();
+            $table->bigIncrements('id');
 
             $table->string('order_no')->comment('提现订单号');
 

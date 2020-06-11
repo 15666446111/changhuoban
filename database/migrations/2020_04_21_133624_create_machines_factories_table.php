@@ -15,7 +15,7 @@ class CreateMachinesFactoriesTable extends Migration
     {
         Schema::create('machines_factories', function (Blueprint $table) {
             
-            $table->id();
+            $table->bigIncrements('id');
 
             $table->string('factory_name')->nullable()->comment('厂商名称');
 

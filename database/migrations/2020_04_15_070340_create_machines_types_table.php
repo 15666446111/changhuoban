@@ -15,7 +15,7 @@ class CreateMachinesTypesTable extends Migration
     {
         Schema::create('machines_types', function (Blueprint $table) {
 
-            $table->id();
+            $table->bigIncrements('id');
 
             $table->string('name')->comment('型号名称');
 

@@ -15,7 +15,7 @@ class CreateTradesTable extends Migration
     {
         Schema::create('trades', function (Blueprint $table) {
 
-            $table->id();
+            $table->bigIncrements('id');
 
             $table->integer('user_id')->nullable()->comment('用户ID');
 

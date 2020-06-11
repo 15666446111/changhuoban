@@ -15,7 +15,7 @@ class CreateShareTypesTable extends Migration
     {
         Schema::create('share_types', function (Blueprint $table) {
 
-            $table->id();
+            $table->bigIncrements('id');
 
             $table->string('name')->comment('分类名称');
 

@@ -15,7 +15,7 @@ class CreatePlugTypesTable extends Migration
     {
         Schema::create('plug_types', function (Blueprint $table) {
 
-            $table->id();
+            $table->bigIncrements('id');
 
             $table->string('name')->nullable()->comment('类型名称');
 
