@@ -18,7 +18,6 @@ class PlugController extends Controller
     public function index(Request $request)
     {
     	try{
-            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
             // 获取展示的轮播图
             $Plug = \App\Plug::where('operate', $request->user->operate)->ApiGet()->get();
 

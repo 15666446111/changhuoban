@@ -126,6 +126,7 @@ class ArticleController extends AdminController
             $Plug = Article::where('id', request()->route()->parameters()['article'])->first();
             if($Plug->operate != Admin::user()->operate) return abort('403'); 
         }
+        
         $form->hidden('operate', __('操盘号'))->value(Admin::user()->operate)->readonly();
 
         $form->text('title', __('标题'));
