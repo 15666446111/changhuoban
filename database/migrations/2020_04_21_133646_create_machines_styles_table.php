@@ -15,7 +15,7 @@ class CreateMachinesStylesTable extends Migration
     {
         Schema::create('machines_styles', function (Blueprint $table) {
 
-            $table->id();
+            $table->bigIncrements('id');
 
             $table->string('style_name')->nullable()->comment('型号名称');
 

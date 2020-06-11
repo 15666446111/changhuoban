@@ -15,7 +15,7 @@ class CreateCashsLogsTable extends Migration
     {
         Schema::create('cashs_logs', function (Blueprint $table) {
 
-            $table->id();
+            $table->bigIncrements('id');
 
             $table->integer('user_id')->comment('用户ID');
 

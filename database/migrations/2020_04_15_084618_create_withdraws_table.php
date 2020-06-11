@@ -15,7 +15,7 @@ class CreateWithdrawsTable extends Migration
     {
         Schema::create('withdraws', function (Blueprint $table) {
 
-            $table->id();
+            $table->bigIncrements('id');
 
             $table->integer('user_id')->comment('用户ID');
 
