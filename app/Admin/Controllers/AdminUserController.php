@@ -24,8 +24,9 @@ class AdminUserController extends AdminController
      */
     protected function grid()
     {
+        
         $userModel = config('admin.database.users_model');
-
+        
         $grid = new Grid(new $userModel());
 
         $grid->column('id', 'ID')->sortable();
@@ -67,7 +68,10 @@ class AdminUserController extends AdminController
     protected function detail($id)
     {
         $userModel = config('admin.database.users_model');
-
+        // if(Admin::user()->operate != "All" && request()->route()->parameters()){
+        //     $userModels = $userModel::where('id', request()->route()->parameters()['admin_users'])->first();
+        //     if($userModels->operate != Admin::user()->operate) return abort('403'); 
+        // }
         $show = new Show($userModel::findOrFail($id));
 
         $show->field('id', 'ID');

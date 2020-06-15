@@ -6,7 +6,7 @@ use App\Machine;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
-
+use Encore\Admin\Facades\Admin;
 use App\Admin\Actions\ImportMachines;
 use App\Admin\Actions\MachineHeadTail;
 use Encore\Admin\Controllers\AdminController;
@@ -60,15 +60,19 @@ class MachineController extends AdminController
      */
     protected function detail($id)
     {
+        if(Admin::user()->operate != "All"){
+            $model = Machine::where('id', $id)->first();
+            if($model->operate != Machine::user()->operate) return abort('403');        
+        }
         $show = new Show(Machine::findOrFail($id));
 
-        $show->field('user_id', __('User id'));
-        $show->field('sn', __('Sn'));
-        $show->field('open_state', __('Open state'));
-        $show->field('is_self', __('Is self'));
+        $show->field('user_id', __('归属人'));
+        $show->field('sn', __('机器序列号'));
+        $show->field('open_state', __('开通状态'));
+        $show->field('is_self', __('是否是自备机'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
-        $show->field('style_id', __('Style id'));
+        $show->field('style_id', __('所属型号'));
 
         return $show;
     }

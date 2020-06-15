@@ -6,6 +6,7 @@ use App\ArticleType;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Facades\Admin;
 use Encore\Admin\Controllers\AdminController;
 
 class ArticleTypeController extends AdminController
@@ -47,6 +48,10 @@ class ArticleTypeController extends AdminController
      */
     protected function detail($id)
     {
+        if(Admin::user()->operate != "All"){
+            $model = ArticleType::where('id', $id)->first();
+            if($model->operate != Admin::user()->operate) return abort('403');        
+        }
         $show = new Show(ArticleType::findOrFail($id));
 
         $show->field('name', __('类型'));
@@ -61,7 +66,7 @@ class ArticleTypeController extends AdminController
 
             $articles->setResource('/admin/articles');
             
-            $articles->model()->latest();
+            // $articles->model()->latest();
             
             $articles->id('索引')->sortable();
 

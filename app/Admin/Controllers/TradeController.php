@@ -7,6 +7,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Facades\Admin;
 
 class TradeController extends AdminController
 {
@@ -82,6 +83,10 @@ class TradeController extends AdminController
      */
     protected function detail($id)
     {
+        if(Admin::user()->operate != "All"){
+            $model = Trade::where('id', $id)->first();
+            if($model->operate != Trade::user()->operate) return abort('403');        
+        }
         $show = new Show(Trade::findOrFail($id));
 
         $show->field('trade_no', __('系统流水号'));
