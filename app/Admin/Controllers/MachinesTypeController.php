@@ -7,6 +7,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Facades\Admin;
 
 class MachinesTypeController extends AdminController
 {
@@ -36,6 +37,25 @@ class MachinesTypeController extends AdminController
 
         $grid->column('updated_at', __('修改时间'))->date('Y-m-d H:i:s');
 
+        $grid->actions(function ($actions) {
+
+            // 去掉删除
+            $actions->disableDelete();
+        
+            // 去掉编辑
+            // $actions->disableEdit();
+        
+            // 去掉查看
+            // $actions->disableView();
+        });
+
+        $grid->disableCreateButton();
+
+        $grid->batchActions(function ($batch) {
+            $batch->disableDelete();
+        });
+        
+
         return $grid;
     }
 
@@ -47,6 +67,10 @@ class MachinesTypeController extends AdminController
      */
     protected function detail($id)
     {
+        if(Admin::user()->operate != "All" && request()->route()->parameters()){
+            $MachinesType = MachinesType::where('id', request()->route()->parameters()['machines_types'])->first();
+            if($MachinesType->operate != Admin::user()->operate) return abort('403'); 
+        }
         $show = new Show(MachinesType::findOrFail($id));
 
         $show->field('name', __('类型名称'));
@@ -70,6 +94,14 @@ class MachinesTypeController extends AdminController
             $factorys->filter(function ($filter) {
                 $filter->like('factory_name');
             });
+        });
+
+        $show->panel()->tools(function ($tools) {
+
+            $tools->disableDelete();
+
+            $tools->disableEdit();
+            
         });
 
         return $show;

@@ -7,6 +7,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Facades\Admin;
 
 class WithdrawController extends AdminController
 {
@@ -69,6 +70,10 @@ class WithdrawController extends AdminController
      */
     protected function detail($id)
     {
+        if(Admin::user()->operate != "All"){
+            $model = Withdraw::where('id', $id)->first();
+            if($model->operate != Withdraw::user()->operate) return abort('403');        
+        }
         $show = new Show(Withdraw::findOrFail($id));
 
         $show->field('order_no', __('提现订单号'));

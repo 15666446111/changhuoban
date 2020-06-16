@@ -8,6 +8,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Facades\Admin;
 
 class MachinesStyleController extends AdminController
 {
@@ -48,6 +49,10 @@ class MachinesStyleController extends AdminController
      */
     protected function detail($id)
     {
+        if(Admin::user()->operate != "All"){
+            $model = MachinesStyle::where('id', $id)->first();
+            if($model->operate != MachinesStyle::user()->operate) return abort('403');        
+        }
         $show = new Show(MachinesStyle::findOrFail($id));
 
         $show->field('style_name', __('型号名称'));
