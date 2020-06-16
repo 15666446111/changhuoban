@@ -7,6 +7,7 @@ use App\MachinesFactory;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Facades\Admin;
 
 use Encore\Admin\Controllers\AdminController;
 
@@ -49,6 +50,10 @@ class MachinesFactoryController extends AdminController
      */
     protected function detail($id)
     {
+        if(Admin::user()->operate != "All"){
+            $model = MachinesFactory::where('id', $id)->first();
+            if($model->operate != MachinesFactory::user()->operate) return abort('403');        
+        }
         $show = new Show(MachinesFactory::findOrFail($id));
 
         $show->field('factory_name', __('厂商名称'));

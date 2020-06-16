@@ -42,6 +42,8 @@ class ArticleController extends AdminController
 
         $grid->column('article_types.name', __('文章类型'));
 
+        $grid->column('sort', __('排序'))->sortable()->label();
+
         $grid->column('verify', __('审核'))->using([
             '0' => '待审核', '1' => '正常', '-1' => '拒绝'
         ])->label([
@@ -90,6 +92,8 @@ class ArticleController extends AdminController
 
         $show->field('images', __('图片'))->image();
 
+        $show->field('sort', __('排序'))->label();
+
         $show->field('created_at', __('创建时间'));
 
         $show->field('updated_at', __('修改时间'));
@@ -137,6 +141,8 @@ class ArticleController extends AdminController
 
         $form->select('type_id', __('类型'))->options(ArticleType::where('active', '1')->get()->pluck('name', 'id'));
 
+        $form->number('sort', __('排序'))->default(0)->help('数值越大越靠前');
+
         if(Admin::user()->operate == 'All'){
             $form->select('verify', __('审核'))->options([
                 0   =>  '待审核',
@@ -145,7 +151,7 @@ class ArticleController extends AdminController
             ]);   
         }
 
-        $form->ueditor('content', __('Content'));
+        $form->ueditor('content', __('内容'));
 
         $form->saving(function (Form $form) {
             if($form->isCreating()){

@@ -7,6 +7,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Facades\Admin;
 
 class ShareTypeController extends AdminController
 {
@@ -58,6 +59,10 @@ class ShareTypeController extends AdminController
      */
     protected function detail($id)
     {
+        if(Admin::user()->operate != "All"){
+            $model = ShareType::where('id', $id)->first();
+            if($model->operate != ShareType::user()->operate) return abort('403');        
+        }
         $show = new Show(ShareType::findOrFail($id));
 
         $show->field('name', __('类型'));

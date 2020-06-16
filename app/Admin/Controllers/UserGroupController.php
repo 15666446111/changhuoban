@@ -7,6 +7,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Facades\Admin;
 
 class UserGroupController extends AdminController
 {
@@ -47,6 +48,10 @@ class UserGroupController extends AdminController
      */
     protected function detail($id)
     {
+        if(Admin::user()->operate != "All"){
+            $model = UserGroup::where('id', $id)->first();
+            if($model->operate != UserGroup::user()->operate) return abort('403');        
+        }
         $show = new Show(UserGroup::findOrFail($id));
 
         $show->field('name', __('组名称'));

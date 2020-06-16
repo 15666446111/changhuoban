@@ -6,6 +6,7 @@ use App\PlugType;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Facades\Admin;
 use Encore\Admin\Controllers\AdminController;
 
 class PlugTypeController extends AdminController
@@ -56,6 +57,10 @@ class PlugTypeController extends AdminController
      */
     protected function detail($id)
     {
+        if(Admin::user()->operate != "All"){
+            $model = PlugType::where('id', $id)->first();
+            if($model->operate != PlugType::user()->operate) return abort('403');        
+        }
         $show = new Show(PlugType::findOrFail($id));
 
         $show->field('name', __('类型'));
