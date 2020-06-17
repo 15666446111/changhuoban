@@ -4,6 +4,25 @@
 
 > 2.如果你是平台开发人员, 若你在开发过程中对数据字段进行了修改或新增或删除， 请及时更新本文档
 
+
+### 操盘方与机构方设置表
+字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
+-----|----- | -----|------|-----|-----
+id 		| int 		| 否 | Auto | 会员ID |
+nickname 	| string 	| 是 | Null | 会员昵称
+account 	| string 	| 否 | 无 	| 会员账号
+password 	| string 	| 否 | 无 	| 会员密码 | 加密方式
+avatar 		| string 	| 是 | URl  	| 会员头像
+user_group 	| int 		| 否 | 1		| 会员用户组 | 关联user_groups表ID
+parent 		| int	 	| 否 | 0  	| 会员上级ID
+active 		| int	 	| 否 | 1  	| 活动状态
+operate 	| string 	| 是 | 无  	| 所属操盘方操盘号
+api_token 	| string 	| 是 | 无  	| API登录令牌
+last_ip		| string 	| 是 | null 	| 最后登录IP
+last_time	| timestamp 	| 是 | URl  	| 最后登录时间
+created_at 	| timestamp 	| 是 | Null | 添加时间 
+updated_at 	| timestamp 	| 是 | Null | 修改时间 
+
 ### 1.用户会员表 (users)
 
 字段 | 类型 | 为空 | 默认值 | 注释 | 其他 
