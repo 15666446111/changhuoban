@@ -12,6 +12,10 @@ Route::group([
 
     $router->get('/', 'HomeController@index')->name('admin.home');
 
+    //
+    $router->resource('admin-settings', AdminSettingController::class);
+
+
     $router->resource('admin-users', AdminUserController::class);
 
     // 操盘方设置表

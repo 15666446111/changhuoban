@@ -17,5 +17,7 @@
  * Admin::js('/packages/prettydocs/js/main.js');
  *
  */
-
-Encore\Admin\Form::forget(['map', 'editor']);
+Admin::css('/css/admin.css');
+//Encore\Admin\Form::forget(['map', 'editor']);
+// 覆盖视图
+app('view')->prependNamespace('admin', resource_path('views/admin/views'));
