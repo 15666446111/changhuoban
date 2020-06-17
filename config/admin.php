@@ -11,7 +11,7 @@ return [
     | login page.
     |
     */
-    'name' => '畅捷支付 3.0',
+    'name' => 'Laravel-admin',
 
     /*
     |--------------------------------------------------------------------------
@@ -22,7 +22,7 @@ return [
     | `img` tag, eg '<img src="http://logo-url" alt="Admin logo">'.
     |
     */
-    'logo' => '<b>畅捷支付_3.0</b>',
+    'logo' => '<b>Laravel</b> admin',
 
     /*
     |--------------------------------------------------------------------------
@@ -34,7 +34,7 @@ return [
     | '<img src="http://logo-url" alt="Admin logo">'.
     |
     */
-    'logo-mini' => '<b>畅捷</b>',
+    'logo-mini' => '<b>La</b>',
 
     /*
     |--------------------------------------------------------------------------
@@ -85,7 +85,7 @@ return [
     | Html title for all pages.
     |
     */
-    'title' => '畅捷支付',
+    'title' => 'Admin',
 
     /*
     |--------------------------------------------------------------------------
@@ -396,46 +396,6 @@ return [
     |
     */
     'extensions' => [
-        // 后台设置
-        'configx' => [
-            // Set to `false` if you want to disable this extension
-            'enable' => true,
-            'tabs' => [
-                'base'      => '系统设置',
-                'draw'      => '提现设置',
-            ],
-            // Whether check group permissions. 
-            //if (!Admin::user()->can('confix.tab.base')) {/*hide base tab*/ } .
-            'check_permission' => false
-        ],
-        // 文章内容编辑器 Ueditor
-        'ueditor' => [
-            // 如果要关掉这个扩展，设置为false
-            'enable' => true,
-            'config' => [
-                'initialFrameHeight' => 400,
-            ],
-            'field_type' => 'ueditor'
-        ],
 
-        // ENV 文件管理
-        'env-manager' => [
-            // If the value is set to false, this extension will be disabled
-            'enable' => true
-        ],
-
-        // 媒体文件管理
-        'media-manager' => [
-        
-            // Select a local disk that you configured in `config/filesystem.php`
-            'disk' => 'public'
-        ],
-
-        // 列表灯箱效果
-        'grid-lightbox' => [
-        
-            // Set to `false` if you want to disable this extension
-            'enable' => true,
-        ]
     ],
 ];
