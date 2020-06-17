@@ -4,6 +4,8 @@ namespace App\Admin\Controllers;
 
 use App\Article;
 use App\ArticleType;
+use App\Articles_log;
+
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
@@ -150,13 +152,48 @@ class ArticleController extends AdminController
                 -1  =>  '拒绝',
             ]);   
         }
-
+        
         $form->ueditor('content', __('内容'));
+
 
         $form->saving(function (Form $form) {
             if($form->isCreating()){
                 $form->operate = Admin::user()->operate;
+                Articles_log::create([
+                    'articles_id'   =>  Article::orderBy('id','desc')->limit(1)->first()->id+1,
+                    'username'      =>  Admin::user()->username,
+                    'type'          =>  '添加',
+                    'put'           =>  json_encode([
+                    'title'         =>  $form->title,
+                    'images'        =>  $form->model()->images,
+                    'active'        =>  $form->active,
+                    'type_id'       =>  $form->type_id,
+                    'verify'        =>  $form->verify,
+                    'content'       =>  $form->content
+                ],JSON_UNESCAPED_UNICODE)]);
+            }else{
+                Articles_log::create([
+                    'articles_id'   =>  $form->model()->id,
+                    'username'      =>  Admin::user()->username,
+                    'type'          =>  '修改',
+                    'before_back'   =>  json_encode([
+                    'title'         =>  $form->model()->title,
+                    'images'        =>  $form->model()->images,
+                    'active'        =>  $form->model()->active,
+                    'type_id'       =>  $form->model()->type_id,
+                    'verify'        =>  $form->model()->verify,
+                    'content'       =>  $form->model()->content
+                ],JSON_UNESCAPED_UNICODE),
+                    'put'           =>  json_encode([
+                    'title'         =>  $form->title,
+                    'images'        =>  $form->images,
+                    'active'        =>  $form->active,
+                    'type_id'       =>  $form->type_id,
+                    'verify'        =>  $form->verify,
+                    'content'       =>  $form->content
+                ],JSON_UNESCAPED_UNICODE)]);
             }
+            
         });
 
         return $form;

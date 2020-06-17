@@ -99,6 +99,7 @@ class AdminUserController extends AdminController
      */
     public function form()
     {
+        
         $userModel = config('admin.database.users_model');
         $permissionModel = config('admin.database.permissions_model');
         $roleModel = config('admin.database.roles_model');
