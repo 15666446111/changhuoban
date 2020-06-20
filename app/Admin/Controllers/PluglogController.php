@@ -30,8 +30,8 @@ class PluglogController extends AdminController
         $grid->column('username', __('操作用户'));
         $grid->column('plug_id', __('轮播图id'));
         $grid->column('type', __('操作类型'));
-        $grid->column('before_back', __('修改前'));
-        $grid->column('put', __('操作'));
+        $grid->column('before_back', __('修改前'))->width(200);
+        $grid->column('put', __('操作'))->width(200);
         $grid->column('created_at', __('操作时间'));
         
         $grid->actions(function ($actions) {

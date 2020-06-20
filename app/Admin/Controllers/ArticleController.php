@@ -157,6 +157,7 @@ class ArticleController extends AdminController
 
 
         $form->saving(function (Form $form) {
+            // dd($form->images);
             if($form->isCreating()){
                 $form->operate = Admin::user()->operate;
                 Articles_log::create([
@@ -186,7 +187,7 @@ class ArticleController extends AdminController
                 ],JSON_UNESCAPED_UNICODE),
                     'put'           =>  json_encode([
                     'title'         =>  $form->title,
-                    'images'        =>  $form->images,
+                    'images'        =>  $form->images->getClientOriginalName(),
                     'active'        =>  $form->active,
                     'type_id'       =>  $form->type_id,
                     'verify'        =>  $form->verify,
