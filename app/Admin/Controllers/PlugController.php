@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Plug;
 use App\PlugType;
+use App\Pluglog;
 
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -158,10 +159,45 @@ class PlugController extends AdminController
         $form->number('sort', __('排序'))->default(0)->help('数值越大越靠前');
 
         $form->text('href', __('链接'))->default('#');
-
+        
         $form->saving(function (Form $form) {
+            
             if($form->isCreating()){
                 $form->operate = Admin::user()->operate;
+                Pluglog::create([
+                    'plug_id'       =>  $form->model()->id,
+                    'username'      =>  Admin::user()->username,
+                    'type'          =>  '添加',
+                    'before_back'   =>  '',
+                    'put'           =>  json_encode([
+                    'name'          =>  $form->name,
+                    'image'         =>  $form->model()->images,
+                    'active'        =>  $form->active,
+                    'type_id'       =>  $form->type_id,
+                    'sort'          =>  $form->sort,
+                    'href'          =>  $form->href
+                ],JSON_UNESCAPED_UNICODE)]);
+            }else{
+                Pluglog::create([
+                    'plug_id'       =>  $form->model()->id,
+                    'username'      =>  Admin::user()->username,
+                    'type'          =>  '修改',
+                    'before_back'   =>  json_encode([
+                    'name'          =>  $form->model()->name,
+                    'image'         =>  $form->model()->images,
+                    'active'        =>  $form->model()->active,
+                    'type_id'       =>  $form->model()->type_id,
+                    'sort'          =>  $form->model()->sort,
+                    'href'          =>  $form->model()->href
+                ],JSON_UNESCAPED_UNICODE),
+                    'put'           =>  json_encode([
+                    'name'          =>  $form->name,
+                    'image'         =>  $form->images,
+                    'active'        =>  $form->active,
+                    'type_id'       =>  $form->type_id,
+                    'sort'          =>  $form->sort,
+                    'href'          =>  $form->href
+                ],JSON_UNESCAPED_UNICODE)]);
             }
         });
 

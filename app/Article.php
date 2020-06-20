@@ -6,7 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Article extends Model
 {
-    //
+    
+    protected $table = 'articles';
+ 
+
+    // 黑名单
+    protected $guarded = [];
     /**
      * [article_types 反向关联分类模型]
      * @author Pudding
