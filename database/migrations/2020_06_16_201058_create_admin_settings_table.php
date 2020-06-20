@@ -19,7 +19,7 @@ class CreateAdminSettingsTable extends Migration
 
             $table->string('operate_number')->comment('所属操盘或者机构号');
 
-            $table->string('company')->nullable()->comment('所属操盘或者机构号');
+            $table->string('company')->nullable()->comment('公司名称');
 
             $table->string('phone')->nullable()->comment('联系电话');
 
@@ -29,12 +29,13 @@ class CreateAdminSettingsTable extends Migration
 
 
 
-
             $table->string('alipay_id')->nullable()->comment('支付宝支付应用ID');
 
             $table->string('alipay_sec')->nullable()->comment('支付宝支付密钥');
 
             $table->string('alipay_sign')->nullable()->comment('支付宝支付加密串');
+
+
 
 
             $table->string('wx_id')->nullable()->comment('微信支付应用ID');
