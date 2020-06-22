@@ -35,7 +35,7 @@ class ArticleController extends AdminController
         }
 
         //$grid->column('id', __('Id'));
-        //
+        
         $grid->column('title', __('标题'));
 
         $grid->column('active', __('状态'))->switch()->sortable();

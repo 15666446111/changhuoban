@@ -23,6 +23,7 @@ class PlugController extends AdminController
      */
     protected $title = '轮播列表';
 
+
     /**
      * Make a grid builder.
      *
