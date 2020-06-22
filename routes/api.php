@@ -86,7 +86,6 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/mine', 'V1\MineController@info');
 
 
-
     /**
      * @version [<APP 提现记录>] [<description>]
      * @return  [个人信息 获取提现记录]   [<description>]

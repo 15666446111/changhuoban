@@ -60,7 +60,7 @@ class PlugController extends AdminController
         
         $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s');
 
-        if(Admin::user()->operate != "All"){
+        if(Admin::user()->type == "2" or Admin::user()->operate == "All"){
                 
             $grid->disableCreateButton(false);
 
@@ -125,7 +125,7 @@ class PlugController extends AdminController
 
         $show->field('updated_at', __('修改时间'));
 
-        if(Admin::user()->operate != "All"){
+        if(Admin::user()->type == "2" or Admin::user()->operate == "All"){
 
             $show->panel()->tools(function ($tools) {
 
@@ -139,11 +139,11 @@ class PlugController extends AdminController
 
             $type->name('类型名称');
 
-            if(Admin::user()->operate != "All"){
+            if(Admin::user()->type == "2" or Admin::user()->operate == "All"){
                 
                 $type->panel()->tools(function ($tools) {
+                    $tools->disableList();
                     $tools->disableEdit(false);
-                    $tools->disableList(false);
                     $tools->disableDelete(false);
                 });
 
@@ -197,40 +197,6 @@ class PlugController extends AdminController
             
             if($form->isCreating()){
                 $form->operate = Admin::user()->operate;
-                Pluglog::create([
-                    'plug_id'       =>  $form->model()->id,
-                    'username'      =>  Admin::user()->username,
-                    'type'          =>  '添加',
-                    'before_back'   =>  '',
-                    'put'           =>  json_encode([
-                    'name'          =>  $form->name,
-                    'image'         =>  $form->model()->images,
-                    'active'        =>  $form->active,
-                    'type_id'       =>  $form->type_id,
-                    'sort'          =>  $form->sort,
-                    'href'          =>  $form->href
-                ],JSON_UNESCAPED_UNICODE)]);
-            }else{
-                Pluglog::create([
-                    'plug_id'       =>  $form->model()->id,
-                    'username'      =>  Admin::user()->username,
-                    'type'          =>  '修改',
-                    'before_back'   =>  json_encode([
-                    'name'          =>  $form->model()->name,
-                    'image'         =>  $form->model()->images,
-                    'active'        =>  $form->model()->active,
-                    'type_id'       =>  $form->model()->type_id,
-                    'sort'          =>  $form->model()->sort,
-                    'href'          =>  $form->model()->href
-                ],JSON_UNESCAPED_UNICODE),
-                    'put'           =>  json_encode([
-                    'name'          =>  $form->name,
-                    'image'         =>  $form->images,
-                    'active'        =>  $form->active,
-                    'type_id'       =>  $form->type_id,
-                    'sort'          =>  $form->sort,
-                    'href'          =>  $form->href
-                ],JSON_UNESCAPED_UNICODE)]);
             }
         });
 

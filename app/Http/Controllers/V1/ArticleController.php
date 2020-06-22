@@ -19,8 +19,8 @@ class ArticleController extends Controller
             // 获取文章类型为公告的数据
             $Article = \App\Article::where('active', '1')->where('verify',1)->where('operate', $request->user->operate)->where('type_id', '1')->orderBy('sort', 'desc')->get();
             
-            if(empty($Article) or !$Article) $Article = \App\Article::where('active', '1')->where('verify',1)->where('type_id', '1')->orderBy('sort', 'desc')->get();
-            dd($Article);
+            if(empty($Article) or !$Article) $Article = \App\Article::where('operate','All')->where('active', '1')->where('verify',1)->where('type_id', '1')->orderBy('sort', 'desc')->get();
+            
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $Article]]);
 
     	} catch (\Exception $e) {
