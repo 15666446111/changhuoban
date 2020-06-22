@@ -43,7 +43,6 @@ class PlugTypeController extends AdminController
                 
             });
             // 在这里添加字段过滤器
-            
 
         });
         return $grid;
