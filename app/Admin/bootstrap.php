@@ -41,11 +41,11 @@ Show::init(function (Show $show) {
 
 /** Grid view init */
 Grid::init(function (Grid $grid) {
-    $grid->disableCreateButton();
-    $grid->actions(function (Grid\Displayers\Actions $actions) {
-        $actions->disableEdit();
-        $actions->disableDelete();
-    });
+    //$grid->disableCreateButton();
+    //$grid->actions(function (Grid\Displayers\Actions $actions) {
+    //    $actions->disableEdit();
+    //    $actions->disableDelete();
+    //});
 });
 
 

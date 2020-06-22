@@ -34,4 +34,19 @@ class Plug extends Model
     		'href'
     	]);
     }
+
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-06-22
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [获取头像图片地址]
+     * @param     [type]      $value [description]
+     * @return    [type]             [description]
+     */
+    public function getImagesAttribute($value)
+    {
+        return "http://".$_SERVER["HTTP_HOST"]."/"."storage/".$value;
+    }
 }

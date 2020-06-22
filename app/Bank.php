@@ -4,13 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Articles_log extends Model
+class Bank extends Model
 {
     
-    protected $table = 'articles_log';
- 
-
     // 黑名单
     protected $guarded = [];
-
+    
 }

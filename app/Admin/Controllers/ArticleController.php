@@ -34,6 +34,8 @@ class ArticleController extends AdminController
             $grid->model()->where('operate', Admin::user()->operate);
         }
 
+        $grid->model()->latest();
+
         //$grid->column('id', __('Id'));
         
         $grid->column('title', __('标题'));
@@ -46,11 +48,9 @@ class ArticleController extends AdminController
 
         $grid->column('sort', __('排序'))->sortable()->label();
 
-        $grid->column('verify', __('审核'))->using([
-            '0' => '待审核', '1' => '正常', '-1' => '拒绝'
-        ])->label([
-            '0' =>  'warning', '1' => 'success', '-1' => 'default'
-        ]);
+        $grid->column('verify', __('审核'))
+                ->using([ '0' => '待审核', '1' => '正常', '-1' => '拒绝'])
+                ->dot([ 0 => 'danger', 1 => 'success' ], 'default');
 
         $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s');
 

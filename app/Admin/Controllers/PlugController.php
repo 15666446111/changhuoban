@@ -23,7 +23,6 @@ class PlugController extends AdminController
      */
     protected $title = '轮播列表';
 
-
     /**
      * Make a grid builder.
      *
@@ -36,6 +35,8 @@ class PlugController extends AdminController
         if(Admin::user()->operate != "All"){
             $grid->model()->where('operate', Admin::user()->operate);
         } 
+
+        $grid->model()->latest();
 
         //倒叙
         //$grid->column('id', __('索引'))->sortable();
@@ -52,11 +53,9 @@ class PlugController extends AdminController
         
         $grid->column('href', __('链接'))->link();
 
-        $grid->column('verify', __('审核'))->using([
-            '0' => '待审核', '1' => '正常', '-1' => '拒绝'
-        ])->label([
-            '0' =>  'warning', '1' => 'success', '-1' => 'default'
-        ]);
+        $grid->column('verify', __('审核'))
+                ->using([ '0' => '待审核', '1' => '正常', '-1' => '拒绝'])
+                ->dot([ 0 => 'danger', 1 => 'success' ], 'default');
         
         $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s');
 

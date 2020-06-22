@@ -27,17 +27,19 @@ class PlugTypeController extends AdminController
     {
         $grid = new Grid(new PlugType());
 
+        $grid->model()->latest();
+        
         $grid->column('id', __('索引'))->sortable();
+
         $grid->column('name', __('类型'));
+
         $grid->column('active', __('状态'))->sortable()->switch();
+
         $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s');
+
         $grid->column('updated_at', __('修改时间'))->date('Y-m-d H:i:s');
 
         $grid->disableCreateButton(false);
-
-        $grid->actions(function (Grid\Displayers\Actions $actions) {
-            $actions->disableDelete(false);
-        });
 
         $grid->filter(function($filter){
             // 去掉默认的id过滤器
@@ -46,9 +48,8 @@ class PlugTypeController extends AdminController
 
             $filter->column(1/4, function ($filter) {
                 $filter->like('name', '类型');
-                
             });
-            // 在这里添加字段过滤器
+
 
         });
         return $grid;
