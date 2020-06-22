@@ -18,10 +18,13 @@ class PlugController extends Controller
     public function index(Request $request)
     {
     	try{
+            if(!$request->type){
+                return response()->json(['error'=>['message' => '缺少必要参数']]);
+            }
             // 获取展示的轮播图
-            $Plug = \App\Plug::select('images','href')->where('operate', $request->user->operate)->where('type_id',1)->where('verify',1)->where('active',1)->orderBy('sort','desc')->get()->toArray();
+            $Plug = \App\Plug::where('operate', $request->user->operate)->where('type_id',$request->type)->ApiGet()->get();
             
-            if(empty($Plug) or !$Plug) $Plug = \App\Plug::select('images','href')->where('operate', 'All')->where('type_id',1)->where('verify',1)->where('active',1)->orderBy('sort','desc')->get();
+            if($Plug->isEmpty()) $Plug = \App\Plug::where('operate', 'All')->where('type_id',$request->type)->ApiGet()->get();
 
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $Plug]]);
 
