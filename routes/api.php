@@ -96,6 +96,11 @@ Route::prefix('V1')->group(function () {
 
 
 
+    /**
+     * 修改个人登录密码
+     */
+    Route::middleware('AuthToken')->post('/updateUser', 'V1\LoginController@editUser');
+
 
 });
 

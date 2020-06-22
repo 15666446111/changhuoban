@@ -59,24 +59,35 @@ class PlugController extends AdminController
         
         $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s');
 
-        $grid->disableCreateButton(false);
+        if(Admin::user()->operate != "All"){
+                
+            $grid->disableCreateButton(false);
 
-        $grid->actions(function (Grid\Displayers\Actions $actions) {
-            $actions->disableDelete(false);
-        });
+            $grid->actions(function (Grid\Displayers\Actions $actions) {
 
-        $grid->filter(function($filter){
-            // 去掉默认的id过滤器
-            $filter->disableIdFilter();
+                $actions->disableEdit(false);
+
+                $actions->disableDelete(false);
+
+            });
+
+            $grid->filter(function($filter){
+                // 去掉默认的id过滤器
+                $filter->disableIdFilter();
 
 
-            $filter->column(1/4, function ($filter) {
-                $filter->like('name', '标题');
+                $filter->column(1/4, function ($filter) {
+                    
+                    $filter->like('name', '标题');
+                    
+                });
+                // 在这里添加字段过滤器
                 
             });
-            // 在这里添加字段过滤器
             
-        });
+        }
+
+        
 
         return $grid;
     }
@@ -113,15 +124,30 @@ class PlugController extends AdminController
 
         $show->field('updated_at', __('修改时间'));
 
+        if(Admin::user()->operate != "All"){
+
+            $show->panel()->tools(function ($tools) {
+
+                $tools->disableDelete(false);
+                
+            });
+
+        }
+
         $show->plug_types('分类信息', function ($type) {
 
             $type->name('类型名称');
 
-            $type->panel()->tools(function ($tools) {
-                $tools->disableEdit();
-                $tools->disableList();
-                $tools->disableDelete();
-            });
+            if(Admin::user()->operate != "All"){
+                
+                $type->panel()->tools(function ($tools) {
+                    $tools->disableEdit(false);
+                    $tools->disableList(false);
+                    $tools->disableDelete(false);
+                });
+
+            }
+            
         });
 
         return $show;
