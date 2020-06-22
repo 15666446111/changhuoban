@@ -83,5 +83,5 @@ export default {
 </script>
 
 <style>
-@import url("../../../shouye/style/profit_data.css");
+@import url("../../../Home/style/profit_data.css");
 </style>
