@@ -24,7 +24,20 @@ class Article extends Model
     }
 
     /**
-     * [scopeApiGet 搜索过滤选项]
+     * @Author    Pudding
+     * @DateTime  2020-06-22
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [获取文章缩略图图片地址]
+     * @param     [type]      $value [description]
+     * @return    [type]             [description]
+     */
+    public function getImagesAttribute($value)
+    {
+        return "http://".$_SERVER["HTTP_HOST"]."/".$value;
+    } 
+    /**
+     * 搜索过滤选项
      */
     public function scopeApiGet($query)
     {
