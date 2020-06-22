@@ -17,6 +17,40 @@
  * Admin::js('/packages/prettydocs/js/main.js');
  *
  */
+use Encore\Admin\Form;
+use Encore\Admin\Grid;
+use Encore\Admin\Show;
+
+/** Form view init */
+Form::init(function (Form $form) {
+    $form->disableEditingCheck();
+    $form->disableCreatingCheck();
+    $form->disableViewCheck();
+    $form->tools(function (Form\Tools $tools) {
+        $tools->disableDelete();
+    });
+});
+
+/** Show view init */
+Show::init(function (Show $show) {
+    $show->disableEditingCheck();
+    $show->disableCreatingCheck();
+    $show->disableViewCheck();
+    $show->panel()->tools(function (Show\Tools $tools) {
+        $tools->disableDelete();
+    });
+});
+
+/** Grid view init */
+Grid::init(function (Grid $grid) {
+    $grid->disableCreateButton();
+    $grid->actions(function (Grid\Displayers\Actions $actions) {
+        $actions->disableEdit();
+        $actions->disableDelete();
+    });
+});
+
+
 Admin::css('/css/admin.css');
 //Encore\Admin\Form::forget(['map', 'editor']);
 // 覆盖视图
