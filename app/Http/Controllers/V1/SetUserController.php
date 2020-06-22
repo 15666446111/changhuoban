@@ -21,7 +21,7 @@ class SetUserController extends Controller
             //用户昵称
             $data['nickname'] = $request->user->nickname;
             //用户头像
-            $data['heading'] = env('APP_URL') . '/' .$request->user->avatar;
+            $data['heading'] = $request->user->avatar;
             //用户组id
             $data['user_group'] = $request->user->user_group;
             //用户级别
