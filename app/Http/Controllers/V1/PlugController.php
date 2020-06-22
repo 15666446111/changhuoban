@@ -27,9 +27,9 @@ class PlugController extends Controller
             if($Plug->isEmpty()) $Plug = \App\Plug::where('operate', 'All')->where('type_id',$request->type)->ApiGet()->get();
 
             foreach($Plug as $k=>$v){
-                $v->images = env('APP_URL') . '/storage/app/public/' . $v->images;
+                $v->images = env('APP_URL') . '/' . 'storage/' . $v->images;
             }
-            
+
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $Plug]]);
 
     	} catch (\Exception $e) {
