@@ -19,9 +19,9 @@ class PlugController extends Controller
     {
     	try{
             // 获取展示的轮播图
-            $Plug = \App\Plug::select('images','href')->where('operate', $request->user->operate)->where('verify',1)->where('active',1)->orderBy('sort','desc')->get();
+            $Plug = \App\Plug::select('images','href')->where('operate', $request->user->operate)->where('type_id',1)->where('verify',1)->where('active',1)->orderBy('sort','desc')->get()->toArray();
             
-            if(empty($Plug) or !$Plug) $Plug = \App\Plug::select('images','href')->where('operate', 'All')->where('verify',1)->where('active',1)->orderBy('sort','desc')->get();
+            if(empty($Plug) or !$Plug) $Plug = \App\Plug::select('images','href')->where('operate', 'All')->where('type_id',1)->where('verify',1)->where('active',1)->orderBy('sort','desc')->get();
 
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $Plug]]);
 
