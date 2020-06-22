@@ -14,26 +14,24 @@ class SetUserController extends Controller
     public function getUserInfo(Request $request)
     {
         try{
-
-            $userInfo = \App\User::where('id',$request->user->id)->first();
         
             $data = [];
             //用户id
-            $data['id'] = $userInfo->id;
+            $data['id'] = $request->user->id;
             //用户昵称
-            $data['nickname'] = $userInfo->nickname;
+            $data['nickname'] = $request->user->nickname;
             //用户头像
-            $data['heading'] = env('APP_URL') . '/' . 'storage/' .$userInfo->avatar;
+            $data['heading'] = env('APP_URL') . '/' .$request->user->avatar;
             //用户组id
-            $data['user_group'] = $userInfo->user_group;
+            $data['user_group'] = $request->user->user_group;
             //用户级别
-            $data['group'] = $userInfo->group->name;
+            $data['group'] = $request->user->group->name;
             //钱包总余额
-            $data['blance'] = $userInfo->wallets->cash_blance/100 + $userInfo->wallets->retrun_blance/100;
+            $data['blance'] = $request->user->wallets->cash_blance/100 + $request->user->wallets->retrun_blance/100;
             //分润余额
-            $data['cash_blance'] = $userInfo->wallets->cash_blance/100;
+            $data['cash_blance'] = $request->user->wallets->cash_blance/100;
             //返现余额
-            $data['return_blance'] = $userInfo->wallets->return_blance/100;
+            $data['return_blance'] = $request->user->wallets->return_blance/100;
 
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $data]]);
 
