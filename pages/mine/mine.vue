@@ -4,7 +4,7 @@
 		<view class="titlebars">
 			
 			<view class="titlebar">
-				<view class="rise">
+				<view class="rise"> 
 					<view class="rise-head">
 						<image class="head" :src="UserInfo.heading" mode="aspectFill" />
 						<view class="name">{{ UserInfo.nickname}}</view>
