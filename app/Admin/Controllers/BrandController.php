@@ -27,7 +27,9 @@ class BrandController extends AdminController
         $grid = new Grid(new Brand());
 
         $grid->column('brand_name', __('品牌名称'));
+
         $grid->column('active', __('状态'))->sortable()->switch();
+        
         $grid->column('created_at', __('创建时间'));
 
         return $grid;

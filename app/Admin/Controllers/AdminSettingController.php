@@ -27,6 +27,8 @@ class AdminSettingController extends AdminController
     {
         $grid = new Grid(new AdminSetting());
 
+        $grid->model()->latest();
+
         $grid->column('operate_number', __('机构/操盘号'));
 
         $grid->column('open', __('状态'))->using([ 0 =>'禁止', 1 =>'正常' ], '未知')->dot([ 0 => 'danger', 1 => 'success' ], 'default');
@@ -187,10 +189,6 @@ class AdminSettingController extends AdminController
 
             }
         });
-
-        
-
-        //dd($form);
 
         return $form;
     }
