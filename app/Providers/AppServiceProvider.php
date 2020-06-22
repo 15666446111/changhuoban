@@ -35,6 +35,23 @@ class AppServiceProvider extends ServiceProvider
          */
         User::observe(UserObserver::class);
 
+        // 轮播图监听
+        \App\Plug::observe(\App\Observers\PlugObserver::class);
+        // 轮播图类型监听
+        \App\PlugType::observe(\App\Observers\PlugTypeObserver::class);
+
+        // 分享素材监听
+        \App\Share::observe(\App\Observers\ShareObserver::class);
+        // 分享类型监听
+        \App\ShareType::observe(\App\Observers\ShareTypeObserver::class);
+
+        // 文章内容监听
+        \App\Article::observe(\App\Observers\ArticleObserver::class);
+        // 文章类型监听
+        \App\ArticleType::observe(\App\Observers\ArticleTypeObserver::class);
+
+
+
 
         /**
          * [$table Config Database Auto Load To Config]

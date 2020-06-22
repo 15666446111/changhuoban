@@ -27,6 +27,8 @@ class ShareTypeController extends AdminController
     {
         $grid = new Grid(new ShareType());
 
+        $grid->model()->latest();
+        
         $grid->column('id', __('索引'))->sortable();
 
         $grid->column('name', __('类型'));
