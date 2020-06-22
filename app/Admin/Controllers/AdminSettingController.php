@@ -6,6 +6,7 @@ use App\AdminSetting;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Illuminate\Support\MessageBag;
 use Encore\Admin\Controllers\AdminController;
 
 class AdminSettingController extends AdminController
@@ -28,7 +29,7 @@ class AdminSettingController extends AdminController
 
         $grid->column('operate_number', __('机构/操盘号'));
 
-        $grid->column('open', __('状态'))->using([ 0 => '禁止', 1 => '正常' ], '未知')->dot([ 0 => 'danger', 1 => 'success' ], 'default');
+        $grid->column('open', __('状态'))->using([ 0 =>'禁止', 1 =>'正常' ], '未知')->dot([ 0 => 'danger', 1 => 'success' ], 'default');
 
         $grid->column('company', __('公司'));
 
@@ -39,6 +40,8 @@ class AdminSettingController extends AdminController
         $grid->column('address', __('公司地址'));
 
         $grid->column('created_at', __('开通时间'));
+
+        $grid->disableCreateButton(false);
 
         return $grid;
     }
@@ -85,15 +88,17 @@ class AdminSettingController extends AdminController
         $form->tab('基础信息', function ($form) use ($no) {
 
             $form->text('operate_number', __('机构/操盘号'))->value($no)->readonly();
+
             $form->text('company', __('公司名称'))->required();
             $form->mobile('phone', __('联系电话'));
             $form->email('email', __('公司邮箱'));
             $form->text('address', __('公司地址'));
 
+            $form->mobile('account', __('登陆账号'))->required()->help('机构使用此账号登陆后台,操盘使用此账号登陆后台与app');
+            $form->password('password', __('登陆密码'))->required()->help('密码最少6位,数字与字母的组合');
+
             $form->radioButton('type', '操盘/机构')->options([ 1 => '操盘方', 2 => '机构方' ])->when(2,function (Form $form) { 
-
                 $form->listbox('sons', __('包含操盘'))->options([1 => 'foo', 2 => 'bar', 'val' => 'Option name']);
-
             })->default(1);
 
         })->tab('扩展设置', function ($form) {
@@ -114,11 +119,15 @@ class AdminSettingController extends AdminController
         })->tab('支付设置', function ($form) {
 
             $form->text('alipay_id', __('支付宝应用ID'));
+
             $form->text('alipay_sec', __('支付宝密钥'));
+
             $form->text('alipay_sign', __('支付宝签名串'));
 
             $form->text('wx_id', __('微信应用ID'));
+
             $form->text('wx_sec', __('微信密钥'));
+
             $form->text('wx_sign', __('微信签名串'));
 
         })->tab('短信设置', function ($form) {
@@ -134,8 +143,54 @@ class AdminSettingController extends AdminController
 
         });
 
+        $form->ignore(['account', 'password']);
+        
 
+        //保存前回调
+        $form->saving(function (Form $form) {
+            /** @version  如果是新增的信息， 需要根据类型的不同， 创建不同的账号 */
+            if($form->isCreating()){
 
+                $account = \request('account');
+
+                $password= \request('password');
+                
+                /**
+                   @version 查询账户是否存在或使用
+                 */
+                $adminUser = \App\AdminUser::where('username', $account)->get();
+
+                if(!$adminUser->isEmpty()){
+                    $error = new MessageBag([ 'title'   => '新开机构/操盘失败', 'message' => '该账号已经存在' ]);
+                    return back()->with(compact('error'));
+                }
+
+                // 根据选择的开户类型创建后台登陆账号
+                \App\AdminUser::create([
+                    'username'  =>  $account,
+                    'password'  =>  bcrypt($password),
+                    'name'      =>  $form->company,
+                    'operate'   =>  $form->operate_number,
+                    'type'      =>  $form->type == '1' ? 3 : 2,
+                ]); 
+
+                // 根据选择的类型 创建对应的前台账号。如果创建的是操盘方， 创建前台账号
+                if($form->type == '1'){
+                    \App\User::create([
+                        'nickname'  =>  $account,
+                        'account'   =>  $account,
+                        'password'  =>  "###" . md5(md5($password . 'v3ZF87bMUC5MK570QH')),
+                        'user_group'=>  1,
+                        'operate'   =>  $form->operate_number,
+                    ]);
+                }
+
+            }
+        });
+
+        
+
+        //dd($form);
 
         return $form;
     }
