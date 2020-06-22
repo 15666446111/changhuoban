@@ -56,7 +56,7 @@ class ArticleController extends AdminController
 
         //$grid->column('updated_at', __('Updated at'));
         //
-        if(Admin::user()->type == "2"){
+        if(Admin::user()->type == "2" or Admin::user()->operate == "All"){
                 
             $grid->disableCreateButton(false);
 
@@ -121,7 +121,7 @@ class ArticleController extends AdminController
             return $content;
         });
 
-        if(Admin::user()->type == "2" or Admin::user()->operate == "All" ){
+        if(Admin::user()->type == "2" or Admin::user()->operate == "All"){
 
             $show->panel()->tools(function ($tools) {
 
@@ -136,7 +136,7 @@ class ArticleController extends AdminController
             if(Admin::user()->type == "2" or Admin::user()->operate == "All"){
 
                 $type->panel()->tools(function ($tools) {
-                    $tools->disableList(false);
+                    $tools->disableList();
                     $tools->disableEdit(false);
                     $tools->disableDelete(false);
                 });

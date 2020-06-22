@@ -142,7 +142,7 @@ class PlugController extends AdminController
             if(Admin::user()->type == "2" or Admin::user()->operate == "All"){
                 
                 $type->panel()->tools(function ($tools) {
-                    $tools->disableList(false);
+                    $tools->disableList();
                     $tools->disableEdit(false);
                     $tools->disableDelete(false);
                 });
