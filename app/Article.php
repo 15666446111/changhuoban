@@ -36,4 +36,12 @@ class Article extends Model
     {
         return "http://".$_SERVER["HTTP_HOST"]."/".$value;
     } 
+    /**
+     * 搜索过滤选项
+     */
+    public function scopeApiGet($query)
+    {
+    	return $query->where('active', '1')->where('verify',1)->orderBy('sort', 'desc');
+    }
+
 }
