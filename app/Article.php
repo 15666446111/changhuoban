@@ -34,6 +34,14 @@ class Article extends Model
      */
     public function getImagesAttribute($value)
     {
-        return "http://".$_SERVER["HTTP_HOST"]."/".$value;
+        return "http://".$_SERVER["HTTP_HOST"]."/"."storage/".$value;
     } 
+    /**
+     * 搜索过滤选项
+     */
+    public function scopeApiGet($query)
+    {
+    	return $query->where('active', '1')->where('verify',1)->orderBy('sort', 'desc');
+    }
+
 }

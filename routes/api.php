@@ -103,7 +103,7 @@ Route::prefix('V1')->group(function () {
     /***
      * 文章详情页
      */
-    Route::middleware('AuthToken')->get('/article', 'V1\ArticleController@Article');
+    Route::middleware('AuthToken')->get('/article', 'V1\ArticleController@Article_detail');
 
     /**
      * 修改个人登录密码

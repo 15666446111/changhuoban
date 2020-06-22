@@ -16,11 +16,18 @@ class ArticleController extends Controller
     public function Notice(Request $request)
     {
     	try{
-            // 获取文章类型为公告的数据
-            $Article = \App\Article::where('active', '1')->where('verify',1)->where('operate', $request->user->operate)->where('type_id', '1')->orderBy('sort', 'desc')->get()->toArray();
-            
-            if(empty($Article) or !$Article) $Article = \App\Article::where('operate','All')->where('active', '1')->where('verify',1)->where('type_id', '1')->orderBy('sort', 'desc')->get();
-            
+            $type_id = $request->type_id;
+            if($type_id == 1){
+                // 获取文章类型为公告的数据
+                $Article = \App\Article::where('operate', $request->user->operate)->where('type_id', $type_id)->ApiGet()->first(['id','title','images','created_at','updated_at']);
+                
+                if(empty($Article) or !$Article) $Article = \App\Article::where('operate','All')->where('type_id', $type_id)->ApiGet()->first(['id','title','images','created_at','updated_at']);
+            }else{
+                $Article = \App\Article::where('operate', $request->user->operate)->where('type_id', $type_id)->ApiGet()->get(['id','title','images','created_at','updated_at']);
+                
+                if($Article->isEmpty()) $Article = \App\Article::where('operate','All')->where('type_id', $type_id)->ApiGet()->get(['id','title','images','created_at','updated_at']);
+            }
+
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $Article]]);
 
     	} catch (\Exception $e) {
@@ -33,7 +40,7 @@ class ArticleController extends Controller
     /**
      * 获取文章详情接口
      */
-    public function Article(Request $request)
+    public function Article_detail(Request $request)
     {
         try{
             
