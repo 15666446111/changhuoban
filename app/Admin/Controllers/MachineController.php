@@ -42,12 +42,34 @@ class MachineController extends AdminController
 
         $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s');
 
-        $grid->tools(function ($tools) {
+        if(Admin::user()->operate != "All"){
 
-            $tools->append(new ImportMachines());
+            $grid->filter(function ($filter) {
+                // 去掉默认的id过滤器
+                $filter->disableIdFilter();
+    
+                $filter->column(1/3, function ($filter) {
+                    $filter->like('sn', '终端编号');
+                });
+    
+                $filter->column(1/4, function ($filter) {
+                    $filter->equal('open_state', '状态')->select(['0' => '未开通', '1' => '已开通']);
+                });
+    
+                $filter->column(1/3, function ($filter) {
+                    $filter->like('users.nickname', '所属代理');
+                });
+    
+            });
+    
+            $grid->tools(function ($tools) {
+    
+                $tools->append(new ImportMachines());
+    
+                $tools->append(new MachineHeadTail());
+            });
 
-            $tools->append(new MachineHeadTail());
-        });
+        }
 
         return $grid;
     }
