@@ -34,7 +34,7 @@ class UserController extends AdminController
             $grid->model()->where('operate', Admin::user()->operate);
         }
 
-        $grid->column('avatar', __('头像'))->image('', 45, 45);
+        $grid->column('avatar', __('头像'))->image('', 30, 30);
 
         $grid->column('nickname', __('昵称'))->copyable();
 
@@ -47,11 +47,11 @@ class UserController extends AdminController
         $grid->column('active', __('状态'))->switch();
 
         $grid->column('wallets.cash_blance', __('分润余额'))->display(function( $cash){
-            return number_format($cash / 100, 2, '.', ',');
+            return number_format( $cash , 2, '.', ',');
         })->label();
 
         $grid->column('wallets.return_blance', __('返现余额'))->display(function($cash){
-            return number_format($cash / 100, 2, '.', ',');
+            return number_format($cash , 2, '.', ',');
         })->label('info');
 
         $grid->column('last_ip', __('最后登录地址'));
