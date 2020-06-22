@@ -24,14 +24,6 @@ class Article extends Model
     }
 
     /**
-<<<<<<< HEAD
-     * [scopeApiGet 搜索过滤选项]
-     */
-    public function scopeApiGet($query)
-    {
-    	return $query->where('active', '1')->where('verify',1)->orderBy('sort', 'desc');
-    }
-=======
      * @Author    Pudding
      * @DateTime  2020-06-22
      * @copyright [copyright]
@@ -44,5 +36,4 @@ class Article extends Model
     {
         return "http://".$_SERVER["HTTP_HOST"]."/".$value;
     } 
->>>>>>> a459d0e58370c8a4b7180044c87262c0677a214e
 }
