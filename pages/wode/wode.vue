@@ -6,7 +6,7 @@
 			<view class="titlebar">
 				<view class="rise">
 					<view class="rise-head">
-						<image class="head" :src="UserInfo.headimg" mode="aspectFill" />
+						<image class="head" :src="UserInfo.heading" mode="aspectFill" />
 						<view class="name">{{ UserInfo.nickname}}</view>
 					</view>
 					<view class="ID">{{ UserInfo.username }}</view>
@@ -162,7 +162,7 @@ export default {
 		// 获取个人信息
 	  	getUserInfo(){
 	    	net({
-	        	url:"/V1/mine",
+	        	url:"/V1/userInfo",
 	            method:'get',
 	            success: (res) => {
 					uni.hideLoading();
