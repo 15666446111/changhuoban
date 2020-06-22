@@ -33,6 +33,12 @@ class PlugTypeController extends AdminController
         $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s');
         $grid->column('updated_at', __('修改时间'))->date('Y-m-d H:i:s');
 
+        $grid->disableCreateButton(false);
+
+        $grid->actions(function (Grid\Displayers\Actions $actions) {
+            $actions->disableDelete(false);
+        });
+
         $grid->filter(function($filter){
             // 去掉默认的id过滤器
             $filter->disableIdFilter();
