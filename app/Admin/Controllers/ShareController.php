@@ -32,7 +32,8 @@ class ShareController extends AdminController
         if(Admin::user()->operate != "All"){
             $grid->model()->where('operate', Admin::user()->operate);
         }
-
+        
+        $grid->model()->latest();
         //$grid->column('id', __('索引'))->sortable();
 
         $grid->column('images', __('图片'))->image('', 100, 30);
@@ -43,7 +44,7 @@ class ShareController extends AdminController
 
         $grid->column('share_types.name', __('类型'));
 
-        $grid->column('sort', __('排序'))->sortable()->label('default');
+        $grid->column('sort', __('排序'))->sortable()->label('danger');
 
         $grid->column('code_size', __('二维码大小'))->label('success');
 
@@ -51,11 +52,8 @@ class ShareController extends AdminController
 
         $grid->column('code_y', __('Y轴位置'))->label('info');
 
-        $grid->column('verify', __('审核'))->using([
-            '0' => '待审核', '1' => '正常', '-1' => '拒绝'
-        ])->label([
-            '0' =>  'warning', '1' => 'success', '-1' => 'default'
-        ]);
+        $grid->column('verify', __('审核'))->using([ '0' => '待审核', '1' => '正常', '-1' => '拒绝'])
+                ->dot([ 0 => 'danger', 1 => 'success' ], 'default');
 
         $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s');
 
