@@ -32,4 +32,15 @@ class Machine extends Model
     {
         return $this->belongsTo('\App\User', 'user_id', 'id');
     }
+
+    /**
+     * [busers 关联终端品牌模型]
+     * @author Pudding
+     * @DateTime 2020-04-10T15:35:13+0800
+     * @return   [type]                   [description]
+     */
+    public function brands()
+    {
+        return $this->belongsTo('\App\Brand', 'brand_id', 'id');
+    }
 }
