@@ -86,7 +86,6 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/mine', 'V1\MineController@info');
 
 
-
     /**
      * @version [<APP 提现记录>] [<description>]
      * @return  [个人信息 获取提现记录]   [<description>]
@@ -94,7 +93,22 @@ Route::prefix('V1')->group(function () {
      */
     Route::middleware('AuthToken')->get('/draw', 'V1\MineController@draw_log');
 
+     /**
+     * @version [<获取系统公告>] [<description>]
+     * @return  [<返回系统公告列表>]
+     * @version [<首页轮播图下方的系统公告>] 
+     */
+    Route::middleware('AuthToken')->get('/notice', 'V1\ArticleController@Notice');
 
+    /***
+     * 文章详情页
+     */
+    Route::middleware('AuthToken')->get('/article', 'V1\ArticleController@Article');
+
+    /**
+     * 修改个人登录密码
+     */
+    Route::middleware('AuthToken')->post('/updateUser', 'V1\LoginController@editUser');
 
 
 });

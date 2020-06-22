@@ -23,6 +23,7 @@ class PlugController extends AdminController
      */
     protected $title = '轮播列表';
 
+
     /**
      * Make a grid builder.
      *
@@ -59,24 +60,35 @@ class PlugController extends AdminController
         
         $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s');
 
-        $grid->disableCreateButton(false);
+        if(Admin::user()->type == "2" or Admin::user()->operate == "All"){
+                
+            $grid->disableCreateButton(false);
 
-        $grid->actions(function (Grid\Displayers\Actions $actions) {
-            $actions->disableDelete(false);
-        });
+            $grid->actions(function (Grid\Displayers\Actions $actions) {
 
-        $grid->filter(function($filter){
-            // 去掉默认的id过滤器
-            $filter->disableIdFilter();
+                $actions->disableEdit(false);
+
+                $actions->disableDelete(false);
+
+            });
+
+            $grid->filter(function($filter){
+                // 去掉默认的id过滤器
+                $filter->disableIdFilter();
 
 
-            $filter->column(1/4, function ($filter) {
-                $filter->like('name', '标题');
+                $filter->column(1/4, function ($filter) {
+                    
+                    $filter->like('name', '标题');
+                    
+                });
+                // 在这里添加字段过滤器
                 
             });
-            // 在这里添加字段过滤器
             
-        });
+        }
+
+        
 
         return $grid;
     }
@@ -113,15 +125,30 @@ class PlugController extends AdminController
 
         $show->field('updated_at', __('修改时间'));
 
+        if(Admin::user()->type == "2" or Admin::user()->operate == "All"){
+
+            $show->panel()->tools(function ($tools) {
+
+                $tools->disableDelete(false);
+                
+            });
+
+        }
+
         $show->plug_types('分类信息', function ($type) {
 
             $type->name('类型名称');
 
-            $type->panel()->tools(function ($tools) {
-                $tools->disableEdit();
-                $tools->disableList();
-                $tools->disableDelete();
-            });
+            if(Admin::user()->type == "2" or Admin::user()->operate == "All"){
+                
+                $type->panel()->tools(function ($tools) {
+                    $tools->disableList();
+                    $tools->disableEdit(false);
+                    $tools->disableDelete(false);
+                });
+
+            }
+            
         });
 
         return $show;
@@ -170,40 +197,6 @@ class PlugController extends AdminController
             
             if($form->isCreating()){
                 $form->operate = Admin::user()->operate;
-                Pluglog::create([
-                    'plug_id'       =>  $form->model()->id,
-                    'username'      =>  Admin::user()->username,
-                    'type'          =>  '添加',
-                    'before_back'   =>  '',
-                    'put'           =>  json_encode([
-                    'name'          =>  $form->name,
-                    'image'         =>  $form->model()->images,
-                    'active'        =>  $form->active,
-                    'type_id'       =>  $form->type_id,
-                    'sort'          =>  $form->sort,
-                    'href'          =>  $form->href
-                ],JSON_UNESCAPED_UNICODE)]);
-            }else{
-                Pluglog::create([
-                    'plug_id'       =>  $form->model()->id,
-                    'username'      =>  Admin::user()->username,
-                    'type'          =>  '修改',
-                    'before_back'   =>  json_encode([
-                    'name'          =>  $form->model()->name,
-                    'image'         =>  $form->model()->images,
-                    'active'        =>  $form->model()->active,
-                    'type_id'       =>  $form->model()->type_id,
-                    'sort'          =>  $form->model()->sort,
-                    'href'          =>  $form->model()->href
-                ],JSON_UNESCAPED_UNICODE),
-                    'put'           =>  json_encode([
-                    'name'          =>  $form->name,
-                    'image'         =>  $form->images,
-                    'active'        =>  $form->active,
-                    'type_id'       =>  $form->type_id,
-                    'sort'          =>  $form->sort,
-                    'href'          =>  $form->href
-                ],JSON_UNESCAPED_UNICODE)]);
             }
         });
 

@@ -44,4 +44,33 @@ class LoginController extends Controller
 
         }
     }
+
+    /**
+     * 修改个人登录密码
+     */
+    public function editUser()
+    {
+        try{
+
+            $User = \App\Buser::where('id', $request->user->id)->first();
+            
+            if($User->password !=  md5($request->password)) 
+                return response()->json(['error'=>['message' => '账号密码错误']]);
+
+            $User->password = \md5($request->newPassword);
+
+            $data = $User->save();
+
+            if($data){
+
+                return response()->json(['success'=>['message' => '修改成功!', []]]); 
+
+            }
+
+        } catch (\Exception $e){
+
+            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
+
+        }
+    }
 }

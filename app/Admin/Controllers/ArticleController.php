@@ -35,7 +35,7 @@ class ArticleController extends AdminController
         }
 
         //$grid->column('id', __('Id'));
-        //
+        
         $grid->column('title', __('标题'));
 
         $grid->column('active', __('状态'))->switch()->sortable();
@@ -56,16 +56,33 @@ class ArticleController extends AdminController
 
         //$grid->column('updated_at', __('Updated at'));
         //
-        $grid->filter(function($filter){
-            // 去掉默认的id过滤器
-            $filter->disableIdFilter();
+        if(Admin::user()->type == "2" or Admin::user()->operate == "All"){
+                
+            $grid->disableCreateButton(false);
 
-            $filter->column(1/4, function ($filter) {
-                $filter->like('name', '标题');
+            $grid->actions(function (Grid\Displayers\Actions $actions) {
+
+                $actions->disableEdit(false);
+
+                $actions->disableDelete(false);
+
             });
-            // 在这里添加字段过滤器
+
+            $grid->filter(function($filter){
+                // 去掉默认的id过滤器
+                $filter->disableIdFilter();
+
+
+                $filter->column(1/4, function ($filter) {
+                    
+                    $filter->like('name', '标题');
+                    
+                });
+                // 在这里添加字段过滤器
+                
+            });
             
-        });
+        }
 
         return $grid;
     }
@@ -104,13 +121,27 @@ class ArticleController extends AdminController
             return $content;
         });
 
+        if(Admin::user()->type == "2" or Admin::user()->operate == "All"){
+
+            $show->panel()->tools(function ($tools) {
+
+                $tools->disableDelete(false);
+                
+            });
+
+        }
+
         $show->article_types('分类信息', function ($type) {
             $type->name('类型名称');
-            $type->panel()->tools(function ($tools) {
-                $tools->disableEdit();
-                $tools->disableList();
-                $tools->disableDelete();
-            });
+            if(Admin::user()->type == "2" or Admin::user()->operate == "All"){
+
+                $type->panel()->tools(function ($tools) {
+                    $tools->disableList();
+                    $tools->disableEdit(false);
+                    $tools->disableDelete(false);
+                });
+
+            }
         });
 
         return $show;
@@ -160,39 +191,6 @@ class ArticleController extends AdminController
             // dd($form->images);
             if($form->isCreating()){
                 $form->operate = Admin::user()->operate;
-                Articles_log::create([
-                    'articles_id'   =>  Article::orderBy('id','desc')->limit(1)->first()->id+1,
-                    'username'      =>  Admin::user()->username,
-                    'type'          =>  '添加',
-                    'put'           =>  json_encode([
-                    'title'         =>  $form->title,
-                    'images'        =>  $form->model()->images,
-                    'active'        =>  $form->active,
-                    'type_id'       =>  $form->type_id,
-                    'verify'        =>  $form->verify,
-                    'content'       =>  $form->content
-                ],JSON_UNESCAPED_UNICODE)]);
-            }else{
-                Articles_log::create([
-                    'articles_id'   =>  $form->model()->id,
-                    'username'      =>  Admin::user()->username,
-                    'type'          =>  '修改',
-                    'before_back'   =>  json_encode([
-                    'title'         =>  $form->model()->title,
-                    'images'        =>  $form->model()->images,
-                    'active'        =>  $form->model()->active,
-                    'type_id'       =>  $form->model()->type_id,
-                    'verify'        =>  $form->model()->verify,
-                    'content'       =>  $form->model()->content
-                ],JSON_UNESCAPED_UNICODE),
-                    'put'           =>  json_encode([
-                    'title'         =>  $form->title,
-                    'images'        =>  $form->images->getClientOriginalName(),
-                    'active'        =>  $form->active,
-                    'type_id'       =>  $form->type_id,
-                    'verify'        =>  $form->verify,
-                    'content'       =>  $form->content
-                ],JSON_UNESCAPED_UNICODE)]);
             }
             
         });
