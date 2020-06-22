@@ -47,6 +47,6 @@ class Plug extends Model
      */
     public function getImagesAttribute($value)
     {
-        return "http://".$_SERVER["HTTP_HOST"]."/".$value;
+        return "http://".$_SERVER["HTTP_HOST"]."/"."storage/".$value;
     }
 }
