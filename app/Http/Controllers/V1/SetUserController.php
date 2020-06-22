@@ -58,7 +58,7 @@ class SetUserController extends Controller
             
             \App\Bank::create([
                 'user_id'=>$request->user->id,
-                'name'=>$request->name,
+                'user_name'=>$request->name,
                 'bank_name'=>$request->bank_name,
                 'bank'=>$request->bank,
                 'number'=>$request->number,
@@ -156,18 +156,24 @@ class SetUserController extends Controller
     {
         try{ 
 
-            $query = \App\Bank::where('user_id',$request->user->id)->where('id',$request->id);
+            $query = \App\Bank::where('user_id',$request->user->id)->where('id',$request->id)->first();
+            
+            $query->user_name = $request->name;
+            $query->bank_name = $request->bank_name;
+            $query->bank = $request->bank;
+            $query->number = $request->number;
 
-            $data = ['name'=>$request->name,'bank_name'=>$request->bank_name,'bank'=>$request->bank,'number'=>$request->number];
             if(empty($request->is_default) || $request->is_default == 0){
 
-                $query->update($data,['is_default'=>0]);
+                $query->is_default = 0;
+                $query->save();
 
             }else{
 
                 \App\Bank::where('user_id',$request->user->id)->update(['is_default'=>0]);
 
-                $query->update($data,['is_default'=>1]);
+                $query->is_default = 1;
+                $query->save();
 
             }
 
@@ -176,7 +182,7 @@ class SetUserController extends Controller
 
     	} catch (\Exception $e) {
             
-            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
+            return response()->json(['error'=>['message' => $e->getMessage()]]);
 
         }
     }
