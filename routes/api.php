@@ -101,10 +101,19 @@ Route::prefix('V1')->group(function () {
      */
     Route::middleware('AuthToken')->get('/notice', 'V1\ArticleController@Notice');
 
+<<<<<<< HEAD
     /***
      * 文章详情页
      */
     Route::middleware('AuthToken')->get('/article', 'V1\ArticleController@Article');
+=======
+
+    /**
+     * 修改个人登录密码
+     */
+    Route::middleware('AuthToken')->post('/updateUser', 'V1\LoginController@editUser');
+
+>>>>>>> 1192c0f6bad30eaaab5c8e87ab9b05c4d51140d2
 
 });
 
