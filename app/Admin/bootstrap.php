@@ -33,12 +33,9 @@ Form::init(function (Form $form) {
 
 /** Show view init */
 Show::init(function (Show $show) {
-    $show->disableEditingCheck();
-    $show->disableCreatingCheck();
-    $show->disableViewCheck();
     $show->panel()->tools(function (Show\Tools $tools) {
         $tools->disableDelete();
-        $tools->disableEdit();
+        // $tools->disableEdit();
     });
 });
 

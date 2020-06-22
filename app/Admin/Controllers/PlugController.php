@@ -129,8 +129,6 @@ class PlugController extends AdminController
             $show->panel()->tools(function ($tools) {
 
                 $tools->disableDelete(false);
-    
-                $tools->disableEdit(false);
                 
             });
 
