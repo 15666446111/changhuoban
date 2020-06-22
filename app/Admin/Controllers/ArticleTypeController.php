@@ -27,6 +27,8 @@ class ArticleTypeController extends AdminController
     {
         $grid = new Grid(new ArticleType());
 
+        $grid->model()->latest();
+
         $grid->column('id', __('索引'))->sortable();
 
         $grid->column('name', __('类型'));

@@ -22,4 +22,12 @@ class Article extends Model
     {
     	return $this->belongsTo('App\ArticleType', 'type_id', 'id');
     }
+
+    /**
+     * [scopeApiGet 搜索过滤选项]
+     */
+    public function scopeApiGet($query)
+    {
+    	return $query->where('active', '1')->where('verify',1)->orderBy('sort', 'desc');
+    }
 }
