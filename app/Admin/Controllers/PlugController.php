@@ -59,12 +59,16 @@ class PlugController extends AdminController
         
         $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s');
 
-        if(Admin::user()->operate = "All"){
+        if(Admin::user()->operate != "All"){
                 
             $grid->disableCreateButton(false);
 
             $grid->actions(function (Grid\Displayers\Actions $actions) {
+
+                $actions->disableEdit(false);
+
                 $actions->disableDelete(false);
+
             });
 
             $grid->filter(function($filter){
@@ -120,16 +124,28 @@ class PlugController extends AdminController
 
         $show->field('updated_at', __('修改时间'));
 
+        if(Admin::user()->operate != "All"){
+
+            $show->panel()->tools(function ($tools) {
+
+                $tools->disableDelete(false);
+    
+                $tools->disableEdit(false);
+                
+            });
+
+        }
+
         $show->plug_types('分类信息', function ($type) {
 
             $type->name('类型名称');
 
-            if(Admin::user()->operate = "All"){
+            if(Admin::user()->operate != "All"){
                 
                 $type->panel()->tools(function ($tools) {
-                    $tools->disableEdit();
-                    $tools->disableList();
-                    $tools->disableDelete();
+                    $tools->disableEdit(false);
+                    $tools->disableList(false);
+                    $tools->disableDelete(false);
                 });
 
             }

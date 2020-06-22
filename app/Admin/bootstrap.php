@@ -38,6 +38,7 @@ Show::init(function (Show $show) {
     $show->disableViewCheck();
     $show->panel()->tools(function (Show\Tools $tools) {
         $tools->disableDelete();
+        $tools->disableEdit();
     });
 });
 
