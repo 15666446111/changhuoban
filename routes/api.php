@@ -110,6 +110,46 @@ Route::prefix('V1')->group(function () {
      */
     Route::middleware('AuthToken')->post('/updateUser', 'V1\LoginController@editUser');
 
+    /**
+     * 获取用户信息
+     */
+    Route::middleware('AuthToken')->get('/userInfo', 'V1\SetUserController@getUserInfo');
+
+    /**
+     * 添加银行卡结算信息接口
+     */
+    Route::middleware('AuthToken')->post('/createBank', 'V1\SetUserController@insertBank');
+    
+
+    /**
+     * 查询银行卡结算信息接口
+     */
+    Route::middleware('AuthToken')->get('/getBankInfo', 'V1\SetUserController@selectBank');
+
+
+    /**
+     * 查询默认银行卡信息接口
+     */
+    Route::middleware('AuthToken')->get('/getBankDefault', 'V1\SetUserController@bankDefault');
+
+
+    /**
+     * 查询单个银行卡信息接口
+     */
+    Route::middleware('AuthToken')->get('/getBankFirst', 'V1\SetUserController@bankFirst');
+
+    
+    /**
+     * 删除银行卡结算信息接口
+     */
+    Route::middleware('AuthToken')->get('/deBank', 'V1\SetUserController@unsetBank');
+
+
+    /**
+     * 修改银行卡结算信息接口
+     */
+    Route::middleware('AuthToken')->get('/upBank', 'V1\SetUserController@updateBank');
+
 
 });
 
