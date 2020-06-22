@@ -17,7 +17,7 @@ class ArticleController extends Controller
     {
     	try{
             // 获取文章类型为公告的数据
-            $Article = \App\Article::where('active', '1')->where('verify',1)->where('operate', $request->user->operate)->where('type_id', '1')->orderBy('sort', 'desc')->get();
+            $Article = \App\Article::where('active', '1')->where('verify',1)->where('operate', $request->user->operate)->where('type_id', '1')->orderBy('sort', 'desc')->get()->toArray();
             
             if(empty($Article) or !$Article) $Article = \App\Article::where('operate','All')->where('active', '1')->where('verify',1)->where('type_id', '1')->orderBy('sort', 'desc')->get();
             
