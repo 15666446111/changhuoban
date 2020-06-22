@@ -79,13 +79,13 @@ export default {
 			
 			indexnavs: [
 				{ src: '/static/1.png', text: 'EPOS', url: '' },
-				{ src: '/static/2.png', text: '商户注册', url: '/pages/shouye/shanghuzhuce/shanghuzhuce' },
-				{ src: '/static/3.png', text: '商户登记', url: '/pages/shouye/shanghudengji/shanghudengji' },
-				{ src: '/static/13.png', text: '商户管理', url: '/pages/shouye/shanghuguanli/shanghuguanli' },
-				{ src: '/static/5.png', text: '商城购买', url: '/pages/shouye/shangcheng/shangcheng' },
-				{ src: '/static/4.png', text: '团队拓展', url: '/pages/shouye/tuanduituozhan/tuanduituozhan' },
-				{ src: '/static/44.png', text: '伙伴管理', url: '/pages/shouye/huobanguanli/huobanguanli' },
-				{ src: '/static/8.png', text: '在线客服', url: '/pages/shouye/zaixiankefu/zaixiankefu' }
+				{ src: '/static/2.png', text: '商户注册', url: '/pages/Home/shanghuzhuce/shanghuzhuce' },
+				{ src: '/static/3.png', text: '商户登记', url: '/pages/Home/shanghudengji/shanghudengji' },
+				{ src: '/static/13.png', text: '商户管理', url: '/pages/Home/shanghuguanli/shanghuguanli' },
+				{ src: '/static/5.png', text: '商城购买', url: '/pages/Home/shangcheng/shangcheng' },
+				{ src: '/static/4.png', text: '团队拓展', url: '/pages/Home/tuanduituozhan/tuanduituozhan' },
+				{ src: '/static/44.png', text: '伙伴管理', url: '/pages/Home/huobanguanli/huobanguanli' },
+				{ src: '/static/8.png', text: '在线客服', url: '/pages/Home/zaixiankefu/zaixiankefu' }
 			]
 		};
 	},

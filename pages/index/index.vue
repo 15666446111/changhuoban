@@ -98,7 +98,7 @@ export default {
 			uni.showToast({ title: '登录中', icon: 'loading', mask: true, duration: 10000 });
 			
 			uni.request({
-				url: 'http://zy.jiufukameng.com/api/V1/login',
+				url: 'http://3.changhuoban.com/api/V1/login',
 				method: 'POST',
 				data: {
 					account: this.account,
@@ -109,7 +109,7 @@ export default {
 					try {
 						if (res.data.success && res.data.success.token) {
 							uni.setStorageSync('token', res.data.success.token);
-							uni.switchTab({ url: '/pages/shouye/shouye' });
+							uni.switchTab({ url: '/pages/Home/shouye' });
 							uni.showToast({ title: '登录成功', icon: 'none' });
 						} else {
 							uni.showToast({ title: res.data.error.message, icon: 'none' });
