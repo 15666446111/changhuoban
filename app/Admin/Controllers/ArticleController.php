@@ -74,9 +74,18 @@ class ArticleController extends AdminController
             $filter->disableIdFilter();
 
 
+<<<<<<< HEAD
+                $filter->column(1/4, function ($filter) {
+                    
+                    $filter->like('title', '标题');
+                    
+                });
+                // 在这里添加字段过滤器
+=======
             $filter->column(1/4, function ($filter) {
                 
                 $filter->like('title', '标题');
+>>>>>>> 6e9996fddf293fdbe2e2f67fa0eca42840386035
                 
             });
             // 在这里添加字段过滤器
