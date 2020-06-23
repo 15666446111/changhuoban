@@ -64,5 +64,8 @@ Route::group([
 
     //订单列表管理
     $router->resource('orders', OrderController::class);
-    
+
+    //品牌管理
+    $router->resource('brands', BrandController::class);
+
 });
