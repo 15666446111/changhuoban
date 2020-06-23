@@ -157,6 +157,12 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/cashs', 'V1\CashsController@cashsIndex');
 
 
+    /**
+     * 机具管理页面接口
+     */
+    Route::middleware('AuthToken')->get('/getBindAll', 'V1\MerchantController@getBind');
+
+
 });
 
 Route::fallback(function(){ 
