@@ -49,20 +49,20 @@ class ProductController extends AdminController
 
         $grid->column('created_at', __('创建时间'));
 
-        $grid->disableCreateButton(false);
+        if(Admin::user()->type == "2" or Admin::user()->operate == "All"){
+                
+            $grid->disableCreateButton(false);
 
-        $grid->actions(function (Grid\Displayers\Actions $actions) {
-            $actions->disableDelete(false);
-        });
-    
-        $grid->actions(function ($actions) {
-            // 去掉删除
-            $actions->disableDelete();
-        });
+            $grid->actions(function (Grid\Displayers\Actions $actions) {
 
-        $grid->batchActions(function ($batch) {
-            $batch->disableDelete();
-        });
+                $actions->disableEdit(false);
+
+                $actions->disableDelete(false);
+
+            });
+            
+        }
+
 
         return $grid;
     }
@@ -90,6 +90,16 @@ class ProductController extends AdminController
         $show->field('content', __('内容'));
         $show->field('created_at', __('创建时间'));
         $show->field('updated_at', __('修改时间'));
+
+        if(Admin::user()->type == "2" or Admin::user()->operate == "All"){
+
+            $show->panel()->tools(function ($tools) {
+
+                $tools->disableDelete(false);
+                
+            });
+
+        }
 
         return $show;
     }

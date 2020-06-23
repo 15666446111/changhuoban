@@ -3,10 +3,12 @@
 namespace App\Admin\Controllers;
 
 use App\Brand;
+use App\Product;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Facades\Admin;
 
 class BrandController extends AdminController
 {
@@ -15,7 +17,7 @@ class BrandController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Brand';
+    protected $title = '品牌管理';
 
     /**
      * Make a grid builder.
@@ -31,6 +33,34 @@ class BrandController extends AdminController
         $grid->column('active', __('状态'))->sortable()->switch();
         
         $grid->column('created_at', __('创建时间'));
+
+        if(Admin::user()->type == "2" or Admin::user()->operate == "All"){
+                
+            $grid->disableCreateButton(false);
+
+            $grid->actions(function (Grid\Displayers\Actions $actions) {
+
+                $actions->disableEdit(false);
+
+                $actions->disableDelete(false);
+
+            });
+            
+        }
+
+        $grid->filter(function($filter){
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+
+
+            $filter->column(1/4, function ($filter) {
+                
+                $filter->like('brand_name', '标题');
+                
+            });
+            // 在这里添加字段过滤器
+            
+        });
 
         return $grid;
     }
@@ -50,66 +80,68 @@ class BrandController extends AdminController
         $show->field('created_at', __('创建时间'));
         $show->field('updated_at', __('修改时间'));
 
+        if(Admin::user()->type == "2" or Admin::user()->operate == "All"){
 
-        // $show->merchants('机具列表', function ($merchants) {
+            $show->panel()->tools(function ($tools) {
 
-        //     $merchants->setResource('/admin/merchants');
+                $tools->disableDelete(false);
+                
+            });
+
+        }
+
+        $show->products('产品列表', function ($products) {
             
-        //     $merchants->model()->latest();
+            $products->model()->latest();
+
+            $products->column('id', __('索引'))->sortable();
+
+            $products->column('title', __('标题'));
+
+            $products->column('price', __('价格'))->display(function($money){
+                return number_format($money / 100, 2, '.', ',');
+            })->label();
+
+            $products->column('image', __('图片'))->image('', 60);
+
+            $products->column('active', __('状态'))->switch();
             
-        //     $merchants->id('索引')->sortable();
+            $products->column('brands.brand_name', __('品牌'));
 
-        //     $merchants->column('busers.nickname', __('归属会员'));
+            $products->column('state', __('审核'))->using([
+                '0' => '待审核', '1' => '正常', '-1' => '拒绝'
+            ])->label([
+                '0' =>  'warning', '1' => 'success', '-1' => 'default'
+            ]);
 
-        //     $merchants->column('merchant_terminal', __('终端编号'));
+            $products->column('created_at', __('创建时间'));
 
-        //     $merchants->column('merchant_sn', __('终端SN'));
+            $products->filter(function ($filter) {
+                // 去掉默认的id过滤器
+                $filter->disableIdFilter();
 
-        //     $merchants->column('policys.title', __('政策活动'));
+                $filter->column(1/3, function ($filter) {
+                    $filter->like('title', '标题');
+                });
 
-        //     $merchants->column('merchant_number', __('商户编号'));
+            });
+            if(Admin::user()->type == "2" or Admin::user()->operate == "All"){
 
-        //     $merchants->column('merchant_name', __('商户名称'));
+                $products->actions(function ($actions) {
+                    $actions->disableList();
+                    $actions->disableEdit(false);
+                    $actions->disableDelete(false);
+                });
 
-        //     $merchants->column('user_phone', __('电话号码'));
+                $products->batchActions(function ($batch) {
+                    $batch->disableDelete(false);
+                });
 
-        //     $merchants->column('bind_status', __('绑定'))->bool();
+            }
 
-        //     $merchants->column('bind_time', __('绑定时间'));
+        });
 
-        //     $merchants->column('active_status', __('激活'))->bool();
 
-        //     $merchants->column('active_time', __('激活时间'));
-
-        //     $merchants->created_at('创建时间')->date('Y-m-d H:i:s');
-
-        //     $merchants->filter(function ($filter) {
-        //         // 去掉默认的id过滤器
-        //         $filter->disableIdFilter();
-
-        //         $filter->column(1/3, function ($filter) {
-        //             $filter->like('merchant_terminal', '终端编号');
-        //         });
-        //         $filter->column(1/3, function ($filter) {
-        //             $filter->like('merchant_name', '商户名称');
-        //         });
-        //         $filter->column(1/3, function ($filter) {
-        //             $filter->equal('bind_status', '商户名称')->select(['0' => '未绑定', '1' => '已绑定']);
-        //         });
-
-        //     });
-
-        //     $merchants->actions(function ($actions) {
-        //         // 去掉删除 编辑
-        //         $actions->disableDelete();
-        //         $actions->disableEdit();
-        //     });
-
-        //     $merchants->batchActions(function ($batch) {
-        //         $batch->disableDelete();
-        //     });
-
-        // });
 
 
         return $show;

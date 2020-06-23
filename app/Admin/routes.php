@@ -59,18 +59,13 @@ Route::group([
     // 提現管理
     $router->resource('withdraws', WithdrawController::class);
 
-    //品牌管理
-    $router->resource('brands', BrandController::class);
-
     //产品列表管理
     $router->resource('products', ProductController::class);
 
     //订单列表管理
     $router->resource('orders', OrderController::class);
 
-    //轮播图操作日志
-    $router->resource('pluglogs', PluglogController::class);
+    //品牌管理
+    $router->resource('brands', BrandController::class);
 
-    //文章操作日志
-    $router->resource('articles_logs', ArtclesLogController::class);
 });

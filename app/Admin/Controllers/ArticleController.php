@@ -67,22 +67,30 @@ class ArticleController extends AdminController
                 $actions->disableDelete(false);
 
             });
+            
+        }
+        $grid->filter(function($filter){
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
 
-            $grid->filter(function($filter){
-                // 去掉默认的id过滤器
-                $filter->disableIdFilter();
 
-
+<<<<<<< HEAD
                 $filter->column(1/4, function ($filter) {
                     
                     $filter->like('title', '标题');
                     
                 });
                 // 在这里添加字段过滤器
+=======
+            $filter->column(1/4, function ($filter) {
+                
+                $filter->like('title', '标题');
+>>>>>>> 6e9996fddf293fdbe2e2f67fa0eca42840386035
                 
             });
+            // 在这里添加字段过滤器
             
-        }
+        });
 
         return $grid;
     }
