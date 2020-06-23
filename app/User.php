@@ -91,6 +91,15 @@ class User extends Authenticatable
 
 
     /**
+     * 用户关联分润返现受益表
+     */
+    public function cash()
+    {
+        return $this->hasMany('\App\CashsLog', 'user_id', 'id');
+    }
+
+
+    /**
      * @Author    Pudding
      * @DateTime  2020-06-22
      * @copyright [copyright]

@@ -151,6 +151,12 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/upBank', 'V1\SetUserController@updateBank');
 
 
+    /**
+     * 收益页面接口
+     */
+    Route::middleware('AuthToken')->get('/cashs', 'V1\CashsController@cashsIndex');
+
+
 });
 
 Route::fallback(function(){ 

@@ -128,7 +128,6 @@ class BrandController extends AdminController
             if(Admin::user()->type == "2" or Admin::user()->operate == "All"){
 
                 $products->actions(function ($actions) {
-                    $actions->disableList();
                     $actions->disableEdit(false);
                     $actions->disableDelete(false);
                 });
