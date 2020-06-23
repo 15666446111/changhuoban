@@ -152,6 +152,7 @@ Route::prefix('V1')->group(function () {
 
 
     /**
+<<<<<<< HEAD
      * @version [<APP 获取产品分类接口>] [<description>]
      * @return  [获取正在展示的产品分类]   [<description>]
      * @version [<产品分类信息接口] [<description>]
@@ -183,6 +184,19 @@ Route::prefix('V1')->group(function () {
      */
     Route::middleware('AuthToken')->get('/getOrderUser', 'V1\OrdersController@getOrder');
 
+=======
+     * 收益页面接口
+     */
+    Route::middleware('AuthToken')->get('/cashs', 'V1\CashsController@cashsIndex');
+
+
+    /**
+     * 机具管理页面接口
+     */
+    Route::middleware('AuthToken')->get('/getBindAll', 'V1\MerchantController@getBind');
+
+
+>>>>>>> eba5913c9a1c922350d5a95977c2b32d8589cf6d
 });
 
 Route::fallback(function(){ 
