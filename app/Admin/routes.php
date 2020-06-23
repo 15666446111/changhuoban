@@ -59,9 +59,6 @@ Route::group([
     // 提現管理
     $router->resource('withdraws', WithdrawController::class);
 
-    //品牌管理
-    $router->resource('brands', BrandController::class);
-
     //产品列表管理
     $router->resource('products', ProductController::class);
 

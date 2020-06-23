@@ -155,6 +155,7 @@ class SetUserController extends Controller
     public function updateBank(Request $request)
     {
         try{ 
+            dd($request->is_default);
 
             $query = \App\Bank::where('user_id',$request->user->id)->where('id',$request->id)->first();
             
