@@ -64,10 +64,5 @@ Route::group([
 
     //订单列表管理
     $router->resource('orders', OrderController::class);
-
-    //轮播图操作日志
-    $router->resource('pluglogs', PluglogController::class);
-
-    //文章操作日志
-    $router->resource('articles_logs', ArtclesLogController::class);
+    
 });

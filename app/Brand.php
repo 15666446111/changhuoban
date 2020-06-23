@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Brand extends Model
 {
+
+	// 黑名单
+    protected $guarded = [];
     
     /**
 	 * [merchants 关联终端模型]
