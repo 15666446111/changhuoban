@@ -300,6 +300,12 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/getNoBindMerchant', 'V1\MerchantController@getNoBindList');
 
 
+    /**
+     * 首页商户登记绑定接口
+     */
+    Route::middleware('AuthToken')->get('/register', 'V1\MerchantController@registers');
+
+
 });
 
 Route::fallback(function(){ 
