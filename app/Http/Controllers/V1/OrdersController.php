@@ -19,12 +19,13 @@ class OrdersController extends Controller
 
         $order_no = $code[intval(date('Y')) - 2011] . strtoupper(dechex(date('m'))) . date('d') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));
         
+
         try{
             $data=\App\Order::create([
                 'user_id'=>$request->user->id,
                 'order_no'=>$order_no,
                 // 'address'=>$request->province.$request->area.$request->city.$request->detail,
-                'address'=>implode(",",$request->address),
+                'address'=>$request->address,
                 'numbers'=>$request->numbers,
                 'price'=>$request->price,
                 'product_id'=>$request->product_id,
