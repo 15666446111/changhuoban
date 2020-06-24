@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -21,7 +22,7 @@ class MerchantController extends Controller
     {
     	try{
 			
-            $merchant = \App\Merchant::select('merchant_sn')->where('user_id', $request->user->id)->where('bind_status', '0')->get();
+            $merchant = \App\Machine::select('sn as merchant_sn')->where('user_id', $request->user->id)->where('bind_status', '0')->get();
             				
            	return response()->json(['success'=>['message' => '获取成功!', 'data' => $merchant]]);
 
@@ -31,6 +32,33 @@ class MerchantController extends Controller
 
         }
 	}
+
+
+	/**
+     * 首页商户登记绑定接口
+     */
+    public function registers(Request $request)
+    {
+        try{ 
+			 $data = \App\Machine::where('user_id',$request->user->id)->where('sn',$request->merchant_sn)->first();
+			 
+			 $data->machine_name = $request->merchant_name;
+			 $data->machine_phone = $request->merchant_phone;
+			 $data->bind_status = 1;
+			 $data->bind_time = Carbon::now()->toDateTimeString();
+
+			 $data->save();
+            
+            return response()->json(['success'=>['message' => '登记成功!', []]]); 
+
+    	} catch (\Exception $e) {
+            
+            return response()->json(['error'=>['message' => '系统错误,请联系客服']]);
+
+        }
+	}
+	
+
 	
 	/**
 	 * 机具管理页面接口
