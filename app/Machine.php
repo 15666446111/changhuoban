@@ -55,4 +55,13 @@ class Machine extends Model
         return $this->belongsTo('\App\Policy', 'policy_id', 'id');
     }
 
+
+    /**
+     * 关联划拨日志
+     */
+    public function transfer()
+    {
+        return $this->hasOne('App\Transfer','id','machine_id');
+    }
+
 }
