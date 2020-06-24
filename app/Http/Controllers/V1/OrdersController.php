@@ -120,6 +120,7 @@ class OrdersController extends Controller
                 ];
 
             }
+
             
             // $data=\App\Order::
             // select('image','products.id','title','order_no','address','orders.price','status','numbers','products.price','products.price as good_price','orders.price as order_price')
