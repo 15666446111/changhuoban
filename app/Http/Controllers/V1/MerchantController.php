@@ -57,6 +57,59 @@ class MerchantController extends Controller
 
         }
 	}
+
+
+	/**
+     * 商户列表接口
+     */
+    public function merchantsList(Request $request)
+    {
+        try{ 
+
+            $arrs;
+            
+            $bind = \App\Machine::where('user_id', $request->user->id)->where('bind_status', '1')->get();
+
+
+            foreach ($bind as $key => $value) {
+                $arrs['Bound'][] = array(
+                    'id'                =>  $value->id,
+                    'merchant_name'     =>  $value->merchant_name,
+                    'machine_phone'   	=>  $value->machine_phone,
+                    'merchant_sn'       =>  $value->sn,
+                    'money'             =>  $value->tradess_sn->sum('amount'),
+                    'created_at'        =>  $value->created_at,
+                    'bind_time'         =>  $value->bind_time,
+                    'active_time'       =>  $value->open_time,
+                    'time'              =>  $value->bind_time ?? $value->open_time
+                );
+            }
+            
+            
+            $UnBind =\App\Machine::where('user_id', $request->user->id)->where('bind_status', '0')->get();
+            
+            foreach ($UnBind as $key => $value) {
+                $arrs['UnBound'][] = array(
+                    'id'                =>  $value->id,
+                    'merchant_name'     =>  $value->merchant_name,
+                    'machine_phone'   	=>  $value->machine_phone,
+                    'merchant_sn'       =>  $value->sn,
+                    'money'             =>  $value->tradess_sn->sum('amount'),
+                    'created_at'        =>  $value->created_at,
+                    'bind_time'         =>  $value->bind_time,
+                    'active_time'       =>  $value->open_time,
+                    'time'              =>  $value->bind_time ?? $value->open_time
+                );
+            }
+            
+            return response()->json(['success'=>['message' => '获取成功!', 'data' => $arrs]]); 
+
+    	} catch (\Exception $e) {
+            
+            return response()->json(['error'=>['message' => '系统错误，请联系客服']]);
+
+        }
+    }
 	
 
 	
