@@ -116,7 +116,7 @@
 					</view>
 					<view class="across"></view>
 				</navigator>
-				<navigator class="url" url="shezhi/shezhi">
+				<navigator class="url" url="bankSet/bankSet">
 					<view class="div">
 						<image class="div-img" src="/static/xtsz.png" />
 						<view class="div-text">系统设置</view>

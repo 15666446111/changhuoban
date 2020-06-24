@@ -33,7 +33,7 @@
 					<view class="content-div">
 						<view class="div">
 							<view class="content-text">调拨用户:{{item.friend_name}}</view>
-							<view class="content-text1">类型:{{item.is_back == 1 ? '回拨' : '划拨'}}</view>
+							<view class="content-text1">类型:{{item.state == 1 ? '划拨' : '回拨'}}</view>
 						</view>
 						<view class="div">
 							<view class="name">SN: {{item.merchant_sn }}</view>

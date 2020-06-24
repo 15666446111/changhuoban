@@ -113,6 +113,7 @@ export default {
 				url: '/V1/getMerchantsList',
 				method: 'GET',
 				success: (res) => {
+					console.log(res);
 					uni.hideLoading();
 					// console.log(res);
 					this.bindList = res.data.success.data.Bound;
