@@ -113,17 +113,19 @@ class TransferController extends Controller
 
         try{
             
-            \App\Machine::where('user_id',$request->friend_id)
-            ->whereIn('id',$request->merchant_id)
-            ->update(['user_id'=>$request->user->id]);
             
 
-            \App\Transfer::where('old_user_id',$request->user->id)
-            ->where('new_user_id',$request->friend_id)
-            ->whereIn('machine_id',$request->merchant_id)
-            ->update(['is_back'=>1]);
-
             if(\is_array($request->merchant_id)){
+
+                \App\Machine::where('user_id',$request->friend_id)
+                ->whereIn('id',$request->merchant_id)
+                ->update(['user_id'=>$request->user->id]);
+                
+
+                \App\Transfer::where('old_user_id',$request->user->id)
+                ->where('new_user_id',$request->friend_id)
+                ->whereIn('machine_id',$request->merchant_id)
+                ->update(['is_back'=>1]);
 
                 foreach($request->merchant_id as $k=>$v){
                     \App\Transfer::create([
@@ -134,13 +136,28 @@ class TransferController extends Controller
                     ]);
                 }
 
-            }else
+            }else{
+
+                \App\Machine::where('user_id',$request->friend_id)
+                ->where('id',$request->merchant_id)
+                ->update(['user_id'=>$request->user->id]);
+                
+
+                \App\Transfer::where('old_user_id',$request->user->id)
+                ->where('new_user_id',$request->friend_id)
+                ->where('machine_id',$request->merchant_id)
+                ->update(['is_back'=>1]);
+
                 \App\Transfer::create([
                     'machine_id'    =>  $request->merchant_id,
                     'old_user_id'   =>  $request->user->id,
                     'new_user_id'   =>  $request->friend_id,
                     'state'         =>  $request->state
                 ]);
+
+            }
+
+                
 
             
 
