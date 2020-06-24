@@ -237,6 +237,60 @@ Route::prefix('V1')->group(function () {
      */
     Route::middleware('AuthToken')->get('/getTail', 'V1\MerchantController@getMerchantsTail');
 
+    
+    /**
+     * @version [<APP 获取政策活动列表>] [<description>]
+     * @return  [获取平台所有的政策活动]   [<description>]
+     * @version [<获取政策后的] [<description>]
+     */
+    Route::middleware('AuthToken')->get('/getPolicy', 'V1\PolicyController@getPolicy');
+
+
+     /**
+     * @version [<APP 我的栏位>] [<description>]
+     * @return  [个人信息 获取个人信息]   [<description>]
+     * @version [<个人信息接口] [<description>]
+     */
+    Route::middleware('AuthToken')->get('/mine', 'V1\MineController@info');
+
+
+    /**
+     * @version [<APP 首页 伙伴管理>] [<description>]
+     * @return  [首页的伙伴管理直接下级列表]   [<description>]
+     * @version [<伙伴管理] [<description>]
+     */
+    Route::middleware('AuthToken')->get('/my_team', 'V1\TeamController@index');
+
+
+    /**
+     * 查询用户未绑定终端机器
+     */
+    Route::middleware('AuthToken')->get('/getUnBoundInfo', 'V1\TransferController@getUnBound');
+    
+
+    /**
+     * 划拨
+     */
+    Route::middleware('AuthToken')->post('/addTransfer', 'V1\TransferController@transfer');
+
+
+    /**
+     * 回拨机器列表
+     */
+    Route::middleware('AuthToken')->get('/getBackList', 'V1\TransferController@backList');
+
+
+    /**
+     * 回拨
+     */
+    Route::middleware('AuthToken')->post('/addBackTransfer', 'V1\TransferController@backTransfer');
+
+    
+    /**
+     * 划拨回拨记录
+     */
+    Route::middleware('AuthToken')->get('/getTransferLog', 'V1\TransferController@transferLog');
+
 
 });
 
