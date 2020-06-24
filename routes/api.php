@@ -163,6 +163,12 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/getBindAll', 'V1\MerchantController@getBind');
 
 
+    /**
+     * 机具管理页面接口
+     */
+    Route::middleware('AuthToken')->get('/getTail', 'V1\MerchantController@getMerchantsTail');
+
+
 });
 
 Route::fallback(function(){ 

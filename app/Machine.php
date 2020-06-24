@@ -43,4 +43,16 @@ class Machine extends Model
     {
         return $this->belongsTo('\App\Brand', 'brand_id', 'id');
     }
+
+    /**
+     * [busers 关联终端活动政策模型]
+     * @author Pudding
+     * @DateTime 2020-04-10T15:35:13+0800
+     * @return   [type]                   [description]
+     */
+    public function policys()
+    {
+        return $this->belongsTo('\App\Policy', 'policy_id', 'id');
+    }
+
 }
