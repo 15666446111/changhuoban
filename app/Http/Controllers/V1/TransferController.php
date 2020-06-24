@@ -119,19 +119,28 @@ class TransferController extends Controller
 
             if($res){
 
-                $data=\App\MachineLog::where('old_user_id',$request->user->id)
+                $data=\App\Transfer::where('old_user_id',$request->user->id)
                 ->whereIn('new_user_id',$request->friend_id)
                 ->whereIn('machine_id',$request->merchant_id)
                 ->update(['is_back'=>1]);
 
-                foreach($request->merchant_id as $k=>$v){
-                    $info = \App\Transfer::create([
-                        'machine_id'    =>  $v,
-                        'old_user_id'   =>  $request->user->id,
-                        'new_user_id'   =>  $request->friend_id,
-                        'state'         =>  $request->state
-                    ]);
+                if($data){
+
+                    foreach($request->merchant_id as $k=>$v){
+
+                        foreach($request->friend_id as $key=>$value){
+                            $info = \App\Transfer::create([
+                                'machine_id'    =>  $v,
+                                'old_user_id'   =>  $request->user->id,
+                                'new_user_id'   =>  $value,
+                                'state'         =>  $request->state
+                            ]);
+                        }
+                        
+                    }
+
                 }
+                
 
             }
             
