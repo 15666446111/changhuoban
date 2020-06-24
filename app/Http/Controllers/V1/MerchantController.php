@@ -21,7 +21,7 @@ class MerchantController extends Controller
     {
     	try{
 			
-            $merchant = \App\Merchant::select('merchant_sn')->where('user_id', $request->user->id)->where('bind_status', '0')->get();
+            $merchant = \App\Merchant::select('sn as merchant_sn')->where('user_id', $request->user->id)->where('bind_status', '0')->get();
             				
            	return response()->json(['success'=>['message' => '获取成功!', 'data' => $merchant]]);
 

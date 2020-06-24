@@ -292,6 +292,14 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/getTransferLog', 'V1\TransferController@transferLog');
 
 
+    /**
+     * @version [<APP 商户登记>] [<description>]
+     * @return  [获取该用户下所有未登记的机器]   [<description>]
+     * @version [<未登记机器获取接口] [<description>]
+     */
+    Route::middleware('AuthToken')->get('/getNoBindMerchant', 'V1\MerchantController@getNoBindList');
+
+
 });
 
 Route::fallback(function(){ 
