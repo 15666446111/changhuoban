@@ -123,6 +123,7 @@ class OrdersController extends Controller
                     'price'      =>  $v->price,
                     'product_id' =>  $v->product_id,
                     'product_price'=>$v->product_price,
+                    'numbers'    =>  $v->numbers
                 ];
 
             }
