@@ -15,7 +15,7 @@
 
 			<view class="earnings">
 				
-				<navigator url="lijitixian/lijitixian">
+				<navigator url="cash/cash">
 					<view class="tixian">提现</view>
 				</navigator>
 				

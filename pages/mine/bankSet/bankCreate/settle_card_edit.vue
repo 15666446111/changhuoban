@@ -6,7 +6,7 @@
 			<view class="select">
 				<view class="select-view">
 					<view class="select-name">姓名</view>
-					<input class="select-text" placeholder="请输入您的姓名" v-model="BankInfo.name" >
+					<input class="select-text" placeholder="请输入您的姓名" v-model="BankInfo.user_name" >
 				</view>
 				<view class="hengxian"></view>
 			</view>
@@ -82,7 +82,7 @@ export default {
 	            success: (res) => {
 					uni.hideLoading();
 					if (res.data.success) {
-						this.BankInfo = res.data.success.data[0];
+						this.BankInfo = res.data.success.data;
 						console.log(this.BankInfo);
 					} else {
 						uni.showToast({
@@ -99,7 +99,7 @@ export default {
 		},
 		
 		submit(){
-			if (this.name == '') {
+			if (this.user_name == '') {
 				uni.showToast({ title: '姓名不能为空', icon: 'none' });
 				return false;
 			}
@@ -131,7 +131,7 @@ export default {
 	            method: 'GET',
 				data: {
 					id: this.id,
-					name: this.BankInfo.name,
+					name: this.BankInfo.user_name,
 					number: this.BankInfo.number,
 					bank_name: this.BankInfo.bank_name,
 					bank: this.BankInfo.bank,

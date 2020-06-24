@@ -275,28 +275,28 @@
 			"path": "pages/mine/tixianjilu/tixianjilu",
 			"style": {}
 		}, {
-			"path": "pages/mine/lijitixian/lijitixian",
+			"path": "pages/mine/cash/cash",
 			"style": {}
 		}, {
-			"path": "pages/mine/lijitixian/tijiaoyinhangka/tijiaoyinhangka",
+			"path": "pages/mine/cash/bankList/bankList",
 			"style": {}
 		}, {
-			"path": "pages/mine/lijitixian/tijiaoyinhka/tijiaoyinhka",
+			"path": "pages/mine/cash/tijiaoyinhka/tijiaoyinhka",
 			"style": {}
 		}, {
-			"path": "pages/mine/lijitixian/xuanzeyinhang/xuanzeyinhang",
+			"path": "pages/mine/cash/xuanzeyinhang/xuanzeyinhang",
 			"style": {}
 		}, {
-			"path": "pages/mine/shezhi/shezhi",
+			"path": "pages/mine/bankSet/bankSet",
 			"style": {}
 		}, {
-			"path": "pages/mine/shezhi/xiugaidenglumima/xiugaidenglumima",
+			"path": "pages/mine/bankSet/xiugaidenglumima/xiugaidenglumima",
 			"style": {}
 		}, {
-			"path": "pages/mine/shezhi/xiugaijiesuanxinxi/xiugaijiesuanxinxi",
+			"path": "pages/mine/bankSet/bankCreate/bankCreate",
 			"style": {}
 		}, {
-			"path": "pages/mine/shezhi/xiugaijiesuanxinxi/settle_card_edit",
+			"path": "pages/mine/bankSet/bankCreate/settle_card_edit",
 			"style": {}
 		}, {
 			"path": "pages/mine/jijuguanli/jijuchakan/jijuchakan",
