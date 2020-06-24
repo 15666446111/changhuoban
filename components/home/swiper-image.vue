@@ -5,7 +5,7 @@
 			<block v-for="(item,index) in resdata" :key="index">
 				<swiper-item class="swit">
 					<view class="swiper-item">
-						<image :src="item.image_file" lazy-load style="height: 350upx;"></image>
+						<image :src="item.images" lazy-load style="height: 350upx;"></image>
 					</view>
 				</swiper-item>
 			</block>

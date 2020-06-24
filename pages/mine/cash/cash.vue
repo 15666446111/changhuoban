@@ -1,6 +1,6 @@
 <template>
 	<view class="background">
-		<navigator url="tijiaoyinhangka/tijiaoyinhangka?pages=cash">
+		<navigator url="bankList/bankList?pages=cash">
 			<view class="top">
 				<!-- <image src="/static/minsheng.png" class="img"></image> -->
 				<view class="fview">
