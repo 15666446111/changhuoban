@@ -112,34 +112,30 @@ class TransferController extends Controller
     {
 
         try{
-
-            $res=\App\Machine::where('user_id',$request->friend_id)
+            dd($request->merchant_id);
+            \App\Machine::where('user_id',$request->friend_id)
             ->whereIn('id',$request->merchant_id)
             ->update(['user_id'=>$request->user->id]);
             
-            if($res){
 
-                \App\Transfer::where('old_user_id',$request->user->id)
-                ->where('new_user_id',$request->friend_id)
-                ->whereIn('machine_id',$request->merchant_id)
-                ->update(['is_back'=>1]);
+            \App\Transfer::where('old_user_id',$request->user->id)
+            ->where('new_user_id',$request->friend_id)
+            ->whereIn('machine_id',$request->merchant_id)
+            ->update(['is_back'=>1]);
 
-                foreach($request->merchant_id as $k=>$v){
-                    $data = \App\Transfer::create([
-                        'machine_id'    =>  $v,
-                        'old_user_id'   =>  $request->user->id,
-                        'new_user_id'   =>  $request->friend_id,
-                        'state'         =>  $request->state
-                    ]);
-                }
-
+            foreach($request->merchant_id as $k=>$v){
+                $data = \App\Transfer::create([
+                    'machine_id'    =>  $v,
+                    'old_user_id'   =>  $request->user->id,
+                    'new_user_id'   =>  $request->friend_id,
+                    'state'         =>  $request->state
+                ]);
             }
+
             
-            if($data){
 
-                return response()->json(['success'=>['message' => '回拨成功!', 'data'=>[]]]);
+            return response()->json(['success'=>['message' => '回拨成功!', 'data'=>[]]]);
 
-            }
         } catch (\Exception $e) {
             
             return response()->json(['error'=>['message' => $e->getMessage()]]);
