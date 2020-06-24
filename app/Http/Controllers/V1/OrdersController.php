@@ -133,7 +133,7 @@ class OrdersController extends Controller
             // $data = $data->get();
             
             
-            return response()->json(['success'=>['message' => '获取成功!', 'data' => $data]]); 
+            return response()->json(['success'=>['message' => '获取成功!', 'data' => $arrs]]); 
 
 
     	} catch (\Exception $e) {
