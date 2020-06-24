@@ -246,6 +246,22 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/getPolicy', 'V1\PolicyController@getPolicy');
 
 
+     /**
+     * @version [<APP 我的栏位>] [<description>]
+     * @return  [个人信息 获取个人信息]   [<description>]
+     * @version [<个人信息接口] [<description>]
+     */
+    Route::middleware('AuthToken')->get('/mine', 'V1\MineController@info');
+
+
+    /**
+     * @version [<APP 首页 伙伴管理>] [<description>]
+     * @return  [首页的伙伴管理直接下级列表]   [<description>]
+     * @version [<伙伴管理] [<description>]
+     */
+    Route::middleware('AuthToken')->get('/my_team', 'V1\TeamController@index');
+
+
 });
 
 Route::fallback(function(){ 
