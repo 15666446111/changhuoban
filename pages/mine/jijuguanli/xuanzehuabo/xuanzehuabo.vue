@@ -85,9 +85,11 @@ export default {
 	            method: 'POST',
 				data: {
 					id: this.termIds,
-					friend_id: this.partnerId
+					friend_id: this.partnerId,
+					state: 1
 				},
 	            success: (res) => {
+					console.log(res);
 					uni.hideLoading();
 					
 					var _this = this;

@@ -57,7 +57,6 @@ export default {
 				data: {
 					policy_id: policyId,
 					friend_id: this.partnerId,
-					
 				},
 	            success: (res) => {
 					this.policy = res.data.success.data;
@@ -83,15 +82,17 @@ export default {
 				return false;
 			}
 			var friend_id = [this.partnerId];
+			
 			net({
 	        	url:"/V1/addBackTransfer",
 	            method: 'POST',
 				data: {
 					merchant_id: this.termIds,
-					friend_id: friend_id
+					friend_id: friend_id,
+					state: 2
 				},
 	            success: (res) => {
-		
+					console.log(res);
 					var _this = this;
 					if (res.data.success) {
 						uni.showToast({

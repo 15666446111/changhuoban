@@ -13,6 +13,18 @@
 				<image class="bank-img" src="../../../static/jiantou.png" mode="widthFix" />
 			</view>
 		</navigator>
+		<navigator url="../cash/bankList/bankList" open-type="navigate">
+			<view class="bank">
+				<view class="bank-name">银行卡管理</view>
+				<image class="bank-img" src="../../../static/jiantou.png" mode="widthFix" />
+			</view>
+		</navigator>
+		<navigator url="../../Home/shangcheng/dizhi/dizhi" open-type="navigate">
+			<view class="bank">
+				<view class="bank-name">收货地址管理</view>
+				<image class="bank-img" src="../../../static/jiantou.png" mode="widthFix" />
+			</view>
+		</navigator>
 		<view class="add-xian"></view>
 		
 		<button class="psy" @click="logout">退出登录</button>
