@@ -121,7 +121,7 @@ class TransferController extends Controller
 
                 \App\Transfer::where('old_user_id',$request->user->id)
                 ->where('new_user_id',$request->friend_id)
-                ->whereIn('merchant_id',$request->merchant_id)
+                ->whereIn('machine_id',$request->merchant_id)
                 ->update(['is_back'=>1]);
 
                 foreach($request->merchant_id as $k=>$v){
@@ -158,7 +158,7 @@ class TransferController extends Controller
             $data = \App\Transfer::orderBy('created_at','desc')->get();
 
             $arrs = [];
-            
+
             foreach($data as $k=>$v){
                 
                 $arrs[] = [
