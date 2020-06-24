@@ -117,6 +117,10 @@ class OrdersController extends Controller
                 $arrs[] = [
                     'title'      =>  $v->products->title,
                     'image'   =>  $v->products->image,
+                    'order_no' =>$V->products->order_no,
+                    'id' =>$V->products->id,
+                    'product_price' =>$V->products->product_price,
+                    'price' =>$V->products->price,
                 ];
 
             }
