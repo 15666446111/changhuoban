@@ -306,6 +306,12 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/register', 'V1\MerchantController@registers');
 
 
+    /**
+     * 商户列表接口
+     */
+    Route::middleware('AuthToken')->get('/getMerchantsList', 'V1\MerchantController@merchantsList');
+
+
 });
 
 Route::fallback(function(){ 
