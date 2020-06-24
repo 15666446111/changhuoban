@@ -237,6 +237,14 @@ Route::prefix('V1')->group(function () {
      */
     Route::middleware('AuthToken')->get('/getTail', 'V1\MerchantController@getMerchantsTail');
 
+    
+    /**
+     * @version [<APP 获取政策活动列表>] [<description>]
+     * @return  [获取平台所有的政策活动]   [<description>]
+     * @version [<获取政策后的] [<description>]
+     */
+    Route::middleware('AuthToken')->get('/getPolicy', 'V1\PolicyController@getPolicy');
+
 
 });
 
