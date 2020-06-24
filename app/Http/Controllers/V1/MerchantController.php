@@ -69,9 +69,10 @@ class MerchantController extends Controller
             $arrs;
             
             $bind = \App\Machine::where('user_id', $request->user->id)->where('bind_status', '1')->get();
-
+			
 
             foreach ($bind as $key => $value) {
+				
                 $arrs['Bound'][] = array(
                     'id'                =>  $value->id,
                     'merchant_name'     =>  $value->machine_name,
@@ -90,12 +91,13 @@ class MerchantController extends Controller
             $UnBind =\App\Machine::where('user_id', $request->user->id)->where('bind_status', '0')->get();
             
             foreach ($UnBind as $key => $value) {
+
                 $arrs['UnBound'][] = array(
                     'id'                =>  $value->id,
                     'merchant_name'     =>  $value->machine_name,
                     'machine_phone'   	=>  $value->machine_phone,
 					'merchant_sn'       =>  $value->sn,
-                    'merchant_terminal' =>  $value->tradess_sn->merchant_code,
+                    'merchant_terminal' =>  '',
                     'money'             =>  $value->tradess_sn->sum('amount'),
                     'created_at'        =>  $value->created_at,
                     'bind_time'         =>  $value->bind_time,
@@ -108,7 +110,7 @@ class MerchantController extends Controller
 
     	} catch (\Exception $e) {
             
-            return response()->json(['error'=>['message' => '系统错误，请联系客服']]);
+            return response()->json(['error'=>['message' => $e->getMessage()]]);
 
         }
     }
