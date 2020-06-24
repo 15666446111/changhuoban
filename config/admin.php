@@ -396,6 +396,45 @@ return [
     |
     */
     'extensions' => [
+        // 图表
+        'chartjs' => [
+            // Set to `false` if you want to disable this extension
+            'enable' => true,
+        ],
+        // 后台设置
+        'configx' => [
+            // Set to `false` if you want to disable this extension
+            'enable' => true,
+            'tabs' => [
+                'base'      => '系统设置',
+                'draw'      => '提现设置',
+            ],
+            // Whether check group permissions. 
+            //if (!Admin::user()->can('confix.tab.base')) {/*hide base tab*/ } .
+            'check_permission' => false
+        ],
+        // 文章内容编辑器 Ueditor
+        'ueditor' => [
+            // 如果要关掉这个扩展，设置为false
+            'enable' => true,
+            'config' => [
+                'initialFrameHeight' => 400,
+            ],
+            'field_type' => 'ueditor'
+        ],
+
+        // ENV 文件管理
+        'env-manager' => [
+            // If the value is set to false, this extension will be disabled
+            'enable' => true
+        ],
+
+        // 媒体文件管理
+        'media-manager' => [
+        
+            // Select a local disk that you configured in `config/filesystem.php`
+            'disk' => 'public'
+        ],
 
     ],
 ];

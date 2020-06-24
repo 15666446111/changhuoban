@@ -13,9 +13,10 @@ class Order extends Model
     // 黑名单
     protected $guarded = [];
 
+    // 
     public function products(){
 
-        return $this->hasone('App\Product','id','product_id');
+        return $this->belongsTo('App\Product','product_id','id');
 
     }
     

@@ -15,6 +15,7 @@
         "fruitcake/laravel-cors": "^1.0",
         "guzzlehttp/guzzle": "^6.3",
         "jxlwqq/env-manager": "^0.1.0",
+        "laravel-admin-ext/chartjs": "^1.0",
         "laravel-admin-ext/config": "^1.1",
         "laravel-admin-ext/grid-lightbox": "^1.0",
         "laravel-admin-ext/log-viewer": "^1.0",

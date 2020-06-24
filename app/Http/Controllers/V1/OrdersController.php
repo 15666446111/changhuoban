@@ -18,7 +18,6 @@ class OrdersController extends Controller
         $code = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J');
 
         $order_no = $code[intval(date('Y')) - 2011] . strtoupper(dechex(date('m'))) . date('d') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));
-        
 
         try{
             $data=\App\Order::create([
@@ -108,34 +107,29 @@ class OrdersController extends Controller
             
             $type = $request->type ?? 'all';
 
-            $data = \App\Order::where('orders.user_id',$request->user->id)->get();
+            $data = \App\Order::where('user_id',$request->user->id)->get();
 
             $arrs = [];
-
+            
             foreach($data as $k=>$v){
-                
+
                 $arrs[] = [
                     'title'      =>  $v->products->title,
-                    'image'   =>  $v->products->image,
-                    'order_no' =>$V->products->order_no,
-                    'id' =>$V->products->id,
-                    'product_price' =>$V->products->product_price,
-                    'price' =>$V->products->price,
+                    'image'      =>  $v->products->image,
+                    'order_no'   =>  $v->order_no,
+                    'id'         =>  $v->id,
+                    'status'     =>  $v->status,
+                    'price'      =>  $v->price,
+                    'product_id' =>  $v->product_id,
+                    'product_price'=>$v->product_price,
+                    'numbers'    =>  $v->numbers
                 ];
 
             }
 
-            
-            // $data=\App\Order::
-            // select('image','products.id','title','order_no','address','orders.price','status','numbers','products.price','products.price as good_price','orders.price as order_price')
-            // ->join('products','orders.product_id','=','products.id')
-            // ->where('orders.user_id',$request->user->id);
-
             if($type == "shop"){
                 
             }
-
-            // $data = $data->get();
             
             
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $arrs]]); 
@@ -143,7 +137,7 @@ class OrdersController extends Controller
 
     	} catch (\Exception $e) {
             
-            return response()->json(['error'=>['message' => '系统错误，请联系客服']]);
+            return response()->json(['error'=>['message' => $e->getMessage()]]);
 
         }
 
