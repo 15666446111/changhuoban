@@ -62,8 +62,6 @@ class MerchantController extends Controller
 				//查询伙伴已达标机器总数
 				$data['friend']['standard_statis'] = \App\Machine::whereIn('user_id', $userAll)->where('standard_status', '1')->count();
 			}
-
-
 			
 			//获取用户机器总数
 			$data['user']['all'] = \App\Machine::where('user_id', $request->user->id)->count();
@@ -95,5 +93,30 @@ class MerchantController extends Controller
 
 		}
 		
-	}
+    }
+    
+
+    /**
+     * 机具详情接口
+     */
+    public function getMerchantsTail(Request $request)
+    {
+        try{
+
+            //参数 friends伙伴  count总  user用户
+            $Type = $request->Type;
+            // dd($Type);
+            $server = new \App\Http\Controllers\V1\ServersController($Type, $request->user);
+
+            $data = $server->getInfo();
+
+            return response()->json(['success'=>['message' => '获取成功!', 'data'=>$data]]); 
+
+        } catch (\Exception $e) {
+
+			return response()->json(['error'=>['message' => $e->getMessage()]]);
+		
+		}
+
+    }
 }
