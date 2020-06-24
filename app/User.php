@@ -141,4 +141,20 @@ class User extends Authenticatable
 
         return $User->parent > 0 ? self::getParentStr($User->parent, $parents) : $parents;
     }
+
+    /**
+     * 关联划拨表
+     */
+    public function old_user_id()
+    {
+        return $this->belongsTo('App\Transfer','id','old_user_id');
+    }
+
+    /**
+     * 关联划拨表
+     */
+    public function new_user_id()
+    {
+        return $this->belongsTo('App\Transfer','id','new_user_id');
+    }
 }

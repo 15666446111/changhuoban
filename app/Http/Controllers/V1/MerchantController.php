@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -21,7 +22,7 @@ class MerchantController extends Controller
     {
     	try{
 			
-            $merchant = \App\Merchant::select('merchant_sn')->where('user_id', $request->user->id)->where('bind_status', '0')->get();
+            $merchant = \App\Machine::select('sn as merchant_sn')->where('user_id', $request->user->id)->where('bind_status', '0')->get();
             				
            	return response()->json(['success'=>['message' => '获取成功!', 'data' => $merchant]]);
 
@@ -31,6 +32,90 @@ class MerchantController extends Controller
 
         }
 	}
+
+
+	/**
+     * 首页商户登记绑定接口
+     */
+    public function registers(Request $request)
+    {
+        try{ 
+			 $data = \App\Machine::where('user_id',$request->user->id)->where('sn',$request->merchant_sn)->first();
+			 
+			 $data->machine_name = $request->merchant_name;
+			 $data->machine_phone = $request->merchant_phone;
+			 $data->bind_status = 1;
+			 $data->bind_time = Carbon::now()->toDateTimeString();
+
+			 $data->save();
+            
+            return response()->json(['success'=>['message' => '登记成功!', []]]); 
+
+    	} catch (\Exception $e) {
+            
+            return response()->json(['error'=>['message' => '系统错误,请联系客服']]);
+
+        }
+	}
+
+
+	/**
+     * 商户列表接口
+     */
+    public function merchantsList(Request $request)
+    {
+        try{ 
+
+            $arrs;
+            
+            $bind = \App\Machine::where('user_id', $request->user->id)->where('bind_status', '1')->get();
+			
+
+            foreach ($bind as $key => $value) {
+				
+                $arrs['Bound'][] = array(
+                    'id'                =>  $value->id,
+                    'merchant_name'     =>  $value->machine_name,
+					'machine_phone'   	=>  $value->machine_phone,
+					'merchant_sn'		=>	$value->sn,
+                    'merchant_terminal' =>  $value->tradess_sn->merchant_code,
+                    'money'             =>  $value->tradess_sn->sum('amount'),
+                    'created_at'        =>  $value->created_at,
+                    'bind_time'         =>  $value->bind_time,
+                    'active_time'       =>  $value->open_time,
+                    'time'              =>  $value->bind_time ?? $value->open_time
+                );
+            }
+            
+            
+            $UnBind =\App\Machine::where('user_id', $request->user->id)->where('bind_status', '0')->get();
+            
+            foreach ($UnBind as $key => $value) {
+
+                $arrs['UnBound'][] = array(
+                    'id'                =>  $value->id,
+                    'merchant_name'     =>  $value->machine_name,
+                    'machine_phone'   	=>  $value->machine_phone,
+					'merchant_sn'       =>  $value->sn,
+                    'merchant_terminal' =>  '',
+                    'money'             =>  $value->tradess_sn->sum('amount'),
+                    'created_at'        =>  $value->created_at,
+                    'bind_time'         =>  $value->bind_time,
+                    'active_time'       =>  $value->open_time,
+                    'time'              =>  $value->bind_time ?? $value->open_time
+                );
+            }
+            
+            return response()->json(['success'=>['message' => '获取成功!', 'data' => $arrs]]); 
+
+    	} catch (\Exception $e) {
+            
+            return response()->json(['error'=>['message' => $e->getMessage()]]);
+
+        }
+    }
+	
+
 	
 	/**
 	 * 机具管理页面接口
@@ -62,8 +147,6 @@ class MerchantController extends Controller
 				//查询伙伴已达标机器总数
 				$data['friend']['standard_statis'] = \App\Machine::whereIn('user_id', $userAll)->where('standard_status', '1')->count();
 			}
-
-
 			
 			//获取用户机器总数
 			$data['user']['all'] = \App\Machine::where('user_id', $request->user->id)->count();
@@ -95,5 +178,30 @@ class MerchantController extends Controller
 
 		}
 		
-	}
+    }
+    
+
+    /**
+     * 机具详情接口
+     */
+    public function getMerchantsTail(Request $request)
+    {
+        try{
+
+            //参数 friends伙伴  count总  user用户
+            $Type = $request->Type;
+            // dd($Type);
+            $server = new \App\Http\Controllers\V1\ServersController($Type, $request->user);
+
+            $data = $server->getInfo();
+
+            return response()->json(['success'=>['message' => '获取成功!', 'data'=>$data]]); 
+
+        } catch (\Exception $e) {
+
+			return response()->json(['error'=>['message' => $e->getMessage()]]);
+		
+		}
+
+    }
 }

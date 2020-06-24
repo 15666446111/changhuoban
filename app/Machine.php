@@ -52,4 +52,37 @@ class Machine extends Model
     {
         return $this->belonesTo('\App\Merchants', 'merchant_id', 'id');
     }
+
+    /**
+     * [busers 关联终端活动政策模型]
+     * @author Pudding
+     * @DateTime 2020-04-10T15:35:13+0800
+     * @return   [type]                   [description]
+     */
+    public function policys()
+    {
+        return $this->belongsTo('\App\Policy', 'policy_id', 'id');
+    }
+
+
+    /**
+     * 关联划拨日志
+     */
+    public function transfer()
+    {
+        return $this->hasOne('App\Transfer','id','machine_id');
+    }
+
+
+    /**
+     * [merchants 关联交易模型 通过SN关联]
+     * @author Pudding
+     * @DateTime 2020-04-10T16:37:46+0800
+     * @return   [type]                   [description]
+     */
+    public function tradess_sn()
+    {
+        return $this->hasMany('\App\Trade', 'sn', 'sn');
+    }
+
 }
