@@ -112,7 +112,7 @@ class TransferController extends Controller
     {
 
         try{
-            dd($request->merchant_id);
+            
             \App\Machine::where('user_id',$request->friend_id)
             ->whereIn('id',$request->merchant_id)
             ->update(['user_id'=>$request->user->id]);
@@ -123,14 +123,24 @@ class TransferController extends Controller
             ->whereIn('machine_id',$request->merchant_id)
             ->update(['is_back'=>1]);
 
-            foreach($request->merchant_id as $k=>$v){
-                $data = \App\Transfer::create([
-                    'machine_id'    =>  $v,
+            if(\is_array($request->merchant_id)){
+
+                foreach($request->merchant_id as $k=>$v){
+                    \App\Transfer::create([
+                        'machine_id'    =>  $v,
+                        'old_user_id'   =>  $request->user->id,
+                        'new_user_id'   =>  $request->friend_id,
+                        'state'         =>  $request->state
+                    ]);
+                }
+
+            }else
+                \App\Transfer::create([
+                    'machine_id'    =>  $request->merchant_id,
                     'old_user_id'   =>  $request->user->id,
                     'new_user_id'   =>  $request->friend_id,
                     'state'         =>  $request->state
                 ]);
-            }
 
             
 
