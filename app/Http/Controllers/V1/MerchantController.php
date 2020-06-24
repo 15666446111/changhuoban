@@ -74,9 +74,10 @@ class MerchantController extends Controller
             foreach ($bind as $key => $value) {
                 $arrs['Bound'][] = array(
                     'id'                =>  $value->id,
-                    'merchant_name'     =>  $value->merchant_name,
-                    'machine_phone'   	=>  $value->machine_phone,
-                    'merchant_sn'       =>  $value->sn,
+                    'merchant_name'     =>  $value->machine_name,
+					'machine_phone'   	=>  $value->machine_phone,
+					'merchant_sn'		=>	$value->sn,
+                    'merchant_terminal' =>  $value->tradess_sn->merchant_code,
                     'money'             =>  $value->tradess_sn->sum('amount'),
                     'created_at'        =>  $value->created_at,
                     'bind_time'         =>  $value->bind_time,
@@ -91,9 +92,10 @@ class MerchantController extends Controller
             foreach ($UnBind as $key => $value) {
                 $arrs['UnBound'][] = array(
                     'id'                =>  $value->id,
-                    'merchant_name'     =>  $value->merchant_name,
+                    'merchant_name'     =>  $value->machine_name,
                     'machine_phone'   	=>  $value->machine_phone,
-                    'merchant_sn'       =>  $value->sn,
+					'merchant_sn'       =>  $value->sn,
+                    'merchant_terminal' =>  $value->tradess_sn->merchant_code,
                     'money'             =>  $value->tradess_sn->sum('amount'),
                     'created_at'        =>  $value->created_at,
                     'bind_time'         =>  $value->bind_time,
