@@ -43,4 +43,13 @@ class Machine extends Model
     {
         return $this->belongsTo('\App\Brand', 'brand_id', 'id');
     }
+
+    /**
+     * [merchants 关联商户模型]
+     * @return [type] [description]
+     */
+    public function merchants()
+    {
+        return $this->belonesTo('\App\Merchants', 'merchant_id', 'id');
+    }
 }

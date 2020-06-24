@@ -50,6 +50,9 @@ Route::group([
     $router->resource('machines-styles', MachinesStyleController::class); // 机器型号
     $router->resource('machines', MachineController::class);  // 仓库管理
 
+    $router->resource('merchants', MerchantController::class);  // 商户管理
+
+
     // 交易列表
     $router->resource('trades', TradeController::class);
 

@@ -98,6 +98,16 @@ class User extends Authenticatable
         return $this->hasMany('\App\CashsLog', 'user_id', 'id');
     }
 
+    /**
+     * [merchants 用户关联商户列表]
+     * @author Pudding
+     * @return   [type]                   [description]
+     */
+    public function merchants()
+    {
+        return $this->hasMany('\App\Merchant', 'user_id', 'id');
+    }
+
 
     /**
      * @Author    Pudding
