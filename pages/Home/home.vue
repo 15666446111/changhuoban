@@ -119,9 +119,9 @@ export default {
 	    	net({
 	        	url:"/V1/notice",
 	            method:'get',
+				data:{type_id:1},
 	            success: (res) => {
 					if(res.data.success.data){
-						// console.log(res);
 						this.notice = res.data.success.data;
 						this.notice_show = true;
 					}
