@@ -151,6 +151,167 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/upBank', 'V1\SetUserController@updateBank');
 
 
+    /**
+     * @version [<APP 获取产品分类接口>] [<description>]
+     * @return  [获取正在展示的产品分类]   [<description>]
+     * @version [<产品分类信息接口] [<description>]
+     */
+    Route::middleware('AuthToken')->get('/getproducttype', 'V1\ProductController@getType');
+
+      /**
+     * @version [<APP 获取产品列表接口>] [<description>]
+     * @return  [获取正在展示的产品列表]   [<description>]
+     * @version [<产品列表信息接口] [<description>]
+     */
+    Route::middleware('AuthToken')->get('/getproduct', 'V1\ProductController@getProduct');
+
+    /**
+     * @version [<APP 获取产品信息接口>] [<description>]
+     * @return  [获取单独某个产品信息]   [<description>]
+     * @version [<产品信息接口] [<description>]
+     */
+    Route::middleware('AuthToken')->get('/getproductinfo', 'V1\ProductController@getProductInfo');
+
+     /**
+     * 添加用户收货地址接口
+     */
+    Route::middleware('AuthToken')->post('/addressAdd', 'V1\AddressController@address');
+
+
+    /**
+     * 查询用户收货地址接口
+     */
+    Route::middleware('AuthToken')->get('/getAddress', 'V1\AddressController@getAAddress');
+
+
+     /**
+     * 删除用户收货地址接口
+     */
+    Route::middleware('AuthToken')->get('/deAddress', 'V1\AddressController@deleteAddress');
+ 
+
+    /**
+     * 修改用户收货地址接口
+     */
+    Route::middleware('AuthToken')->get('/upAddress', 'V1\AddressController@updateAddress');
+
+
+
+    /**
+     * 查询单个收货地址接口
+     */
+    Route::middleware('AuthToken')->get('/getFirstAddress', 'V1\AddressController@firstAddress');    
+
+
+    
+    /**
+     * 查询默认收货地址接口
+     */
+    Route::middleware('AuthToken')->get('/getDefaultAddress', 'V1\AddressController@defaultAddress');    
+
+
+      /**
+     * 生成订单接口
+     */
+    Route::middleware('AuthToken')->post('/addOrderCreate', 'V1\OrdersController@orderCreate');
+
+
+    /**31
+     * 查询订单接口
+     */
+    Route::middleware('AuthToken')->get('/getOrderUser', 'V1\OrdersController@getOrder');
+
+
+    /* 收益页面接口
+    */
+   Route::middleware('AuthToken')->get('/cashs', 'V1\CashsController@cashsIndex');
+
+
+   /**
+    * 机具管理页面接口
+    */
+   Route::middleware('AuthToken')->get('/getBindAll', 'V1\MerchantController@getBind');
+
+    /**
+     * 机具管理页面接口
+     */
+    Route::middleware('AuthToken')->get('/getTail', 'V1\MerchantController@getMerchantsTail');
+
+    
+    /**
+     * @version [<APP 获取政策活动列表>] [<description>]
+     * @return  [获取平台所有的政策活动]   [<description>]
+     * @version [<获取政策后的] [<description>]
+     */
+    Route::middleware('AuthToken')->get('/getPolicy', 'V1\PolicyController@getPolicy');
+
+
+     /**
+     * @version [<APP 我的栏位>] [<description>]
+     * @return  [个人信息 获取个人信息]   [<description>]
+     * @version [<个人信息接口] [<description>]
+     */
+    Route::middleware('AuthToken')->get('/mine', 'V1\MineController@info');
+
+
+    /**
+     * @version [<APP 首页 伙伴管理>] [<description>]
+     * @return  [首页的伙伴管理直接下级列表]   [<description>]
+     * @version [<伙伴管理] [<description>]
+     */
+    Route::middleware('AuthToken')->get('/my_team', 'V1\TeamController@index');
+
+
+    /**
+     * 查询用户未绑定终端机器
+     */
+    Route::middleware('AuthToken')->get('/getUnBoundInfo', 'V1\TransferController@getUnBound');
+    
+
+    /**
+     * 划拨
+     */
+    Route::middleware('AuthToken')->post('/addTransfer', 'V1\TransferController@transfer');
+
+
+    /**
+     * 回拨机器列表
+     */
+    Route::middleware('AuthToken')->get('/getBackList', 'V1\TransferController@backList');
+
+
+    /**
+     * 回拨
+     */
+    Route::middleware('AuthToken')->post('/addBackTransfer', 'V1\TransferController@backTransfer');
+
+    
+    /**
+     * 划拨回拨记录
+     */
+    Route::middleware('AuthToken')->get('/getTransferLog', 'V1\TransferController@transferLog');
+
+
+    /**
+     * @version [<APP 商户登记>] [<description>]
+     * @return  [获取该用户下所有未登记的机器]   [<description>]
+     * @version [<未登记机器获取接口] [<description>]
+     */
+    Route::middleware('AuthToken')->get('/getNoBindMerchant', 'V1\MerchantController@getNoBindList');
+
+
+    /**
+     * 首页商户登记绑定接口
+     */
+    Route::middleware('AuthToken')->get('/register', 'V1\MerchantController@registers');
+
+
+    /**
+     * 商户列表接口
+     */
+    Route::middleware('AuthToken')->get('/getMerchantsList', 'V1\MerchantController@merchantsList');
+
+
 });
 
 Route::fallback(function(){ 

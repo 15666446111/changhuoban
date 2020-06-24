@@ -11,4 +11,27 @@ class Trade extends Model
      * @var array
      */
     protected $guarded = [];
+
+    /**
+	 * [merchants 反向关联收益]
+	 * @author Pudding
+	 * @DateTime 2020-04-10T16:37:46+0800
+	 * @return   [type]                   [description]
+	 */
+    public function trades_cash()
+    {
+    	return $this->hasMany('\App\CashsLog', 'trade_id', 'id');
+    }
+
+
+    /**
+     * [merchants 关联商户模型 通过SN关联]
+     * @author Pudding
+     * @DateTime 2020-04-10T16:37:46+0800
+     * @return   [type]                   [description]
+     */
+    public function merchants_sn()
+    {
+        return $this->belongsTo('\App\Machine', 'sn', 'sn');
+    }
 }

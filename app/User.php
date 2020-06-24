@@ -91,6 +91,15 @@ class User extends Authenticatable
 
 
     /**
+     * 用户关联分润返现受益表
+     */
+    public function cash()
+    {
+        return $this->hasMany('\App\CashsLog', 'user_id', 'id');
+    }
+
+
+    /**
      * @Author    Pudding
      * @DateTime  2020-06-22
      * @copyright [copyright]
@@ -121,5 +130,21 @@ class User extends Authenticatable
         $parents .= "_".$User->id."_,";
 
         return $User->parent > 0 ? self::getParentStr($User->parent, $parents) : $parents;
+    }
+
+    /**
+     * 关联划拨表
+     */
+    public function old_user_id()
+    {
+        return $this->belongsTo('App\Transfer','id','old_user_id');
+    }
+
+    /**
+     * 关联划拨表
+     */
+    public function new_user_id()
+    {
+        return $this->belongsTo('App\Transfer','id','new_user_id');
     }
 }

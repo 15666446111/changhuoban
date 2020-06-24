@@ -52,7 +52,6 @@ class AppServiceProvider extends ServiceProvider
 
 
 
-
         /**
          * [$table Config Database Auto Load To Config]
          * @var [自动加载配置表到Config]
