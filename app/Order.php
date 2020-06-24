@@ -13,7 +13,7 @@ class Order extends Model
     // 黑名单
     protected $guarded = [];
 
-    public function Products(){
+    public function products(){
 
         return $this->hasone('App\Product','id','product_id');
 
