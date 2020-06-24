@@ -126,7 +126,7 @@ class ProductController extends AdminController
         $form->ueditor('content', __('内容'));
 
         if(Admin::user()->operate == 'All'){
-            $form->select('verify', __('审核'))->options([
+            $form->select('state', __('审核'))->options([
                 0   =>  '待审核',
                 1   =>  '正常',
                 -1  =>  '拒绝',
