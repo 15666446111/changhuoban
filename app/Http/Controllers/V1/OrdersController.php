@@ -108,7 +108,18 @@ class OrdersController extends Controller
             
             $type = $request->type ?? 'all';
 
-            $data = \App\Order::get();
+            $data = \App\Order::where('orders.user_id',$request->user->id)->get();
+
+            $arrs = [];
+
+            foreach($data as $k=>$v){
+                
+                $arrs[] = [
+                    'title'      =>  $v->products->title,
+                    'image'   =>  $v->products->image,
+                ];
+
+            }
             
             // $data=\App\Order::
             // select('image','products.id','title','order_no','address','orders.price','status','numbers','products.price','products.price as good_price','orders.price as order_price')
@@ -116,13 +127,13 @@ class OrdersController extends Controller
             // ->where('orders.user_id',$request->user->id);
 
             if($type == "shop"){
-
+                
             }
 
             // $data = $data->get();
             
             
-            return response()->json(['success'=>['message' => '获取成功!', 'data' => $data]]); 
+            return response()->json(['success'=>['message' => '获取成功!', 'data' => $arrs]]); 
 
 
     	} catch (\Exception $e) {
