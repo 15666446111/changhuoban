@@ -23,7 +23,8 @@ class OrdersController extends Controller
             $data=\App\Order::create([
                 'user_id'=>$request->user->id,
                 'order_no'=>$order_no,
-                'address'=>$request->address,
+                // 'address'=>$request->province.$request->area.$request->city.$request->detail,
+                'address'=>implode(",",$request->address),
                 'numbers'=>$request->numbers,
                 'price'=>$request->price,
                 'product_id'=>$request->product_id,
