@@ -25,7 +25,7 @@ class OrdersController extends Controller
                 'user_id'=>$request->user->id,
                 'order_no'=>$order_no,
                 // 'address'=>$request->province.$request->area.$request->city.$request->detail,
-                'address'=>$request->address->id,
+                'address'=>$request->address,
                 'numbers'=>$request->numbers,
                 'price'=>$request->price,
                 'product_id'=>$request->product_id,
