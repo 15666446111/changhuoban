@@ -117,9 +117,14 @@ class OrdersController extends Controller
                 $arrs[] = [
                     'title'      =>  $v->products->title,
                     'image'   =>  $v->products->image,
+                    'order_no' =>$V->products->order_no,
+                    'id' =>$V->products->id,
+                    'product_price' =>$V->products->product_price,
+                    'price' =>$V->products->price,
                 ];
 
             }
+
             
             // $data=\App\Order::
             // select('image','products.id','title','order_no','address','orders.price','status','numbers','products.price','products.price as good_price','orders.price as order_price')
