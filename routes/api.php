@@ -151,6 +151,49 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/upBank', 'V1\SetUserController@updateBank');
 
 
+    /**
+     * @version [<APP 获取产品分类接口>] [<description>]
+     * @return  [获取正在展示的产品分类]   [<description>]
+     * @version [<产品分类信息接口] [<description>]
+     */
+    Route::middleware('AuthToken')->get('/getproducttype', 'V1\ProductController@getType');
+
+      /**
+     * @version [<APP 获取产品列表接口>] [<description>]
+     * @return  [获取正在展示的产品列表]   [<description>]
+     * @version [<产品列表信息接口] [<description>]
+     */
+    Route::middleware('AuthToken')->get('/getproduct', 'V1\ProductController@getProduct');
+
+    /**
+     * @version [<APP 获取产品信息接口>] [<description>]
+     * @return  [获取单独某个产品信息]   [<description>]
+     * @version [<产品信息接口] [<description>]
+     */
+    Route::middleware('AuthToken')->get('/getproductinfo', 'V1\ProductController@getProductInfo');
+
+      /**
+     * 生成订单接口
+     */
+    Route::middleware('AuthToken')->post('/addOrderCreate', 'V1\OrdersController@orderCreate');
+
+
+    /**
+     * 查询订单接口
+     */
+    Route::middleware('AuthToken')->get('/getOrderUser', 'V1\OrdersController@getOrder');
+    
+
+    /* 收益页面接口
+    */
+   Route::middleware('AuthToken')->get('/cashs', 'V1\CashsController@cashsIndex');
+
+
+   /**
+    * 机具管理页面接口
+    */
+   Route::middleware('AuthToken')->get('/getBindAll', 'V1\MerchantController@getBind');
+
 });
 
 Route::fallback(function(){ 
