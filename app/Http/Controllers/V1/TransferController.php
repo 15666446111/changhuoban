@@ -112,25 +112,34 @@ class TransferController extends Controller
     {
 
         try{
-            
-                \App\Machine::where('user_id',$request->friend_id)
-                ->whereIn('id',$request->merchant_id)
-                ->update(['user_id'=>$request->user->id]);
-                
 
-                \App\Transfer::where('old_user_id',$request->user->id)
-                ->where('new_user_id',$request->friend_id)
+            $res=\App\Machine::whereIn('user_id',$request->friend_id)
+            ->whereIn('id',$request->merchant_id)
+            ->update(['user_id'=>$request->user->id]);
+
+            if($res){
+
+                $data=\App\MachineLog::where('old_user_id',$request->user->id)
+                ->whereIn('new_user_id',$request->friend_id)
                 ->whereIn('machine_id',$request->merchant_id)
                 ->update(['is_back'=>1]);
 
                 foreach($request->merchant_id as $k=>$v){
-                    \App\Transfer::create([
+                    $info = \App\Transfer::create([
                         'machine_id'    =>  $v,
                         'old_user_id'   =>  $request->user->id,
                         'new_user_id'   =>  $request->friend_id,
                         'state'         =>  $request->state
                     ]);
                 }
+
+            }
+            
+            if($info){
+
+                return response()->json(['success'=>['message' => '回拨成功!', 'data'=>[]]]);
+
+            }
 
             return response()->json(['success'=>['message' => '回拨成功!', 'data'=>[]]]);
 
