@@ -19,11 +19,11 @@ class TeamController extends Controller
     {
     	try{
             // 获取直接下级信息
-            $list = \App\Buser::/*where('parent', $request->user->id)
+            $list = \App\User::/*where('parent', $request->user->id)
                         ->*/select(['id', 'headimg', 'nickname', 'created_at'])->orderBy('created_at', 'desc')->get();
 
             // 获取总下级人数
-            $Arr = \App\BuserParent::where('parents', 'like', "%_".$request->user->id."_%")->pluck('id')->toArray();
+            $Arr = \App\UserRelation::where('parents', 'like', "%_".$request->user->id."_%")->pluck('id')->toArray();
 
             return response()->json(['success'=>
                     [
