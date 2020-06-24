@@ -396,6 +396,11 @@ return [
     |
     */
     'extensions' => [
+        // 图表
+        'chartjs' => [
+            // Set to `false` if you want to disable this extension
+            'enable' => true,
+        ],
         // 后台设置
         'configx' => [
             // Set to `false` if you want to disable this extension
