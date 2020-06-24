@@ -6,7 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    
+	
+    // 黑名单
+	protected $guarded = [];
+		
     /**
 	 * @Author    Pudding
 	 * @DateTime  2020-06-10
@@ -22,7 +25,7 @@ class Product extends Model
 
 	public function orders()
 	{
-		return $this->belongsTo('\App\Orders','id','product_id');
+		return $this->hasMany('\App\Orders','product_id','id');
 	}
 
 
