@@ -55,7 +55,6 @@ Route::group([
     // 交易列表
     $router->resource('trades', TradeController::class);
 
-
     // 提現管理
     $router->resource('withdraws', WithdrawController::class);
 
@@ -73,4 +72,5 @@ Route::group([
 
     //文章操作日志
     $router->resource('articles_logs', ArtclesLogController::class);
+
 });
