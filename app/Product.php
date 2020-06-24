@@ -20,6 +20,11 @@ class Product extends Model
 		return $this->belongsTo('\App\Brand', 'type', 'id');
 	}
 
+	public function orders()
+	{
+		return $this->belongsTo('\App\Orders','id','product_id');
+	}
+
 
  	/** 获取图片头像 **/
  	public function getImageAttribute($value)
