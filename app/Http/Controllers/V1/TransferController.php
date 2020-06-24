@@ -113,10 +113,6 @@ class TransferController extends Controller
 
         try{
             
-            
-
-            if(\is_array($request->merchant_id)){
-
                 \App\Machine::where('user_id',$request->friend_id)
                 ->whereIn('id',$request->merchant_id)
                 ->update(['user_id'=>$request->user->id]);
@@ -135,31 +131,6 @@ class TransferController extends Controller
                         'state'         =>  $request->state
                     ]);
                 }
-
-            }else{
-
-                \App\Machine::where('user_id',$request->friend_id)
-                ->where('id',$request->merchant_id)
-                ->update(['user_id'=>$request->user->id]);
-                
-
-                \App\Transfer::where('old_user_id',$request->user->id)
-                ->where('new_user_id',$request->friend_id)
-                ->where('machine_id',$request->merchant_id)
-                ->update(['is_back'=>1]);
-
-                \App\Transfer::create([
-                    'machine_id'    =>  $request->merchant_id,
-                    'old_user_id'   =>  $request->user->id,
-                    'new_user_id'   =>  $request->friend_id,
-                    'state'         =>  $request->state
-                ]);
-
-            }
-
-                
-
-            
 
             return response()->json(['success'=>['message' => '回拨成功!', 'data'=>[]]]);
 
