@@ -172,6 +172,44 @@ Route::prefix('V1')->group(function () {
      */
     Route::middleware('AuthToken')->get('/getproductinfo', 'V1\ProductController@getProductInfo');
 
+     /**
+     * 添加用户收货地址接口
+     */
+    Route::middleware('AuthToken')->post('/addressAdd', 'V1\AddressController@address');
+
+
+    /**
+     * 查询用户收货地址接口
+     */
+    Route::middleware('AuthToken')->get('/getAddress', 'V1\AddressController@getAAddress');
+
+
+     /**
+     * 删除用户收货地址接口
+     */
+    Route::middleware('AuthToken')->get('/deAddress', 'V1\AddressController@deleteAddress');
+ 
+
+    /**
+     * 修改用户收货地址接口
+     */
+    Route::middleware('AuthToken')->get('/upAddress', 'V1\AddressController@updateAddress');
+
+
+
+    /**
+     * 查询单个收货地址接口
+     */
+    Route::middleware('AuthToken')->get('/getFirstAddress', 'V1\AddressController@firstAddress');    
+
+
+    
+    /**
+     * 查询默认收货地址接口
+     */
+    Route::middleware('AuthToken')->get('/getDefaultAddress', 'V1\AddressController@defaultAddress');    
+
+
       /**
      * 生成订单接口
      */
