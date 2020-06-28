@@ -23,6 +23,23 @@ class Product extends Model
 		return $this->belongsTo('\App\Brand', 'type', 'id');
 	}
 
+
+	/**
+	 * @Author    Pudding
+	 * @DateTime  2020-06-10
+	 * @copyright [copyright]
+	 * @license   [关联类型品牌]
+	 * @version   [version]
+	 * @return    [type]      [description]
+	 */
+	public function style()
+	{
+		return $this->belongsTo('\App\MachinesStyle', 'style_id', 'id');
+	}
+
+	/**
+	 * 关联订单品牌
+	 */
 	public function orders()
 	{
 		return $this->hasMany('\App\Orders','product_id','id');
