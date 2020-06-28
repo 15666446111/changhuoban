@@ -11,7 +11,7 @@ const net = function(options) {
 		
 		if (token == ''){
 			// 如果没有token  定位到登陆页面
-            uni.navigateTo({
+            uni.redirectTo({
                 url: '/pages/index/index'
             });
 
@@ -37,10 +37,10 @@ const net = function(options) {
 					})
 					
 					setTimeout(function() {
-						uni.navigateTo({
+						uni.redirectTo({
 							url: '/pages/index/index'
 						})
-					}, 1200);
+					}, 1000);
 					return;
 				}
 				
