@@ -28,6 +28,11 @@ class ProductController extends AdminController
     {
         $grid = new Grid(new Product());
 
+        //展示该操盘方下的产品数据
+        if(Admin::user()->operate != "All"){
+            $grid->model()->where('operate', Admin::user()->operate);
+        }
+
         $grid->column('id', __('索引'));
 
         $grid->column('title', __('标题'));
@@ -114,10 +119,13 @@ class ProductController extends AdminController
     {
         $form = new Form(new Product());
 
+
         if(Admin::user()->operate != "All" && request()->route()->parameters()){
             $Plug = Plug::where('id', request()->route()->parameters()['plug'])->first();
             if($Plug->operate != Admin::user()->operate) return abort('403'); 
         }
+
+        $form->hidden('operate', __('操盘号'))->value(Admin::user()->operate)->readonly();
 
         $form->text('title', __('产品标题'));
 
