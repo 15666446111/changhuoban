@@ -53,26 +53,28 @@
 					<view class="detail-name" v-if="t.type == 2">团队分润</view>
 					
 					<image class="detail-img" v-if="t.type == 3" src="/static/sy/zhi.png"  />
-					<view class="detail-name" v-if="t.type == 3">直推分润</view>
+					<view class="detail-name" v-if="t.type == 3">激活返现</view>
 					
 					<image class="detail-img" v-if="t.type == 4" src="/static/sy/zhi.png"  />
-					<view class="detail-name" v-if="t.type == 4">间推分润</view>
+					<view class="detail-name" v-if="t.type == 4">间推激活返现</view>
 					
 					
 					<image class="detail-img" v-if="t.type == 5" src="/static/sy/fan.png"  />
-					<view class="detail-name" v-if="t.type == 5">激活返现</view>
+					<view class="detail-name" v-if="t.type == 5">间间推激活返现</view>
 					
 					
 					<image class="detail-img" v-if="t.type == 6" src="/static/sy/fan.png"  />
-					<view class="detail-name" v-if="t.type == 6">直推激活</view>
+					<view class="detail-name" v-if="t.type == 6">达标返现</view>
 					
 					<image class="detail-img" v-if="t.type == 7" src="/static/sy/fan.png"  />
-					<view class="detail-name" v-if="t.type == 7">间推激活</view>
+					<view class="detail-name" v-if="t.type == 7">二次达标返现</view>
 					
 					
 					<image class="detail-img" v-if="t.type == 8" src="/static/sy/fan.png"  />
-					<view class="detail-name" v-if="t.type == 8">间推分润</view>
+					<view class="detail-name" v-if="t.type == 8">三次达标返现</view>
 					
+					<image class="detail-img" v-if="t.type == 9" src="/static/sy/fan.png"  />
+					<view class="detail-name" v-if="t.type == 9">财商学院推荐奖励</view>
 					
 					<view class="detail-text">+{{ t.money / 100 | 0}}</view>
 				</view>

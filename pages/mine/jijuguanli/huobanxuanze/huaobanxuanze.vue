@@ -57,6 +57,7 @@ export default {
 				url: '/V1/my_team',
 				method: 'GET',
 				success: (res) => {
+					console.log(res);
 					this.partnerList = res.data.success.data.list;
 				}
 			})

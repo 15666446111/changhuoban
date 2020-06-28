@@ -4,9 +4,9 @@
 		<view class="titlebars">
 			
 			<view class="titlebar">
-				<view class="rise">
+				<view class="rise"> 
 					<view class="rise-head">
-						<image class="head" :src="UserInfo.headimg" mode="aspectFill" />
+						<image class="head" :src="UserInfo.heading" mode="aspectFill" />
 						<view class="name">{{ UserInfo.nickname}}</view>
 					</view>
 					<view class="ID">{{ UserInfo.username }}</view>
@@ -15,7 +15,7 @@
 
 			<view class="earnings">
 				
-				<navigator url="lijitixian/lijitixian">
+				<navigator url="cash/cash">
 					<view class="tixian">提现</view>
 				</navigator>
 				
@@ -116,7 +116,7 @@
 					</view>
 					<view class="across"></view>
 				</navigator>
-				<navigator class="url" url="shezhi/shezhi">
+				<navigator class="url" url="bankSet/bankSet">
 					<view class="div">
 						<image class="div-img" src="/static/xtsz.png" />
 						<view class="div-text">系统设置</view>
@@ -162,7 +162,7 @@ export default {
 		// 获取个人信息
 	  	getUserInfo(){
 	    	net({
-	        	url:"/V1/mine",
+	        	url:"/V1/userInfo",
 	            method:'get',
 	            success: (res) => {
 					uni.hideLoading();

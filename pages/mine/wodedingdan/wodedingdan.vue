@@ -7,19 +7,19 @@
 					<view class="mall">
 						<view class="order-number">
 							<view class="number">订单号:{{ item.order_no }}</view>
-							<view class="pay">{{status == 0 ? '未支付' : '已支付'}}</view>
+							<view class="pay">{{item.status == 0 ? '未支付' : '已支付'}}</view>
 						</view>
 						<view class="mall-xian1"></view>
 						<view class="information">
 							<image class="information-img" :src="item.image" mode="widthFix" />
 							<view class="information-view">
 								<view class="information-text">{{item.title}}</view>
-								<view class="information-figure">¥{{item.good_price / 100}} × {{item.numbers}}</view>
+								<view class="information-figure">¥{{item.product_price / 100}} × {{item.numbers}}</view>
 							</view>
 						</view>
 						<view class="mall-xian"></view>
 						<view class="total1">
-							<view class="total-text">合计：¥{{item.order_price / 100}}</view>
+							<view class="total-text">合计：¥{{item.price / 100}}</view>
 							<!-- <view class="total-text1">删除订单</view> -->
 						</view>
 					</view>
@@ -31,19 +31,19 @@
 					<view class="mall">
 						<view class="order-number">
 							<view class="number">订单号:{{ item.order_no }}</view>
-							<view class="pay">{{status == 0 ? '未支付' : '已支付'}}</view>
+							<view class="pay">{{item.status == 0 ? '未支付' : '已支付'}}</view>
 						</view>
 						<view class="mall-xian1"></view>
 						<view class="information">
 							<image class="information-img" :src="item.image" mode="widthFix" />
 							<view class="information-view">
 								<view class="information-text">{{item.title}}</view>
-								<view class="information-figure">¥{{item.good_price / 100}} × {{item.numbers}}</view>
+								<view class="information-figure">¥{{item.product_price / 100}} × {{item.numbers}}</view>
 							</view>
 						</view>
 						<view class="mall-xian"></view>
 						<view class="total1">
-							<view class="total-text">合计：¥{{item.order_price / 100}}</view>
+							<view class="total-text">合计：¥{{item.price / 100}}</view>
 							<!-- <view class="total-text1">删除订单</view> -->
 						</view>
 					</view>

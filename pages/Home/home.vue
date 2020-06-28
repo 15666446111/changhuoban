@@ -18,7 +18,7 @@
 
 		<!-- 数据显示 -->
 		<view class="datas">
-			<view class="data">
+			<view class="data"> 
 				<view class="deal">
 					<view class="number">{{ info.MonthTrade}}</view>
 					<view class="text">月交易额</view>
@@ -107,6 +107,7 @@ export default {
 	    	net({
 	        	url:"/V1/plug",
 	            method:'get',
+				data:{type:1},
 	            success: (res) => {
 					console.log(res);
 					this.swipers = res.data.success.data;
@@ -119,9 +120,9 @@ export default {
 	    	net({
 	        	url:"/V1/notice",
 	            method:'get',
+				data:{type_id:1},
 	            success: (res) => {
 					if(res.data.success.data){
-						// console.log(res);
 						this.notice = res.data.success.data;
 						this.notice_show = true;
 					}

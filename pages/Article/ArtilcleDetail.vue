@@ -30,12 +30,12 @@
 		
 		methods: {
 			getArticle(aid){
-				net({
-		        	url:"/V1/getArticle",
+				net({	
+		        	url:"/V1/article",
 		            method:'get',
-					data: { aid: aid},
+					data:{aid:aid},
 		            success: (res) => {
-						console.log(res);
+						console.log("hahhaha"+res.data.success.data);
 						this.article = res.data.success.data;
 		            } 
 		      	})
@@ -71,11 +71,6 @@
 
 	}
 </script>
-
-
-
-
-
 
 <style>
 	page {

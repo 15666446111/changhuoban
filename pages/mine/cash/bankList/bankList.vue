@@ -22,7 +22,7 @@
 			</view>
 		</view>
 		
-		<navigator url="../../shezhi/xiugaijiesuanxinxi/xiugaijiesuanxinxi"><button class="bck">添加银行卡</button></navigator>
+		<navigator url="../../bankSet/bankCreate/bankCreate"><button class="bck">添加银行卡</button></navigator>
 	</view>
 </template>
 
@@ -83,7 +83,7 @@
 			// 修改卡信息
 			cardEdit(bankId){
 				uni.navigateTo({
-					url: '../../shezhi/xiugaijiesuanxinxi/settle_card_edit?card_id=' + bankId
+					url: '../../bankSet/bankCreate/settle_card_edit?card_id=' + bankId
 				})
 			},
 			

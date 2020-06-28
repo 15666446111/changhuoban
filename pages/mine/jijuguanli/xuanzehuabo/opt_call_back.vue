@@ -19,7 +19,7 @@
 		</view>
 		
 		<view style="height: 100upx"></view>
-		<view class="button" @click="transfer">确 认 划 拨<text>({{tranNum}})</text></view>
+		<view class="button" @click="transfer">确 认 回 拨<text>({{tranNum}})</text></view>
 	</view>
 </template>
 
@@ -29,7 +29,7 @@ import net from '../../../../common/net.js';
 export default {
 	data() {
 		return {
-			// 被划拨人id
+			// 被回拨人id
 			partnerId: '',
 			// 政策id
 			policyId: '',
@@ -43,18 +43,21 @@ export default {
 	onLoad(options) {
 		this.partnerId = options.uid;
 		this.policyId = options.policy_id;
-		// 获取可划拨终端列表
-		this.getUnBoundInfo(this.policyId);
+		// 获取可回拨终端列表
+		this.getBackList(this.policyId);
 		console.log(options);
 	},
 	
 	methods: {
-		// 获取可划拨终端列表
-		getUnBoundInfo(policyId){
+		// 获取可回拨终端列表
+		getBackList(policyId){
 			net({
-	        	url:"/V1/getUnBoundInfo",
+	        	url:"/V1/getBackList",
 	            method: 'get',
-				data: { policy_id: policyId },
+				data: {
+					policy_id: policyId,
+					friend_id: this.partnerId,
+				},
 	            success: (res) => {
 					this.policy = res.data.success.data;
 	            }
@@ -68,39 +71,39 @@ export default {
 			this.tranNum = e.target.value.length;
 		},
 		
-		// 划拨
+		// 回拨
 		transfer(){
 			if (this.termIds == '') {
-				uni.showToast({ title: '请选择划拨终端', icon: 'none' })
+				uni.showToast({ title: '请选择回拨终端', icon: 'none' })
 				return false;
 			}
 			if (this.partnerId == '') {
-				uni.showToast({ title: '请选择划拨用户', icon: 'none' })
+				uni.showToast({ title: '请选择回拨用户', icon: 'none' })
 				return false;
 			}
+			var friend_id = [this.partnerId];
 			
-			uni.showLoading();
 			net({
-	        	url:"/V1/addTransfer",
+	        	url:"/V1/addBackTransfer",
 	            method: 'POST',
 				data: {
-					id: this.termIds,
-					friend_id: this.partnerId
+					merchant_id: this.termIds,
+					friend_id: friend_id,
+					state: 2
 				},
 	            success: (res) => {
-					uni.hideLoading();
-					
+					console.log(res);
 					var _this = this;
 					if (res.data.success) {
 						uni.showToast({
-							title: '划拨成功',
-							icon: 'none'
+							title: '回拨成功',
+							icon: 'none',
 						})
 						setTimeout(function() {
 							uni.redirectTo({
-								url: 'xuanzehuabo?policy_id=' + _this.policyId + '&uid=' + _this.partnerId
+								url: './opt_call_back?policy_id=' + _this.policyId + '&uid=' + _this.partnerId
 							});
-						}, 1500);
+						}, 1500)
 					}
 	            }
 	      	})
