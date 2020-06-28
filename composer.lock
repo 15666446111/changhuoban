@@ -4605,7 +4605,14 @@
                     "email": "thibaud@aztech.io"
                 }
             ],
-            "time": "2020-06-06T08:46:27+00:00"
+            "description": "Formerly rhumsaa/uuid. A PHP 5.4+ library for generating RFC 4122 version 1, 3, 4, and 5 universally unique identifiers (UUID).",
+            "homepage": "https://github.com/ramsey/uuid",
+            "keywords": [
+                "guid",
+                "identifier",
+                "uuid"
+            ],
+            "time": "2020-02-21T04:36:14+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -4654,7 +4661,9 @@
                     "email": "sebastian@phpunit.de"
                 }
             ],
-            "time": "2020-06-06T08:46:27+00:00"
+            "description": "Looks up which function or method a line of code belongs to",
+            "homepage": "https://github.com/sebastianbergmann/code-unit-reverse-lookup/",
+            "time": "2017-03-04T06:30:41+00:00"
         },
         {
             "name": "sebastian/comparator",
@@ -4717,7 +4726,14 @@
                     "email": "sebastian@phpunit.de"
                 }
             ],
-            "time": "2020-06-06T08:46:27+00:00"
+            "description": "Provides the functionality to compare PHP values for equality",
+            "homepage": "https://github.com/sebastianbergmann/comparator",
+            "keywords": [
+                "comparator",
+                "compare",
+                "equality"
+            ],
+            "time": "2018-07-12T15:12:46+00:00"
         },
         {
             "name": "sebastian/diff",
@@ -4779,7 +4795,7 @@
                 "unidiff",
                 "unified diff"
             ],
-            "time": "2020-06-06T08:46:27+00:00"
+            "time": "2019-02-04T06:01:07+00:00"
         },
         {
             "name": "sebastian/environment",
@@ -4905,7 +4921,13 @@
                     "email": "bschussek@gmail.com"
                 }
             ],
-            "time": "2020-06-06T08:46:27+00:00"
+            "description": "Provides the functionality to export PHP variables for visualization",
+            "homepage": "http://www.github.com/sebastianbergmann/exporter",
+            "keywords": [
+                "export",
+                "exporter"
+            ],
+            "time": "2019-09-14T09:02:43+00:00"
         },
         {
             "name": "sebastian/global-state",
@@ -4962,7 +4984,7 @@
             "keywords": [
                 "global state"
             ],
-            "time": "2020-06-06T08:46:27+00:00"
+            "time": "2017-04-27T15:39:26+00:00"
         },
         {
             "name": "sebastian/object-enumerator",

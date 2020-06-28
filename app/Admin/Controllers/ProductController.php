@@ -32,7 +32,7 @@ class ProductController extends AdminController
         $grid->column('title', __('标题'));
 
         $grid->column('price', __('价格'))->display(function($money){
-            return number_format($money / 100, 2, '.', ',');
+            return number_format($money, 2, '.', ',');
         })->label();
 
         $grid->column('image', __('图片'))->image('', 60);
@@ -119,7 +119,9 @@ class ProductController extends AdminController
         }
 
         $form->text('title', __('产品标题'));
+
         $form->image('image', __('缩略图'));
+
         $form->switch('active', __('状态'))->default(1);
 
         $type = \App\MachinesType::where('state',1)->get()->pluck('name', 'id');
@@ -133,6 +135,10 @@ class ProductController extends AdminController
         $form->ignore(['name','factory_name','style_name']);
 
         $form->number('price', __('价格'));
+
+
+        $form->currency('price', __('价格'))->symbol('￥');
+
         $form->ueditor('content', __('内容'));
 
         if(Admin::user()->operate == 'All'){

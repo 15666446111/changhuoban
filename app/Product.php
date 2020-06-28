@@ -34,4 +34,25 @@ class Product extends Model
     {
     	return env("APP_URL")."/storage/".$value;
     }
+
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-06-28
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [设置器 ， 将存入到数据库中product表的price字段 自动转化为分单位]
+     * @param     [type]      $value [description]
+     */
+    public function setPriceAttribute($value)
+    {
+    	return (int)($value * 100);
+    }
+
+
+    public function getPriceAttribute($value)
+    {
+    	return $value / 100 ;
+    }
+
 }
