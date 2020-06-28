@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CashsLog extends Model
 {
-
+    protected $table = 'cashs_logs';
     
     // 黑名单
     protected $guarded = ['id'];
@@ -17,7 +17,7 @@ class CashsLog extends Model
      */
     public function users()
     {
-        return $this->hasMany('\App\User', 'user_id', 'id');
+        return $this->hasMany('\App\User', 'id', 'user_id');
     }
 
 
