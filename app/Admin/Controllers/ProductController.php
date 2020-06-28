@@ -151,8 +151,6 @@ class ProductController extends AdminController
 
             $form->hidden('style_id','型号')->required();
 
-            $form->ignore(['name','factory_name']);
-
             $form->currency('price', __('价格'))->symbol('￥');
 
             $form->ueditor('content', __('内容'));
