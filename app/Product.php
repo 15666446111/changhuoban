@@ -46,7 +46,7 @@ class Product extends Model
      */
     public function setPriceAttribute($value)
     {
-    	return (int)($value * 100);
+        $this->attributes['price'] = (int)($value * 100);
     }
 
 

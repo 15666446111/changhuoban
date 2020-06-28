@@ -14,6 +14,7 @@ class CreatePoliciesTable extends Migration
     public function up()
     {
         Schema::create('policies', function (Blueprint $table) {
+
             $table->bigIncrements('id');
 
             $table->string('title')->comment('政策活动');
@@ -49,6 +50,7 @@ class CreatePoliciesTable extends Migration
             $table->dropColumn([ 'active_return', 'standard', 'standard_count' ]);
 
             $table->timestamps();
+            
         });
     }
 

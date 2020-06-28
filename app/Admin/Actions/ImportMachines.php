@@ -28,8 +28,8 @@ class ImportMachines extends Action
 
                 $headings = [];
 
-                if (count($rows) > 0) 
-                {
+                if (count($rows) > 0) {
+                    
                     foreach ($rows[0] as $key => $col) $headings[Str::snake($col)] = $key;
                 }
                 
