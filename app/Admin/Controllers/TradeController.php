@@ -37,6 +37,8 @@ class TradeController extends AdminController
 
         $grid->column('merchant_code',  __('商户号'));
 
+        $grid->column('rate',  __('交易费率'));
+
         $grid->column('amount',         __('交易金额'))->display(function($amount){
             return number_format($amount / 100, 2, '.', ',');
         })->label();
