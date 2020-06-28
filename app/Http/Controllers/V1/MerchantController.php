@@ -104,7 +104,7 @@ class MerchantController extends Controller
 					'machine_phone'		=>		'',
 					'merchant_sn'		=>		$value->sn,
 					'money'				=>		'',
-					'machine_id'		=>		$value->machines->id,
+					'machine_id'		=>		$value->id,
 					'created_at'		=>		$value->bind_time
 
 				);
