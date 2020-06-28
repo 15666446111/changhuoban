@@ -71,4 +71,7 @@ Route::group([
     //划拨回拨日志列表
     $router->resource('transfers', TransferController::class);
 
+    // 活动组管理
+    $router->resource('policy-groups', PolicyGroupController::class);
+
 });
