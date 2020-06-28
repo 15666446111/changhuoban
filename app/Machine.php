@@ -85,4 +85,16 @@ class Machine extends Model
         return $this->hasMany('\App\Trade', 'sn', 'sn');
     }
 
+
+    /**
+     * [merchants 关联交易模型 通过SN关联]
+     * @author Pudding
+     * @DateTime 2020-04-10T16:37:46+0800
+     * @return   [type]                   [description]
+     */
+    public function cashs()
+    {
+        return $this->hasMany('\App\CashLog', 'machine_id', 'id');
+    }
+
 }

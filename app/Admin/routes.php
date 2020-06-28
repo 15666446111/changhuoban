@@ -74,4 +74,7 @@ Route::group([
     // 活动组管理
     $router->resource('policy-groups', PolicyGroupController::class);
 
+    //分润管理
+    $router->resource('cashs-logs', CashController::class);
+
 });
