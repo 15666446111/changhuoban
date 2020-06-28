@@ -29,7 +29,9 @@ class AdminUserController extends AdminController
         
         $grid = new Grid(new $userModel());
 
-        $grid->column('id', 'ID')->sortable();
+        $grid->model()->latest();
+
+        //$grid->column('id', 'ID')->sortable();
 
         $grid->column('username', trans('admin.username'));
 

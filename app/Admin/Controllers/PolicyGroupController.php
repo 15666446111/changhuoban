@@ -30,13 +30,18 @@ class PolicyGroupController extends AdminController
         if(Admin::user()->operate != "All"){
             $grid->model()->where('operate', Admin::user()->operate);
         }
+
+        $grid->model()->latest();
+        
         //$grid->column('id', __('Id'));
         //
         $grid->column('title', __('组名称'));
 
         $grid->column('operate', __('操盘方'));
 
-        $grid->column('type', __('组类别'));
+        $grid->column('type', __('组类别'))
+                ->using([ '1' => '联盟模式', '2' => '工具模式'])
+                ->dot([ 1 => 'danger', 2 => 'success' ], 'default');
 
         $grid->column('created_at', __('创建时间'));
 

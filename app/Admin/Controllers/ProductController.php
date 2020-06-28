@@ -33,7 +33,9 @@ class ProductController extends AdminController
             $grid->model()->where('operate', Admin::user()->operate);
         }
 
-        $grid->column('id', __('索引'));
+        $grid->model()->latest();
+
+        //$grid->column('id', __('索引'));
 
         $grid->column('title', __('标题'));
 

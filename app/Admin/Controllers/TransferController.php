@@ -26,7 +26,9 @@ class TransferController extends AdminController
     {
         $grid = new Grid(new Transfer());
 
-        $grid->column('id', __('索引'));
+        $grid->model()->latest();
+
+        //$grid->column('id', __('索引'));
         $grid->column('machine.sn', __('终端号'));
         $grid->column('old_user.nickname', __('划拨前用户'));
         $grid->column('new_user.nickname', __('划拨后用户'));
