@@ -37,3 +37,9 @@ Route::post('/trade', 	'TradeApiController@index');
  * @version [<vector>] [<后台联动Select 查询符合条件的厂家>]
  */
 Route::get('/api/getAdminFactory', 		'AdminApiController@getAdminFactory');
+
+
+/**
+ * @version [<vector>] [<后台联动Select 查询符合条件的型号>]
+ */
+Route::get('/api/getAdminStyle', 		'AdminApiController@getAdminStyle');

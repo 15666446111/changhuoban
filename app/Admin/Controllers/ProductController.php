@@ -39,7 +39,7 @@ class ProductController extends AdminController
 
         $grid->column('active', __('状态'))->switch();
         
-        $grid->column('brands.brand_name', __('品牌'));
+        // $grid->column('brands.brand_name', __('品牌'));
 
         $grid->column('state', __('审核'))->using([
             '0' => '待审核', '1' => '正常', '-1' => '拒绝'
@@ -121,7 +121,17 @@ class ProductController extends AdminController
         $form->text('title', __('产品标题'));
         $form->image('image', __('缩略图'));
         $form->switch('active', __('状态'))->default(1);
-        $form->select('type', __('品牌'))->options(\App\Brand::where('active', '1')->get()->pluck('brand_name', 'id'));
+
+        $type = \App\MachinesType::where('state',1)->get()->pluck('name', 'id');
+
+        $form->select('name','类型')->options($type)->load('factory_name','/api/getAdminFactory');
+
+        $form->select('factory_name','厂商')->load('style_name','/api/getAdminStyle');
+
+        $form->select('style_name','型号');
+
+        $form->ignore(['name','factory_name','style_name']);
+
         $form->number('price', __('价格'));
         $form->ueditor('content', __('内容'));
 

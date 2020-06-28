@@ -17,4 +17,5 @@ class MachinesType extends Model
     {
     	return $this->hasMany('App\MachinesFactory', 'type_id', "id");
     }
+
 }
