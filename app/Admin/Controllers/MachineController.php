@@ -9,6 +9,9 @@ use Encore\Admin\Show;
 use Encore\Admin\Facades\Admin;
 use App\Admin\Actions\ImportMachines;
 use App\Admin\Actions\MachineHeadTail;
+use App\Admin\Actions\HeadTailDeliverGoods;
+use App\Admin\Actions\ImportDeliverGoods;
+
 
 use Encore\Admin\Controllers\AdminController;
 
@@ -89,6 +92,10 @@ class MachineController extends AdminController
             $tools->append(new ImportMachines());
 
             $tools->append(new MachineHeadTail());
+
+            $tools->append(new HeadTailDeliverGoods());
+
+            $tools->append(new ImportDeliverGoods());
 
         });
 

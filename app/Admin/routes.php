@@ -68,4 +68,7 @@ Route::group([
     //品牌管理
     $router->resource('brands', BrandController::class);
 
+    //划拨回拨日志列表
+    $router->resource('transfers', TransferController::class);
+
 });
