@@ -65,7 +65,4 @@ Route::group([
     //品牌管理
     $router->resource('brands', BrandController::class);
 
-    //文章操作日志
-    $router->resource('articles_logs', ArtclesLogController::class);
-
 });
