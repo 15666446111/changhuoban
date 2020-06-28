@@ -125,6 +125,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Alipay Config
+    |--------------------------------------------------------------------------
+    |
+    */
+    // appid
+    'alipay_appid'  =>  env('ALIPAY_APPID', ''),
+    // aes 密钥
+    'alipay_encyptkey'  =>  env('ALIPAY_ENCRYPTKEY', ''),
+    // private key
+    'alipay_privatekey' =>  env('ALIPAY_PRIVATEKEY', ''),
+    // public key
+    'alipay_publickey'  =>  env('ALIPAY_PUBLICKEY', ''),
+    
+
+    /*
+    |--------------------------------------------------------------------------
     | Autoloaded Service Providers
     |--------------------------------------------------------------------------
     |

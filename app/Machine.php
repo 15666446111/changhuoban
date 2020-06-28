@@ -45,6 +45,15 @@ class Machine extends Model
     }
 
     /**
+     * [merchants 关联商户模型]
+     * @return [type] [description]
+     */
+    public function merchants()
+    {
+        return $this->belonesTo('\App\Merchants', 'merchant_id', 'id');
+    }
+
+    /**
      * [busers 关联终端活动政策模型]
      * @author Pudding
      * @DateTime 2020-04-10T15:35:13+0800

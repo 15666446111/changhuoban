@@ -11,7 +11,7 @@ return [
     | login page.
     |
     */
-    'name' => '畅捷支付 3.0',
+    'name' => 'Laravel-admin',
 
     /*
     |--------------------------------------------------------------------------
@@ -22,7 +22,7 @@ return [
     | `img` tag, eg '<img src="http://logo-url" alt="Admin logo">'.
     |
     */
-    'logo' => '<b>畅捷支付_3.0</b>',
+    'logo' => '<b>Laravel</b> admin',
 
     /*
     |--------------------------------------------------------------------------
@@ -34,7 +34,7 @@ return [
     | '<img src="http://logo-url" alt="Admin logo">'.
     |
     */
-    'logo-mini' => '<b>畅捷</b>',
+    'logo-mini' => '<b>La</b>',
 
     /*
     |--------------------------------------------------------------------------
@@ -85,7 +85,7 @@ return [
     | Html title for all pages.
     |
     */
-    'title' => '畅捷支付',
+    'title' => 'Admin',
 
     /*
     |--------------------------------------------------------------------------
@@ -436,11 +436,5 @@ return [
             'disk' => 'public'
         ],
 
-        // 列表灯箱效果
-        'grid-lightbox' => [
-        
-            // Set to `false` if you want to disable this extension
-            'enable' => true,
-        ]
     ],
 ];

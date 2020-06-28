@@ -8,11 +8,11 @@ Route::group([
     'prefix'        => config('admin.route.prefix'),
     'namespace'     => config('admin.route.namespace'),
     'middleware'    => config('admin.route.middleware'),
+    'as'            => config('admin.route.prefix') . '.',
 ], function (Router $router) {
 
-    $router->get('/', 'HomeController@index')->name('admin.home');
+    $router->get('/', 'HomeController@index')->name('home');
 
-    //
     $router->resource('admin-settings', AdminSettingController::class);
 
 
@@ -49,6 +49,9 @@ Route::group([
     $router->resource('machines-factories', MachinesFactoryController::class); // 机器厂商
     $router->resource('machines-styles', MachinesStyleController::class); // 机器型号
     $router->resource('machines', MachineController::class);  // 仓库管理
+
+    $router->resource('merchants', MerchantController::class);  // 商户管理
+
 
     // 交易列表
     $router->resource('trades', TradeController::class);

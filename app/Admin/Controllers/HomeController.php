@@ -66,7 +66,7 @@ class HomeController extends Controller
                 DB::raw('COUNT(*) as value')
             ])
             ->toJSON();
-        dd($stats);
+        //dd($stats);
         return view('admin.usersGrowth', compact('day'));
     }
 }

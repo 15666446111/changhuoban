@@ -15,12 +15,11 @@ class OrdersController extends Controller
      */
     public function orderCreate(Request $request)
     {
-        $code = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J');
-
-        $order_no = $code[intval(date('Y')) - 2011] . strtoupper(dechex(date('m'))) . date('d') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));
-        
-
         try{
+            $code = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J');
+
+            $order_no = $code[intval(date('Y')) - 2011] . strtoupper(dechex(date('m'))) . date('d') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));
+            
             $data=\App\Order::create([
                 'user_id'=>$request->user->id,
                 'order_no'=>$order_no,
@@ -34,10 +33,16 @@ class OrdersController extends Controller
                 'status'=>$request->status ?? '0',  
             ]); 
 
-            if($data){
+            Factory::setOptions($this->getOptions());
 
-                return response()->json(['success'=>['message' => '添加成功!', 'data' => []]]); 
-
+            //2. 发起API调用（以支付能力下的统一收单交易创建接口为例）
+            $result = Factory::payment()->App()->pay("iPhone6 16G", "20200326235526001", "88.88");
+            dd($result->body);
+            //3. 处理响应或异常
+            if (!empty($result['code']) && $result['code'] == 10000) {
+                echo "调用成功". PHP_EOL;
+            } else {
+                echo "调用失败，原因：". $result['msg']."，".$result['sub_msg'].PHP_EOL;
             }
 
         }catch (Exception $e) {
@@ -45,21 +50,7 @@ class OrdersController extends Controller
         }
 
 
-        // Factory::setOptions($this->getOptions());
-
-        // try {
-            // //2. 发起API调用（以支付能力下的统一收单交易创建接口为例）
-            // $result = Factory::payment()->App()->pay("iPhone6 16G", "20200326235526001", "88.88");
-            // dd($result->body);
-            // //3. 处理响应或异常
-            // if (!empty($result['code']) && $result['code'] == 10000) {
-            //     echo "调用成功". PHP_EOL;
-            // } else {
-            //     echo "调用失败，原因：". $result['msg']."，".$result['sub_msg'].PHP_EOL;
-            // }
-        // } catch (Exception $e) {
-        //     echo "调用失败，". $e->getMessage(). PHP_EOL;;
-        // }
+        
 
     }
 
