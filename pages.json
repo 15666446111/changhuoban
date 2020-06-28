@@ -388,7 +388,7 @@
 		"selectedColor": "#F0AD4E",
 		"backgroundColor": "#f5f5f5",
 		"list": [{
-				"pagePath": "pages/Home/Home",
+				"pagePath": "pages/Home/home",
 				"iconPath": "static/index.png",
 				"selectedIconPath": "static/index_checked.png",
 				"text": "首页"
