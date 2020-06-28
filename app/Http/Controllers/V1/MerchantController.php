@@ -83,6 +83,7 @@ class MerchantController extends Controller
 					'machine_phone'		=>		$value->phone,
 					'merchant_sn'		=>		$value->activate_sn,
 					'money'				=>		$value->trade_amount / 100,
+					'machine_id'		=>		$value->machines->id,
 					'created_at'		=>		$value->machines->bind_time
 
 				);
@@ -103,6 +104,7 @@ class MerchantController extends Controller
 					'machine_phone'		=>		'',
 					'merchant_sn'		=>		$value->sn,
 					'money'				=>		'',
+					'machine_id'		=>		$value->machines->id,
 					'created_at'		=>		$value->bind_time
 
 				);
@@ -207,5 +209,29 @@ class MerchantController extends Controller
 		
 		}
 
+	}
+	
+
+	/**
+     * 个人商户详情接口
+     */
+    public function merchantInfo(Request $request)
+    {
+        try{ 
+             
+            $data=\App\Machine::where('user_id',$request->user->id)
+            ->where('id',$request->id)
+            ->first();
+            
+            $data['time'] = $data->bind_time ? $data->bind_time : $data->activate_time;
+            
+            return response()->json(['success'=>['message' => '获取成功!', 'data' => $data]]);   
+
+    	} catch (\Exception $e) {
+            
+            return response()->json(['error'=>['message' => '系统错误，请联系客服']]);
+
+        }
     }
+	 
 }

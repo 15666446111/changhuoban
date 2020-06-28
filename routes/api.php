@@ -312,6 +312,12 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/getMerchantsList', 'V1\MerchantController@merchantsList');
 
 
+    /**
+     * 个人商户详情接口
+     */
+    Route::middleware('AuthToken')->get('/getMerchantInfo', 'V1\MerchantController@merchantInfo');
+
+
 });
 
 Route::fallback(function(){ 
