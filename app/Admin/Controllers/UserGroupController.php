@@ -33,6 +33,10 @@ class UserGroupController extends AdminController
 
         $grid->column('level', __('级别'));
 
+        $grid->column('trade_count', __('级别'))->display(function($money){
+            return number_format($money, 2, '.', ',');
+        })->label();
+
         $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s');
 
         $grid->column('updated_at', __('修改时间'))->date('Y-m-d H:i:s');
@@ -77,6 +81,8 @@ class UserGroupController extends AdminController
         $form->text('name', __('组名称'));
 
         $form->number('level', __('级别'))->default(0)->help('越大级别越高,但必须唯一');
+
+        $form->currency('trade_count', '满足交易')->symbol('￥');
 
         return $form;
     }

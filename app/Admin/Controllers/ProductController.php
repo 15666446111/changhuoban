@@ -32,7 +32,7 @@ class ProductController extends AdminController
         $grid->column('title', __('标题'));
 
         $grid->column('price', __('价格'))->display(function($money){
-            return number_format($money / 100, 2, '.', ',');
+            return number_format($money, 2, '.', ',');
         })->label();
 
         $grid->column('image', __('图片'))->image('', 60);
@@ -119,10 +119,15 @@ class ProductController extends AdminController
         }
 
         $form->text('title', __('产品标题'));
+
         $form->image('image', __('缩略图'));
+
         $form->switch('active', __('状态'))->default(1);
-        $form->select('type', __('品牌'))->options(\App\Brand::where('active', '1')->get()->pluck('brand_name', 'id'));
-        $form->number('price', __('价格'));
+
+        $form->select('type', __('品牌'))->options(\App\Brand::where('active', '1')->get()->pluck('brand_name', 'id'))->default(1);
+
+        $form->currency('price', __('价格'))->symbol('￥');
+
         $form->ueditor('content', __('内容'));
 
         if(Admin::user()->operate == 'All'){
