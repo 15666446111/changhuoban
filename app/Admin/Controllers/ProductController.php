@@ -137,9 +137,7 @@ class ProductController extends AdminController
 
             $form->select('name','类型')->options($type)->load('factory_name','/api/getAdminFactory');
 
-
             $form->hidden('operate', __('操盘号'))->value(Admin::user()->operate)->readonly();
-
 
             $form->select('style_id','型号')->required();
 
@@ -158,8 +156,6 @@ class ProductController extends AdminController
             $form->switch('active', __('状态'))->default(1);
 
             $form->hidden('style_id','型号')->required();
-
-            $form->ignore(['name','factory_name']);
 
             $form->currency('price', __('价格'))->symbol('￥');
 
