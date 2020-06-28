@@ -172,7 +172,7 @@ class PlugController extends AdminController
 
         $form->text('name', __('标题'));
 
-        $form->image('images', __('图片'));
+        $form->image('images', __('图片'))->uniqueName();
 
         $form->hidden('operate', __('操盘号'))->value(Admin::user()->operate)->readonly();
 
