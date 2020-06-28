@@ -3,10 +3,11 @@
 namespace App\Admin\Controllers;
 
 use App\Merchant;
-use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Facades\Admin;
+use Encore\Admin\Controllers\AdminController;
 
 class MerchantController extends AdminController
 {
@@ -57,8 +58,8 @@ class MerchantController extends AdminController
         $show = new Show(Merchant::findOrFail($id));
 
         if (Admin::user()->operate != 'ALL') {
-
-            // $model = $
+            $model = Merchant::where('id', $id)->first();
+            if($model->operate != Admin::user()->operate) return abort('403');        
         }
 
         $show->field('users.user_id', __('归属代理'));
