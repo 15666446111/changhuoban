@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CashsLog extends Model
 {
-
+    protected $table = 'cashs_logs';
     
     // 黑名单
     protected $guarded = ['id'];
@@ -17,7 +17,15 @@ class CashsLog extends Model
      */
     public function users()
     {
-        return $this->hasMany('\App\User', 'user_id', 'id');
+        return $this->belongsTo('\App\User', 'user_id', 'id');
+    }
+
+    /**
+     * 收益表反向关联机具表
+     */
+    public function machines()
+    {
+        return $this->belongsTo('\App\Machine', 'machine_id', 'id');
     }
 
 
