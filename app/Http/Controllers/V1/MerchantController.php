@@ -78,11 +78,12 @@ class MerchantController extends Controller
 				
 				$arrs['Bound'][] = array(
 
+					'id'				=>		$value->id,
 					'merchant_name'		=>		$value->name,
 					'machine_phone'		=>		$value->phone,
 					'merchant_sn'		=>		$value->activate_sn,
 					'money'				=>		$value->trade_amount / 100,
-					'created_at'		=>		$value->created_at
+					'created_at'		=>		$value->machines->bind_time
 
 				);
 			}
@@ -97,11 +98,12 @@ class MerchantController extends Controller
 
 				$arrs['UnBound'][] = array(
 
+					'id'				=>		'',
 					'merchant_name'		=>		'',
 					'machine_phone'		=>		'',
 					'merchant_sn'		=>		$value->sn,
 					'money'				=>		'',
-					'created_at'		=>		$value->created_at
+					'created_at'		=>		$value->bind_time
 
 				);
 
