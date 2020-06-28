@@ -137,13 +137,9 @@ class ProductController extends AdminController
 
             $form->select('name','类型')->options($type)->load('factory_name','/api/getAdminFactory');
 
-<<<<<<< HEAD
-        $form->hidden('operate', __('操盘号'))->value(Admin::user()->operate)->readonly();
 
-        $form->text('title', __('产品标题'));
-=======
-            $form->select('factory_name','厂商')->load('style_id','/api/getAdminStyle');
->>>>>>> a0f56b8d750c6cb55a4ddbde6a72c7e3f70d7598
+            $form->hidden('operate', __('操盘号'))->value(Admin::user()->operate)->readonly();
+
 
             $form->select('style_id','型号')->required();
 
