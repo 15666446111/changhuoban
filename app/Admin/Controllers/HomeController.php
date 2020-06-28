@@ -55,7 +55,7 @@ class HomeController extends Controller
         $day = $now->day;
 
         //
-        $range = Carbon::now()->subDays($day-1)->toDateString();
+        $range = Carbon::now()->subDays( $day -1 )->toDateString();
 
         // 构建查询构造器
         //$user = \App\User::where()->
@@ -66,7 +66,6 @@ class HomeController extends Controller
                 DB::raw('COUNT(*) as value')
             ])
             ->toJSON();
-        dd($stats);
         return view('admin.usersGrowth', compact('day'));
     }
 }
