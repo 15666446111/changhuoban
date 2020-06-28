@@ -94,7 +94,7 @@ class CashController extends AdminController
         $show->field('users.nickname', __('会员昵称'));
         $show->field('machines.sn', __('终端号'));
         $show->field('trades.order_no', __('交易流水号'));
-        $show->field('money', __('分润金额'))->display(function ($money) {
+        $show->field('money', __('分润金额'))->as(function ($money) {
             return number_format($money / 100, 2, '.', ',');
         })->label();
         $show->field('is_run', __('方式'))->using(['1' => '分润', '2' => '返现']);

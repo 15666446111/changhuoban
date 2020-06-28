@@ -108,7 +108,7 @@ Route::prefix('V1')->group(function () {
     /**
      * 修改个人登录密码
      */
-    Route::middleware('AuthToken')->post('/updateUser', 'V1\LoginController@editUser');
+    Route::middleware('AuthToken')->get('/setUserPwd', 'V1\LoginController@editUser');
 
     /**
      * 获取用户信息
