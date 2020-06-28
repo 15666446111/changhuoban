@@ -86,6 +86,7 @@ class ProductController extends AdminController
         $show->field('title', __('产品标题'));
         $show->field('image', __('缩略图'));
         $show->field('active', __('状态'));
+
         $show->field('price', __('价格'));
         $show->field('content', __('内容'));
         $show->field('created_at', __('创建时间'));
