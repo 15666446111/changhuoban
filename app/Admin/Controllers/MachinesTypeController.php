@@ -27,6 +27,8 @@ class MachinesTypeController extends AdminController
     {
         $grid = new Grid(new MachinesType());
 
+        $grid->model()->latest();
+        
         $grid->column('id', __('索引'))->sortable();
 
         $grid->column('name', __('类型名称'));

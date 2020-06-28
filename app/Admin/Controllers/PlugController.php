@@ -67,7 +67,7 @@ class PlugController extends AdminController
 
                 $actions->disableEdit(false);
 
-                $actions->disableDelete(false);
+                $actions->disableDelete(true);
 
             });
 

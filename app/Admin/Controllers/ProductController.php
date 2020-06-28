@@ -27,7 +27,9 @@ class ProductController extends AdminController
     {
         $grid = new Grid(new Product());
 
-        $grid->column('id', __('索引'));
+
+        $grid->model()->latest();
+        //$grid->column('id', __('索引'));
 
         $grid->column('title', __('标题'));
 

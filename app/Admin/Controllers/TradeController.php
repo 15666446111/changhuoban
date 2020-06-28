@@ -27,6 +27,8 @@ class TradeController extends AdminController
     {
         $grid = new Grid(new Trade());
 
+        $grid->model()->latest();
+        
         $grid->column('trade_no',        __('系统流水号'));
 
         $grid->column('rrn',            __('参考号'));
