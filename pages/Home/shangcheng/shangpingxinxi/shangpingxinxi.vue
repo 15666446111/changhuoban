@@ -14,7 +14,7 @@
 		<!-- 详情 -->
 		<view class="xian"></view>
 		<view class="xian-text">商品详情</view>
-		<view class="xian"></view>
+		<view class="xian">{{ productInfo.content }}</view>
 		<view class="introduces">
 			<rich-text>{{ productInfo.content }}</rich-text>
 		</view>
