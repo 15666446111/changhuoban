@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Product;
+use App\MachinesStyle;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -39,7 +40,7 @@ class ProductController extends AdminController
 
         $grid->column('active', __('状态'))->switch();
         
-        // $grid->column('brands.brand_name', __('品牌'));
+        $grid->column('style.style_name', __('型号'));
 
         $grid->column('state', __('审核'))->using([
             '0' => '待审核', '1' => '正常', '-1' => '拒绝'
@@ -85,7 +86,11 @@ class ProductController extends AdminController
         $show->field('title', __('产品标题'));
         $show->field('image', __('缩略图'));
         $show->field('active', __('状态'));
+<<<<<<< HEAD
         // $show->field('type', __('品牌'));
+=======
+        $show->field('style.style_name', __('型号'));
+>>>>>>> 0f6c614a5c00a420e9b30f035910c52414a9e594
         $show->field('price', __('价格'));
         $show->field('content', __('内容'));
         $show->field('created_at', __('创建时间'));
@@ -129,10 +134,15 @@ class ProductController extends AdminController
         $form->select('name','类型')->options($type)->load('factory_name','/api/getAdminFactory');
 
         $form->select('factory_name','厂商')->load('style_id','/api/getAdminStyle');
+<<<<<<< HEAD
 
         $form->select('style_id','型号')->required();
 
         $form->ignore(['name','factory_name']);
+=======
+
+        $form->select('style_id','型号');
+>>>>>>> 0f6c614a5c00a420e9b30f035910c52414a9e594
 
         $form->currency('price', __('价格'))->symbol('￥');
 
@@ -146,6 +156,8 @@ class ProductController extends AdminController
             ]);   
         }
 
+        $form->ignore(['name','factory_name','style_name']);
+        
         return $form;
     }
 }
