@@ -87,9 +87,6 @@ class ProductController extends AdminController
         $show->field('image', __('缩略图'));
         $show->field('active', __('状态'));
 
-    
-        $show->field('style.style_name', __('型号'));
-
         $show->field('price', __('价格'));
         $show->field('content', __('内容'));
         $show->field('created_at', __('创建时间'));
@@ -133,15 +130,10 @@ class ProductController extends AdminController
         $form->select('name','类型')->options($type)->load('factory_name','/api/getAdminFactory');
 
         $form->select('factory_name','厂商')->load('style_id','/api/getAdminStyle');
-<<<<<<< HEAD
 
         $form->select('style_id','型号')->required();
 
         $form->ignore(['name','factory_name']);
-=======
-
-        $form->select('style_id','型号');
->>>>>>> 0f6c614a5c00a420e9b30f035910c52414a9e594
 
         $form->currency('price', __('价格'))->symbol('￥');
 
