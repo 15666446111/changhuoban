@@ -66,7 +66,7 @@ class MerchantController extends Controller
     {
         try{ 
 
-			$data = \App\Machine::where('bind_status',0)->where('user_id',$request->user->id)->get();
+			$data = \App\Machine::where('bind_status',1)->where('user_id',$request->user->id)->get();
 			
 			$arrs = [];
 
