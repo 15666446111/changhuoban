@@ -14,7 +14,7 @@ class SetUserController extends Controller
     public function getUserInfo(Request $request)
     {
         try{
-        
+            
             $data = [];
             //用户id
             $data['id'] = $request->user->id;
@@ -31,11 +31,11 @@ class SetUserController extends Controller
             //用户级别
             $data['group'] = $request->user->group->name;
             //钱包总余额
-            $data['blance'] = $request->user->wallets->cash_blance/100 + $request->user->wallets->retrun_blance/100;
+            $data['blance'] = $request->user->wallets->cash_blance + $request->user->wallets->return_blance;
             //分润余额
-            $data['cash_blance'] = $request->user->wallets->cash_blance/100;
+            $data['cash_blance'] = $request->user->wallets->cash_blance;
             //返现余额
-            $data['return_blance'] = $request->user->wallets->return_blance/100;
+            $data['return_blance'] = $request->user->wallets->return_blance;
             //注册时间
             $data['created_at'] = $request->user->created_at;
 
