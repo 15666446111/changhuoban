@@ -17,4 +17,30 @@ class UserGroup extends Model
 	{
 		return $this->HasMany('\App\User', 'user_group', 'id');
 	}
+
+	/**
+	 * @Author    Pudding
+	 * @DateTime  2020-06-28
+	 * @copyright [copyright]
+	 * @license   [license]
+	 * @version   [设置器]
+	 * @param     [type]      $value [description]
+	 */
+	public function setTradeCountAttribute($value)
+    {
+    	$this->attributes['trade_count'] = (int)($value * 100);
+    }
+
+	/**
+	 * @Author    Pudding
+	 * @DateTime  2020-06-28
+	 * @copyright [copyright]
+	 * @license   [license]
+	 * @version   [获取器]
+	 * @param     [type]      $value [description]
+	 */
+	public function getTradeCountAttribute($value)
+    {
+    	return $value / 100;
+    }
 }

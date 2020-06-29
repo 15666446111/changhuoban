@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateProductsTable extends Migration
+class CreatePolicyGroupsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,18 @@ class CreateProductsTable extends Migration
      */
     public function up()
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('policy_groups', function (Blueprint $table) {
+
             $table->bigIncrements('id');
 
-            $table->string('title')->comment('产品标题');
+            $table->string('title')->nullable()->comment('活动组名称');
 
-            $table->integer('price')->default(0)->comment('产品价格');
+            $table->string('operate')->comment('所属操盘方');
 
-            $table->longText('content')->nullable()->comment('产品内容');
+            $table->string('type')->comment('联盟方式还是工具方式');
 
             $table->timestamps();
+
         });
     }
 
@@ -33,6 +35,6 @@ class CreateProductsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('policy_groups');
     }
 }

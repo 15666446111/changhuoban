@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Product;
+use App\MachinesStyle;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -27,19 +28,26 @@ class ProductController extends AdminController
     {
         $grid = new Grid(new Product());
 
-        $grid->column('id', __('索引'));
+        //展示该操盘方下的产品数据
+        if(Admin::user()->operate != "All"){
+            $grid->model()->where('operate', Admin::user()->operate);
+        }
+
+        $grid->model()->latest();
+
+        //$grid->column('id', __('索引'));
 
         $grid->column('title', __('标题'));
 
         $grid->column('price', __('价格'))->display(function($money){
-            return number_format($money / 100, 2, '.', ',');
+            return number_format($money, 2, '.', ',');
         })->label();
 
         $grid->column('image', __('图片'))->image('', 60);
 
         $grid->column('active', __('状态'))->switch();
         
-        $grid->column('brands.brand_name', __('品牌'));
+        $grid->column('style.style_name', __('型号'));
 
         $grid->column('state', __('审核'))->using([
             '0' => '待审核', '1' => '正常', '-1' => '拒绝'
@@ -51,7 +59,7 @@ class ProductController extends AdminController
 
         if(Admin::user()->type == "2" or Admin::user()->operate == "All"){
                 
-            $grid->disableCreateButton(false);
+            $grid->disableCreateButton(false);  
 
             $grid->actions(function (Grid\Displayers\Actions $actions) {
 
@@ -62,7 +70,6 @@ class ProductController extends AdminController
             });
             
         }
-
 
         return $grid;
     }
@@ -85,7 +92,7 @@ class ProductController extends AdminController
         $show->field('title', __('产品标题'));
         $show->field('image', __('缩略图'));
         $show->field('active', __('状态'));
-        $show->field('type', __('品牌'));
+        $show->field('style.style_name', __('型号'));
         $show->field('price', __('价格'));
         $show->field('content', __('内容'));
         $show->field('created_at', __('创建时间'));
@@ -113,17 +120,52 @@ class ProductController extends AdminController
     {
         $form = new Form(new Product());
 
+
         if(Admin::user()->operate != "All" && request()->route()->parameters()){
-            $Plug = Plug::where('id', request()->route()->parameters()['plug'])->first();
+            $Plug = Product::where('id', request()->route()->parameters()['product'])->first();
             if($Plug->operate != Admin::user()->operate) return abort('403'); 
         }
+        
+        if($form->isCreating()){
 
-        $form->text('title', __('产品标题'));
-        $form->image('image', __('缩略图'));
-        $form->switch('active', __('状态'))->default(1);
-        $form->select('type', __('品牌'))->options(\App\Brand::where('active', '1')->get()->pluck('brand_name', 'id'));
-        $form->number('price', __('价格'));
-        $form->ueditor('content', __('内容'));
+            $form->text('title', __('产品标题'));
+
+            $form->image('image', __('缩略图'));
+
+            $form->switch('active', __('状态'))->default(1);
+
+            $type = \App\MachinesType::where('state',1)->get()->pluck('name', 'id');
+
+            $form->select('name','类型')->options($type)->load('factory_name','/api/getAdminFactory');
+
+            $form->hidden('operate', __('操盘号'))->value(Admin::user()->operate)->readonly();
+
+            $form->select('factory_name','厂商')->load('style_id','/api/getAdminStyle');
+
+            $form->select('style_id','型号')->required();
+
+            $form->ignore(['name','factory_name']);
+
+            $form->currency('price', __('价格'))->symbol('￥');
+
+            $form->ueditor('content', __('内容'));
+
+        }else{
+
+            $form->text('title', __('产品标题'));
+
+            $form->image('image', __('缩略图'));
+
+            $form->switch('active', __('状态'))->default(1);
+
+            $form->hidden('style_id','型号')->required();
+
+            $form->currency('price', __('价格'))->symbol('￥');
+
+            $form->ueditor('content', __('内容'));
+            
+        }
+        
 
         if(Admin::user()->operate == 'All'){
             $form->select('state', __('审核'))->options([
@@ -132,7 +174,7 @@ class ProductController extends AdminController
                 -1  =>  '拒绝',
             ]);   
         }
-
+        
         return $form;
     }
 }

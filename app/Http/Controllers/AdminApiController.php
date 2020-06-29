@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\MachinesFactory;
+use App\MachinesStyle;
 use Illuminate\Http\Request;
 
 class AdminApiController extends Controller
@@ -26,4 +27,10 @@ class AdminApiController extends Controller
     {
     	return MachinesFactory::where('type_id', $request->q)->get(['factory_name as text', 'id']);
     }
+
+    public function getAdminStyle(Request $request){
+        return MachinesStyle::where('factory_id',$request->q)->get(['style_name as text','id']);
+    }
+
+
 }

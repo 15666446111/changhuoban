@@ -68,7 +68,15 @@ Route::group([
     //品牌管理
     $router->resource('brands', BrandController::class);
 
-    //文章操作日志
-    $router->resource('articles_logs', ArtclesLogController::class);
+    //划拨回拨日志列表
+    $router->resource('transfers', TransferController::class);
+
+    // 活动组管理
+    $router->resource('policy-groups', PolicyGroupController::class);
+
+    //消息通知列表
+    $router->resource('buser-messages', BuserMessageController::class);
+    //分润管理
+    $router->resource('cashs-logs', CashController::class);
 
 });

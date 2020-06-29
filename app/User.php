@@ -157,4 +157,13 @@ class User extends Authenticatable
     {
         return $this->belongsTo('App\Transfer','id','new_user_id');
     }
+
+
+     /**
+     * 关联税点表
+     */
+    public function points()
+    {
+        return $this->hasOne('App\UserPoint','user_id','id');
+    }
 }

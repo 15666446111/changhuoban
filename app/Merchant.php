@@ -16,12 +16,14 @@ class Merchant extends Model
         return $this->belongsTo('\App\User', 'user_id', 'id');
 	}
 
-	/**
-	 * [machines 关联机具模型]
-	 * @return [type] [description]
-	 */
-	public function machines()
-	{
-		return $this->hasMany('\App\Machine', 'merchant_id', 'id');
-	}
+	 /**
+     * [merchants 关联机具模型 通过id关联]
+     * @author Pudding 
+     * @DateTime 2020-04-10T16:37:46+0800
+     * @return   [type]                   [description]
+     */
+    public function machines()
+    {
+        return $this->belongsTo('\App\Machine', 'id', 'merchant_id');
+    }
 }

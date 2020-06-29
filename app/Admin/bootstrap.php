@@ -41,15 +41,20 @@ Show::init(function (Show $show) {
 
 /** Grid view init */
 Grid::init(function (Grid $grid) {
+    // 去掉批量编辑
+    $grid->batchActions(function ($batch) {
+        $batch->disableDelete();
+    });
+    
     //$grid->disableCreateButton();
-    //$grid->actions(function (Grid\Displayers\Actions $actions) {
-    //    $actions->disableEdit();
-    //    $actions->disableDelete();
-    //});
+    $grid->actions(function (Grid\Displayers\Actions $actions) {
+        //$actions->disableEdit();
+        $actions->disableDelete();
+    });
 });
 
 
-Admin::css('/css/admin.css');
+Admin::css('/css/admin.css?v='.time());
 //Encore\Admin\Form::forget(['map', 'editor']);
 // 覆盖视图
 app('view')->prependNamespace('admin', resource_path('views/admin/views'));

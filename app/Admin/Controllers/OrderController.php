@@ -26,7 +26,9 @@ class OrderController extends AdminController
     {
         $grid = new Grid(new Order());
 
-        $grid->column('id', __('索引'));
+        $grid->model()->latest();
+
+        //$grid->column('id', __('索引'));
         $grid->column('order_no', __('订单编号'));
         $grid->column('user_id', __('下单会员'));
         $grid->column('product_id', __('订单产品'));

@@ -34,6 +34,8 @@ class UserController extends AdminController
             $grid->model()->where('operate', Admin::user()->operate);
         }
 
+        $grid->model()->latest();
+
         $grid->column('avatar', __('头像'))->image('', 30, 30);
 
         $grid->column('nickname', __('昵称'))->copyable();
@@ -182,7 +184,7 @@ class UserController extends AdminController
 
         $form->text('account', __('账号'));
 
-        $form->image('avatar', __('头像'))->default('images/avatar.png');
+        $form->image('avatar', __('头像'))->default('images/avatar.png')->uniqueName();
 
         $form->password('password', __('密码'));
 

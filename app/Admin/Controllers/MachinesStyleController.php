@@ -28,6 +28,8 @@ class MachinesStyleController extends AdminController
     {
         $grid = new Grid(new MachinesStyle());
 
+        $grid->model()->latest();
+        
         $grid->column('id', __('索引'))->sortable();
 
         $grid->column('style_name', __('型号名称'));

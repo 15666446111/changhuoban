@@ -28,4 +28,5 @@ class MachinesStyle extends Model
     {
         return $this->hasMany('App\Machine', 'style_id', 'id');
     }
+
 }

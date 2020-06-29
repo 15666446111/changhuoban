@@ -108,7 +108,7 @@ class ArticleController extends AdminController
 
         $show->field('active', __('状态'))->using([0 => '关闭', 1 => '开启'])->label('info');
 
-        $show->field('images', __('图片'))->image();
+        $show->field('images', __('图片'))->image()->uniqueName();
 
         $show->field('sort', __('排序'))->label();
 

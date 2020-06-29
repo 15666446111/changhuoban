@@ -55,7 +55,7 @@ class HomeController extends Controller
         $day = $now->day;
 
         //
-        $range = Carbon::now()->subDays($day-1)->toDateString();
+        $range = Carbon::now()->subDays( $day -1 )->toDateString();
 
         // 构建查询构造器
         //$user = \App\User::where()->
