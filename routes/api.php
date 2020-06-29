@@ -345,6 +345,9 @@ Route::prefix('V1')->group(function () {
     * @version [<消息通知信息接口] [<description>]
     */
     Route::middleware('AuthToken')->get('/message', 'V1\MessageController@getMessage');
+
+
+    
     /**
      * 个人商户详情接口
      */

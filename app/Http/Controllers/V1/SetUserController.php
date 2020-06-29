@@ -242,21 +242,22 @@ class SetUserController extends Controller
     {
 
         try{ 
+            
             // 判断是分润钱包还是返现钱包 * 获取提现税点
             if($request->type == '1'){
                 //税点
-                $data['point']=config('draw.rate');
+                $data['point']=$request->user->points->rate;
                 //单笔提现费
-                $data['rate_m']=config('draw.rate_m');
+                $data['rate_m']=$request->user->points->rate_m;
                 //免审核额度
-                $data['no_check']=config('draw.no_check');
+                $data['no_check']=$request->user->points->no_check;
 
             }else
-                $data['point']=config('draw.return_blance');
+                $data['point']=$request->user->points->return_blance;
 
-                $data['rate_m']=config('draw.return_money');
+                $data['rate_m']=$request->user->points->return_money;
 
-                $data['no_check']=config('draw.no_check');
+                $data['no_check']=$request->user->points->no_check;
             
             //最小提现金额
             $data['min_money']=200;
@@ -268,7 +269,7 @@ class SetUserController extends Controller
 
     	} catch (\Exception $e) {
             
-            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
+            return response()->json(['error'=>['message' => $e->getMessage()]]);
 
         }
 

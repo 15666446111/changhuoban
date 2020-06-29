@@ -309,7 +309,7 @@ class MerchantController extends Controller
     {
 
         try{ 
-
+			
             if(!$request->merchant){
                 return response()->json(['error'=>['message' => 'sn号无效']]);
             }
@@ -333,8 +333,18 @@ class MerchantController extends Controller
 
             $data = \App\Trade::select('cardType as card_type','card_number','trade_type','amount as money','trade_time')
             ->where('sn', $request->merchant)
-            ->whereBetween('created_at', [ $StartTime,  $EndTime])
-            ->get();
+            ->whereBetween('created_at', [$StartTime,  $EndTime])
+			->get();
+			
+			if(!$data or empty($data)){
+				$data[] = array(
+					'card_type'		=>	'',
+					'card_number'	=>	'',
+					'trade_type'	=>	'',
+					'money'			=>	'',
+					'trade_time'	=>	''
+				);
+			}
 
             return response()->json(['success'=>['message' => '获取成功!', 'data'=>$data]]);
         
