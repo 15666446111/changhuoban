@@ -87,7 +87,7 @@ class MerchantController extends Controller
 				foreach($data as $key=>$value){
 					$arrs['Bound'][] = array(
 
-						'merchant_name'		=>		$value->merchant_name,
+						'merchant_name'		=>		$value->machine_name,
 						'machine_phone'		=>		$value->machine_phone,
 						'merchant_sn'		=>		$value->sn,
 						'money'				=>		$value->tradess_sn->sum('amount') / 100 ?? '',
