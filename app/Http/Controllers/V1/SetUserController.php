@@ -282,7 +282,7 @@ class SetUserController extends Controller
     public function Withdrawal(Request $request)
     {
         try{ 
-
+            
             // if($request->user->wallets->blance_active !="1"){
             //     return response()->json(['error'=>['message' => $request->user->wallets->blance_bak]]);
             // }
@@ -297,7 +297,7 @@ class SetUserController extends Controller
             if($curr_time >= $timeBegin1 && $curr_time <= $timeEnd1)
             {
 
-                if($request->money < 20000 ){
+                if($request->money < 200 ){
 
                     return response()->json(['error'=>['message' => '提现金额必须不低于200元']]);
     
@@ -310,27 +310,40 @@ class SetUserController extends Controller
                         return response()->json(['error'=>['message' => '当前钱包余额不足']]);
                     }
 
-                    $request->user->wallets->cash_blance = $request->user->wallets->cash_blance - $request->money;
+                    $request->user->wallets->cash_blance = ($request->user->wallets->cash_blance - $request->money) * 100;
     
                 }else{
-
+                    
                     if($request->user->wallets->return_blance < $request->money ){
                         return response()->json(['error'=>['message' => '当前钱包余额不足']]);
                     }
 
-                    $request->user->wallets->return_blance = $request->user->wallets->return_blance - $request->money;
+                    $request->user->wallets->return_blance = ($request->user->wallets->return_blance - $request->money) * 100;
                 }
 
                 $request->user->wallets->save();
-                
+
+                $yCode = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J');
+                $order_no = $yCode[intval(date('Y')) - 2011] . strtoupper(dechex(date('m'))) . date('d') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));
                 
                 \App\Withdraw::create([
                     'user_id'   => $request->user->id,
+                    'order_no'  => $order_no,
                     'money'     => $request->money,
                     'type'      => $request->rate,
                     'real_money'=> $request->money - $request->money * $request->rate - $request->rate_m,
                     'state'     => '1',
-                    'make_state'=> '2',
+                    'make_state'=> '0'
+                ]);
+
+                \App\WithdrawsData::create([
+                    'order_no'  => $order_no,
+                    'phone'     => '15530055097',
+                    'username'  => $request->user_name,
+                    'idcard'    => $request->idcard,
+                    'bank'      => $request->bank,
+                    'bank_open' => $request->bank_open,
+                    'reason'    => $request->reason
                 ]);
     
                 return response()->json(['success'=>['message' => '提现申请提交成功!', 'data' => $request->user->wallets]]);
@@ -344,7 +357,7 @@ class SetUserController extends Controller
 
     	} catch (\Exception $e) {
             
-            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
+            return response()->json(['error'=>['message' => $e->getMessage()]]);
 
         }
 
