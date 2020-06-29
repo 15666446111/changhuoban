@@ -66,7 +66,7 @@ class MerchantController extends Controller
     {
         try{ 
 
-			$data = \App\Merchant::where('state',1)->where('user_id',$request->user->id)->get();
+			$data = \App\Machine::where('bind_status',0)->where('user_id',$request->user->id)->get();
 			
 			$arrs = [];
 
@@ -85,16 +85,15 @@ class MerchantController extends Controller
 			}else{
 
 				foreach($data as $key=>$value){
-				
+					dd($value->tradess_sn);
 					$arrs['Bound'][] = array(
-	
-						'id'				=>		$value->id,
-						'merchant_name'		=>		$value->name,
-						'machine_phone'		=>		$value->phone,
-						'merchant_sn'		=>		$value->activate_sn,
-						'money'				=>		$value->trade_amount / 100,
-						'machine_id'		=>		$value->machines->id,
-						'created_at'		=>		$value->machines->bind_time
+
+						'merchant_name'		=>		$value->merchant_name,
+						'machine_phone'		=>		$value->machine_phone,
+						'merchant_sn'		=>		$value->sn,
+						'money'				=>		$value->tradess_sn->amount / 100 ?? '',
+						'machine_id'		=>		$value->id,
+						'created_at'		=>		$value->bind_time
 	
 					);
 				}
