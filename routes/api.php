@@ -377,6 +377,13 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->post('/getWithdrawal', 'V1\SetUserController@Withdrawal');
 
 
+    /**
+     * @version [<APP 获取交易详情>] [<description>]
+     * @return  [伙伴管理交易详情]   [<description>]
+     * @version [<获取交易详情] [<description>]
+     */
+    Route::middleware('AuthToken')->post('/getTradeDetail', 'V1\TradeController@getDetail');
+
 });
 
 Route::fallback(function(){ 
