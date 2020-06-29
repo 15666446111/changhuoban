@@ -339,7 +339,7 @@ class SetUserController extends Controller
                 \App\WithdrawsData::create([
                     'order_no'  => $order_no,
                     'phone'     => '15530055097',
-                    'username'  => $request->user_name,
+                    'username'  => $request->username,
                     'idcard'    => $request->idcard,
                     'bank'      => $request->bank,
                     'bank_open' => $request->bank_open,
