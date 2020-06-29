@@ -20,6 +20,10 @@ class SetUserController extends Controller
             $data['id'] = $request->user->id;
             //用户昵称
             $data['nickname'] = $request->user->nickname;
+            //用户账号
+            $data['account'] = $request->user->account;
+            //用户状态
+            $data['active'] = $request->user->active;
             //用户头像
             $data['heading'] = $request->user->avatar;
             //用户组id
@@ -32,6 +36,8 @@ class SetUserController extends Controller
             $data['cash_blance'] = $request->user->wallets->cash_blance/100;
             //返现余额
             $data['return_blance'] = $request->user->wallets->return_blance/100;
+            //注册时间
+            $data['created_at'] = $request->user->created_at;
 
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $data]]);
 
