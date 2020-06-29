@@ -57,7 +57,7 @@ class ProductController extends AdminController
 
         if(Admin::user()->type == "2" or Admin::user()->operate == "All"){
                 
-            $grid->disableCreateButton(false);
+            $grid->disableCreateButton(false);  
 
             $grid->actions(function (Grid\Displayers\Actions $actions) {
 

@@ -44,6 +44,23 @@ class SetUserController extends Controller
     }
 
     /**
+     * 修改用户头像/昵称
+     */
+    // public function editUserInfo(){
+        // try{ 
+
+            // $heading = $request->avatar;
+
+            // $res = \App\User::where('user_id',$request->user->id)->save(['avatar'=>$heading]);   
+
+            // return response()->json(['success'=>['message' => '修改成功!', []]]); 
+        // } catch (\Exception $e) {
+            // 
+            // return response()->json(['error'=>['message' => $e->getMessage()]]);
+        // }
+    // }
+
+    /**
      * 添加银行卡结算信息接口
      */
     public function insertBank(Request $request)

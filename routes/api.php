@@ -116,6 +116,11 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/userInfo', 'V1\SetUserController@getUserInfo');
 
     /**
+     * 修改用户头像/昵称  
+    */
+    Route::middleware('AuthToken')->get('/updateUserInfo', 'V1\SetUserController@editUserInfo');
+
+    /**
      * 添加银行卡结算信息接口
      */
     Route::middleware('AuthToken')->post('/createBank', 'V1\SetUserController@insertBank');
@@ -152,11 +157,26 @@ Route::prefix('V1')->group(function () {
 
 
     /**
-     * @version [<APP 获取产品分类接口>] [<description>]
-     * @return  [获取正在展示的产品分类]   [<description>]
-     * @version [<产品分类信息接口] [<description>]
+     * @version [<APP 获取产品类型接口>] [<description>]
+     * @return  [获取正在展示的产品类型]   [<description>]
+     * @version [<产品类型信息接口] [<description>]
      */
     Route::middleware('AuthToken')->get('/getproducttype', 'V1\ProductController@getType');
+
+
+    /**
+     * @version [<APP 获取产品类型--厂商接口>] [<description>]
+    * @return  [获取正在展示的厂商]   [<description>]
+    * @version [<产品厂商信息接口] [<description>]
+    */
+    Route::middleware('AuthToken')->get('/getproductfactories', 'V1\ProductController@getFactories');
+
+    /**
+     * @version [<APP 获取产品型号接口>] [<description>]
+    * @return  [获取正在展示的产品型号]   [<description>]
+    * @version [<产品型号信息接口] [<description>]
+    */
+    Route::middleware('AuthToken')->get('/getproductstyles', 'V1\ProductController@getStyles');
 
       /**
      * @version [<APP 获取产品列表接口>] [<description>]
@@ -310,6 +330,14 @@ Route::prefix('V1')->group(function () {
      * 商户列表接口
      */
     Route::middleware('AuthToken')->get('/getMerchantsList', 'V1\MerchantController@merchantsList');
+
+
+     /**
+     * @version [<APP 获取消息通知>] [<description>]
+    * @return  [获取发送的消息接口]   [<description>]
+    * @version [<消息通知信息接口] [<description>]
+    */
+    Route::middleware('AuthToken')->get('/message', 'V1\MessageController@getMessage');
 
 
 });
