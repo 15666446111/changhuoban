@@ -75,8 +75,11 @@ class SetUserController extends Controller
 
         try{ 
             
-            \App\User::where('id',$request->user->id)->save(['nickname'=>$request->nickname]);
+            $userInfo = \App\User::where('id',$request->user->id)->first();
 
+            $userInfo->nickname = $request->nickname;
+
+            $userInfo->save();
             return response()->json(['success'=>['message' => '修改成功!', []]]); 
 
     	} catch (\Exception $e) {
