@@ -68,7 +68,7 @@ class MerchantController extends Controller
 
 			$data = \App\Merchant::where('state',1)->where('user_id',$request->user->id)->get();
 			
-			$arrs;
+			$arrs = [];
 
 			if(!$data or empty($data)){
 				$arrs['Bound'][] = array(
