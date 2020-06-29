@@ -19,12 +19,27 @@ class MineController extends Controller
     {
     	try{
             
-            return response()->json(['success'=>['message' => '获取成功!', 'data' => [
-                'headimg'   =>  $request->user->avatar,
-                'nickname'  =>  $request->user->nickname,
-                'blance'    =>  number_format(($request->user->blance / 100), 2, '.', ','),
-                'group'     =>  $request->user->group->name,
-            ]]]);
+            $userFirst = \App\User::where('id',$request->team_user)->first();
+
+            $data = [];
+            //用户id
+            $data['id'] = $userFirst->id;
+            //用户昵称
+            $data['nickname'] = $userFirst->nickname;
+            //用户账号
+            $data['account'] = $userFirst->account;
+            //用户状态
+            $data['active'] = $userFirst->active;
+            //用户头像
+            $data['heading'] = $userFirst->avatar;
+            //用户组id
+            $data['user_group'] = $userFirst->user_group;
+            //用户级别
+            $data['group'] = $userFirst->group->name;
+            //注册时间
+            $data['created_at'] = $userFirst->created_at;
+
+            return response()->json(['success'=>['message' => '获取成功!', 'data' => $data]]);
 
     	} catch (\Exception $e) {
             

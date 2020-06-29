@@ -77,15 +77,6 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/team_data', 'V1\TeamController@data');
 
 
-
-    /**
-     * @version [<APP 我的栏位>] [<description>]
-     * @return  [个人信息 获取个人信息]   [<description>]
-     * @version [<个人信息接口] [<description>]
-     */
-    Route::middleware('AuthToken')->get('/mine', 'V1\MineController@info');
-
-
     /**
      * @version [<APP 提现记录>] [<description>]
      * @return  [个人信息 获取提现记录]   [<description>]
@@ -274,9 +265,9 @@ Route::prefix('V1')->group(function () {
 
 
      /**
-     * @version [<APP 我的栏位>] [<description>]
-     * @return  [个人信息 获取个人信息]   [<description>]
-     * @version [<个人信息接口] [<description>]
+     * @version [<APP 伙伴信息>] [<description>]
+     * @return  [获取伙伴个人信息]   [<description>]
+     * @version [<伙伴信息接口] [<description>]
      */
     Route::middleware('AuthToken')->get('/mine', 'V1\MineController@info');
 
@@ -345,6 +336,9 @@ Route::prefix('V1')->group(function () {
     * @version [<消息通知信息接口] [<description>]
     */
     Route::middleware('AuthToken')->get('/message', 'V1\MessageController@getMessage');
+
+
+    
     /**
      * 个人商户详情接口
      */
@@ -383,6 +377,12 @@ Route::prefix('V1')->group(function () {
      * @version [<获取交易详情] [<description>]
      */
     Route::middleware('AuthToken')->post('/getTradeDetail', 'V1\TradeController@getDetail');
+
+
+    /**
+     * 修改个人信息
+     */
+    Route::middleware('AuthToken')->get('/setUserInfo', 'V1\SetUserController@setUserInfos');
 
 });
 

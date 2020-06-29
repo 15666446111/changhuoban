@@ -66,7 +66,7 @@ class MerchantController extends Controller
     {
         try{ 
 
-			$data = \App\Machine::where('bind_status',0)->where('user_id',$request->user->id)->get();
+			$data = \App\Machine::where('bind_status',1)->where('user_id',$request->user->id)->get();
 			
 			$arrs = [];
 
@@ -78,6 +78,7 @@ class MerchantController extends Controller
 					'machine_phone'		=>		'',
 					'merchant_sn'		=>		'',
 					'money'				=>		'',
+					'merchant_number'	=>		'',
 					'machine_id'		=>		'',
 					'created_at'		=>		''
 
@@ -85,13 +86,14 @@ class MerchantController extends Controller
 			}else{
 
 				foreach($data as $key=>$value){
-					dd($value->tradess_sn);
+					// dd($value->merchants);
 					$arrs['Bound'][] = array(
 
-						'merchant_name'		=>		$value->merchant_name,
+						'merchant_name'		=>		$value->machine_name,
 						'machine_phone'		=>		$value->machine_phone,
 						'merchant_sn'		=>		$value->sn,
-						'money'				=>		$value->tradess_sn->amount / 100 ?? '',
+						'money'				=>		$value->tradess_sn->sum('amount') / 100 ?? '',
+						'merchant_number'	=>		$value->merchants->code ?? '',
 						'machine_id'		=>		$value->id,
 						'created_at'		=>		$value->bind_time
 	
@@ -110,7 +112,7 @@ class MerchantController extends Controller
 					'merchant_name'		=>		'',
 					'machine_phone'		=>		'',
 					'merchant_sn'		=>		'',
-					'money'				=>		'',
+					'money'				=>		0,
 					'machine_id'		=>		'',
 					'created_at'		=>		''
 
@@ -126,7 +128,7 @@ class MerchantController extends Controller
 						'merchant_name'		=>		'',
 						'machine_phone'		=>		'',
 						'merchant_sn'		=>		$value->sn,
-						'money'				=>		'',
+						'money'				=>		0,
 						'machine_id'		=>		$value->id,
 						'created_at'		=>		$value->bind_time
 	
@@ -252,8 +254,8 @@ class MerchantController extends Controller
 			$arrs = array(
 
 				'merchant_sn'			=>	$data->sn,
-				'merchant_name'			=>	$data->merchants->name,
-				'merchant_phone'		=>	$data->merchants->merchant_phone,
+				'merchant_name'			=>	$data->machine_name,
+				'merchant_phone'		=>	$data->machine_phone,
 				'time'					=>	$data->bind_time ?? $data->created_at,
 				'active_status'			=>	$data->activate_state
 			);
@@ -307,7 +309,7 @@ class MerchantController extends Controller
     {
 
         try{ 
-
+			
             if(!$request->merchant){
                 return response()->json(['error'=>['message' => 'sn号无效']]);
             }
@@ -331,8 +333,18 @@ class MerchantController extends Controller
 
             $data = \App\Trade::select('cardType as card_type','card_number','trade_type','amount as money','trade_time')
             ->where('sn', $request->merchant)
-            ->whereBetween('created_at', [ $StartTime,  $EndTime])
-            ->get();
+            ->whereBetween('created_at', [$StartTime,  $EndTime])
+			->get();
+			
+			if(!$data or empty($data)){
+				$data[] = array(
+					'card_type'		=>	'',
+					'card_number'	=>	'',
+					'trade_type'	=>	'',
+					'money'			=>	'',
+					'trade_time'	=>	''
+				);
+			}
 
             return response()->json(['success'=>['message' => '获取成功!', 'data'=>$data]]);
         

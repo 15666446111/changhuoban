@@ -78,9 +78,8 @@ class StatisticController
      */
     public function getMyTeam()
     {
-        return \App\UserRelation::where('parents', 'like', "%_".$this->Users->id."_%")->pluck('id')->toArray();
+        return \App\UserRelation::where('parents', 'like', "%_".$this->Users->id."_%")->pluck('user_id')->toArray();
     }
-
 
 
     /**
@@ -93,7 +92,7 @@ class StatisticController
     {
 
         $Arr =  $this->getMyTeam();
-
+        
         return \App\Machine::where('bind_status', '1')->whereBetween('created_at', [ 
                     $this->StartTime,  $this->EndTime])->whereHas('users', function($q) use ($Arr){
                         $q->whereIn('id', $Arr);
@@ -113,7 +112,7 @@ class StatisticController
         $Arr = $rule == 'team' ? $this->getMyTeam() :  array($this->Users->id);
 
         return \App\Trade::whereBetween('created_at', [ 
-                    $this->StartTime,  $this->EndTime])->whereHas('merchants_sn.users', function($q) use ($Arr){
+                    $this->StartTime,  $this->EndTime])->whereHas('users', function($q) use ($Arr){
                         $q->whereIn('id', $Arr);
                     })->sum('amount');
     }
