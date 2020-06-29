@@ -7,9 +7,9 @@
 				<view class="rise"> 
 					<view class="rise-head">
 						<image class="head" :src="UserInfo.heading" mode="aspectFill" />
-						<view class="name">{{ UserInfo.nickname}}</view>
+						<view class="name">{{ UserInfo.account}}</view>
 					</view>
-					<view class="ID">{{ UserInfo.username }}</view>
+					<view class="ID">{{ UserInfo.nickname }}</view>
 				</view>
 			</view>
 

@@ -35,7 +35,7 @@
 		            method:'get',
 					data:{aid:aid},
 		            success: (res) => {
-						console.log("hahhaha"+res.data.success.data);
+						console.log(res.data.success.data);
 						this.article = res.data.success.data;
 		            } 
 		      	})
