@@ -29,7 +29,7 @@
 					<view class="detail">
 						<view class="detail-name">{{ item.merchant_name }}</view>
 						<view class="detail-text1">累计交易:</view>
-						<view class="detail-text">{{ item.money > 0 ? item.money / 100 : 0 }}</view>
+						<view class="detail-text">{{ item.money > 0 ? item.money : 0 }}</view>
 					</view>
 					<view class="SN">SN:{{ item.merchant_sn }}</view>
 

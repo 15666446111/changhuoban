@@ -175,7 +175,7 @@ export default {
 		
 		getUserInfo(){
 	    	net({
-	        	url:"/V1/mine",
+	        	url:"/V1/userInfo",
 	            method:'get',
 	            success: (res) => {
 					uni.hideLoading();

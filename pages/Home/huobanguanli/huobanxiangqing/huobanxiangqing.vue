@@ -85,7 +85,7 @@ export default {
 	methods: {
 	  	getUserInfo(user){
 	    	net({
-	        	url:"/V1/userInfo",
+	        	url:"/V1/mine",
 	            method:'get',
 				data:{
 					team_user: user,
