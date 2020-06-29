@@ -112,7 +112,7 @@ class MerchantController extends Controller
 					'merchant_name'		=>		'',
 					'machine_phone'		=>		'',
 					'merchant_sn'		=>		'',
-					'money'				=>		'',
+					'money'				=>		0,
 					'machine_id'		=>		'',
 					'created_at'		=>		''
 
@@ -128,7 +128,7 @@ class MerchantController extends Controller
 						'merchant_name'		=>		'',
 						'machine_phone'		=>		'',
 						'merchant_sn'		=>		$value->sn,
-						'money'				=>		'',
+						'money'				=>		0,
 						'machine_id'		=>		$value->id,
 						'created_at'		=>		$value->bind_time
 	

@@ -384,6 +384,12 @@ Route::prefix('V1')->group(function () {
      */
     Route::middleware('AuthToken')->post('/getTradeDetail', 'V1\TradeController@getDetail');
 
+
+    /**
+     * 修改个人信息
+     */
+    Route::middleware('AuthToken')->get('/setUserInfo', 'V1\SetUserController@setUserInfos');
+
 });
 
 Route::fallback(function(){ 

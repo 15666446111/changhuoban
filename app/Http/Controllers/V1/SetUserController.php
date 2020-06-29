@@ -66,6 +66,27 @@ class SetUserController extends Controller
         // }
     // }
 
+
+    /**
+     * 修改个人信息
+     */
+    public function setUserInfos(Request $request)
+    {
+
+        try{ 
+            
+            \App\User::where('id',$request->user->id)->save(['nickname'=>$request->nickname]);
+
+            return response()->json(['success'=>['message' => '修改成功!', []]]); 
+
+    	} catch (\Exception $e) {
+            
+            return response()->json(['error'=>['message' => $e->getMessage()]]);
+
+        }
+
+    }
+
     /**
      * 添加银行卡结算信息接口
      */
