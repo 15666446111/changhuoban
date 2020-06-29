@@ -318,6 +318,14 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/getMerchantInfo', 'V1\MerchantController@merchantInfo');
 
 
+    /**
+     * @version [<APP 获取机具活动详情>] [<description>]
+     * @return  [机具的达标返现与交易情况]   [<description>]
+     * @version [<机具的达标返现情况] [<description>]
+     */
+    Route::middleware('AuthToken')->get('/getTerminalActiveDetail', 'V1\MerchantController@getActiveDetail');
+
+
 });
 
 Route::fallback(function(){ 
