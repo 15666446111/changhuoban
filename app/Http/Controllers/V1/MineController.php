@@ -39,6 +39,8 @@ class MineController extends Controller
             //注册时间
             $data['created_at'] = $userFirst->created_at;
 
+            return response()->json(['success'=>['message' => '获取成功!', 'data' => $data]]);
+
     	} catch (\Exception $e) {
             
             return response()->json(['error'=>['message' => $e->getMessage()]]);
