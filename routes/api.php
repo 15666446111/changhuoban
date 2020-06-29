@@ -274,9 +274,9 @@ Route::prefix('V1')->group(function () {
 
 
      /**
-     * @version [<APP 我的栏位>] [<description>]
-     * @return  [个人信息 获取个人信息]   [<description>]
-     * @version [<个人信息接口] [<description>]
+     * @version [<APP 伙伴信息>] [<description>]
+     * @return  [获取伙伴个人信息]   [<description>]
+     * @version [<伙伴信息接口] [<description>]
      */
     Route::middleware('AuthToken')->get('/mine', 'V1\MineController@info');
 
