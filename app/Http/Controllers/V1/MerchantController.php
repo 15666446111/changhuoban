@@ -273,6 +273,51 @@ class MerchantController extends Controller
 
     	return response()->json(['success'=>['message' => '获取成功', 'data' =>$ActiveInfo ]]);
 
+	}
+	
+
+	/**
+     * 商户交易明细
+     */
+    public function MerchantDetails(Request $request)
+    {
+
+        try{ 
+
+            if(!$request->merchant){
+                return response()->json(['error'=>['message' => 'sn号无效']]);
+            }
+
+            switch ($request->data_type) {
+                case 'month':
+                    $StartTime = Carbon::now()->startOfMonth()->toDateTimeString();
+                    break;
+                case 'day':
+                    $StartTime = Carbon::today()->toDateTimeString();
+                    break;
+                case 'count':
+                    $StartTime = Carbon::createFromFormat('Y-m-d H', '1970-01-01 00')->toDateTimeString();
+                    break;
+                default:
+                    $StartTime = Carbon::today()->toDateTimeString();
+                    break;
+            }
+
+            $EndTime = Carbon::now()->toDateTimeString();
+
+            $data = \App\Trade::select('cardType as card_type','card_number','trade_type','amount as money','trade_time')
+            ->where('sn', $request->merchant)
+            ->whereBetween('created_at', [ $StartTime,  $EndTime])
+            ->get();
+
+            return response()->json(['success'=>['message' => '获取成功!', 'data'=>$data]]);
+        
+        } catch (\Exception $e) {
+                
+            return response()->json(['error'=>['message' => '系统错误，请联系客服']]);
+
+        }
+
     }
 	 
 }

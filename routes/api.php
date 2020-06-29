@@ -326,6 +326,12 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/getTerminalActiveDetail', 'V1\MerchantController@getActiveDetail');
 
 
+    /**
+     * 查询商户交易明细
+     */
+    Route::middleware('AuthToken')->get('/getMerchantDetails', 'V1\MerchantController@MerchantDetails');
+
+
 });
 
 Route::fallback(function(){ 
