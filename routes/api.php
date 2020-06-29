@@ -332,14 +332,12 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/getMerchantsList', 'V1\MerchantController@merchantsList');
 
 
-<<<<<<< HEAD
      /**
      * @version [<APP 获取消息通知>] [<description>]
     * @return  [获取发送的消息接口]   [<description>]
     * @version [<消息通知信息接口] [<description>]
     */
     Route::middleware('AuthToken')->get('/message', 'V1\MessageController@getMessage');
-=======
     /**
      * 个人商户详情接口
      */
@@ -358,7 +356,6 @@ Route::prefix('V1')->group(function () {
      * 查询商户交易明细
      */
     Route::middleware('AuthToken')->get('/getMerchantDetails', 'V1\MerchantController@MerchantDetails');
->>>>>>> 4ded9fc17b5338194cfba1fb103027c02cdc18ae
 
 
     /**
