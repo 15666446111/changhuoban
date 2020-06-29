@@ -332,6 +332,18 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/getMerchantDetails', 'V1\MerchantController@MerchantDetails');
 
 
+    /**
+     * 提现税点接口
+     */
+    Route::middleware('AuthToken')->get('/getPoint', 'V1\SetUserController@point');
+
+
+    /**
+     * 用户提现接口
+     */
+    Route::middleware('AuthToken')->post('/getWithdrawal', 'V1\SetUserController@Withdrawal');
+
+
 });
 
 Route::fallback(function(){ 
