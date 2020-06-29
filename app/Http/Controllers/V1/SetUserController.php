@@ -23,7 +23,7 @@ class SetUserController extends Controller
             //用户账号
             $data['account'] = $request->user->account;
             //用户状态
-            $data['active'] = $request->user->account;
+            $data['active'] = $request->user->active;
             //用户头像
             $data['heading'] = $request->user->avatar;
             //用户组id
