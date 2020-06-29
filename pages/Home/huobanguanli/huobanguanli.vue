@@ -13,9 +13,9 @@
 			<view class="content">
 				
 				<view v-for="(item,index) in team" :key="item.id">
-				<navigator :url="'/pages/shouye/huobanguanli/huobanxiangqing/huobanxiangqing?user='+item.id">
+				<navigator :url="'/pages/Home/huobanguanli/huobanxiangqing/huobanxiangqing?user='+item.id">
 				<view class="detail">
-						<image :src="item.headimg" class="detail-image"/>
+						<image :src="item.avatar" class="detail-image"/>
 						<view class="partner">
 							<view class="detail-name">{{ item.nickname}}</view>
 						</view>

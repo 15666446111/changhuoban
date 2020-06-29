@@ -88,6 +88,7 @@
 					uni.showLoading();
 					this.getTradeList(this.merchant_sn, 'month');
 				}
+				
 			}
 		},
 		methods: {
@@ -111,6 +112,7 @@
 						data_type: data_type
 					},
 					success: (res) => {
+						console.log(res);
 						uni.hideLoading();
 						if (res.data.success) {
 							this.tradeData = res.data.success.data;
