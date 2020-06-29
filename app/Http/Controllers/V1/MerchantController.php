@@ -205,7 +205,7 @@ class MerchantController extends Controller
 
         } catch (\Exception $e) {
 
-			return response()->json(['error'=>['message' => $e->getMessage()]]);
+			return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
 		
 		}
 
@@ -221,15 +221,24 @@ class MerchantController extends Controller
              
             $data=\App\Machine::where('user_id',$request->user->id)
             ->where('id',$request->id)
-            ->first();
+			->first();
+			
+			$arrs;
+
+			$arrs = array(
+
+				'merchant_sn'			=>	$data->sn,
+				'merchant_name'			=>	$data->merchants->name,
+				'merchant_phone'		=>	$data->merchants->merchant_phone,
+				'time'					=>	$data->bind_time ?? $data->created_at,
+				'active_status'			=>	$data->activate_state
+			);
             
-            $data['time'] = $data->bind_time ? $data->bind_time : $data->activate_time;
-            
-            return response()->json(['success'=>['message' => '获取成功!', 'data' => $data]]);   
+            return response()->json(['success'=>['message' => '获取成功!', 'data' => $arrs]]);   
 
     	} catch (\Exception $e) {
             
-            return response()->json(['error'=>['message' => '系统错误，请联系客服']]);
+            return response()->json(['error'=>['message' => $e->getMessage()]]);
 
         }
     }
