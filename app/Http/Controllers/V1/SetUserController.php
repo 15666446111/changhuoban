@@ -52,19 +52,32 @@ class SetUserController extends Controller
     /**
      * 修改用户头像/昵称
      */
-    // public function editUserInfo(){
-        // try{ 
+    public function editUserInfo(){
 
-            // $heading = $request->avatar;
+        try{
+            $User = \App\User::where('id', $request->user->id)->first(); 
 
-            // $res = \App\User::where('user_id',$request->user->id)->save(['avatar'=>$heading]);   
+            $heading = $request->avatar;
 
-            // return response()->json(['success'=>['message' => '修改成功!', []]]); 
-        // } catch (\Exception $e) {
-            // 
-            // return response()->json(['error'=>['message' => $e->getMessage()]]);
-        // }
-    // }
+            //上传
+            $request->$heading->store('images');
+
+            $User->avatar = "images/".$heading;
+
+            $res = $User->save();
+
+            if($res){
+
+                return response()->json(['success'=>['message' => '修改成功!', []]]); 
+
+            }
+
+        } catch (\Exception $e) {
+            
+            return response()->json(['error'=>['message' => $e->getMessage()]]);
+        }
+        
+    }
 
     /**
      * 添加银行卡结算信息接口

@@ -76,6 +76,7 @@ Route::group([
 
     //消息通知列表
     $router->resource('buser-messages', BuserMessageController::class);
+    
     //分润管理
     $router->resource('cashs-logs', CashController::class);
 
