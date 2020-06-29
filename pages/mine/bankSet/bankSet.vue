@@ -19,6 +19,12 @@
 				<image class="bank-img" src="../../../static/jiantou.png" mode="widthFix" />
 			</view>
 		</navigator>
+		<navigator url="../userInfo/userInfo" open-type="navigate">
+			<view class="bank">
+				<view class="bank-name">个人信息管理</view>
+				<image class="bank-img" src="../../../static/jiantou.png" mode="widthFix" />
+			</view>
+		</navigator>
 		<view class="add-xian"></view>
 		
 		<button class="psy" @click="logout">退出登录</button>

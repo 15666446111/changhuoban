@@ -5,7 +5,7 @@
 			<view class="titlebar">
 				<view class="rise">
 					<view class="rise-head">
-						<image :src=UserInfo.headimg class="head" />
+						<image :src=UserInfo.heading class="head" />
 						<view class="name">{{ UserInfo.nickname }}</view>
 						<!-- <view class="shiming">
 							<image class="shiming-image" src="../../../../static/xz1.png" />
@@ -13,6 +13,10 @@
 						</view> -->
 						<view class="id">
 							<view class="zhanghao">账号:{{ UserInfo.account }}</view>
+						</view>
+						
+						<view class="">
+							<view class="zhanghao">级别:{{ UserInfo.group }}</view>
 						</view>
 					</view>
 				</view>
@@ -82,11 +86,12 @@ export default {
 	  	getUserInfo(user){
 	    	net({
 	        	url:"/V1/userInfo",
-	            method:'POST',
+	            method:'get',
 				data:{
 					team_user: user,
 				},
 	            success: (res) => {
+					console.log(res);
 					this.UserInfo = res.data.success.data;
 	            },
 				fail: () => { console.log("22") },
@@ -99,7 +104,6 @@ export default {
 	        	url:"/V1/getPolicy",
 	            method:'GET',
 	            success: (res) => {
-					console.log(res);
 					this.PolicyList = res.data.success.data;
 	            },
 				fail: () => { console.log("22") },
