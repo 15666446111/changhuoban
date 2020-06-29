@@ -85,13 +85,12 @@ class MerchantController extends Controller
 			}else{
 
 				foreach($data as $key=>$value){
-					dd($value->tradess_sn);
 					$arrs['Bound'][] = array(
 
 						'merchant_name'		=>		$value->merchant_name,
 						'machine_phone'		=>		$value->machine_phone,
 						'merchant_sn'		=>		$value->sn,
-						'money'				=>		$value->tradess_sn->amount / 100 ?? '',
+						'money'				=>		$value->tradess_sn->sum('amount') / 100 ?? '',
 						'machine_id'		=>		$value->id,
 						'created_at'		=>		$value->bind_time
 	
