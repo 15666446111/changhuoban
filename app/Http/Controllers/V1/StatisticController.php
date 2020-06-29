@@ -82,7 +82,6 @@ class StatisticController
     }
 
 
-
     /**
      * [getTeam 获取新增的商户数量]
      * @author Pudding
@@ -93,7 +92,7 @@ class StatisticController
     {
 
         $Arr =  $this->getMyTeam();
-        
+        dd($Arr);
         return \App\Machine::where('bind_status', '1')->whereBetween('bind_time', [ 
                     $this->StartTime,  $this->EndTime])->whereHas('users', function($q) use ($Arr){
                         $q->whereIn('id', $Arr);

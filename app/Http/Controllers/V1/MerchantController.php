@@ -254,8 +254,8 @@ class MerchantController extends Controller
 			$arrs = array(
 
 				'merchant_sn'			=>	$data->sn,
-				'merchant_name'			=>	$data->merchants->name,
-				'merchant_phone'		=>	$data->merchants->merchant_phone,
+				'merchant_name'			=>	$data->machine_name,
+				'merchant_phone'		=>	$data->machine_phone,
 				'time'					=>	$data->bind_time ?? $data->created_at,
 				'active_status'			=>	$data->activate_state
 			);
