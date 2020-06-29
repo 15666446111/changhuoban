@@ -48,7 +48,7 @@ class ArticleController extends Controller
     {
         try{
             // 获取展示的轮播图
-            $Article = \App\Article::where('active', '1')->where('type_id', '2')->orderBy('sort', 'desc')->offset(0)->limit(5)->get();
+            $Article = \App\Article::where('active', '1')->where('verify',1)->where('type_id', '2')->orderBy('sort', 'desc')->offset(0)->limit(5)->get();
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $Article]]);       
         } catch (\Exception $e) {
             return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
