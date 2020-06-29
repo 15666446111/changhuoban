@@ -166,7 +166,7 @@ class ServerController extends Controller
 
         $team = $this->team;
 
-    	$select = \App\Trade::whereHas('sn', function($q) use ($team){
+    	$select = \App\Trade::whereHas('merchants_sn', function($q) use ($team){
     		$q->whereIn('user_id', $team);
     	})->whereBetween('created_at', [ $this->StartTime,  $this->EndTime]);
 
