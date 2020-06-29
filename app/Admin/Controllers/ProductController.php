@@ -33,7 +33,9 @@ class ProductController extends AdminController
             $grid->model()->where('operate', Admin::user()->operate);
         }
 
-        $grid->column('id', __('索引'));
+        $grid->model()->latest();
+
+        //$grid->column('id', __('索引'));
 
         $grid->column('title', __('标题'));
 
@@ -68,7 +70,6 @@ class ProductController extends AdminController
             });
             
         }
-
 
         return $grid;
     }
@@ -121,7 +122,7 @@ class ProductController extends AdminController
 
 
         if(Admin::user()->operate != "All" && request()->route()->parameters()){
-            $Plug = Plug::where('id', request()->route()->parameters()['plug'])->first();
+            $Plug = Product::where('id', request()->route()->parameters()['product'])->first();
             if($Plug->operate != Admin::user()->operate) return abort('403'); 
         }
         
@@ -173,8 +174,6 @@ class ProductController extends AdminController
                 -1  =>  '拒绝',
             ]);   
         }
-
-        $form->ignore(['name','factory_name','style_name']);
         
         return $form;
     }

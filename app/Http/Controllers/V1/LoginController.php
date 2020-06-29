@@ -48,16 +48,16 @@ class LoginController extends Controller
     /**
      * 修改个人登录密码
      */
-    public function editUser()
+    public function editUser(Request $request)
     {
         try{
 
-            $User = \App\Buser::where('id', $request->user->id)->first();
+            $User = \App\User::where('id', $request->user->id)->first();
             
-            if($User->password !=  md5($request->password)) 
+            if($User->password !=  "###".md5(md5($request->password. 'v3ZF87bMUC5MK570QH'))) 
                 return response()->json(['error'=>['message' => '账号密码错误']]);
 
-            $User->password = \md5($request->newPassword);
+            $User->password = "###".md5(md5($request->newPassword. 'v3ZF87bMUC5MK570QH'));
 
             $data = $User->save();
 

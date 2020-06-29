@@ -28,6 +28,8 @@ class BrandController extends AdminController
     {
         $grid = new Grid(new Brand());
 
+        $grid->model()->latest();
+        
         $grid->column('brand_name', __('品牌名称'));
 
         $grid->column('active', __('状态'))->sortable()->switch();

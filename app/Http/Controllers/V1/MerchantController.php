@@ -66,45 +66,51 @@ class MerchantController extends Controller
     {
         try{ 
 
-            $arrs;
-            
-            $bind = \App\Machine::where('user_id', $request->user->id)->where('bind_status', '1')->get();
+			$data = \App\Merchant::where('state',1)->where('user_id',$request->user->id)->get();
 			
+			if(!$data or empty($data)){
+				$arrs['Bound'][] = [];
+			}
 
-            foreach ($bind as $key => $value) {
+			$arrs;
+
+			foreach($data as $key=>$value){
 				
-                $arrs['Bound'][] = array(
-                    'id'                =>  $value->id,
-                    'merchant_name'     =>  $value->machine_name,
-					'machine_phone'   	=>  $value->machine_phone,
-					'merchant_sn'		=>	$value->sn,
-                    'merchant_terminal' =>  $value->tradess_sn->merchant_code,
-                    'money'             =>  $value->tradess_sn->sum('amount'),
-                    'created_at'        =>  $value->created_at,
-                    'bind_time'         =>  $value->bind_time,
-                    'active_time'       =>  $value->open_time,
-                    'time'              =>  $value->bind_time ?? $value->open_time
-                );
-            }
-            
-            
-            $UnBind =\App\Machine::where('user_id', $request->user->id)->where('bind_status', '0')->get();
-            
-            foreach ($UnBind as $key => $value) {
+				$arrs['Bound'][] = array(
 
-                $arrs['UnBound'][] = array(
-                    'id'                =>  $value->id,
-                    'merchant_name'     =>  $value->machine_name,
-                    'machine_phone'   	=>  $value->machine_phone,
-					'merchant_sn'       =>  $value->sn,
-                    'merchant_terminal' =>  '',
-                    'money'             =>  $value->tradess_sn->sum('amount'),
-                    'created_at'        =>  $value->created_at,
-                    'bind_time'         =>  $value->bind_time,
-                    'active_time'       =>  $value->open_time,
-                    'time'              =>  $value->bind_time ?? $value->open_time
-                );
-            }
+					'id'				=>		$value->id,
+					'merchant_name'		=>		$value->name,
+					'machine_phone'		=>		$value->phone,
+					'merchant_sn'		=>		$value->activate_sn,
+					'money'				=>		$value->trade_amount / 100,
+					'machine_id'		=>		$value->machines->id,
+					'created_at'		=>		$value->machines->bind_time
+
+				);
+			}
+
+			$UnBind = \App\Machine::where('user_id',$request->user->id)->where('bind_status',0)->get();
+
+			if(!$UnBind or empty($UnBind)){
+				$arrs['UnBound'][] = [];
+			}
+
+			foreach($UnBind as $key=>$value){
+
+				$arrs['UnBound'][] = array(
+
+					'id'				=>		'',
+					'merchant_name'		=>		'',
+					'machine_phone'		=>		'',
+					'merchant_sn'		=>		$value->sn,
+					'money'				=>		'',
+					'machine_id'		=>		$value->id,
+					'created_at'		=>		$value->bind_time
+
+				);
+
+			}
+			
             
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $arrs]]); 
 
@@ -199,9 +205,119 @@ class MerchantController extends Controller
 
         } catch (\Exception $e) {
 
-			return response()->json(['error'=>['message' => $e->getMessage()]]);
+			return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
 		
 		}
 
+	}
+	
+
+	/**
+     * 个人商户详情接口
+     */
+    public function merchantInfo(Request $request)
+    {
+        try{ 
+             
+            $data=\App\Machine::where('user_id',$request->user->id)
+            ->where('id',$request->id)
+			->first();
+			
+			$arrs;
+
+			$arrs = array(
+
+				'merchant_sn'			=>	$data->sn,
+				'merchant_name'			=>	$data->merchants->name,
+				'merchant_phone'		=>	$data->merchants->merchant_phone,
+				'time'					=>	$data->bind_time ?? $data->created_at,
+				'active_status'			=>	$data->activate_state
+			);
+            
+            return response()->json(['success'=>['message' => '获取成功!', 'data' => $arrs]]);   
+
+    	} catch (\Exception $e) {
+            
+            return response()->json(['error'=>['message' => $e->getMessage()]]);
+
+        }
+	}
+	
+
+	/**
+	 * @Author    Pudding
+	 * @DateTime  2020-06-07
+	 * @copyright [copyright]
+	 * @license   [license]
+	 * @version   [获取机器的活动详情]
+	 * @param     Request     $request [description]
+	 * @return    [type]               [description]
+	 */
+    public function getActiveDetail(Request $request)
+    {	
+    	/**
+    	 * @var 返回该机器的活动情况
+    	 */
+    	if(!$request->terminal ) return response()->json(['error'=>['message' => '缺少机器终端']]);
+
+    	$ActiveInfo = array();
+
+    	$countTradeMoney =  \App\Trade::where('sn', $request->terminal )->sum('amount');
+    	
+    	// 获得该机器总交易额
+    	$ActiveInfo['countTradeMoney'] =number_format($countTradeMoney / 100, 2, '.', ',');
+
+
+    	$ActiveInfo['tips'] = "达标统计的是T0、T1、云闪付贷记卡交易之和，非总交易额";
+    	
+
+    	return response()->json(['success'=>['message' => '获取成功', 'data' =>$ActiveInfo ]]);
+
+	}
+	
+
+	/**
+     * 商户交易明细
+     */
+    public function MerchantDetails(Request $request)
+    {
+
+        try{ 
+
+            if(!$request->merchant){
+                return response()->json(['error'=>['message' => 'sn号无效']]);
+            }
+
+            switch ($request->data_type) {
+                case 'month':
+                    $StartTime = Carbon::now()->startOfMonth()->toDateTimeString();
+                    break;
+                case 'day':
+                    $StartTime = Carbon::today()->toDateTimeString();
+                    break;
+                case 'count':
+                    $StartTime = Carbon::createFromFormat('Y-m-d H', '1970-01-01 00')->toDateTimeString();
+                    break;
+                default:
+                    $StartTime = Carbon::today()->toDateTimeString();
+                    break;
+            }
+
+            $EndTime = Carbon::now()->toDateTimeString();
+
+            $data = \App\Trade::select('cardType as card_type','card_number','trade_type','amount as money','trade_time')
+            ->where('sn', $request->merchant)
+            ->whereBetween('created_at', [ $StartTime,  $EndTime])
+            ->get();
+
+            return response()->json(['success'=>['message' => '获取成功!', 'data'=>$data]]);
+        
+        } catch (\Exception $e) {
+                
+            return response()->json(['error'=>['message' => '系统错误，请联系客服']]);
+
+        }
+
     }
+	 
 }

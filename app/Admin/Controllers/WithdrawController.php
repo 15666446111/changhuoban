@@ -27,6 +27,8 @@ class WithdrawController extends AdminController
     {
         $grid = new Grid(new Withdraw());
 
+        $grid->model()->latest();
+        
         $grid->column('order_no', __('提现订单'));
 
         $grid->column('user_id', __('提现代理'));

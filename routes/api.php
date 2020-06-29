@@ -108,7 +108,7 @@ Route::prefix('V1')->group(function () {
     /**
      * 修改个人登录密码
      */
-    Route::middleware('AuthToken')->post('/updateUser', 'V1\LoginController@editUser');
+    Route::middleware('AuthToken')->get('/setUserPwd', 'V1\LoginController@editUser');
 
     /**
      * 获取用户信息
@@ -332,12 +332,33 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/getMerchantsList', 'V1\MerchantController@merchantsList');
 
 
+<<<<<<< HEAD
      /**
      * @version [<APP 获取消息通知>] [<description>]
     * @return  [获取发送的消息接口]   [<description>]
     * @version [<消息通知信息接口] [<description>]
     */
     Route::middleware('AuthToken')->get('/message', 'V1\MessageController@getMessage');
+=======
+    /**
+     * 个人商户详情接口
+     */
+    Route::middleware('AuthToken')->get('/getMerchantInfo', 'V1\MerchantController@merchantInfo');
+
+
+    /**
+     * @version [<APP 获取机具活动详情>] [<description>]
+     * @return  [机具的达标返现与交易情况]   [<description>]
+     * @version [<机具的达标返现情况] [<description>]
+     */
+    Route::middleware('AuthToken')->get('/getTerminalActiveDetail', 'V1\MerchantController@getActiveDetail');
+
+
+    /**
+     * 查询商户交易明细
+     */
+    Route::middleware('AuthToken')->get('/getMerchantDetails', 'V1\MerchantController@MerchantDetails');
+>>>>>>> 4ded9fc17b5338194cfba1fb103027c02cdc18ae
 
 
 });

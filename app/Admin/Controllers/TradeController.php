@@ -27,6 +27,8 @@ class TradeController extends AdminController
     {
         $grid = new Grid(new Trade());
 
+        $grid->model()->latest();
+        
         $grid->column('trade_no',        __('系统流水号'));
 
         $grid->column('rrn',            __('参考号'));
@@ -46,7 +48,7 @@ class TradeController extends AdminController
         })->label();
 
         $grid->column('rate_money', __('手续费'))->display(function ($money) {
-            return number_format($money/100, 2, '.', ',');
+            return number_format($money / 100, 2, '.', ',');
         })->label('warning')->filter('range');
 
         $grid->column('settle_amount', __('结算金额'))->display(function($amount){
@@ -148,7 +150,7 @@ class TradeController extends AdminController
     {
         if(Admin::user()->operate != "All"){
             $model = Trade::where('id', $id)->first();
-            if($model->operate != Trade::user()->operate) return abort('403');        
+            if($model->operate != Admin::user()->operate) return abort('403');        
         }
         $show = new Show(Trade::findOrFail($id));
 
@@ -168,11 +170,11 @@ class TradeController extends AdminController
 
         $show->field('rate', __('交易费率'))->as(function ($rate) {
             return $rate / 10000;
-        })->label();
+        })->label('warning');
 
         $show->field('rate_money', __('手续费'))->as(function ($money) {
             return number_format($money / 100, 2, '.', ',');
-        })->label();
+        })->label('info');
 
         $show->field('fee_type', __('手续费类型'))->using(['1' => '非封顶', '2' => '封顶']);
 
