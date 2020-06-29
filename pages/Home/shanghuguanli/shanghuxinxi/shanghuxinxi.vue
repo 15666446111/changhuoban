@@ -8,7 +8,7 @@
 						<image class="head" src="/static/huoban/tb.png" />
 						<view class="name">{{ merchantInfo.merchant_name }}</view>
 						<view class="id">
-							<view class="ID">SN:{{ merchantInfo.merchant_sn ? merchant_sn : "" }}</view>
+							<view class="ID">SN:{{ merchantInfo.merchant_sn}}</view>
 						</view>
 					</view>
 				</view>
@@ -23,7 +23,7 @@
 			<view class="dara-xian"></view>
 			<view class="data">
 				<view class="phone">注册时间</view>
-				<view class="mark">2019年12月6日</view>
+				<view class="mark">{{ merchantInfo.time}}</view>
 			</view>
 			<view class="dara-xian"></view>
 			<view class="data">
@@ -31,7 +31,7 @@
 				<view class="mark">{{ merchantInfo.active_status == '1' ? '已激活' : '未激活' }}</view>
 			</view>
 			<view class="dara-xian"></view>
-			<navigator :url="'../huodongxiangqing/huodongxiangqing?terminal=' + merchantInfo.merchant_terminal">
+			<navigator :url="'../huodongxiangqing/huodongxiangqing?terminal=' + merchantInfo.merchant_sn">
 			<view class="data">
 				<view class="phone">活动详情</view>
 				<view class="mark">查看</view>

@@ -24,7 +24,7 @@
 		
 		<view class="content">
 			<!-- 已绑定商户 -->
-			<navigator v-if="Head == 0" v-for="(item, index) in bindList" :key="index" :url="'shanghuxinxi/shanghuxinxi?id=' + item.id">
+			<navigator v-if="Head == 0" v-for="(item, index) in bindList" :key="index" :url="'shanghuxinxi/shanghuxinxi?id=' + item.machine_id">
 				<view id="view">
 					<view class="detail">
 						<view class="detail-name">{{ item.merchant_name }}</view>
@@ -53,7 +53,7 @@
 
 					<view class="money">
 						<view class="money-text">商户号:{{ item.merchant_number }}</view>
-						<view class="money-time">登记时间：{{ item.create_at }}</view>
+						<view class="money-time">登记时间：{{ item.created_at }}</view>
 					</view>
 				</view>
 				<view class="across"></view>
