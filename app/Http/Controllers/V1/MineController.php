@@ -18,17 +18,17 @@ class MineController extends Controller
     public function info(Request $request)
     {
     	try{
-
+            
             return response()->json(['success'=>['message' => '获取成功!', 'data' => [
                 'headimg'   =>  $request->user->avatar,
                 'nickname'  =>  $request->user->nickname,
                 'blance'    =>  number_format(($request->user->blance / 100), 2, '.', ','),
-                'group'     =>  $request->user->groups->name,
+                'group'     =>  $request->user->group->name,
             ]]]);
 
     	} catch (\Exception $e) {
             
-            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
+            return response()->json(['error'=>['message' => $e->getMessage()]]);
 
         }
     }

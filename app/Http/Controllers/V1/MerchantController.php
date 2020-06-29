@@ -68,49 +68,74 @@ class MerchantController extends Controller
 
 			$data = \App\Merchant::where('state',1)->where('user_id',$request->user->id)->get();
 			
-			if(!$data or empty($data)){
-				$arrs['Bound'][] = [];
-			}
-
 			$arrs;
 
-			foreach($data as $key=>$value){
-				
+			if(!$data or empty($data)){
 				$arrs['Bound'][] = array(
 
-					'id'				=>		$value->id,
-					'merchant_name'		=>		$value->name,
-					'machine_phone'		=>		$value->phone,
-					'merchant_sn'		=>		$value->activate_sn,
-					'money'				=>		$value->trade_amount / 100,
-					'machine_id'		=>		$value->machines->id,
-					'created_at'		=>		$value->machines->bind_time
+					'id'				=>		'',
+					'merchant_name'		=>		'',
+					'machine_phone'		=>		'',
+					'merchant_sn'		=>		'',
+					'money'				=>		'',
+					'machine_id'		=>		'',
+					'created_at'		=>		''
 
 				);
+			}else{
+
+				foreach($data as $key=>$value){
+				
+					$arrs['Bound'][] = array(
+	
+						'id'				=>		$value->id,
+						'merchant_name'		=>		$value->name,
+						'machine_phone'		=>		$value->phone,
+						'merchant_sn'		=>		$value->activate_sn,
+						'money'				=>		$value->trade_amount / 100,
+						'machine_id'		=>		$value->machines->id,
+						'created_at'		=>		$value->machines->bind_time
+	
+					);
+				}
+
 			}
 
 			$UnBind = \App\Machine::where('user_id',$request->user->id)->where('bind_status',0)->get();
 
 			if(!$UnBind or empty($UnBind)){
-				$arrs['UnBound'][] = [];
-			}
-
-			foreach($UnBind as $key=>$value){
 
 				$arrs['UnBound'][] = array(
 
 					'id'				=>		'',
 					'merchant_name'		=>		'',
 					'machine_phone'		=>		'',
-					'merchant_sn'		=>		$value->sn,
+					'merchant_sn'		=>		'',
 					'money'				=>		'',
-					'machine_id'		=>		$value->id,
-					'created_at'		=>		$value->bind_time
+					'machine_id'		=>		'',
+					'created_at'		=>		''
 
 				);
 
+			}else{
+
+				foreach($UnBind as $key=>$value){
+
+					$arrs['UnBound'][] = array(
+	
+						'id'				=>		'',
+						'merchant_name'		=>		'',
+						'machine_phone'		=>		'',
+						'merchant_sn'		=>		$value->sn,
+						'money'				=>		'',
+						'machine_id'		=>		$value->id,
+						'created_at'		=>		$value->bind_time
+	
+					);
+	
+				}
+
 			}
-			
             
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $arrs]]); 
 

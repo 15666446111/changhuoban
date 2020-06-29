@@ -361,6 +361,18 @@ Route::prefix('V1')->group(function () {
 >>>>>>> 4ded9fc17b5338194cfba1fb103027c02cdc18ae
 
 
+    /**
+     * 提现税点接口
+     */
+    Route::middleware('AuthToken')->get('/getPoint', 'V1\SetUserController@point');
+
+
+    /**
+     * 用户提现接口
+     */
+    Route::middleware('AuthToken')->post('/getWithdrawal', 'V1\SetUserController@Withdrawal');
+
+
 });
 
 Route::fallback(function(){ 
