@@ -77,15 +77,6 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/team_data', 'V1\TeamController@data');
 
 
-
-    /**
-     * @version [<APP 我的栏位>] [<description>]
-     * @return  [个人信息 获取个人信息]   [<description>]
-     * @version [<个人信息接口] [<description>]
-     */
-    Route::middleware('AuthToken')->get('/mine', 'V1\MineController@info');
-
-
     /**
      * @version [<APP 提现记录>] [<description>]
      * @return  [个人信息 获取提现记录]   [<description>]
