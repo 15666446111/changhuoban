@@ -330,7 +330,7 @@ class SetUserController extends Controller
                     'user_id'   => $request->user->id,
                     'order_no'  => $order_no,
                     'money'     => $request->money,
-                    'type'      => $request->rate,
+                    'type'      => $request->blance,
                     'real_money'=> $request->money - $request->money * $request->rate - $request->rate_m,
                     'state'     => '1',
                     'make_state'=> '0'
