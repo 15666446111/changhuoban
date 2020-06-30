@@ -167,8 +167,8 @@ class AdminSettingController extends AdminController
                     return back()->with(compact('error'));
                 }
 
-                // 根据选择的开户类型创建后台登陆账号
-                \App\AdminUser::create([
+                // 根据选择的开户类型创建后台登陆账号 并且给与相应的权限
+                $adminUser = \App\AdminUser::create([
                     'username'  =>  $account,
                     'password'  =>  bcrypt($password),
                     'name'      =>  $form->company,
@@ -176,13 +176,18 @@ class AdminSettingController extends AdminController
                     'type'      =>  $form->type == '1' ? 3 : 2,
                 ]); 
 
-                // 根据选择的类型 创建对应的前台账号。如果创建的是操盘方， 创建前台账号
+                \App\AdminRoleUser::create([
+                    'role_id'   =>$form->type == '1' ? 2 : 3,
+                    'user_id'   =>$adminUser->id,
+                ]);
+
+                // 根据选择的类型 创建对应的前台账号。如果创建的是操盘方， 创建前台账号 并且 如果是联盟模式 , 该账号为最高级别用户组
                 if($form->type == '1'){
                     \App\User::create([
                         'nickname'  =>  $account,
                         'account'   =>  $account,
                         'password'  =>  "###" . md5(md5($password . 'v3ZF87bMUC5MK570QH')),
-                        'user_group'=>  1,
+                        'user_group'=>  $form->pattern == "1" ? 10 : 1,
                         'operate'   =>  $form->operate_number,
                     ]);
                 }

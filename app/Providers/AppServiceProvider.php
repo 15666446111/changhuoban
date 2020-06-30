@@ -35,6 +35,9 @@ class AppServiceProvider extends ServiceProvider
          */
         User::observe(UserObserver::class);
 
+        // 操盘方设置表监听
+        \App\AdminUser::observe(\App\Observers\SettingObserver::class);
+
         // 轮播图监听
         \App\Plug::observe(\App\Observers\PlugObserver::class);
         // 轮播图类型监听
