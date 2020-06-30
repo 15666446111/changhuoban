@@ -131,7 +131,7 @@ class ShareController extends Controller
                 return response()->json(['success'=>['message' => '获取成功!', 'data' => array()]]);
 
             // 生成分享地址
-            $Url = env('APP_URL')."/team/".Hashids::encode($request->user->id);
+            $Url = config("base.merchant_register");
             
             // 二维码地址
             $CodePath = public_path('/share/'.$request->user->id.'/qrcodes/');
