@@ -34,15 +34,15 @@ class IndexController extends Controller
             $MonthIncome   = 0;
 
             return response()->json(['success'=>
-                    [
-                        'message' => '获取成功!', 
-                        'data' => [
-                            'MonthTrade'    =>  $MonthTrade,
-                            'MonthTeam'     =>  $MonthTeam,
-                            'MonthIncome'   =>  $MonthIncome,
-                            'MonthMerchant' =>  $MonthMerchant,
-                        ]
+                [
+                    'message' => '获取成功!', 
+                    'data' => [
+                        'MonthTrade'    =>  $MonthTrade,
+                        'MonthTeam'     =>  $MonthTeam,
+                        'MonthIncome'   =>  $MonthIncome,
+                        'MonthMerchant' =>  $MonthMerchant,
                     ]
+                ]
             ]);
 
     	} catch (\Exception $e) {

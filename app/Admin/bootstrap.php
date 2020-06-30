@@ -20,6 +20,12 @@
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Facades\Admin;
+    
+// 自定义导航
+Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navbar) {
+    $navbar->right('<a class="btn btn-sm btn-default import-deliver-goods"><i class="fa fa-upload" ></i>导入发货</a>');
+});
 
 /** Form view init */
 Form::init(function (Form $form) {

@@ -32,6 +32,7 @@ class SetUserController extends Controller
             //用户级别
             $data['group'] = $request->user->group->name;
             //钱包总余额
+
             $data['blance'] = $request->user->wallets->cash_blance + $request->user->wallets->return_blance;
             //分润余额
             $data['cash_blance'] = $request->user->wallets->cash_blance;
@@ -39,6 +40,7 @@ class SetUserController extends Controller
             $data['return_blance'] = $request->user->wallets->return_blance;
             //注册时间
             $data['created_at'] = $request->user->created_at;
+
 
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $data]]);
 
