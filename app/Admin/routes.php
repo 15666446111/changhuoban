@@ -74,6 +74,9 @@ Route::group([
     // 活动组管理
     $router->resource('policy-groups', PolicyGroupController::class);
 
+    //消息通知列表
+    $router->resource('buser-messages', BuserMessageController::class);
+    
     //分润管理
     $router->resource('cashs-logs', CashController::class);
 

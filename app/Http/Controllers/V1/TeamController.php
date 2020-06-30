@@ -19,8 +19,8 @@ class TeamController extends Controller
     {
     	try{
             // 获取直接下级信息
-            $list = \App\User::/*where('parent', $request->user->id)
-                        ->*/select(['id', 'avatar', 'nickname', 'created_at'])->orderBy('created_at', 'desc')->get();
+            $list = \App\User::where('parent', $request->user->id)
+                        ->select(['id', 'avatar', 'nickname', 'created_at'])->orderBy('created_at', 'desc')->get();
 
             // 获取总下级人数
             $Arr = \App\UserRelation::where('parents', 'like', "%_".$request->user->id."_%")->pluck('id')->toArray();
@@ -147,7 +147,7 @@ class TeamController extends Controller
 
         } catch (\Exception $e) {
 
-            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
+            return response()->json(['error'=>['message' => $e->getMessage()]]);
 
         }
     }

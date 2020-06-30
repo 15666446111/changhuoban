@@ -50,7 +50,7 @@ class Machine extends Model
      */
     public function merchants()
     {
-        return $this->belonesTo('\App\Merchants', 'merchant_id', 'id');
+        return $this->hasOne('\App\Merchant', 'id', 'merchant_id');
     }
 
     /**
@@ -96,5 +96,7 @@ class Machine extends Model
     {
         return $this->hasMany('\App\CashLog', 'machine_id', 'id');
     }
+
+
 
 }
