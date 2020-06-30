@@ -2715,16 +2715,6 @@
                 "php",
                 "phpspreadsheet"
             ],
-            "funding": [
-                {
-                    "url": "https://laravel-excel.com/commercial-support",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/patrickbrouwers",
-                    "type": "github"
-                }
-            ],
             "time": "2020-02-28T15:47:45+00:00"
         },
         {
@@ -3184,15 +3174,12 @@
                 "object",
                 "object graph"
             ],
-<<<<<<< HEAD
-=======
             "funding": [
                 {
                     "url": "https://tidelift.com/funding/github/packagist/myclabs/deep-copy",
                     "type": "tidelift"
                 }
             ],
->>>>>>> a721841c848902778a8fc45085d74c5d1bb4daa5
             "time": "2020-06-29T13:22:24+00:00"
         },
         {

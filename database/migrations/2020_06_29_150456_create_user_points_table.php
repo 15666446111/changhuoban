@@ -14,6 +14,7 @@ class CreateUserPointsTable extends Migration
     public function up()
     {
         Schema::create('user_points', function (Blueprint $table) {
+            
             $table->bigIncrements('id');
 
             $table->integer('user_id')->comment('用户id');

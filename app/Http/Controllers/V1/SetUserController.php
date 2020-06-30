@@ -32,6 +32,7 @@ class SetUserController extends Controller
             //用户级别
             $data['group'] = $request->user->group->name;
             //钱包总余额
+
             $data['blance'] = $request->user->wallets->cash_blance + $request->user->wallets->return_blance;
             //分润余额
             $data['cash_blance'] = $request->user->wallets->cash_blance;
@@ -39,6 +40,7 @@ class SetUserController extends Controller
             $data['return_blance'] = $request->user->wallets->return_blance;
             //注册时间
             $data['created_at'] = $request->user->created_at;
+
 
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $data]]);
 
@@ -77,6 +79,7 @@ class SetUserController extends Controller
         } catch (\Exception $e) {
             
             return response()->json(['error'=>['message' => $e->getMessage()]]);
+
         }
         
     }
@@ -257,22 +260,28 @@ class SetUserController extends Controller
     {
 
         try{ 
+            if(!$request->user->settings){
+                return response()->json(['message'=>['message' => '请设置您的提现信息']]);
+            }
+            if($request->user->settings->verify != '1'){
+                return response()->json(['message'=>['message' => '您的提现信息还未审核']]);
+            }
             
             // 判断是分润钱包还是返现钱包 * 获取提现税点
             if($request->type == '1'){
                 //税点
-                $data['point']=$request->user->points->rate;
+                $data['point']=$request->user->settings->rate;
                 //单笔提现费
-                $data['rate_m']=$request->user->points->rate_m;
+                $data['rate_m']=$request->user->settings->rate_m;
                 //免审核额度
-                $data['no_check']=$request->user->points->no_check;
+                $data['no_check']=$request->user->settings->no_check;
 
             }else
-                $data['point']=$request->user->points->return_blance;
+                $data['point']=$request->user->settings->return_blance;
 
-                $data['rate_m']=$request->user->points->return_money;
+                $data['rate_m']=$request->user->settings->return_money;
 
-                $data['no_check']=$request->user->points->no_check;
+                $data['no_check']=$request->user->settings->no_check_return;
             
             //最小提现金额
             $data['min_money']=200;

@@ -133,7 +133,7 @@ class ShareController extends Controller
             // 分享地址
             $Url = \App\AdminSetting::where('operate_number', $request->user->operate)->value('register_merchant');
             if($Url == null)
-                return response()->json(['error'=>['message' => '获取失败,联系客服!', 'data' => array()]]);
+                return response()->json(['error'=>['message' => '获取失败，请联系客服!', 'data' => array()]]);
             
             // 二维码地址
             $CodePath = public_path('/share/'.$request->user->id.'/qrcodes/');
