@@ -77,6 +77,7 @@ class SetUserController extends Controller
         } catch (\Exception $e) {
             
             return response()->json(['error'=>['message' => $e->getMessage()]]);
+            
         }
         
     }
