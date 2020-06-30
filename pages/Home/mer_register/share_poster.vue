@@ -26,12 +26,20 @@ export default {
 	methods: {
 		// 获取分享图
 		getMerchantPic(){
+			
+			console.log(uni.getStorageSync('token'));
 	    	net({
 	        	url:"/V1/merchant_share",
 	            method:'get',
 	            success: (res) => {
-					console.log(res);
-					this.images = res.data.success.data.link;
+					if (res.data.success) {
+						this.images = res.data.success.data.link;
+					} else {
+						uni.showToast({
+							title: res.data.error.message,
+							icon: 'none'
+						})
+					}
 	            }
 	      	})
 		},

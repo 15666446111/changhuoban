@@ -147,6 +147,7 @@ export default {
 				'blance': '0.00',
 				'cash_blance': '0.00',
 				'return_blance': '0.00',
+				'file':[]
 			}
 		}
 	},
@@ -195,12 +196,16 @@ export default {
 		                count: 1,
 		                sizeType: ["compressed"],
 		                success(response) {
+							
 		                // 选择图片后, 返回的数据
-		                  var fileUrl = response.tempFilePaths[0]
+						   var file =[];
+		                   file = response.tempFiles[0]
+						   // console.log(file);return;
 							net({
 					         	 url:"/V1/updateUserInfo",
-					             method:'get',
-								 data:{avatar:fileUrl},
+					             method:'post',
+								 data:{avatar:file},
+								 header:{"Content-Type": "multipart/form-data"},
 					             success: (res) => {
 									uni.hideLoading();
 									if (res.data.success) {
