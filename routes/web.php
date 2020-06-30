@@ -22,6 +22,7 @@ Route::get('/forget', 	'RegisterController@forget');
 // 项目登录之后的主页面
 Route::get('/home', 	'HomeController@home');
 
+Auth::routes();
 
 
 
@@ -43,3 +44,18 @@ Route::get('/api/getAdminFactory', 		'AdminApiController@getAdminFactory');
  * @version [<vector>] [<后台联动Select 查询符合条件的型号>]
  */
 Route::get('/api/getAdminStyle', 		'AdminApiController@getAdminStyle');
+
+
+/**
+ * @version [<团队邀请人注册 扫描二维码>] [<description>]
+ * @author  [Pudding] <[755969423@qq.com]>
+ * @version [<会员注册>] [<description>]
+ */
+Route::get('/team/{code}', 'RegisterController@team');
+
+/**
+ * @version [<团队邀请人注册 扫描二维码>] [<description>]
+ * @author  [Pudding] <[755969423@qq.com]>
+ * @version [<会员注册>] [<description>]
+ */
+Route::post('/team/{code}', 'RegisterController@team_in')->name('register');
