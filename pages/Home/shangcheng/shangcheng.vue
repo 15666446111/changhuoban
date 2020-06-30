@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<!-- 顶部选项卡 -->
-		<scroll-view scroll-x class="border-bottom scroll-row" style="height: 100rpx;" :scroll-into-view="srcollinto" scroll-with-animation="true">
+		<scroll-view scroll-x class="border-bottom scroll-row" style="height: 80rpx;" :scroll-into-view="srcollinto" scroll-with-animation="true">
 			<view
 				class="scroll-row-item px-3 "
 				@click="changTab(index)"
@@ -19,7 +19,7 @@
 			<swiper-item v-for="(item, index) in typeList" :key="index">
 				
 				<!-- 厂商 -->
-				<scroll-view scroll-x class="border-bottom scroll-row" style="height: 100rpx;" :scroll-into-view="srcollinto_f" scroll-with-animation="true">
+				<scroll-view scroll-x class="border-bottom scroll-row " style="height: 80rpx;" :scroll-into-view="srcollinto_f" scroll-with-animation="true">
 					<view
 						class="scroll-row-item px-3 "
 						@click="changTab1(index)"
@@ -37,7 +37,7 @@
 					<swiper-item v-for="(item, index) in factiryList" :key="index">
 						
 						<!-- 型号 -->
-						<scroll-view scroll-x class="border-bottom scroll-row" style="height: 100rpx;" :scroll-into-view="srcollinto_s" scroll-with-animation="true">
+						<scroll-view scroll-x class="border-bottom scroll-row" style="height: 80rpx;" :scroll-into-view="srcollinto_s" scroll-with-animation="true">
 							<view
 								class="scroll-row-item px-3 "
 								@click="changTab2(index)"
