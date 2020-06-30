@@ -24,9 +24,9 @@ use Encore\Admin\Facades\Admin;
     
 // 自定义导航
 Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navbar) {
-    // if(Admin::user()->type == "3"){
+    if(Admin::user()->type == "3"){
         $navbar->right('<li> <a href="/manage/settings"><i class="fa fa-cog"></i> <span class="label label-success"></span></a></li>');
-    // }
+    }
 });
 
 /** Form view init */
