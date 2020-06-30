@@ -27,11 +27,11 @@ class SetUserController extends Controller
             //用户级别
             $data['group'] = $request->user->group->name;
             //钱包总余额
-            $data['blance'] = $request->user->wallets->cash_blance/100 + $request->user->wallets->retrun_blance/100;
+            $data['blance'] = $request->user->wallets->cash_blance / 100 + $request->user->wallets->retrun_blance / 100;
             //分润余额
-            $data['cash_blance'] = $request->user->wallets->cash_blance/100;
+            $data['cash_blance'] = $request->user->wallets->cash_blance / 100;
             //返现余额
-            $data['return_blance'] = $request->user->wallets->return_blance/100;
+            $data['return_blance'] = $request->user->wallets->return_blance / 100;
 
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $data]]);
 
