@@ -20,7 +20,7 @@ class HomeController extends Controller
         return $content->title('欢迎回家👏')->description('信息基础统计...')
 
                 ->row(function (Row $row) {
-                    $row->column(8, function (Column $column) {
+                    $row->column(12, function (Column $column) {
                     $UserBox = new Box('代理增长统计', $this->usersGrowth()); 
                     $UserBox->removable();
                     $UserBox->collapsable();
@@ -28,10 +28,6 @@ class HomeController extends Controller
                     $UserBox->solid();
                     $UserBox->scrollable();
                     $column->append($UserBox);
-                });
-
-                $row->column(4, function (Column $column) {
-                    $column->append(Dashboard::extensions());
                 });
 
             });

@@ -48,6 +48,8 @@ class UserGroupController extends AdminController
 
         // $grid->column('updated_at', __('修改时间'))->date('Y-m-d H:i:s');
 
+        $grid->disableCreateButton();
+
         return $grid;
     }
 
