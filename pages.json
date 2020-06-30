@@ -374,7 +374,11 @@
 			"style": {}
 		}
 
-	],
+	    ,{
+            "path" : "pages/mine/userInfo/userInfo",
+            "style" : {}
+        }
+    ],
 
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

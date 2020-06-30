@@ -6,10 +6,12 @@
 			<view class="titlebar">
 				<view class="rise"> 
 					<view class="rise-head">
-						<image class="head" :src="UserInfo.heading" mode="aspectFill" />
-						<view class="name">{{ UserInfo.nickname}}</view>
+						<image class="head" :src="UserInfo.heading" @click="changeAvatar(UserInfo.heading)" mode="aspectFill" />
+						<view class="name">昵称:{{ UserInfo.account}}</view>
 					</view>
-					<view class="ID">{{ UserInfo.username }}</view>
+
+					<view class="ID">账号:{{ UserInfo.account }}  级别:{{ UserInfo.group }}</view>
+
 				</view>
 			</view>
 
@@ -24,7 +26,7 @@
 				</view>
 				
 				<view class="earning blance_text">
-					<text style="">{{ UserInfo.blance / 100 | numberGSH }}</text>
+					<text style="">{{ UserInfo.blance | numberGSH }}</text>
 				</view>
 				
 				<view class="across"></view>
@@ -32,12 +34,12 @@
 				<view class="eings d-flex">
 					<view class="eings-view">
 						<view style="color: #666;">分润钱包(元)</view>
-						<view style="color: #EE9900;">{{UserInfo.cash_blance/100 | numberGSH }}</view>
+						<view style="color: #EE9900;">{{UserInfo.cash_blance | numberGSH }}</view>
 					</view>
 					<view class="shuxian"></view>
 					<view class="eings-view">
 						<view style="color: #666;">返现钱包(元)</view>
-						<view style="color: #EE9900;">{{UserInfo.return_blance/100 | numberGSH }}</view>
+						<view style="color: #EE9900;">{{UserInfo.return_blance| numberGSH }}</view>
 					</view>
 				</view>
 			</view>
@@ -145,6 +147,7 @@ export default {
 				'blance': '0.00',
 				'cash_blance': '0.00',
 				'return_blance': '0.00',
+				'file':[]
 			}
 		}
 	},
@@ -171,6 +174,64 @@ export default {
 	            }
 	      	})
 		},
+		changeAvatar(heading){
+		        uni.showActionSheet({
+		        // itemList按钮的文字接受的是数组
+		          itemList: ["查看头像","从相册选择图片"],
+		          success(e){
+		            var index = e.tapIndex
+		            if(index === 0){
+		            // 用户点击了预览当前图片
+		            // 可以自己实现当前头像链接的读取
+		              let url  = heading
+		              let arr=[]
+		              arr.push(url)
+		              uni.previewImage({
+		              // 预览功能图片也必须是数组的
+		                urls: arr
+		              })
+		            }else if(index === 1){
+		            // 用户点击了从图库上传
+		              uni.chooseImage({
+		                count: 1,
+		                sizeType: ["compressed"],
+		                success(response) {
+							
+		                // 选择图片后, 返回的数据
+						   var file =[];
+		                   file = response.tempFiles[0]
+						   // console.log(file);return;
+							net({
+					         	 url:"/V1/updateUserInfo",
+					             method:'post',
+								 data:{avatar:file},
+								 header:{"Content-Type": "multipart/form-data"},
+					             success: (res) => {
+									uni.hideLoading();
+									if (res.data.success) {
+										uni.showToast({
+											title: res.data.success.message,
+											icon: 'none',
+											success : function(){
+												setTimeout(function() {
+													uni.navigateBack();
+												}, 1500);
+											}
+										});
+									} else {
+										uni.showToast({
+											title: res.data.error.message,
+											icon: 'none'
+										});
+									}
+					             }
+					       	})
+		                }
+		              })
+		            }
+		        }
+			})
+		}
 	},
 	filters: {
 		numberGSH(value){

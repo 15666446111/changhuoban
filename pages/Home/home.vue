@@ -134,7 +134,7 @@ export default {
 	  	getHomeInfo(){
 	    	net({
 	        	url:"/V1/index_info",
-	            method:'get',
+	            method:'get',	
 	            success: (res) => {
 					this.info = res.data.success.data;
 	            }

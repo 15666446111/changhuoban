@@ -7,21 +7,21 @@
 			</view>
 		</navigator>
 		<view class="add-xian"></view>
-		<navigator url="../lijitixian/tijiaoyinhangka/tijiaoyinhangka" open-type="navigate">
-			<view class="bank">
-				<view class="bank-name">结算信息管理</view>
-				<image class="bank-img" src="../../../static/jiantou.png" mode="widthFix" />
-			</view>
-		</navigator>
 		<navigator url="../cash/bankList/bankList" open-type="navigate">
 			<view class="bank">
-				<view class="bank-name">银行卡管理</view>
+				<view class="bank-name">结算信息管理</view>
 				<image class="bank-img" src="../../../static/jiantou.png" mode="widthFix" />
 			</view>
 		</navigator>
 		<navigator url="../../Home/shangcheng/dizhi/dizhi" open-type="navigate">
 			<view class="bank">
 				<view class="bank-name">收货地址管理</view>
+				<image class="bank-img" src="../../../static/jiantou.png" mode="widthFix" />
+			</view>
+		</navigator>
+		<navigator url="../userInfo/userInfo" open-type="navigate">
+			<view class="bank">
+				<view class="bank-name">个人信息管理</view>
 				<image class="bank-img" src="../../../static/jiantou.png" mode="widthFix" />
 			</view>
 		</navigator>
