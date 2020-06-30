@@ -31,17 +31,22 @@ class WithdrawController extends AdminController
         
         $grid->column('order_no', __('提现订单'));
 
-        $grid->column('user_id', __('提现代理'));
+        $grid->column('users.nickname', __('提现代理'));
         
-        $grid->column('money', __('提现金额'));
+        $grid->column('money', __('提现金额'))->label();
 
-        $grid->column('real_money', __('到账金额'));
+        $grid->column('real_money', __('到账金额'))->label('info');
 
-        $grid->column('type', __('提现类型'));
+        $grid->column('type', __('提现类型'))
+                ->using(['1' => '分润提现', '2' => '返现提现']);
 
-        $grid->column('state', __('提现状态'));
+        $grid->column('state', __('提现状态'))
+                ->using(['1' => '待审核', '2' => '通过', '3'=>'驳回'])
+                ->dot([ 0 => 'success', 1 => 'danger' ], 'default');
 
-        $grid->column('make_state', __('打款状态'));
+        $grid->column('make_state', __('打款状态'))
+                ->using(['0' => '未打款', '1' => '已打款'])
+                ->dot([ 0 => 'danger', 1 => 'success' ], 'default');
 
         $grid->column('check_at', __('审核时间'));
 
