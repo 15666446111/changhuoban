@@ -114,9 +114,9 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/userInfo', 'V1\SetUserController@getUserInfo');
 
     /**
-     * 修改用户头像/昵称  
+     * 修改用户头像
     */
-    Route::middleware('AuthToken')->get('/updateUserInfo', 'V1\SetUserController@editUserInfo');
+    Route::middleware('AuthToken')->post('/updateUserInfo', 'V1\SetUserController@editUserInfo');
 
     /**
      * 添加银行卡结算信息接口
