@@ -27,6 +27,8 @@ class SetUserController extends Controller
             $data['active'] = $request->user->active;
             //用户头像
             $data['heading'] = $request->user->avatar;
+            //用户手机号
+            $data['phone'] = $request->user->phone;
             //用户组id
             $data['user_group'] = $request->user->user_group;
             //用户级别
