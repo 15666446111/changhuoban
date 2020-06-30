@@ -109,7 +109,7 @@ class ShareController extends Controller
      */
     public function merchant(Request $request)
     {
-        // try{
+        try{
             
             /** 获取分享类型的素材  */
             // 操盘方分享素材
@@ -181,10 +181,10 @@ class ShareController extends Controller
 
             return response()->json(['success'=>['message' => '获取成功!', 'data' => ['link' => $link."?time=".time() ]]]);
 
-        // } catch (\Exception $e) {
+        } catch (\Exception $e) {
             
-        //     return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
+            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
 
-        // }
+        }
     }
 }
