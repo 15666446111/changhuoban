@@ -60,7 +60,7 @@ class SetUserController extends Controller
             
             $heading = $request->avatar;
             
-            $filename = uniqid() . '.' . $heading->getClientOriginalExtension();
+            $filename = uniqid() . '.' . 'jpg';
             
             Storage::disk('file')->put('/'.$filename,file_get_contents($heading->getRealPath()));
 
