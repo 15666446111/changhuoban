@@ -33,7 +33,7 @@
 				<text style="margin-left:10upx;">元</text>
 			</view>
 			<view class="bview4">
-				<view>提示：手续费0元，税点{{ cashsetUp.point }}%，单笔提现金额不低于{{ cashsetUp.min_money }}元</view>
+				<view>提示：手续费{{cashsetUp.rate_m / 100}}元，税点{{ cashsetUp.point }}%，单笔提现金额不低于{{ cashsetUp.min_money }}元</view>
 				<view>提现时间：{{ cashsetUp.point_time }},请注意查收短信或查询提现进度</view>
 			</view>
 		</view>
@@ -90,8 +90,7 @@ export default {
 	onLoad() {
 		// 获取用户个人信息
 		this.getUserInfo();
-		// 获取提现设置信息
-		this.getPoint();
+		
 		// 获取默认结算卡信息
 		this.getDefaultCard();
 	},
@@ -101,6 +100,9 @@ export default {
 			this.$refs[str].show();
 		},
 		onConfirm(val) {
+			// 获取提现设置信息
+			this.getPoint(val.checkArr.value);
+			// console.log(val);
 			this.resultInfo = { ...val };
 			this.balance = val.checkArr.value == 1 ? this.UserInfo.cash_blance : this.UserInfo.return_blance;
 		},
@@ -111,20 +113,33 @@ export default {
 	        	url:"/V1/userInfo",
 	            method:'get',
 	            success: (res) => {
-					console.log(res);
+					// console.log(res);
 					this.UserInfo = res.data.success.data;
 	            }
 	      	})
 		},
 		
 		// 获取提现设置信息
-		getPoint(){
+		getPoint(val){
 			net({
 	        	url:"/V1/getPoint",
 	            method:'get',
+				data:{type:val},
 	            success: (res) => {
-					// console.log(res);
-					this.cashsetUp = res.data.success.data;
+					console.log(res);
+					if(res.data.code == 201){
+						uni.showToast({
+						    title: res.data.message.message,
+						    duration: 1500
+						});
+					}else if(res.data.code == 202){
+						uni.showToast({
+						    title: res.data.message.message,
+						    duration: 1500
+						});
+					}else{
+						this.cashsetUp = res.data.success.data;
+					}
 	            }
 	      	})
 		},
@@ -135,7 +150,7 @@ export default {
 	        	url:"/V1/getBankDefault",
 	            method:'get',
 	            success: (res) => {
-					console.log(res);
+					// console.log(res);
 					this.bankCard = res.data.success.data;
 	            }
 	      	})
@@ -161,6 +176,7 @@ export default {
 					'idcard':this.bankCard.number,
 					'bank':this.bankCard.bank_name,
 					'bank_open':this.bankCard.open_bank,
+					'banklink':this.bankCard.bank,
 					'reason':''
 				},
 	            success: (res) => {
@@ -185,21 +201,30 @@ export default {
 		
 		// 同步应提现金额方法
 		moneyInput(event){
+			if(event.detail.value == ""){
+				this.reachBalance = Math.floor("");
+				return false;
+			}
+			// console.log(event);
 			var eventMoney = event.detail.value;
 			var settleMoney = eventMoney * (1 - this.cashsetUp.point * 0.01);
-			this.reachBalance = Math.floor(settleMoney);
+			this.reachBalance = Math.floor(settleMoney - this.cashsetUp.rate_m / 100);
 		},
 		
 		// 全部提现
 		cashAll(){
+			if(event.detail.value == ""){
+				this.reachBalance = Math.floor("");
+				return false;
+			}
 			if (this.resultInfo.checkArr == undefined) {
 				uni.showToast({ title: '请选择提现钱包', icon: 'none' })
 				return false;
 			}
-			this.money = this.balance / 100;
-			var settleMoney = this.money * (1 - this.cashsetUp.point * 0.01);
-			console.log(settleMoney);
-			this.reachBalance = Math.floor(settleMoney * 100);
+			this.money = this.balance;
+			var settleMoney = this.money * (1 - this.cashsetUp.point * 0.01) / 100;
+			// console.log(settleMoney);
+			this.reachBalance = Math.floor(settleMoney * 100 - this.cashsetUp.rate_m / 100);
 		}
 	}
 };
