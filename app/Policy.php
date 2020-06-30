@@ -16,23 +16,6 @@ class Policy extends Model
         'vip_active_set' 		=> 'json'
     ];
 
-	/**
-	 * @Author    Pudding
-	 * @DateTime  2020-05-21
-	 * @copyright [ 结算价]
-	 * @license   [license]
-	 * @version   [version]
-	 * @param     [type]      $extra [description]
-	 * @return    [type]             [description]
-	 */
-    public function getSettPriceAttribute($extra)
-    {
-        return array_values(json_decode($extra, true) ?: []);
-    }
-    public function setSettPriceAttribute($extra)
-    {
-        $this->attributes['sett_price'] = json_encode(array_values($extra));
-    }
 
 	/**
 	 * @Author    Pudding
@@ -45,15 +28,20 @@ class Policy extends Model
 	 */
     public function getDefaultStandardSetAttribute($extra)
     {
-    	$attr = json_decode($extra, true);
-    	foreach ($attr as $key => $value) {
-            $attr[$key]['standard_agent_price'] = $value['standard_agent_price'] / 100;
-    		$attr[$key]['standard_trade'] = $value['standard_trade'] / 100;
-    		$attr[$key]['standard_price'] = $value['standard_price'] / 100;
-    		$attr[$key]['standard_parent_price'] = $value['standard_parent_price'] / 100;
-    	}
+        if($extra) {
+            $attr = json_decode($extra, true);
+            foreach ($attr as $key => $value) {
+                $attr[$key]['standard_agent_price'] = $value['standard_agent_price'] / 100;
+                $attr[$key]['standard_trade'] = $value['standard_trade'] / 100;
+                $attr[$key]['standard_price'] = $value['standard_price'] / 100;
+                $attr[$key]['standard_parent_price'] = $value['standard_parent_price'] / 100;
+            }
 
-        return array_values($attr ?: []);
+            return array_values($attr ?: []);
+        }else {
+            return [];
+        }
+
     }
     public function setDefaultStandardSetAttribute($extra)
     {
@@ -87,6 +75,8 @@ class Policy extends Model
     {
         $this->attributes['vip_standard_set'] = json_encode(array_values($extra));
     }    
+
+
 	/**
 	 * [merchants 关联终端模型]
 	 * @author Pudding
@@ -97,4 +87,16 @@ class Policy extends Model
  	{
  		return $this->hasMany('\App\Machine', 'policy_id', 'id');
  	}
+
+    /**
+     * [merchants 关联终端模型]
+     * @author Pudding
+     * @DateTime 2020-04-10T15:33:52+0800
+     * @return   [type]                   [description]
+     */
+    public function policy_groups()
+    {
+        return $this->belongsTo('\App\PolicyGroup', 'policy_group_id', 'id');
+    }
+
 }

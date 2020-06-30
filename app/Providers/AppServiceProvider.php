@@ -53,6 +53,9 @@ class AppServiceProvider extends ServiceProvider
         // 文章类型监听
         \App\ArticleType::observe(\App\Observers\ArticleTypeObserver::class);
 
+        // 新增活动组的时候 监听创建各个用户组的各个结算价设置 仅限联盟模式
+        \App\PolicyGroup::observe(\App\Observers\PolicyGroupObserver::class);
+
 
 
         /**

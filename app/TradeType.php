@@ -7,6 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 class TradeType extends Model
 {
 
+    /**
+     * [users  关联活动组结算价模型]
+     * @author Pudding
+     * @DateTime 2020-04-20T13:43:38+0800
+     * @return   [type]                   [description]
+     */
+    public function policy_sett()
+    {
+        return $this->HasMany('\App\PolicyGroupSettlement', 'trade_type_id', 'id');
+    }
+
     // 设置交易标识
     public function getTradeTypeAttribute($value)
     {

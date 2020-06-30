@@ -27,7 +27,9 @@ class TradeTypeController extends AdminController
         $grid = new Grid(new TradeType());
 
         $grid->column('id', __('索引'));
+
         $grid->column('name', __('类型名称'));
+        
         $grid->column('trade_type', __('交易标识'))->display(function ($title) {
 
             $type = [
@@ -54,15 +56,44 @@ class TradeTypeController extends AdminController
 
             $str = "";
             foreach ($title as $key => $value) {
-                $str.=$type[$value];
+                $str.="<span style='background:#00a65a; padding: 5px 10px; color:white; margin-right:5px; border-radius:5px;'>$type[$value]</span>";
             }
             return $str;
-            
-        })->label();
+        });
 
-        $grid->column('card_type', __('交易卡'));
-        $grid->column('trade_code', __('交易码'));
-        $grid->column('is_top', __('是否封顶'));
+        $grid->column('card_type', __('交易卡'))->display(function ($title) {
+            $str = "";
+            foreach ($title as $key => $value) {
+                $card = $value == "0" ? '借记卡' : '信用卡';
+                $str.="<span style='background:#55acee; padding: 5px 10px; color:white; margin-right:5px; border-radius:5px;'>$card</span>";
+            }
+            return $str;    
+        });
+        $grid->column('trade_code', __('手续费计算类型'))->display(function ($title) {
+
+            $type = [ 
+                'Y' => '优惠', 
+                'M' => '减免',
+                'B' => '标准',
+                'YN'=> '云闪付NFC',
+                'YM'=> '云闪付双免'
+            ];
+
+            $str = "";
+            foreach ($title as $key => $value) {
+                $str.="<span style='background:#00a65a; padding: 5px 10px; color:white; margin-right:5px; border-radius:5px;'>$type[$value]</span>";
+            }
+            return $str;
+        });
+
+        $grid->column('is_top', __('是否封顶'))->display(function ($title) {
+            $str = "";
+            foreach ($title as $key => $value) {
+                $card = $value == "0" ? '非封顶' : '封顶';
+                $str.="<span style='background:#55acee; padding: 5px 10px; color:white; margin-right:5px; border-radius:5px;'>$card</span>";
+            }
+            return $str;    
+        });
         $grid->column('created_at', __('创建时间'));
         //$grid->column('updated_at', __('Updated at'));
 

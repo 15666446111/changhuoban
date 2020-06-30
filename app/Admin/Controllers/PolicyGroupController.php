@@ -74,11 +74,18 @@ class PolicyGroupController extends AdminController
         }
 
         $show->field('title', __('活动组标题'));
-        $show->field('operate', __('所属操盘'));
-        $show->field('type', __('组类型'));
         $show->field('created_at', __('创建时间'));
         //$show->field('updated_at', __('Updated at'));
-
+        //
+        //
+        $show->settsprice('结算价设置', function ($settsprice) {
+            $settsprice->resource('/manage/policy-group-settlements');
+            $settsprice->column('user_groups.name', __('用户组'));
+            $settsprice->column('trade_types.name', __('交易类型'));
+            $settsprice->column('set_price', __('结算价'))->editable();
+            $settsprice->disableCreateButton();
+            $settsprice->disableActions();
+        });
         return $show;
     }
 
@@ -107,6 +114,11 @@ class PolicyGroupController extends AdminController
                 $form->type    = 1;     // 暂时先等于联盟模式
             }
             
+        });
+
+        $form->saved(function (Form $form) {
+            // 跳转页面
+            return redirect('/manage/policy-groups/'. $form->model()->id);
         });
 
         return $form;
