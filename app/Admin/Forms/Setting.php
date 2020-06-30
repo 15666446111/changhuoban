@@ -29,7 +29,33 @@ class Setting extends Form
      */
     public function handle(Request $request)
     {
-        //dump($request->all());
+        
+        $data = \App\Setting::where('operate', Admin::user()->operate)->first();
+        if($request->withdraw_open){
+            $withdraw_open = '1';
+        }else{
+            $withdraw_open = '0';
+        }
+
+        $data->withdraw_open = $withdraw_open;
+
+        $data->verify = '0';
+
+        $data->rate = $request->rate;
+
+        $data->rate_m = $request->rate_m;
+
+        $data->return_blance = $request->return_blance;
+
+        $data->return_money = $request->return_money;
+
+        $data->no_check = $request->no_check;
+
+        $data->no_check_return = $request->no_check_return;
+
+        $data->operate = Admin::user()->operate;
+
+        $data->save();
 
         admin_success('Processed successfully.');
 
@@ -44,7 +70,7 @@ class Setting extends Form
 
         $this->switch('withdraw_open', '开启提现')->rules('required');
 
-        $this->switch('verify', '是否审核')->rules('required');
+        // $this->switch('verify', '是否审核')->rules('required');
 
         $this->number('rate', '分润提现税点')->rules('required')->help('分润钱包提现时的税点,单位为百分位');
 

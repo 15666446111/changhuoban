@@ -52,7 +52,7 @@ class MachineHeadTail extends Action
             foreach ($InsertData as $key => $value) {
                 \App\Machine::create([
                     'sn'       =>  $value,
-                    'style_id'          =>  $request->style_id,
+                    'style_id'          =>  $request->h_style_id,
                 ]);
             }
 

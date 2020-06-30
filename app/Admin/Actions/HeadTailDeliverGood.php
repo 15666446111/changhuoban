@@ -13,7 +13,7 @@ class HeadTailDeliverGood extends Action
     {
         // $request ...
         try { 
-
+            var_dump($request->all());
             //验证首位
             if(!is_numeric($request->f_head) or !is_numeric($request->f_tail)){
                 return $this->response()->error('首尾终端需为整数!')->refresh();
@@ -41,16 +41,16 @@ class HeadTailDeliverGood extends Action
 
             }
 
-            $eplice = \App\Merchant::whereIn('merchant_terminal', $data)->pluck('merchant_terminal')->toArray();
+            $eplice = \App\Machine::whereIn('sn', $data)->pluck('sn')->toArray();
             // 交集
             $epliceRows = array_intersect($data, $eplice);
             // 差集
             $InsertData = array_diff($data, $eplice);
 
             foreach ($InsertData as $key => $value) {
-                \App\Merchant::create([
+                \App\Machine::create([
                     'sn'       =>  $value,
-                    'brand_id'          =>  $request->f_brand,
+                    'style_id'          =>  $request->f_brand,
                 ]);
             }
 
