@@ -186,6 +186,7 @@ class AdminSettingController extends AdminController
                     \App\User::create([
                         'nickname'  =>  $account,
                         'account'   =>  $account,
+                        'phone'     =>  $phone,
                         'password'  =>  "###" . md5(md5($password . 'v3ZF87bMUC5MK570QH')),
                         'user_group'=>  $form->pattern == "1" ? 10 : 1,
                         'operate'   =>  $form->operate_number,
