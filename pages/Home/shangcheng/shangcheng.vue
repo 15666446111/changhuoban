@@ -6,7 +6,7 @@
 				class="scroll-row-item px-3 "
 				@click="changTab(index)"
 				style="height: 80rpx; line-height: 80rpx;"
-				v-for="(item, index) in tabBars"
+				v-for="(item, index) in typeList"
 				:key="index"
 				:class="tabIndex === index ? 'main-text-color' : ''"
 				:id="'tab' + index"
@@ -15,60 +15,69 @@
 			</view>
 		</scroll-view>
 		
-		<scroll-view scroll-x class="border-bottom scroll-row" style="height: 100rpx;" :scroll-into-view="srcollinto" scroll-with-animation="true">
-			<view
-				class="scroll-row-item px-3 "
-				@click="changTab1(index)"
-				style="height: 80rpx; line-height: 80rpx;"
-				v-for="(item, index) in tabBars1"
-				:key="index"
-				:class="tabIndex === index ? 'main-text-color' : ''"
-				:id="'tab' + index"
-			>
-				<text class="font-md">{{ item.factory_name }}</text>
-			</view>
-		</scroll-view>
-		
-		<scroll-view scroll-x class="border-bottom scroll-row" style="height: 100rpx;" :scroll-into-view="srcollinto" scroll-with-animation="true">
-			<view
-				class="scroll-row-item px-3 "
-				@click="changTab2(index)"
-				style="height: 80rpx; line-height: 80rpx;"
-				v-for="(item, index) in tabBars2"
-				:key="index"
-				:class="tabIndex === index ? 'main-text-color' : ''"
-				:id="'tab' + index"
-			>
-				<text class="font-md">{{ item.style_name }}</text>
-			</view>
-		</scroll-view>
-		
-
-		<swiper :current="tabIndex" :duration="150" :style="'height:' + scrollH + 'px'">
-			<swiper-item v-for="(item, index) in tabBars1" :key="index">
-				<scroll-view scroll-y="true" :style="'height:' + scrollH + 'px'">
-					<view class="body">
-						<view class="list-wrap">
-							<scroll-view scroll-y="true" class="list">
-								<view class="list-scroll-view">
-									
-									<view class="course-card" v-for="(item, index) in product" :key="index">
-										<navigator :url="'shangpingxinxi/shangpingxinxi?product='+item.id">
-											<view>
-												<image :src=item.image mode="widthFix"></image>
-											</view>
-											<view class="body-text">{{item.title}}</view>
-											<view class="price">¥{{item.price / 100}}</view>
-										</navigator>
-									</view>
-													
-								</view>
-							</scroll-view>
-						</view>
+		<swiper :current="tabIndex" :duration="150" disable-touch="true" :style="'height:' + scrollH + 'px'">
+			<swiper-item v-for="(item, index) in typeList" :key="index">
+				
+				<!-- 厂商 -->
+				<scroll-view scroll-x class="border-bottom scroll-row" style="height: 100rpx;" :scroll-into-view="srcollinto_f" scroll-with-animation="true">
+					<view
+						class="scroll-row-item px-3 "
+						@click="changTab1(index)"
+						style="height: 80rpx; line-height: 80rpx;"
+						v-for="(item, index) in factiryList"
+						:key="index"
+						:class="tabIndexFac === index ? 'main-text-color' : ''"
+						:id="'tab' + index"
+					>
+						<text class="font-md">{{ item.factory_name }}</text>
 					</view>
 				</scroll-view>
+				
+				<swiper :current="tabIndexFac" :duration="150" disable-touch="true" :style="'height:' + scrollH + 'px'">
+					<swiper-item v-for="(item, index) in factiryList" :key="index">
+						
+						<!-- 型号 -->
+						<scroll-view scroll-x class="border-bottom scroll-row" style="height: 100rpx;" :scroll-into-view="srcollinto_s" scroll-with-animation="true">
+							<view
+								class="scroll-row-item px-3 "
+								@click="changTab2(index)"
+								style="height: 80rpx; line-height: 80rpx;"
+								v-for="(item, index) in styleList"
+								:key="index"
+								:class="tabIndexStyle === index ? 'main-text-color' : ''"
+								:id="'tab' + index"
+							>
+								<text class="font-md">{{ item.style_name }}</text>
+							</view>
+						</scroll-view>
+						
+						<!-- 产品 -->
+						<scroll-view scroll-y="true" :style="'height:' + scrollH + 'px'">
+							<view class="body">
+								<view class="list-wrap">
+									<scroll-view scroll-y="true" class="list">
+										<view class="list-scroll-view">
+											
+											<view class="course-card" v-for="(item, index) in product" :key="index">
+												<navigator :url="'shangpingxinxi/shangpingxinxi?product='+item.id">
+													<view>
+														<image :src=item.image mode="widthFix"></image>
+													</view>
+													<view class="body-text">{{item.title}}</view>
+													<view class="price">¥{{item.price / 100}}</view>
+												</navigator>
+											</view>
+															
+										</view>
+									</scroll-view>
+								</view>
+							</view>
+						</scroll-view>
+					</swiper-item>
+				</swiper>
 			</swiper-item>
 		</swiper>
+		
 	</view>
 </template>
 
@@ -79,12 +88,19 @@ export default {
 	data() {
 		return {
 			srcollinto: '',
+			srcollinto_f: '',
+			srcollinto_s: '',
+			
 			scrollH: 500,
+			
 			tabIndex: 0,
-			tabBars: [],
-			tabBars1: [],
-			tabBars2: [],
-			product: []
+			tabIndexFac: 0,
+			tabIndexStyle: 0,
+			
+			typeList: [],		// 产品类型
+			factiryList: [],	// 产品厂商
+			styleList: [],		// 产品型号
+			product: []			// 产品
 		};
 	},
 	onLoad() {
@@ -105,7 +121,7 @@ export default {
 	            method:'get',
 	            success: (res) => {
 					uni.hideLoading();
-					this.tabBars = res.data.success.data;
+					this.typeList = res.data.success.data;
 					// 获取厂商信息
 					this.changTab(0);
 	            }
@@ -115,63 +131,76 @@ export default {
 		
 		// 切换选项卡
 		changTab(index) {
-			// if (this.tabIndex == index) return;
-			this.tabIndex = index;
-			this.srcollinto = 'tab' + index;
-			// 请求数据
-			const type = this.tabBars[index].id
-			
-	    	net({
-	        	url:"/V1/getproductfactories",
-	            method:'get',
-				data: { type: type},
-	            success: (res) => {
-					// console.log(res);
-					this.tabBars1 = res.data.success.data;
-					this.changTab1(0);
-	            }
-	      	})
-	
-		},
+				uni.showLoading();
+				// if (this.tabIndex == index) return;
+				this.tabIndex = index;
+				this.srcollinto = 'tab' + index;
+				
+				// 获取厂商信息
+				// 请求数据
+				const type = this.typeList[index].id;
+				
+		    	net({
+		        	url:"/V1/getproductfactories",
+		            method:'get',
+					data: { type: type },
+		            success: (res) => {
+						// console.log(res);
+						this.factiryList = res.data.success.data;
+						this.changTab1(0);
+		            }
+		      	})
+				
+			},
 		
+		// 获取型号信息
 		changTab1(index) {
-				// if (this.tabIndex == index) return;
-				this.tabIndex = index;
-				this.srcollinto = 'tab' + index;
-				// 请求数据
-				const type = this.tabBars[index].id
+				uni.showLoading();
+				this.tabIndexFac = index;
+				this.srcollinto_f = 'tab' + index;
 				
-		    	net({
-		        	url:"/V1/getproductstyles",
-		            method:'get',
-					data: { factoriy: type},
-		            success: (res) => {
-						// console.log(res);
-						this.tabBars2 = res.data.success.data;
-		            }
-		      	})
-		
+				if (this.factiryList[index] != undefined) {
+					// 请求数据
+					const type = this.factiryList[index].id;
+			    	net({
+			        	url:"/V1/getproductstyles",
+			            method:'get',
+						data: { factoriy: type},
+			            success: (res) => {
+							// console.log(res);
+							this.styleList = res.data.success.data;
+							this.changTab2(0);
+			            }
+			      	})
+				} else {
+					uni.hideLoading();
+				}
 			},
 			
+		// 获取产品信息
 		changTab2(index) {
+				uni.showLoading();
 				// if (this.tabIndex == index) return;
-				this.tabIndex = index;
-				this.srcollinto = 'tab' + index;
-				// 请求数据
-				const type = this.tabBars[index].id
+				this.tabIndexStyle = index;
+				this.srcollinto_s = 'tab' + index;
 				
-		    	net({
-		        	url:"/V1/getproduct",
-		            method:'get',
-					data: { style: type},
-		            success: (res) => {
-						// console.log(res);
-						this.product = res.data.success.data;
-		            }
-		      	})
-		
+				if (this.styleList[index] != undefined) {
+					// 请求数据
+					const type = this.styleList[index].id
+			    	net({
+			        	url:"/V1/getproduct",
+			            method:'get',
+						data: { style: type},
+			            success: (res) => {
+							uni.hideLoading();
+							this.product = res.data.success.data;
+			            }
+			      	})
+				} else {
+					uni.hideLoading();
+					this.product = [];
+				}
 			},
-		
 		
 		
 		onChangeTab(e) {
