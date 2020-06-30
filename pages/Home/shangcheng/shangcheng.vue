@@ -11,12 +11,41 @@
 				:class="tabIndex === index ? 'main-text-color' : ''"
 				:id="'tab' + index"
 			>
-				<text class="font-md">{{ item.brand_name }}</text>
+				<text class="font-md">{{ item.name }}</text>
 			</view>
 		</scroll-view>
+		
+		<scroll-view scroll-x class="border-bottom scroll-row" style="height: 100rpx;" :scroll-into-view="srcollinto" scroll-with-animation="true">
+			<view
+				class="scroll-row-item px-3 "
+				@click="changTab1(index)"
+				style="height: 80rpx; line-height: 80rpx;"
+				v-for="(item, index) in tabBars1"
+				:key="index"
+				:class="tabIndex === index ? 'main-text-color' : ''"
+				:id="'tab' + index"
+			>
+				<text class="font-md">{{ item.factory_name }}</text>
+			</view>
+		</scroll-view>
+		
+		<scroll-view scroll-x class="border-bottom scroll-row" style="height: 100rpx;" :scroll-into-view="srcollinto" scroll-with-animation="true">
+			<view
+				class="scroll-row-item px-3 "
+				@click="changTab2(index)"
+				style="height: 80rpx; line-height: 80rpx;"
+				v-for="(item, index) in tabBars2"
+				:key="index"
+				:class="tabIndex === index ? 'main-text-color' : ''"
+				:id="'tab' + index"
+			>
+				<text class="font-md">{{ item.style_name }}</text>
+			</view>
+		</scroll-view>
+		
 
 		<swiper :current="tabIndex" :duration="150" :style="'height:' + scrollH + 'px'">
-			<swiper-item v-for="(item, index) in tabBars" :key="index">
+			<swiper-item v-for="(item, index) in tabBars1" :key="index">
 				<scroll-view scroll-y="true" :style="'height:' + scrollH + 'px'">
 					<view class="body">
 						<view class="list-wrap">
@@ -53,6 +82,8 @@ export default {
 			scrollH: 500,
 			tabIndex: 0,
 			tabBars: [],
+			tabBars1: [],
+			tabBars2: [],
 			product: []
 		};
 	},
@@ -67,7 +98,7 @@ export default {
 	},
 	
 	methods: {
-		// 获取产品分类信息
+		// 获取产品类型信息
 	  	getProductType(){
 	    	net({
 	        	url:"/V1/getproducttype",
@@ -75,7 +106,7 @@ export default {
 	            success: (res) => {
 					uni.hideLoading();
 					this.tabBars = res.data.success.data;
-					// 获取商品信息
+					// 获取厂商信息
 					this.changTab(0);
 	            }
 	      	})
@@ -91,16 +122,57 @@ export default {
 			const type = this.tabBars[index].id
 			
 	    	net({
-	        	url:"/V1/getproduct",
+	        	url:"/V1/getproductfactories",
 	            method:'get',
 				data: { type: type},
 	            success: (res) => {
 					// console.log(res);
-					this.product = res.data.success.data;
+					this.tabBars1 = res.data.success.data;
+					this.changTab1(0);
 	            }
 	      	})
 	
 		},
+		
+		changTab1(index) {
+				// if (this.tabIndex == index) return;
+				this.tabIndex = index;
+				this.srcollinto = 'tab' + index;
+				// 请求数据
+				const type = this.tabBars[index].id
+				
+		    	net({
+		        	url:"/V1/getproductstyles",
+		            method:'get',
+					data: { factoriy: type},
+		            success: (res) => {
+						// console.log(res);
+						this.tabBars2 = res.data.success.data;
+		            }
+		      	})
+		
+			},
+			
+		changTab2(index) {
+				// if (this.tabIndex == index) return;
+				this.tabIndex = index;
+				this.srcollinto = 'tab' + index;
+				// 请求数据
+				const type = this.tabBars[index].id
+				
+		    	net({
+		        	url:"/V1/getproduct",
+		            method:'get',
+					data: { style: type},
+		            success: (res) => {
+						// console.log(res);
+						this.product = res.data.success.data;
+		            }
+		      	})
+		
+			},
+		
+		
 		
 		onChangeTab(e) {
 			this.changTab(e.detail.current);
