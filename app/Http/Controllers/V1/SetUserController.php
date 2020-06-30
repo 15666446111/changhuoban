@@ -260,22 +260,28 @@ class SetUserController extends Controller
     {
 
         try{ 
+            if(!$request->user->settings){
+                return response()->json(['message'=>['message' => '请设置您的提现信息']]);
+            }
+            if($request->user->settings->verify != '1'){
+                return response()->json(['message'=>['message' => '您的提现信息还未审核']]);
+            }
             
             // 判断是分润钱包还是返现钱包 * 获取提现税点
             if($request->type == '1'){
                 //税点
-                $data['point']=$request->user->operate->rate;
+                $data['point']=$request->user->settings->rate;
                 //单笔提现费
-                $data['rate_m']=$request->user->operate->rate_m;
+                $data['rate_m']=$request->user->settings->rate_m;
                 //免审核额度
-                $data['no_check']=$request->user->operate->no_check;
+                $data['no_check']=$request->user->settings->no_check;
 
             }else
-                $data['point']=$request->user->operate->return_blance;
+                $data['point']=$request->user->settings->return_blance;
 
-                $data['rate_m']=$request->user->operate->return_money;
+                $data['rate_m']=$request->user->settings->return_money;
 
-                $data['no_check']=$request->user->operate->no_check_return;
+                $data['no_check']=$request->user->settings->no_check_return;
             
             //最小提现金额
             $data['min_money']=200;
