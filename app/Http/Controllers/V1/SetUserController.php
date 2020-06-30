@@ -59,7 +59,7 @@ class SetUserController extends Controller
             $User = \App\User::where('id', $request->user->id)->first(); 
             
             $heading = $request->avatar;
-            var_dump($_FILES['file']['name']);
+            var_dump($_FILES['avatar']['name']);
             $filename = uniqid() . '.' . $heading->getClientOriginalExtension();
             
             Storage::disk('file')->put('/'.$filename,file_get_contents($heading->getRealPath()));
