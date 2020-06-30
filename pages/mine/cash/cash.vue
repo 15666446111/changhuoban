@@ -177,6 +177,7 @@ export default {
 					'bank':this.bankCard.bank_name,
 					'bank_open':this.bankCard.open_bank,
 					'banklink':this.bankCard.bank,
+					'phone':this.UserInfo.phone,
 					'reason':''
 				},
 	            success: (res) => {
@@ -189,6 +190,16 @@ export default {
 								this.balance = this.balance - this.money;
 							}
 						})
+					}else if(res.data.code == 201){
+						uni.showToast({
+						    title: res.data.message.message,
+						    duration: 1500
+						});
+					}else if(res.data.code == 202){
+						uni.showToast({
+						    title: res.data.message.message,
+						    duration: 1500
+						});
 					} else {
 						uni.showToast({
 							title: res.data.error.message,

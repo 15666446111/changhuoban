@@ -27,7 +27,7 @@
 		<view class="backgroundColor">
 			<view class="data">
 				<view class="phone">手机号</view>
-				<view class="mark">{{ UserInfo.account }}</view>
+				<view class="mark">{{ UserInfo.phone }}</view>
 			</view>
 			<view class="dara-xian"></view>
 			<view class="data">
