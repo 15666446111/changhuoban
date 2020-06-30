@@ -110,7 +110,6 @@ class ProductController extends Controller
      */
     public function getProductInfo(Request $request)
     {
-        
     	try{
 
     		if(!$request->product) return response()->json(['success'=>['message' => '获取成功!', 'data' => []]]);
