@@ -162,8 +162,8 @@ class User extends Authenticatable
      /**
      * 关联税点表
      */
-    public function points()
+    public function settings()
     {
-        return $this->hasOne('App\UserPoint','user_id','id');
+        return $this->hasOne('App\Setting','operate','operate');
     }
 }

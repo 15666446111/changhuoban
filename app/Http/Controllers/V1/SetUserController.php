@@ -27,6 +27,8 @@ class SetUserController extends Controller
             $data['active'] = $request->user->active;
             //用户头像
             $data['heading'] = $request->user->avatar;
+            //用户手机号
+            $data['phone'] = $request->user->phone;
             //用户组id
             $data['user_group'] = $request->user->user_group;
             //用户级别
@@ -79,6 +81,7 @@ class SetUserController extends Controller
         } catch (\Exception $e) {
             
             return response()->json(['error'=>['message' => $e->getMessage()]]);
+
         }
         
     }
@@ -259,22 +262,29 @@ class SetUserController extends Controller
     {
 
         try{ 
+
+            if(!$request->user->settings){
+                return response()->json(['message'=>['message' => '请设置您的提现信息'],'code'=>201]);
+            }
+            if($request->user->settings->verify != '1'){
+                return response()->json(['message'=>['message' => '您的提现信息还未审核'],'code'=>202]);
+            }
             
             // 判断是分润钱包还是返现钱包 * 获取提现税点
             if($request->type == '1'){
                 //税点
-                $data['point']=$request->user->points->rate;
+                $data['point']=$request->user->settings->rate;
                 //单笔提现费
-                $data['rate_m']=$request->user->points->rate_m;
+                $data['rate_m']=$request->user->settings->rate_m;
                 //免审核额度
-                $data['no_check']=$request->user->points->no_check;
+                $data['no_check']=$request->user->settings->no_check;
 
             }else
-                $data['point']=$request->user->points->return_blance;
+                $data['point']=$request->user->settings->return_blance;
 
-                $data['rate_m']=$request->user->points->return_money;
+                $data['rate_m']=$request->user->settings->return_money;
 
-                $data['no_check']=$request->user->points->no_check;
+                $data['no_check']=$request->user->settings->no_check_return;
             
             //最小提现金额
             $data['min_money']=200;
@@ -300,6 +310,13 @@ class SetUserController extends Controller
     {
         try{ 
             
+            if(!$request->user->settings){
+                return response()->json(['message'=>['message' => '请设置您的提现信息'],'code'=>201]);
+            }
+            if($request->user->settings->verify != '1'){
+                return response()->json(['message'=>['message' => '您的提现信息还未审核'],'code'=>202]);
+            }
+
             // if($request->user->wallets->blance_active !="1"){
             //     return response()->json(['error'=>['message' => $request->user->wallets->blance_bak]]);
             // }
@@ -355,11 +372,12 @@ class SetUserController extends Controller
 
                 \App\WithdrawsData::create([
                     'order_no'  => $order_no,
-                    'phone'     => '15530055097',
+                    'phone'     => $request->phone,
                     'username'  => $request->username,
                     'idcard'    => $request->idcard,
                     'bank'      => $request->bank,
                     'bank_open' => $request->bank_open,
+                    'banklink'  => $request->banklink,
                     'reason'    => $request->reason
                 ]);
     

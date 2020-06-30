@@ -39,9 +39,14 @@ class UserGroupController extends AdminController
             return number_format($money, 2, '.', ',');
         })->label();
 
-        $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s');
+        if(Admin::user()->operate != "All"){
+            $grid->disableCreateButton();
+            // 全部关闭
+            $grid->disableActions();
+        }
+        // $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s');
 
-        $grid->column('updated_at', __('修改时间'))->date('Y-m-d H:i:s');
+        // $grid->column('updated_at', __('修改时间'))->date('Y-m-d H:i:s');
 
         $grid->disableCreateButton();
 
