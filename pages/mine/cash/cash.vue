@@ -158,7 +158,7 @@ export default {
 		
 		// 发起提现
 		setWithdrawal(){
-			// console.log(this.bankCard.open_bank);return;
+			// console.log(this.resultInfo.checkArr);return;
 			if (this.resultInfo.checkArr == undefined) {
 				uni.showToast({ title: '请选择提现钱包', icon: 'none' })
 				return false;
@@ -178,6 +178,7 @@ export default {
 					'bank_open':this.bankCard.open_bank,
 					'banklink':this.bankCard.bank,
 					'phone':this.UserInfo.phone,
+					'state':this.cashsetUp.no_check > this.money ? 2 : 1,
 					'reason':''
 				},
 	            success: (res) => {
