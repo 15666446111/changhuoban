@@ -56,7 +56,7 @@ class SetUserController extends Controller
     public function editUserInfo(Request $request){
 
         try{
-            
+            var_dump($request->avatar);
             $User = \App\User::where('id', $request->user->id)->first(); 
             
             $heading = $request->avatar;
