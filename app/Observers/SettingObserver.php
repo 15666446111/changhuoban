@@ -16,7 +16,7 @@ class SettingObserver
         if($AdminUser->type == "3"){
             \App\Setting::create([
                 'operate'   =>  $AdminUser->operate
-            ]);
+            ]);         
         }
     }
 }
