@@ -201,10 +201,23 @@ export default {
 						   var file =[];
 		                   file = response.tempFiles[0]
 						   // console.log(file);return;
+						   var formData = new FormData();
+						   formData.append('file',response.tempFiles[0]);
+						   uni.uploadFile({
+							   url: 'http://3.changhuoban.com/api/V1/updateUserInfo', 
+							   filePath: tempFilePaths[0],
+							   name: 'file',
+							   formData: {
+								   'user': 'test'
+							   },
+							   success: (uploadFileRes) => {
+								   console.log(uploadFileRes.data);
+							   }
+						   });
 							net({
 					         	 url:"/V1/updateUserInfo",
 					             method:'post',
-								 data:{avatar:file},
+								 data:formData,
 								 header:{"Content-Type": "multipart/form-data"},
 					             success: (res) => {
 									uni.hideLoading();
