@@ -3184,12 +3184,15 @@
                 "object",
                 "object graph"
             ],
+<<<<<<< HEAD
+=======
             "funding": [
                 {
                     "url": "https://tidelift.com/funding/github/packagist/myclabs/deep-copy",
                     "type": "tidelift"
                 }
             ],
+>>>>>>> a721841c848902778a8fc45085d74c5d1bb4daa5
             "time": "2020-06-29T13:22:24+00:00"
         },
         {
