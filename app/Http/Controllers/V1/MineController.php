@@ -32,6 +32,8 @@ class MineController extends Controller
             $data['active'] = $userFirst->active;
             //用户头像
             $data['heading'] = $userFirst->avatar;
+            //用户手机号
+            $data['phone'] = $userFirst->phone;
             //用户组id
             $data['user_group'] = $userFirst->user_group;
             //用户级别
