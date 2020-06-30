@@ -136,9 +136,9 @@ class ProductController extends AdminController
 
             $type = \App\MachinesType::where('state',1)->get()->pluck('name', 'id');
 
-            $form->select('name','类型')->options($type)->load('factory_name','/api/getAdminFactory');
-
             $form->hidden('operate', __('操盘号'))->value(Admin::user()->operate)->readonly();
+
+            $form->select('name','类型')->options($type)->load('factory_name','/api/getAdminFactory');
 
             $form->select('factory_name','厂商')->load('style_id','/api/getAdminStyle');
 

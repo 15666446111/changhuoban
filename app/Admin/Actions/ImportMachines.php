@@ -18,7 +18,6 @@ class ImportMachines extends Action
     public function handle(Request $request)
     {
         try {
-
             $result = Excel::toArray(null, request()->file('file'));
 
             // 只取第一个Sheet
@@ -93,11 +92,13 @@ HTML;
     {
         $Type = \App\MachinesType::where('state', '1')->get()->pluck('name','id');
 
-        $this->select('type', '机具类型')->options($Type)->load('factory_name', '/api/getAdminFactory');
-        
-        $this->select('factory_name', '机具厂商');
+        $this->select('name','类型')->options($Type)->load('factory_name','/api/getAdminFactory');
 
-        $this->file('file', '上传简历')->rules('required', ['required' => '文件不能为空']);
+        $this->select('factory_name','厂商')->load('style_id','/api/getAdminStyle');
+
+        $this->select('style_id','型号')->required();
+
+        $this->file('file', '上传简历');//->rules('required', ['required' => '文件不能为空']);
     }
 
 
@@ -108,6 +109,50 @@ HTML;
     public function handleActionPromise()
     {
         $resolve = <<<'SCRIPT'
+
+        $(".name").on('change',function(){
+            var name = $(".name option:selected").val();
+            console.log(name)
+            if(name == ""){ 
+                $(".factory_name").find("option").remove();
+                $(".style_id").find("option").remove();
+            }else{
+                
+                $.ajax({
+                    url: '/api/getAdminFactory',
+                    data:{q: name},
+                    success:function(data){
+                        var options = '';
+                        $.each(data, function(i, val) {  
+                            console.log(val['text'])
+                            options += "<option value='"+val['id']+"'>"+val['text']+"</option>";
+                        });
+                        $(".factory_name").html(options);
+                        $(".factory_name").change();
+                    }
+                });
+            }
+        })
+
+        $(".factory_name").on('change',function(){
+            var factory_name = $(".factory_name option:selected").val();
+            if(factory_name == ""){ $(".style_id").find("option").remove();
+            }else{
+                $.ajax({
+                    url: '/api/getAdminStyle',
+                    data:{q: factory_name},
+                    success:function(data){
+                        var options = '';
+                        $.each(data, function(i, val) {  
+                            console.log(val['text'])
+                            options += "<option value='"+val['id']+"'>"+val['text']+"</option>";
+                        });
+                        $(".style_id").html(options);
+                    }
+                });
+            }
+        })
+
 var actionResolverss = function (data) {
             $('.modal-footer').show()
             $('.tips').remove()
