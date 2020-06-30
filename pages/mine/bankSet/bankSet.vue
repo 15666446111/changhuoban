@@ -1,6 +1,6 @@
 <template>
 	<view class="bank-card">
-		<navigator url="xiugaidenglumima/xiugaidenglumima" open-type="navigate">
+		<navigator url="updatePwd/updatePwd" open-type="navigate">
 			<view class="bank">
 				<view class="bank-name">修改登录密码</view>
 				<image class="bank-img" src="../../../static/jiantou.png" mode="widthFix" />

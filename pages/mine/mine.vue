@@ -49,7 +49,7 @@
 		<view class="NavigationBar">
 			<view class="Bar1">
 				
-				<navigator class="url" url="jijuguanli/jijuguanli">
+				<navigator class="url" url="machinesInfo/machinesInfo">
 					<view class="div">
 						<image class="div-img" src="/static/wd/jj.png" />
 						<view class="div-text">机具管理</view>
@@ -101,7 +101,7 @@
 				</navigator>
 				<view class="across"></view>				
 				
-				<navigator class="url" url="../shouye/zaixiankefu/zaixiankefu">
+				<navigator class="url" url="../Home/zaixiankefu/zaixiankefu">
 					<view class="div">
 						<image class="div-img" src="/static/wd/kf.png" />
 						<view class="div-text">在线客服</view>

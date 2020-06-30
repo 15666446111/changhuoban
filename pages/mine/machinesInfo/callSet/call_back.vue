@@ -2,7 +2,7 @@
 	<view>
 		<view class="back">
 			<view class="view">
-				<navigator url="../zhengcexuanze/zhengcexuanze">
+				<navigator url="../policGet/policGet">
 					<view class="policy">
 						<view class="model">选择回拨机具政策</view>
 						<view class="amount" v-if="policyInfo.id == undefined">请选择</view>
@@ -12,7 +12,7 @@
 				</navigator>
 			</view>
 			<view class="view">
-				<navigator url="../huobanxuanze/huaobanxuanze">
+				<navigator url="../friendsGet/friendsGet">
 				<view class="policy">
 					<view class="model">选择回拨伙伴</view>
 					<view class="amount" v-if="partnerInfo.id == undefined">请选择</view>
