@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1;
 
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -52,17 +53,19 @@ class SetUserController extends Controller
     /**
      * 修改用户头像/昵称
      */
-    public function editUserInfo(){
+    public function editUserInfo(Request $request){
 
         try{
+            
             $User = \App\User::where('id', $request->user->id)->first(); 
-
+            
             $heading = $request->avatar;
 
-            //上传
-            $request->$heading->store('images');
+            $filename = uniqid() . '.' . $heading->getClientOriginalExtension();
+            
+            Storage::disk('file')->put('/'.$filename,file_get_contents($heading->getRealPath()));
 
-            $User->avatar = "images/".$heading;
+            $User->avatar = "images/".$filename;
 
             $res = $User->save();
 
