@@ -56,11 +56,11 @@ class SetUserController extends Controller
     public function editUserInfo(Request $request){
 
         try{
-            
+            var_dump($request->file());
             $User = \App\User::where('id', $request->user->id)->first(); 
             
             $heading = $_FILES;
-            var_dump($heading);
+            
             $filename = uniqid() . '.' . $heading->getClientOriginalExtension();
             
             Storage::disk('file')->put('/'.$filename,file_get_contents($heading->getRealPath()));
