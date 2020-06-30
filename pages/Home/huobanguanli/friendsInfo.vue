@@ -13,7 +13,7 @@
 			<view class="content">
 				
 				<view v-for="(item,index) in team" :key="item.id">
-				<navigator :url="'/pages/Home/huobanguanli/huobanxiangqing/huobanxiangqing?user='+item.id">
+				<navigator :url="'/pages/Home/huobanguanli/friendList/friendList?user='+item.id">
 				<view class="detail">
 						<image :src="item.avatar" class="detail-image"/>
 						<view class="partner">

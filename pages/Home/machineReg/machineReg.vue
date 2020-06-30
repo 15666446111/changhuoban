@@ -9,7 +9,7 @@
 		<!-- 第一栏 -->
 		<view class="selects">
 			<view class="select">
-			<navigator url="zhongduanxuanze/zhongduanxuanze">
+			<navigator url="machineChoice/machineChoice">
 				<view class="select-view">
 					<view class="select-name">终端选择</view>
 					<view class="select-text1" v-if="merchant_sn == ''">请选择</view>

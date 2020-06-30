@@ -12,14 +12,14 @@
 				"app-plus":{"titleNView": false}
 			}
 		}, {
-			"path": "pages/tuandui/tuandui",
+			"path": "pages/team/team",
 			"style": {
 				"navigationBarTitleText": "团队",
 				"navigationBarTextStyle": "black"
 
 			}
 		}, {
-			"path": "pages/shouyi/shouyi",
+			"path": "pages/cash/cash",
 			"style": {
 				"navigationBarTitleText": "收益",
 				"navigationBarTextStyle": "black"
@@ -31,61 +31,61 @@
 				"navigationBarTextStyle": "black"
 			}
 		}, {
-			"path": "pages/tuandui/jiaoyixiangqing/jiaoyixiangqing",
+			"path": "pages/team/tradeTeam/tradeTeam",
 			"style": {
 				"navigationBarTitleText": "交易详情",
 				"navigationBarTextStyle": "black"
 			}
 		}, {
-			"path": "pages/tuandui/jinrijiaoyi/jinrijiaoyi",
+			"path": "pages/team/jinrijiaoyi/jinrijiaoyi",
 			"style": {
 				"navigationBarTitleText": "今日交易",
 				"navigationBarTextStyle": "black"
 			}
 		}, {
-			"path": "pages/tuandui/jihuozongshu/jihuozongshu",
+			"path": "pages/team/jihuozongshu/jihuozongshu",
 			"style": {
 				"navigationBarTitleText": "激活总数",
 				"navigationBarTextStyle": "black"
 			}
 		}, {
-			"path": "pages/tuandui/huobanzongshu/huobanzongshu",
+			"path": "pages/team/huobanzongshu/huobanzongshu",
 			"style": {
 				"navigationBarTitleText": "伙伴总数",
 				"navigationBarTextStyle": "black"
 			}
 		}, {
-			"path": "pages/tuandui/shouyizongshu/shouyizongshu",
+			"path": "pages/team/shouyizongshu/shouyizongshu",
 			"style": {
 				"navigationBarTitleText": "收益总数",
 				"navigationBarTextStyle": "black"
 			}
 		}, {
-			"path": "pages/tuandui/shanghuzongshu/shanghuzongshu",
+			"path": "pages/team/shanghuzongshu/shanghuzongshu",
 			"style": {
 				"navigationBarTitleText": "商户总数",
 				"navigationBarTextStyle": "black"
 			}
 		}, {
-			"path": "pages/tuandui/taijunjiaoyi/taijunjiaoyi",
+			"path": "pages/team/taijunjiaoyi/taijunjiaoyi",
 			"style": {
 				"navigationBarTitleText": "台均交易",
 				"navigationBarTextStyle": "black"
 			}
 		}, {
-			"path": "pages/Home/huobanguanli/huobanguanli",
+			"path": "pages/Home/huobanguanli/friendsInfo",
 			"style": {
 				"navigationBarTitleText": "伙伴管理",
 				"navigationBarTextStyle": "black"
 			}
 		}, {
-			"path": "pages/Home/shanghudengji/shanghudengji",
+			"path": "pages/Home/machineReg/machineReg",
 			"style": {
 				"navigationBarTitleText": "商户登记",
 				"navigationBarTextStyle": "black"
 			}
 		}, {
-			"path": "pages/Home/shanghuguanli/shanghuguanli",
+			"path": "pages/Home/shanghuguanli/machineInfo",
 			"style": {
 				"navigationBarTitleText": "商户管理",
 				"navigationBarTextStyle": "black"
@@ -97,73 +97,73 @@
 				"navigationBarTextStyle": "black"
 			}
 		}, {
-			"path": "pages/Home/huobanguanli/huobanxiangqing/huobanxiangqing",
+			"path": "pages/Home/huobanguanli/friendList/friendList",
 			"style": {
 				"navigationBarTitleText": "伙伴详情",
 				"navigationBarTextStyle": "black"
 			}
 		}, {
-			"path": "pages/Home/huobanguanli/jiaoyixiangqing/jiaoyixiangqing",
+			"path": "pages/Home/huobanguanli/tradeInfo/tradeList",
 			"style": {
 				"navigationBarTitleText": "交易详情",
 				"navigationBarTextStyle": "black"
 			}
 		}, {
-			"path": "pages/Home/huobanguanli/jiaoyixiangqing/huobanzongshu/huobanzongshu",
+			"path": "pages/Home/huobanguanli/tradeInfo/huobanzongshu/huobanzongshu",
 			"style": {
 				"navigationBarTitleText": "伙伴总数",
 				"navigationBarTextStyle": "black"
 			}
 		}, {
-			"path": "pages/Home/huobanguanli/jiaoyixiangqing/jinrijiaoyi/jinrijiaoyi",
+			"path": "pages/Home/huobanguanli/tradeInfo/jinrijiaoyi/jinrijiaoyi",
 			"style": {
 				"navigationBarTitleText": "今日交易",
 				"navigationBarTextStyle": "black"
 			}
 		}, {
-			"path": "pages/Home/huobanguanli/jiaoyixiangqing/jihuozongshu/jihuozongshu",
+			"path": "pages/Home/huobanguanli/tradeInfo/jihuozongshu/jihuozongshu",
 			"style": {
 				"navigationBarTitleText": "激活总数",
 				"navigationBarTextStyle": "black"
 			}
 		}, {
-			"path": "pages/Home/huobanguanli/jiaoyixiangqing/shouyizongshu/shouyizongshu",
+			"path": "pages/Home/huobanguanli/tradeInfo/shouyizongshu/shouyizongshu",
 			"style": {
 				"navigationBarTitleText": "收益总数",
 				"navigationBarTextStyle": "black"
 			}
 		}, {
-			"path": "pages/Home/huobanguanli/jiaoyixiangqing/shanghuzongshu/shanghuzongshu",
+			"path": "pages/Home/huobanguanli/tradeInfo/shanghuzongshu/shanghuzongshu",
 			"style": {
 				"navigationBarTitleText": "商户总数",
 				"navigationBarTextStyle": "black"
 			}
 		}, {
-			"path": "pages/Home/huobanguanli/jiaoyixiangqing/taijunjiaoyi/taijunjiaoyi",
+			"path": "pages/Home/huobanguanli/tradeInfo/taijunjiaoyi/taijunjiaoyi",
 			"style": {
 				"navigationBarTitleText": "台均交易",
 				"navigationBarTextStyle": "black"
 			}
 		}, {
-			"path": "pages/Home/shanghudengji/shanghuxinxi/shanghuxinxi",
+			"path": "pages/Home/machineReg/shanghuxinxi/shanghuxinxi",
 			"style": {
 				"navigationBarTitleText": "商户信息",
 				"navigationBarTextStyle": "black"
 			}
 		}, {
-			"path": "pages/Home/shanghudengji/yinhangka/yinhangka",
+			"path": "pages/Home/machineReg/yinhangka/yinhangka",
 			"style": {
 				"navigationBarTitleText": "银行卡",
 				"navigationBarTextStyle": "black"
 			}
 		}, {
-			"path": "pages/Home/shanghudengji/yingyezhizhao/yingyezhizhao",
+			"path": "pages/Home/machineReg/yingyezhizhao/yingyezhizhao",
 			"style": {
 				"navigationBarTitleText": "营业执照",
 				"navigationBarTextStyle": "black"
 			}
 		}, {
-			"path": "pages/Home/shanghudengji/querenxinxi/querenxinxi",
+			"path": "pages/Home/machineReg/querenxinxi/querenxinxi",
 			"style": {
 				"navigationBarTitleText": "确认信息",
 				"navigationBarTextStyle": "black"
@@ -176,19 +176,19 @@
 				"navigationBarTextStyle": "black"
 			}
 		}, {
-			"path": "pages/Home/shanghuguanli/jiaoymingxi/jiaoymingxi",
+			"path": "pages/Home/shanghuguanli/trade/trade",
 			"style": {
 				"navigationBarTitleText": "交易明细",
 				"navigationBarTextStyle": "black"
 			}
 		}, {
-			"path": "pages/Home/shanghuguanli/shanghuxinxi/shanghuxinxi",
+			"path": "pages/Home/shanghuguanli/machineFirst/machineFirst",
 			"style": {
 				"navigationBarTitleText": "商户信息",
 				"navigationBarTextStyle": "black"
 			}
 		},  {
-			"path": "pages/tuandui/TemailCount/TemailCount",
+			"path": "pages/team/TemailCount/TemailCount",
 			"style": {
 				"navigationBarTitleText": "机具总数",
 				"navigationBarTextStyle": "black"
@@ -257,19 +257,19 @@
 			"path": "pages/mine/wodedingdan/wodedingdan",
 			"style": {}
 		}, {
-			"path": "pages/mine/jijuguanli/jijuguanli",
+			"path": "pages/mine/machinesInfo/machinesInfo",
 			"style": {}
 		}, {
-			"path": "pages/mine/jijuguanli/jijuhuabo/jijuhuabo",
+			"path": "pages/mine/machinesInfo/callSet/callSet",
 			"style": {}
 		}, {
-			"path": "pages/mine/jijuguanli/jijuhuabo/call_back",
+			"path": "pages/mine/machinesInfo/callSet/call_back",
 			"style": {}
 		}, {
-			"path": "pages/mine/jijuguanli/huabojilu/huabojilu",
+			"path": "pages/mine/machinesInfo/callLog/callLog",
 			"style": {}
 		}, {
-			"path": "pages/mine/jijuguanli/zhongduandingjia/zhongduandingjia",
+			"path": "pages/mine/machinesInfo/zhongduandingjia/zhongduandingjia",
 			"style": {}
 		}, {
 			"path": "pages/mine/tixianjilu/tixianjilu",
@@ -290,7 +290,7 @@
 			"path": "pages/mine/bankSet/bankSet",
 			"style": {}
 		}, {
-			"path": "pages/mine/bankSet/xiugaidenglumima/xiugaidenglumima",
+			"path": "pages/mine/bankSet/updatePwd/updatePwd",
 			"style": {}
 		}, {
 			"path": "pages/mine/bankSet/bankCreate/bankCreate",
@@ -299,25 +299,25 @@
 			"path": "pages/mine/bankSet/bankCreate/settle_card_edit",
 			"style": {}
 		}, {
-			"path": "pages/mine/jijuguanli/jijuchakan/jijuchakan",
+			"path": "pages/mine/machinesInfo/machinesCount/machinesCount",
 			"style": {}
 		}, {
-			"path": "pages/Home/shanghudengji/zhongduanxuanze/zhongduanxuanze",
+			"path": "pages/Home/machineReg/machineChoice/machineChoice",
 			"style": {}
 		}, {
-			"path": "pages/mine/jijuguanli/qujianhuabo/qujianhuabo",
+			"path": "pages/mine/machinesInfo/qujianhuabo/qujianhuabo",
 			"style": {}
 		}, {
-			"path": "pages/mine/jijuguanli/xuanzehuabo/xuanzehuabo",
+			"path": "pages/mine/machinesInfo/xuanzehuabo/xuanzehuabo",
 			"style": {}
 		}, {
-			"path": "pages/mine/jijuguanli/xuanzehuabo/opt_call_back",
+			"path": "pages/mine/machinesInfo/xuanzehuabo/opt_call_back",
 			"style": {}
 		}, {
-			"path": "pages/mine/jijuguanli/huobanxuanze/huaobanxuanze",
+			"path": "pages/mine/machinesInfo/friendsGet/friendsGet",
 			"style": {}
 		}, {
-			"path": "pages/mine/jijuguanli/zhengcexuanze/zhengcexuanze",
+			"path": "pages/mine/machinesInfo/policGet/policGet",
 			"style": {}
 		}, {
 			"path": "pages/Home/EPOS/EPOS",
@@ -355,7 +355,7 @@
 				"app-plus":{"titleNView": false}
 			}
 		}, {
-			"path": "pages/Home/shanghuguanli/huodongxiangqing/huodongxiangqing",
+			"path": "pages/Home/shanghuguanli/activeFirst/activeFirst",
 			"style": {}
 		}, {
 			"path": "pages/mine/wodezhengc/wodezhengc",
@@ -399,14 +399,14 @@
 
 			},
 			{
-				"pagePath": "pages/tuandui/tuandui",
+				"pagePath": "pages/team/team",
 				"iconPath": "static/team.png",
 				"selectedIconPath": "static/team_checked.png",
 				"text": "团队"
 
 			},
 			{
-				"pagePath": "pages/shouyi/shouyi",
+				"pagePath": "pages/cash/cash",
 				"iconPath": "static/profit.png",
 				"selectedIconPath": "static/profit_checked.png",
 				"text": "收益"

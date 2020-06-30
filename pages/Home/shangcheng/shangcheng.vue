@@ -131,27 +131,26 @@ export default {
 		
 		// 切换选项卡
 		changTab(index) {
-				uni.showLoading();
-				// if (this.tabIndex == index) return;
-				this.tabIndex = index;
-				this.srcollinto = 'tab' + index;
-				
-				// 获取厂商信息
-				// 请求数据
-				const type = this.typeList[index].id;
-				
-		    	net({
-		        	url:"/V1/getproductfactories",
-		            method:'get',
-					data: { type: type },
-		            success: (res) => {
-						// console.log(res);
-						this.factiryList = res.data.success.data;
-						this.changTab1(0);
-		            }
-		      	})
-				
-			},
+			uni.showLoading();
+			// if (this.tabIndex == index) return;
+			this.tabIndex = index;
+			this.srcollinto = 'tab' + index;
+			// 请求数据
+			const type = this.typeList[index].id
+			
+	    	net({
+	        	url:"/V1/getproductfactories",
+	            method:'get',
+				data: { type: type},
+	            success: (res) => {
+					// console.log(res);
+					uni.hideLoading();
+					this.factiryList = res.data.success.data;
+					this.changTab1(0);
+	            }
+	      	})
+	
+		},
 		
 		// 获取型号信息
 		changTab1(index) {
