@@ -56,11 +56,9 @@ class SetUserController extends Controller
     public function editUserInfo(Request $request){
 
         try{
-            var_dump($_FILES);
-            var_dump($request->all());
             $User = \App\User::where('id', $request->user->id)->first(); 
             
-            $heading = $_FILES;
+            $heading = $request->avatar;
             
             $filename = uniqid() . '.' . $heading->getClientOriginalExtension();
             
