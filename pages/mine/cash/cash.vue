@@ -33,7 +33,7 @@
 				<text style="margin-left:10upx;">元</text>
 			</view>
 			<view class="bview4">
-				<view>提示：手续费{{cashsetUp.rate_m / 100}}元，税点{{ cashsetUp.point }}%，单笔提现金额不低于{{ cashsetUp.min_money }}元</view>
+				<view>提示：手续费{{cashsetUp.rate_m / 100 ? cashsetUp.rate_m : ""}}元，税点{{ cashsetUp.point }}%，单笔提现金额不低于{{ cashsetUp.min_money }}元</view>
 				<view>提现时间：{{ cashsetUp.point_time }},请注意查收短信或查询提现进度</view>
 			</view>
 		</view>

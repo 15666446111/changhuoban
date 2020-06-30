@@ -127,6 +127,7 @@ export default {
 				data: { type: type},
 	            success: (res) => {
 					// console.log(res);
+					uni.hideLoading();
 					this.tabBars1 = res.data.success.data;
 					this.changTab1(0);
 	            }
