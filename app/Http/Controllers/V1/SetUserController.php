@@ -262,10 +262,10 @@ class SetUserController extends Controller
         try{ 
 
             if(!$request->user->settings){
-                return response()->json(['message'=>['message' => '请设置您的提现信息']],201);
+                return response()->json(['message'=>['message' => '请设置您的提现信息'],'code'=>201]);
             }
             if($request->user->settings->verify != '1'){
-                return response()->json(['message'=>['message' => '您的提现信息还未审核']],202);
+                return response()->json(['message'=>['message' => '您的提现信息还未审核'],'code'=>202]);
             }
             
             // 判断是分润钱包还是返现钱包 * 获取提现税点
