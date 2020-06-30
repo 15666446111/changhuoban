@@ -24,7 +24,9 @@ use Encore\Admin\Facades\Admin;
     
 // 自定义导航
 Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navbar) {
-    $navbar->right('<a class="btn btn-sm btn-default import-deliver-goods"><i class="fa fa-upload" ></i>导入发货</a>');
+    if(Admin::user() && Admin::user()->type == "3"){
+        $navbar->right('<li> <a href="/manage/settings"><i class="fa fa-cog"></i> <span class="label label-success"></span></a></li>');
+    }
 });
 
 /** Form view init */

@@ -19,6 +19,17 @@ class UserGroup extends Model
 	}
 
 	/**
+	 * [users  关联活动组结算价模型]
+	 * @author Pudding
+	 * @DateTime 2020-04-20T13:43:38+0800
+	 * @return   [type]                   [description]
+	 */
+	public function policy_sett()
+	{
+		return $this->HasMany('\App\PolicyGroupSettlement', 'user_group_id', 'id');
+	}
+
+	/**
 	 * @Author    Pudding
 	 * @DateTime  2020-06-28
 	 * @copyright [copyright]

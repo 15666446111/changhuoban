@@ -13,14 +13,14 @@ Route::group([
 
     $router->get('/', 'HomeController@index')->name('home');
 
-    $router->resource('admin-settings', AdminSettingController::class);
+    // 操盘方设置表
+    //$router->resource('settings', SettingController::class);
+    $router->get('/settings', 'SettingController@index');
 
+    $router->resource('admin-settings', AdminSettingController::class);
 
     $router->resource('admin-users', AdminUserController::class);
 
-    // 操盘方设置表
-    $router->resource('settings', SettingController::class);
-    
     // 轮播图类型管理
     $router->resource('plug-types', PlugTypeController::class);
     // 轮播图管理
@@ -71,13 +71,24 @@ Route::group([
     //划拨回拨日志列表
     $router->resource('transfers', TransferController::class);
 
-    // 活动组管理
-    $router->resource('policy-groups', PolicyGroupController::class);
+
 
     //消息通知列表
     $router->resource('buser-messages', BuserMessageController::class);
     
     //分润管理
     $router->resource('cashs-logs', CashController::class);
+
+
+
+    // 活动组管理
+    $router->resource('policy-groups', PolicyGroupController::class);
+    // 交易类型管理 有分润
+    $router->resource('trade-types', TradeTypeController::class);
+    // 组级别对应活动组的费率
+    $router->resource('policy-group-settlements', PolicyGroupSettlementController::class);
+    // 活动管理
+    $router->resource('policies', PolicyController::class);
+
 
 });

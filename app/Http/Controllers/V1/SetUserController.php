@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -309,7 +310,14 @@ class SetUserController extends Controller
     public function Withdrawal(Request $request)
     {
         try{ 
-            
+
+            if(!$request->user->settings){
+                return response()->json(['message'=>['message' => '请设置您的提现信息'],'code'=>201]);
+            }
+            if($request->user->settings->verify != '1'){
+                return response()->json(['message'=>['message' => '您的提现信息还未审核'],'code'=>202]);
+            }
+
             // if($request->user->wallets->blance_active !="1"){
             //     return response()->json(['error'=>['message' => $request->user->wallets->blance_bak]]);
             // }
@@ -359,7 +367,8 @@ class SetUserController extends Controller
                     'money'     => $request->money,
                     'type'      => $request->blance,
                     'real_money'=> $request->money - $request->money * $request->rate - $request->rate_m,
-                    'state'     => '1',
+                    'state'     => $request->state ? $request->state : '1',
+                    'check_at'  => $request->state ? Carbon::now() : '',
                     'make_state'=> '0'
                 ]);
 

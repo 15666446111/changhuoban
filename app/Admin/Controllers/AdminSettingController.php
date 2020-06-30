@@ -33,6 +33,8 @@ class AdminSettingController extends AdminController
 
         $grid->column('open', __('状态'))->using([ 0 =>'禁止', 1 =>'正常' ], '未知')->dot([ 0 => 'danger', 1 => 'success' ], 'default');
 
+        $grid->column('type', __('模式'))->using([ 1 =>'联盟模式', 2 =>'操盘模式' ])->dot([ 1 => 'primary', 2 => 'success' ]);
+
         $grid->column('company', __('公司'));
 
         $grid->column('phone', __('联系电话'));
@@ -186,7 +188,7 @@ class AdminSettingController extends AdminController
                     \App\User::create([
                         'nickname'  =>  $account,
                         'account'   =>  $account,
-                        'phone'     =>  $phone,
+                        'phone'     =>  $form->phone,
                         'password'  =>  "###" . md5(md5($password . 'v3ZF87bMUC5MK570QH')),
                         'user_group'=>  $form->pattern == "1" ? 10 : 1,
                         'operate'   =>  $form->operate_number,
