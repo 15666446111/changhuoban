@@ -103,6 +103,7 @@ export default {
 	            { type:  type},
 	      	)
 			.then((res) => {
+				// console.log(res);
 				if(type == 'Register'){
 					this.Register = res.data.success.data;
 				}

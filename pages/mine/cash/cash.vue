@@ -18,7 +18,7 @@
 			</view>
 			<view class="bview">
 				<text>可提现金额：</text>
-				<text style="color: #EE9900;">{{balance / 100 }}</text>
+				<text style="color: #EE9900;">{{balance }}</text>
 				<text>元</text>
 			</view>
 			<view class="hengxian"></view>
@@ -29,10 +29,9 @@
 			<view class="hengxian"></view>
 			<view class="bview">
 				<text>应到金额：</text>
-				<text style="color:#f0ad4e;">{{ reachBalance / 100 }}</text>
+				<text style="color:#f0ad4e;">{{ reachBalance }}</text>
 				<text style="margin-left:10upx;">元</text>
 			</view>
-			<view class="hengxian"></view>
 			<view class="bview4">
 				<view>提示：手续费0元，税点{{ cashsetUp.point }}%，单笔提现金额不低于{{ cashsetUp.min_money }}元</view>
 				<view>提现时间：{{ cashsetUp.point_time }},请注意查收短信或查询提现进度</view>
@@ -109,9 +108,10 @@ export default {
 		// 获取用户个人信息
 		getUserInfo(){
 			net({
-	        	url:"/V1/mine",
+	        	url:"/V1/userInfo",
 	            method:'get',
 	            success: (res) => {
+					console.log(res);
 					this.UserInfo = res.data.success.data;
 	            }
 	      	})
@@ -123,7 +123,7 @@ export default {
 	        	url:"/V1/getPoint",
 	            method:'get',
 	            success: (res) => {
-					console.log(res);
+					// console.log(res);
 					this.cashsetUp = res.data.success.data;
 	            }
 	      	})
@@ -135,6 +135,7 @@ export default {
 	        	url:"/V1/getBankDefault",
 	            method:'get',
 	            success: (res) => {
+					console.log(res);
 					this.bankCard = res.data.success.data;
 	            }
 	      	})
@@ -142,7 +143,7 @@ export default {
 		
 		// 发起提现
 		setWithdrawal(){
-			// console.log(this.resultInfo.checkArr.value);
+			// console.log(this.bankCard.open_bank);return;
 			if (this.resultInfo.checkArr == undefined) {
 				uni.showToast({ title: '请选择提现钱包', icon: 'none' })
 				return false;
@@ -153,10 +154,14 @@ export default {
 	        	url: "/V1/getWithdrawal",
 	            method: 'POST',
 				data: {
-					'money': this.money * 100,
+					'money': this.money,
 					'blance': this.resultInfo.checkArr.value,
 					'rate': this.cashsetUp.point * 0.01,
-					'remark': '',
+					'username':this.bankCard.user_name,
+					'idcard':this.bankCard.number,
+					'bank':this.bankCard.bank_name,
+					'bank_open':this.bankCard.open_bank,
+					'reason':''
 				},
 	            success: (res) => {
 					uni.hideLoading();
@@ -165,7 +170,7 @@ export default {
 							title: '提交成功',
 							icon: 'none',
 							success: (res) => {
-								this.balance = this.balance - this.money * 100;
+								this.balance = this.balance - this.money;
 							}
 						})
 					} else {
@@ -182,7 +187,7 @@ export default {
 		moneyInput(event){
 			var eventMoney = event.detail.value;
 			var settleMoney = eventMoney * (1 - this.cashsetUp.point * 0.01);
-			this.reachBalance = Math.floor(settleMoney * 100);
+			this.reachBalance = Math.floor(settleMoney);
 		},
 		
 		// 全部提现
