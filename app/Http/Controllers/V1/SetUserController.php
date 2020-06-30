@@ -368,6 +368,7 @@ class SetUserController extends Controller
                     'idcard'    => $request->idcard,
                     'bank'      => $request->bank,
                     'bank_open' => $request->bank_open,
+                    'banklink'  => $request->banklink,
                     'reason'    => $request->reason
                 ]);
     
