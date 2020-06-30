@@ -6,11 +6,9 @@
 			<view class="titlebar">
 				<view class="rise"> 
 					<view class="rise-head">
-						<image class="head" :src="UserInfo.heading" mode="aspectFill" />
-						<view class="name">{{ UserInfo.account}}</view>
+						<image class="head" :src="UserInfo.heading" @click="changeAvatar(UserInfo.heading)" mode="aspectFill" />
+						<view class="name">昵称:{{ UserInfo.account}}</view>
 					</view>
-
-					<view class="ID">{{ UserInfo.nickname }}</view>
 
 					<view class="ID">账号:{{ UserInfo.account }}  级别:{{ UserInfo.group }}</view>
 
@@ -175,6 +173,60 @@ export default {
 	            }
 	      	})
 		},
+		changeAvatar(heading){
+		        uni.showActionSheet({
+		        // itemList按钮的文字接受的是数组
+		          itemList: ["查看头像","从相册选择图片"],
+		          success(e){
+		            var index = e.tapIndex
+		            if(index === 0){
+		            // 用户点击了预览当前图片
+		            // 可以自己实现当前头像链接的读取
+		              let url  = heading
+		              let arr=[]
+		              arr.push(url)
+		              uni.previewImage({
+		              // 预览功能图片也必须是数组的
+		                urls: arr
+		              })
+		            }else if(index === 1){
+		            // 用户点击了从图库上传
+		              uni.chooseImage({
+		                count: 1,
+		                sizeType: ["compressed"],
+		                success(response) {
+		                // 选择图片后, 返回的数据
+		                  var fileUrl = response.tempFilePaths[0]
+							net({
+					         	 url:"/V1/updateUserInfo",
+					             method:'get',
+								 data:{avatar:fileUrl},
+					             success: (res) => {
+									uni.hideLoading();
+									if (res.data.success) {
+										uni.showToast({
+											title: res.data.success.message,
+											icon: 'none',
+											success : function(){
+												setTimeout(function() {
+													uni.navigateBack();
+												}, 1500);
+											}
+										});
+									} else {
+										uni.showToast({
+											title: res.data.error.message,
+											icon: 'none'
+										});
+									}
+					             }
+					       	})
+		                }
+		              })
+		            }
+		        }
+			})
+		}
 	},
 	filters: {
 		numberGSH(value){
