@@ -4,6 +4,8 @@
 			"path": "pages/Home/home",
 			"style": {
 				"navigationBarTitleText": "首页",
+				"enablePullDownRefresh": true,  	//设置为true表示当前页面开启下拉刷新
+				"backgroundTextStyle": "dark",
 				"navigationBarTextStyle": "black"
 			}
 		},{
@@ -350,7 +352,7 @@
 			"path": "pages/Home/EPOS/tianjiayinhangka/tianjiayinhangka",
 			"style": {}
 		}, {
-			"path": "pages/index/register",
+			"path": "pages/index/forgetPassword",
 			"style": {
 				"app-plus":{"titleNView": false}
 			}

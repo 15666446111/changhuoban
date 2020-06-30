@@ -7,9 +7,7 @@
 		<view class="notice" v-if="notice_show">
 			<image class="notice-img" src="../../static/laba.png" mode="widthFix"></image>
 			<navigator :url=" '../Article/ArtilcleDetail?aid=' + notice.id" style="width: 90%;">
-				<view class="notice-text">
-					{{ notice.title}}
-				</view>
+				<view class="notice-text"> {{ notice.title}} </view>
 			</navigator>
 		</view>
 
@@ -63,7 +61,6 @@ export default {
 		return {
 			// 轮播图
 			swipers: [],
-			
 			// 公告信息
 			notice:{},
 			// 是否显示公告
@@ -100,6 +97,19 @@ export default {
 		this.getHomeInfo();
 	},
 	
+	//监听下拉刷新动作的执行方法，每次手动下拉刷新都会执行一次
+    onPullDownRefresh() {
+		// 获取轮播图
+		this.getSwipers();
+		// 获取公告信息
+		this.getNotice();
+		// 获取首页统计信息
+		this.getHomeInfo();
+		
+        setTimeout(function () {
+            uni.stopPullDownRefresh();  //停止下拉刷新动画
+        }, 2000);
+	},
 	
 	methods: {	
 		// 获取轮播图
@@ -109,8 +119,8 @@ export default {
 	            method:'get',
 				data:{type:1},
 	            success: (res) => {
-					console.log(res);
-					this.swipers = res.data.success.data;
+					if (res.data.success && res.data.success.data) this.swipers = res.data.success.data;
+					else uni.showToast({ title: res.data.error.message, icon: 'none' });
 	            }
 	      	})
 		},
@@ -126,6 +136,7 @@ export default {
 						this.notice = res.data.success.data;
 						this.notice_show = true;
 					}
+					else uni.showToast({ title: res.data.error.message, icon: 'none' });
 	            }
 	      	})
 		},
@@ -136,7 +147,8 @@ export default {
 	        	url:"/V1/index_info",
 	            method:'get',
 	            success: (res) => {
-					this.info = res.data.success.data;
+					if(res.data.success && res.data.success.data) this.info = res.data.success.data;
+					else uni.showToast({ title: res.data.error.message, icon: 'none' });
 	            }
 	      	})
 		}
