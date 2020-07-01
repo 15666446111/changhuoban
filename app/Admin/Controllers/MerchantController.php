@@ -28,6 +28,23 @@ class MerchantController extends AdminController
     {
         $grid = new Grid(new Merchant());
 
+        if(Admin::user()->operate != "All"){
+
+            $user_id[] = \App\User::where('operate',Admin::user()->operate)->first()->id;
+
+            $id = \App\User::where('operate',Admin::user()->operate)->first()->id;
+            $userInfo = \App\UserRelation::where('parents', 'like', "%_".$id."_%")->pluck('user_id')->toArray();
+
+            $user_id = array_merge($user_id,$userInfo);
+
+            $grid->model()->whereIn('user_id',$user_id);
+            
+        }else{
+
+            $grid->model()->where('operate',Admin::user()->operate);
+
+        }
+
         // 倒叙
         $grid->model()->latest();
 

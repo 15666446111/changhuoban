@@ -78,7 +78,9 @@ class StatisticController
      */
     public function getMyTeam()
     {
-        return \App\UserRelation::where('parents', 'like', "%_".$this->Users->id."_%")->pluck('user_id')->toArray();
+        $user_id[] = \App\User::where('id',$this->Users->id)->first()->id;
+        $userInfo = \App\UserRelation::where('parents', 'like', "%_".$this->Users->id."_%")->pluck('user_id')->toArray();
+        return array_merge($user_id,$userInfo);
     }
 
 
@@ -90,7 +92,7 @@ class StatisticController
      */
     public function getNewAddMerchant()
     {
-
+        
         $Arr =  $this->getMyTeam();
         
         return \App\Machine::where('bind_status', '1')->whereBetween('created_at', [ 
