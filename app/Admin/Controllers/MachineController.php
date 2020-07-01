@@ -33,11 +33,20 @@ class MachineController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Machine());
-
+        
         if(Admin::user()->operate != "All"){
-            $grid->model()->where('operate', Admin::user()->operate);
-        }
 
+            $user_id[] = \App\User::where('operate',Admin::user()->operate)->first()->id;
+
+            $id = \App\User::where('operate',Admin::user()->operate)->first()->id;
+            $userInfo = \App\UserRelation::where('parents', 'like', "%_".$id."_%")->pluck('user_id')->toArray();
+
+            $user_id = array_merge($user_id,$userInfo);
+
+            $grid->model()->whereIn('user_id',$user_id);
+            
+        }
+        
         // 倒叙
         $grid->model()->latest();
 

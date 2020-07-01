@@ -69,7 +69,7 @@ class MachineHeadTail extends Action
     public function html()
     {
         return <<<HTML
-        <a class="btn btn-sm btn-default machine-head-tail"><i class="fa fa-balance-scale" style="margin-right: 3px;"></i>首尾补全</a>
+        <a class="btn btn-sm btn-default machine-head-tail" style="position:absolute;  right: 250px;"><i class="fa fa-balance-scale" style="margin-right: 3px;"></i>首尾补全</a>
 HTML;
     }
 

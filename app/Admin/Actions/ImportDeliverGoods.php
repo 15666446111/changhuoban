@@ -3,7 +3,7 @@
 namespace App\Admin\Actions;
 
 use Throwable;
-use Encore\Admin\Admin;
+use Encore\Admin\Facades\Admin;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Imports\ImportDeliverGoods as ImportDeliverGood;
@@ -19,7 +19,7 @@ class ImportDeliverGoods extends Action
     {
         try {
 
-            if(!$request->policy)
+            if(!$request->h_policy)
                 return $this->response()->swal()->error('请选择活动政策');
 
             if(!$request->user)
@@ -52,36 +52,32 @@ class ImportDeliverGoods extends Action
 
                 \App\Machine::whereIn('sn', $epliceRows)->whereNull('user_id')->update([
                     'user_id'   => $request->user,
-                    'policy_id' => $request->policy,
+                    'policy_id' => $request->h_policy,
                 ]);
 
                 /*
                     检查该会员在该政策下是否有结算激活等配置。如果没有 进行默认该政策配置
                 */
-                $userPolicy  = \App\UserPolicy::where('user_id', $request->user)->where('policy_id', $request->policy)->first();
+                $userPolicy  = \App\UserPolicy::where('user_id', $request->user)->where('policy_id', $request->h_policy)->first();
 
                 if(!$userPolicy or empty($userPolicy)){
 
-                    $policy = \App\Policy::where('id', $request->policy)->first();
-
-                    $sett_price = $policy['sett_price'];
-
-                    foreach ($sett_price as $key => $value) {
-                        $sett_price[$key]['setprice'] = $value['defaultPrice'];
-                    }
-
+                    $policy = \App\Policy::where('id', $request->h_policy)->first();
+                    
+                    $sett_price[] = $policy->settlements->set_price;
+                    
                     $default_active_set = $policy['default_active_set'];
                     $default_active_set['return_money'] = $default_active_set['default_money'];
-
+                    
                     $vip_active_set = $policy['vip_active_set'];
                     $vip_active_set['return_money'] = $vip_active_set['default_money'];
-
+                    
                     $standard = $policy->default_standard_set;
-
+                    
                     \App\UserPolicy::create([
                         'user_id'       =>  $request->user,
-                        'policy_id'     =>  $request->policy,
-                        'sett_price'    =>  $policy->sett_price,
+                        'policy_id'     =>  $request->h_policy,
+                        'sett_price'    =>  $sett_price,
                         'default_active_set'    => $default_active_set,
                         'vip_active_set'        => $vip_active_set,
                         'standard'      =>  $standard
@@ -126,12 +122,15 @@ HTML;
      */
     public function form()
     {
-        $user = \App\User::pluck('account as name','id');
+        $user_id = \App\User::where('operate',Admin::user()->operate)->first()->id;
+        
+        $user = \App\User::where('parent', $user_id)->where('id','!=',$user_id)->pluck('nickname as name','id');
         $this->select('user', '配送会员')->options($user)->rules('required', ['required' => '请选择品牌']);
-
-
-        $policy = \App\Policy::where('active', '1')->pluck('title as name','id');
-        $this->select('policy', '政策活动')->options($policy)->rules('required', ['required' => '请选择品牌']);
+        
+        $policyGroups = \App\PolicyGroup::where('operate', Admin::user()->operate)->pluck('title','id');
+        $this->select('h_title','活动组')->options($policyGroups)->load('h_policy','/api/getAdminUserGroup');
+        
+        $this->select('h_policy','活动')->required();
 
         $this->file('file1', '上传导入模版')->rules('required', ['required' => '文件不能为空']);
     }
@@ -144,6 +143,30 @@ HTML;
     public function handleActionPromise()
     {
         $resolve = <<<'SCRIPT'
+
+        $(".h_title").on('change',function(){
+            var name = $(".h_title option:selected").val();
+            console.log(name)
+            if(name == ""){ 
+                $(".h_policy").find("option").remove();
+            }else{
+                
+                $.ajax({
+                    url: '/api/getAdminUserGroup',
+                    data:{q: name},
+                    success:function(data){
+                        var options = '';
+                        $.each(data, function(i, val) {  
+                            console.log(val['text'])
+                            options += "<option value='"+val['id']+"'>"+val['text']+"</option>";
+                        });
+                        $(".h_policy").html(options);
+                        $(".h_policy").change();
+                    }
+                });
+            }
+        })
+
 var actionResolverss = function (data) {
             $('.modal-footer').show()
             $('.tips').remove()
