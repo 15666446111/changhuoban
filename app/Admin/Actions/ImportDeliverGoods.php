@@ -122,17 +122,24 @@ HTML;
      */
     public function form()
     {
-        $user_id = \App\User::where('operate',Admin::user()->operate)->first()->id;
-        
-        $user = \App\User::where('parent', $user_id)->where('id','!=',$user_id)->pluck('nickname as name','id');
-        $this->select('user', '配送会员')->options($user)->rules('required', ['required' => '请选择品牌']);
-        
-        $policyGroups = \App\PolicyGroup::where('operate', Admin::user()->operate)->pluck('title','id');
-        $this->select('h_title','活动组')->options($policyGroups)->load('h_policy','/api/getAdminUserGroup');
-        
-        $this->select('h_policy','活动')->required();
+        if(Admin::user()->operate == 'All' or Admin::user()->type == '2'){
 
-        $this->file('file1', '上传导入模版')->rules('required', ['required' => '文件不能为空']);
+        }else{
+
+            $user_id = \App\User::where('operate',Admin::user()->operate)->first()->id;
+        
+            $user = \App\User::where('parent', $user_id)->where('id','!=',$user_id)->pluck('nickname as name','id');
+            $this->select('user', '配送会员')->options($user)->rules('required', ['required' => '请选择品牌']);
+            
+            $policyGroups = \App\PolicyGroup::where('operate', Admin::user()->operate)->pluck('title','id');
+            $this->select('h_title','活动组')->options($policyGroups)->load('h_policy','/api/getAdminUserGroup');
+            
+            $this->select('h_policy','活动')->required();
+
+            $this->file('file1', '上传导入模版')->rules('required', ['required' => '文件不能为空']);
+
+        }
+        
     }
 
 

@@ -7,6 +7,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Facades\Admin;
 
 class CashController extends AdminController
 {
@@ -28,19 +29,8 @@ class CashController extends AdminController
 
         if(Admin::user()->operate != "All"){
 
-            $user_id[] = \App\User::where('operate',Admin::user()->operate)->first()->id;
-
-            $id = \App\User::where('operate',Admin::user()->operate)->first()->id;
-            $userInfo = \App\UserRelation::where('parents', 'like', "%_".$id."_%")->pluck('user_id')->toArray();
-
-            $user_id = array_merge($user_id,$userInfo);
-
-            $grid->model()->whereIn('user_id',$user_id);
+            $grid->model()->where('operate', Admin::user()->operate);
             
-        }else{
-
-            $grid->model()->where('operate',Admin::user()->operate);
-
         }
 
         $grid->column('id', __('索引'));
@@ -106,6 +96,11 @@ class CashController extends AdminController
     protected function detail($id)
     {
         $show = new Show(CashsLog::findOrFail($id));
+
+        if(Admin::user()->operate != "All"){
+            $model = Machine::where('id', $id)->first();
+            if($model->operate != Admin::user()->operate) return abort('403');        
+        }
 
         $show->field('id', __('索引'));
         $show->field('users.nickname', __('会员昵称'));

@@ -31,6 +31,7 @@ class OrdersController extends Controller
                 'product_price'=>$request->product_price,
                 'remark'=>$request->remark,
                 'status'=>$request->status ?? '0',  
+                'operate'=>$request->user->operate
             ]); 
 
             Factory::setOptions($this->getOptions());
@@ -129,7 +130,7 @@ class OrdersController extends Controller
 
     	} catch (\Exception $e) {
             
-            return response()->json(['error'=>['message' => $e->getMessage()]]);
+            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
 
         }
 

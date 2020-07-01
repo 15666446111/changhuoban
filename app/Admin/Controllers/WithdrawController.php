@@ -31,21 +31,10 @@ class WithdrawController extends AdminController
 
         if(Admin::user()->operate != "All"){
 
-            $user_id[] = \App\User::where('operate',Admin::user()->operate)->first()->id;
-
-            $id = \App\User::where('operate',Admin::user()->operate)->first()->id;
-            $userInfo = \App\UserRelation::where('parents', 'like', "%_".$id."_%")->pluck('user_id')->toArray();
-
-            $user_id = array_merge($user_id,$userInfo);
-
-            $grid->model()->whereIn('user_id',$user_id);
+            $grid->model()->where('operate', Admin::user()->operate);
             
-        }else{
-
-            $grid->model()->where('operate',Admin::user()->operate);
-
         }
-
+        
         $grid->model()->latest();
         
         $grid->column('order_no', __('提现订单'));
@@ -53,6 +42,12 @@ class WithdrawController extends AdminController
         $grid->column('users.nickname', __('提现代理'));
         
         $grid->column('money', __('提现金额'))->label();
+
+        $grid->column('rate', __('提现费率'));
+
+        $grid->column('rate_m', __('手续费'))->display(function ($money) {
+            return number_format($money/100, 2, '.', ',');
+        })->label('info')->filter('range');
 
         $grid->column('real_money', __('到账金额'))->label('info');
 
@@ -99,11 +94,13 @@ class WithdrawController extends AdminController
      */
     protected function detail($id)
     {
-        if(Admin::user()->operate != "All"){
-            $model = Withdraw::where('id', $id)->first();
-            if($model->operate != Withdraw::user()->operate) return abort('403');        
-        }
+        
         $show = new Show(Withdraw::findOrFail($id));
+
+        if(Admin::user()->operate != "All"){
+            $model = Machine::where('id', $id)->first();
+            if($model->operate != Admin::user()->operate) return abort('403');        
+        }
 
         $show->field('order_no', __('提现订单号'));
 

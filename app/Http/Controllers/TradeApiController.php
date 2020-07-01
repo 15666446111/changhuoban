@@ -23,6 +23,8 @@ class TradeApiController extends Controller
 
         foreach ($dataList as $key => $value) {
             
+            // 新建交易订单 写入交易表 并且 分发到队列处理
+            
         }
     	/**
     	 * @version [<vector>] [< 将推送过来的数据 压入到队列进行处理 >]

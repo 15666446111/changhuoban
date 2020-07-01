@@ -7,6 +7,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Facades\Admin;
 
 class TransferController extends AdminController
 {
@@ -28,19 +29,8 @@ class TransferController extends AdminController
 
         if(Admin::user()->operate != "All"){
 
-            $user_id[] = \App\User::where('operate',Admin::user()->operate)->first()->id;
-
-            $id = \App\User::where('operate',Admin::user()->operate)->first()->id;
-            $userInfo = \App\UserRelation::where('parents', 'like', "%_".$id."_%")->pluck('user_id')->toArray();
-
-            $user_id = array_merge($user_id,$userInfo);
-
-            $grid->model()->whereIn('user_id',$user_id);
+            $grid->model()->where('operate', Admin::user()->operate);
             
-        }else{
-
-            $grid->model()->where('operate',Admin::user()->operate);
-
         }
 
         $grid->model()->latest();
@@ -84,6 +74,11 @@ class TransferController extends AdminController
     protected function detail($id)
     {
         $show = new Show(Transfer::findOrFail($id));
+
+        if(Admin::user()->operate != "All"){
+            $model = Machine::where('id', $id)->first();
+            if($model->operate != Admin::user()->operate) return abort('403');        
+        }
 
         $show->field('id', __('Id'));
         $show->field('machine_id', __('Machine id'));

@@ -31,7 +31,7 @@ class IndexController extends Controller
             $MonthTrade     = number_format(($model->getTradeSum() / 100), 2, ".", "," );
 
             // 获取本月收益
-            $MonthIncome   = 0;
+            $MonthIncome   = number_format(($model->getCashSum() / 100), 2, ".", "," );
 
             return response()->json(['success'=>
                 [
@@ -47,7 +47,7 @@ class IndexController extends Controller
 
     	} catch (\Exception $e) {
             
-            return response()->json(['error'=>['message' => $e->getMessage()]]);
+            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
 
         }
     }

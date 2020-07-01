@@ -7,6 +7,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Facades\Admin;
 
 class OrderController extends AdminController
 {
@@ -25,6 +26,12 @@ class OrderController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Order());
+
+        if(Admin::user()->operate != "All"){
+
+            $grid->model()->where('operate', Admin::user()->operate);
+            
+        }
 
         $grid->model()->latest();
 
@@ -63,6 +70,11 @@ class OrderController extends AdminController
     protected function detail($id)
     {
         $show = new Show(Order::findOrFail($id));
+
+        if(Admin::user()->operate != "All"){
+            $model = Machine::where('id', $id)->first();
+            if($model->operate != Admin::user()->operate) return abort('403');        
+        }
 
         $show->field('order_no', __('订单编号'));
         $show->field('user_id', __('下单会员'));

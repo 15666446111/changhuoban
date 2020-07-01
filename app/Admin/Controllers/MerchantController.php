@@ -30,21 +30,10 @@ class MerchantController extends AdminController
 
         if(Admin::user()->operate != "All"){
 
-            $user_id[] = \App\User::where('operate',Admin::user()->operate)->first()->id;
-
-            $id = \App\User::where('operate',Admin::user()->operate)->first()->id;
-            $userInfo = \App\UserRelation::where('parents', 'like', "%_".$id."_%")->pluck('user_id')->toArray();
-
-            $user_id = array_merge($user_id,$userInfo);
-
-            $grid->model()->whereIn('user_id',$user_id);
+            $grid->model()->where('operate', Admin::user()->operate);
             
-        }else{
-
-            $grid->model()->where('operate',Admin::user()->operate);
-
         }
-
+        
         // 倒叙
         $grid->model()->latest();
 
@@ -60,7 +49,9 @@ class MerchantController extends AdminController
 
         $grid->column('phone', __('商户电话'));
 
-        $grid->column('trade_amount', __('累计交易金额'));
+        $grid->column('trade_amount', __('累计交易金额'))->display(function ($money) {
+            return number_format($money / 100, 2, '.', ',');
+        })->label('info');
                 
         $grid->column('created_at', __('创建时间'));
 
@@ -100,9 +91,9 @@ class MerchantController extends AdminController
     {
         $show = new Show(Merchant::findOrFail($id));
 
-        if (Admin::user()->operate != 'All') {
-            $model = Merchant::where('id', $id)->first();
-            if($model->operate != Admin::user()->operate) { return abort(403); }
+        if(Admin::user()->operate != "All"){
+            $model = Machine::where('id', $id)->first();
+            if($model->operate != Admin::user()->operate) return abort('403');        
         }
 
         $show->field('users.nickname', __('归属代理'));

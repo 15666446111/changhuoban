@@ -139,5 +139,35 @@ class StatisticController
     }
 
 
+    /**
+     * 获取新的收益金额
+     */
+    public function getCashSum($rule = 'team')
+    {
+        $Arr = $rule == 'team' ? $this->getMyTeam() :  array($this->Users->id);
+
+        return \App\CashsLog::whereBetween('created_at', [ 
+            $this->StartTime,  $this->EndTime])->whereHas('users', function($q) use ($Arr){
+                $q->whereIn('id', $Arr);
+            })->sum('money');
+
+    }
+
+
+    /**
+     * 获取新的激活台数
+     */
+    public function getMachineCount()
+    {
+
+        $Arr =  $this->getMyTeam();
+        
+        return \App\Machine::where('activate_state', '1')->whereBetween('created_at', [ 
+                    $this->StartTime,  $this->EndTime])->whereHas('users', function($q) use ($Arr){
+                        $q->whereIn('id', $Arr);
+                    })->count();   
+
+    }
+
 
 }

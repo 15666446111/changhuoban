@@ -36,19 +36,8 @@ class MachineController extends AdminController
         
         if(Admin::user()->operate != "All"){
 
-            $user_id[] = \App\User::where('operate',Admin::user()->operate)->first()->id;
-
-            $id = \App\User::where('operate',Admin::user()->operate)->first()->id;
-            $userInfo = \App\UserRelation::where('parents', 'like', "%_".$id."_%")->pluck('user_id')->toArray();
-
-            $user_id = array_merge($user_id,$userInfo);
-
-            $grid->model()->whereIn('user_id',$user_id);
+            $grid->model()->where('operate', Admin::user()->operate);
             
-        }else{
-
-            $grid->model()->where('operate',Admin::user()->operate);
-
         }
         
         // 倒叙
@@ -124,19 +113,98 @@ class MachineController extends AdminController
      */
     protected function detail($id)
     {
+        
+        $show = new Show(Machine::findOrFail($id));
+
         if(Admin::user()->operate != "All"){
             $model = Machine::where('id', $id)->first();
-            if($model->operate != Machine::user()->operate) return abort('403');        
+            if($model->operate != Admin::user()->operate) return abort('403');        
         }
-        $show = new Show(Machine::findOrFail($id));
 
         $show->field('user_id', __('归属人'));
         $show->field('sn', __('机器序列号'));
-        $show->field('open_state', __('开通状态'));
-        $show->field('is_self', __('是否是自备机'));
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
-        $show->field('style_id', __('所属型号'));
+        $show->field('open_time', __('开通时间'));
+        $show->field('open_state', __('开通状态'))->using([ '0' => '未开通', '1' => '已开通']);
+        $show->field('is_self', __('是否是自备机'))->using([ '0' => '不是', '1' => '是']);
+        $show->field('machine_name', __('商户名称'));
+        $show->field('machine_phone', __('商户电话'));
+        // $show->field('created_at', __('Created at'));
+        // $show->field('updated_at', __('Updated at'));
+        $show->field('machines_styles.style_name', __('所属型号'));
+        $show->field('bind_status', __('绑定状态'))->using([ '0' => '未绑定', '1' => '已绑定']);
+        $show->field('bind_time', __('绑定时间'));
+        $show->field('standard_status', __('达标状态'))->using([ '0' => '默认', '1' => '连续达标', '-1' => '达标中断']);
+        $show->field('activate_time', __('激活时间'));
+        $show->field('activate_state', __('激活状态'))->using([ '0' => '默认', '1' => '连续达标', '-1' => '达标中断']);
+        $show->field('policys.title', __('政策活动'));
+
+        $show->policys('政策信息', function ($policys) {
+            $policys->title('政策标题');
+            $policys->active('状态')->using(['0'=> '关闭', '1' => '正常']);
+            $policys->field('policy_groups.title', __('活动组'));
+            $policys->panel()->tools(function ($tools) {
+                $tools->disableEdit();
+                $tools->disableList();
+                $tools->disableDelete();
+            });
+        });
+        
+
+        $show->tradess_sn('交易信息', function ($trade) {
+
+            $trade->setResource('/admin/trades');
+            
+            $trade->model()->latest();
+            
+            $trade->id('索引')->sortable();
+
+            $trade->column('trade_no', __('交易流水号'))->copyable();
+            $trade->column('merchant_id', __('商户编号'))->copyable();
+            $trade->column('merchant_sn', __('SN'))->copyable();
+
+            $trade->column('agt_merchant_id', __('渠道商ID'));
+            $trade->column('agt_merchant_name', __('渠道商名称'));
+            $trade->column('agt_merchant_level', __('渠道商级别'));
+
+            $trade->column('cardType', __('卡类型'))->using([ '0' => '贷记卡', '1' => '借记卡']);
+            $trade->column('trade_type', __('交易类型'));
+            $trade->column('trade_time', __('交易时间'));
+
+
+            $trade->column('amount', __('交易金额'))->display(function ($money) {
+                return number_format($money/100, 2, '.', ',');
+            })->label('info')->filter('range');
+
+            //$grid->column('rate', __('交易费率'));
+            $trade->column('rate_money', __('手续费'))->display(function ($money) {
+                return number_format($money/100, 2, '.', ',');
+            })->label('warning')->filter('range');
+
+            $trade->column('settle_amount', __('结算金额'))->display(function ($money) {
+                return number_format($money/100, 2, '.', ',');
+            })->label('success')->filter('range');;
+
+            $trade->column('is_cash', __('分润'))->bool();
+
+            $trade->column('', '其他')->modal('处理结果', function ($model) {
+                
+                return new Table(['商户编号名称','交易卡号','分润备注'], [[$model->merchant_name,$model->card_number,$model->remark]]);
+            
+            });
+
+            $trade->column('created_at', __('推送时间'));
+
+            $trade->disableCreateButton();
+            $trade->actions(function ($actions) {
+                // 去掉删除 编辑
+                $actions->disableDelete();
+                $actions->disableEdit();
+            });
+            $trade->batchActions(function ($batch) {
+                $batch->disableDelete();
+            });
+
+        });
 
         return $show;
     }
