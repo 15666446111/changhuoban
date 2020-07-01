@@ -8,6 +8,8 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Encore\Admin\Facades\Admin;
+use App\Admin\Actions\WithdrawAdopt;
+use App\Admin\Actions\WithdrawReject;
 
 class WithdrawController extends AdminController
 {
@@ -52,7 +54,6 @@ class WithdrawController extends AdminController
 
         $grid->column('created_at', __('申请时间'));
 
-        //$grid->column('updated_at', __('Updated at'));
         //
         $grid->disableCreateButton();
 
@@ -61,8 +62,10 @@ class WithdrawController extends AdminController
             $actions->disableDelete();
             // 去掉编辑
             $actions->disableEdit();
-            // 添加操作按钮
-            $actions->add(new Money);
+            // 添加通过按钮
+            $actions->add(new WithdrawAdopt());
+            // 添加驳回按钮
+            $actions->add(new WithdrawReject());
         });
 
         $grid->batchActions(function ($batch) {
