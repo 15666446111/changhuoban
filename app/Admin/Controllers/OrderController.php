@@ -30,15 +30,21 @@ class OrderController extends AdminController
 
         //$grid->column('id', __('索引'));
         $grid->column('order_no', __('订单编号'));
-        $grid->column('user_id', __('下单会员'));
-        $grid->column('product_id', __('订单产品'));
-        $grid->column('product_price', __('产品单价'));
+        $grid->column('users.nickname', __('下单会员'));
+        $grid->column('products.title', __('订单产品'));
+        $grid->column('product_price', __('产品单价'))->display(function($amount){
+            return number_format($amount / 100, 2, '.', ',');
+        })->label();
         $grid->column('numbers', __('订单数量'));
-        $grid->column('price', __('订单价格'));
+        $grid->column('price', __('订单价格'))->display(function($amount){
+            return number_format($amount / 100, 2, '.', ',');
+        })->label("info");
         $grid->column('address', __('配送地址'));
-        $grid->column('status', __('订单状态'));
+        $grid->column('status', __('订单状态'))->using(['0' => '未支付', '1' => '已支付']);
         $grid->column('remark', __('订单备注'));
         $grid->column('created_at', __('创建时间'));
+        $grid->disableCreateButton();
+
         $grid->actions(function ($actions) {
  
             //关闭行操作 删除 
