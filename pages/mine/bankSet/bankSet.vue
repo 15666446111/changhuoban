@@ -41,6 +41,7 @@
 		methods: {
 			logout(){
 				uni.removeStorageSync('token');
+				uni.removeStorageSync('operate');
 				uni.showToast({
 					title: '退出成功',
 					icon: 'none',

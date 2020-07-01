@@ -8,6 +8,8 @@ const net = function(options) {
     try {
 		// 获取token
 		const token 	= uni.getStorageSync('token');
+		// 获取操盘
+		const operate 	= uni.getStorageSync('operate');
 		
 		if (token == ''){
 			// 如果没有token  定位到登陆页面
@@ -18,6 +20,14 @@ const net = function(options) {
             return;
         }
 
+		if (operate == ''){
+			// 如果没有operate  定位到登陆页面
+            uni.redirectTo({
+                url: '/pages/index/index'
+            });
+
+            return;
+        }
 		// 发起请求
 		uni.request({
 			url: options.url,
