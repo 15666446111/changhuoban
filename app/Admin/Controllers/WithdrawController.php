@@ -61,6 +61,8 @@ class WithdrawController extends AdminController
             $actions->disableDelete();
             // 去掉编辑
             $actions->disableEdit();
+            // 添加操作按钮
+            $actions->add(new Money);
         });
 
         $grid->batchActions(function ($batch) {
