@@ -36,9 +36,9 @@ class HandleTradeInfo implements ShouldQueue
     public function handle()
     {
 
-        sleep(10);
-
-        file_put_contents(public_path("a".date("H-i-s", time()).".txt"), $this->trade);
+        // if ($this->trade->) {
+        //     # code...
+        // }
 
     }
 }
