@@ -141,13 +141,14 @@ class MachineController extends AdminController
         $show->policys('政策信息', function ($policys) {
             $policys->title('政策标题');
             $policys->active('状态')->using(['0'=> '关闭', '1' => '正常']);
-            // $policys->model()->policy_groups->title('活动组');
+            $policys->field('policy_groups.title', __('活动组'));
             $policys->panel()->tools(function ($tools) {
                 $tools->disableEdit();
                 $tools->disableList();
                 $tools->disableDelete();
             });
         });
+        
 
         $show->tradess_sn('交易信息', function ($trade) {
 
@@ -201,26 +202,6 @@ class MachineController extends AdminController
             });
             $trade->batchActions(function ($batch) {
                 $batch->disableDelete();
-            });
-
-            $trade->filter(function($filter){
-                // 去掉默认的id过滤器
-                $filter->disableIdFilter();
-
-                $filter->column(1/4, function ($filter) {
-                    $filter->like('order_no', '订单');
-                });
-                $filter->column(1/4, function ($filter) {
-                    $filter->like('sn', 'SN');
-                });
-                $filter->column(1/4, function ($filter) {
-                    $filter->like('merchant_id', '商户');
-                });
-                $filter->column(1/4, function ($filter) {
-                    $filter->equal('is_send', '状态')->select(['0' => '失败', '1' => '成功']);
-                });
-                // 在这里添加字段过滤器
-                
             });
 
         });
