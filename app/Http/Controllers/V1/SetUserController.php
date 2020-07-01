@@ -367,6 +367,8 @@ class SetUserController extends Controller
                     'money'     => $request->money,
                     'type'      => $request->blance,
                     'real_money'=> $request->money - $request->money * $request->rate - $request->rate_m,
+                    'rate'      => $request->rate,
+                    'rate_m'    => $request->rate_m,
                     'state'     => $request->state ? $request->state : '1',
                     'check_at'  => $request->state ? Carbon::now() : '',
                     'make_state'=> '0',

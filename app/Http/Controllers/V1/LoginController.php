@@ -36,7 +36,7 @@ class LoginController extends Controller
 
             $User->save();
 
-    		return response()->json(['success'=>['token' => $User->api_token]]);
+    		return response()->json(['success'=>['token' => $User->api_token,'operate' => $User->operate]]);
 
     	} catch (\Exception $e) {
 

@@ -43,6 +43,12 @@ class WithdrawController extends AdminController
         
         $grid->column('money', __('提现金额'))->label();
 
+        $grid->column('rate', __('提现费率'));
+
+        $grid->column('rate_m', __('手续费'))->display(function ($money) {
+            return number_format($money/100, 2, '.', ',');
+        })->label('info')->filter('range');
+
         $grid->column('real_money', __('到账金额'))->label('info');
 
         $grid->column('type', __('提现类型'))
