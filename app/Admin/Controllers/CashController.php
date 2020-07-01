@@ -7,6 +7,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Facades\Admin;
 
 class CashController extends AdminController
 {
@@ -37,10 +38,6 @@ class CashController extends AdminController
 
             $grid->model()->whereIn('user_id',$user_id);
             
-        }else{
-
-            $grid->model()->where('operate',Admin::user()->operate);
-
         }
 
         $grid->column('id', __('索引'));
