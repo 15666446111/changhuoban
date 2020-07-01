@@ -38,10 +38,6 @@ class TradeController extends AdminController
 
             $grid->model()->whereIn('user_id',$user_id);
             
-        }else{
-
-            $grid->model()->where('operate',Admin::user()->operate);
-
         }
 
         $grid->model()->latest();

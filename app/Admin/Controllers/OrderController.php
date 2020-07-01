@@ -7,6 +7,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Facades\Admin;
 
 class OrderController extends AdminController
 {
@@ -25,6 +26,19 @@ class OrderController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Order());
+
+        if(Admin::user()->operate != "All"){
+
+            $user_id[] = \App\User::where('operate',Admin::user()->operate)->first()->id;
+
+            $id = \App\User::where('operate',Admin::user()->operate)->first()->id;
+            $userInfo = \App\UserRelation::where('parents', 'like', "%_".$id."_%")->pluck('user_id')->toArray();
+            
+            $user_id = array_merge($user_id,$userInfo);
+
+            $grid->model()->whereIn('user_id',$user_id);
+            
+        }
 
         $grid->model()->latest();
 

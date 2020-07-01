@@ -62,15 +62,15 @@ class TeamController extends Controller
             // 日交易数据
             $DayTrade = number_format(($model->getTradeSum() / 100), 2, ".", "," );
             // 日激活数据
-            $DayActive= 0;
+            $DayActive= $model->getMachineCount();
             // 日商户个数
             $DayMerchant = $model->getNewAddMerchant();
             // 日收益数据
-            $DayIncome= number_format( 0, 2, ".", "," );
+            $DayIncome= number_format(($model->getCashSum() / 100), 2, ".", "," );
             // 日伙伴个数
             $DayTeam  = $model->getNewAddTeamCount();
             // 日台均交易
-            $DayAvgTrade = number_format( 0, 2, ".", "," );
+            $DayAvgTrade = number_format( $DayMerchant !=0 ? $DayTrade / $DayMerchant : 0, 2, ".", "," );
 
 
             /**
@@ -80,15 +80,15 @@ class TeamController extends Controller
             // 月交易数据
             $MonthTrade = number_format(($MonthModel->getTradeSum() / 100), 2, ".", "," );
             // 日激活数据
-            $MonthActive= 0;
+            $MonthActive= $MonthModel->getMachineCount();
             // 日商户个数
             $MonthMerchant = $MonthModel->getNewAddMerchant();
             // 日收益数据
-            $MonthIncome= number_format( 0, 2, ".", "," );
+            $MonthIncome= number_format(($MonthModel->getCashSum() / 100), 2, ".", "," );
             // 日伙伴个数
             $MonthTeam  = $MonthModel->getNewAddTeamCount();
             // 日台均交易
-            $MonthAvgTrade = number_format( 0, 2, ".", "," );
+            $MonthAvgTrade = number_format( $MonthMerchant != 0 ? $MonthTrade / $MonthMerchant : 0, 2, ".", "," );
 
 
             /**
@@ -98,15 +98,15 @@ class TeamController extends Controller
             // 月交易数据
             $CountTrade = number_format(($CountModel->getTradeSum() / 100), 2, ".", "," );
             // 日激活数据
-            $CountActive= 0;
+            $CountActive= $CountModel->getMachineCount();
             // 日商户个数
             $CountMerchant = $CountModel->getNewAddMerchant();
             // 日收益数据
-            $CountIncome= number_format( 0, 2, ".", "," );
+            $CountIncome= number_format(($CountModel->getCashSum() / 100), 2, ".", "," );
             // 日伙伴个数
             $CountTeam  = $CountModel->getNewAddTeamCount();
             // 日台均交易
-            $CountAvgTrade = number_format( 0, 2, ".", "," );
+            $CountAvgTrade = number_format( $CountMerchant != 0 ? $CountTrade / $CountMerchant : 0 , 2, ".", "," );
 
 
             return response()->json(['success'=>
