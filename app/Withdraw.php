@@ -16,4 +16,13 @@ class Withdraw extends Model
     {
         return $this->belongsTo('App\User','user_id','id');
     }
+
+    /**
+     * 关联提现详情表
+     * @return [type] [description]
+     */
+    public function withdrawDatas()
+    {
+    	return $this->hasOne('App\User', 'order_no', 'order_no');
+    }
 }
