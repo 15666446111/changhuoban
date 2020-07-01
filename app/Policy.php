@@ -99,4 +99,16 @@ class Policy extends Model
         return $this->belongsTo('\App\PolicyGroup', 'policy_group_id', 'id');
     }
 
+
+    /**
+     * [merchants 关联活动组结算价]
+     * @author Pudding
+     * @DateTime 2020-04-10T15:33:52+0800
+     * @return   [type]                   [description]
+     */
+    public function settlements()
+    {
+        return $this->hasOne('\App\PolicyGroupSettlement', 'policy_group_id', 'id');
+    }
+
 }

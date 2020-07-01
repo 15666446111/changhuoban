@@ -3,7 +3,7 @@
 namespace App\Admin\Actions;
 
 use Throwable;
-use Encore\Admin\Admin;
+use Encore\Admin\Facades\Admin;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Imports\ImportMachines as ImportMachine;
@@ -19,7 +19,7 @@ class ImportMachines extends Action
     {
         try {
             $result = Excel::toArray(null, request()->file('file'));
-
+            
             // 只取第一个Sheet
             if (count($result[0]) > 0) 
             {
@@ -44,11 +44,12 @@ class ImportMachines extends Action
                 $epliceRows = array_intersect($data, $eplice);
                 // 差集
                 $InsertData = array_diff($data, $eplice);
-                
+
                 foreach ($InsertData as $key => $value) {
                     \App\Machine::create([
                         'sn'        =>  $value,
                         'style_id'  =>  $request->style_id,
+                        'user_id'   =>  Admin::user()->id
                     ]);
                 }
 
@@ -78,7 +79,7 @@ class ImportMachines extends Action
     public function html()
     {
         return <<<HTML
-        <a class="btn btn-sm btn-default import-machines"><i class="fa fa-upload" style="margin-right: 3px;"></i>导入仓库</a>
+        <a class="btn btn-sm btn-default import-machines" style="position:absolute;  right: 350px;"><i class="fa fa-upload" style="margin-right: 3px;"></i>导入仓库</a>
 HTML;
     }
 

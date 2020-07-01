@@ -32,10 +32,22 @@ class MachineController extends AdminController
      */
     protected function grid()
     {
-        $grid = new Grid(new Machine());
-
+        
         if(Admin::user()->operate != "All"){
+
+            $grid = new Grid(new Machine());
+
             $grid->model()->where('operate', Admin::user()->operate);
+
+        }else{
+            
+            $user_id = \App\User::where('operate',Admin::user()->operate)->first()->id;
+        
+            $user = \App\User::where('parent', $user_id)->where('id','!=',$user_id)->pluck('nickname as name','id');
+            $grid = Mine::whereHas('comments', function ($query) {
+                $query->where('content', 'like', 'foo%');
+            })->get();
+
         }
 
         // 倒叙
