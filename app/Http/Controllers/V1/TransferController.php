@@ -57,7 +57,8 @@ class TransferController extends Controller
                     'machine_id'    =>  $v,
                     'old_user_id'   =>  $request->user->id,
                     'new_user_id'   =>  $request->friend_id,
-                    'state'         =>  $request->state
+                    'state'         =>  $request->state,
+                    'operate'       =>  $request->user->operate
                 ]);
             }
 
@@ -65,7 +66,7 @@ class TransferController extends Controller
         
         } catch (\Exception $e) {
             
-            return response()->json(['error'=>['message' => $e->getMessage()]]);
+            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
 
         }
 
@@ -133,7 +134,8 @@ class TransferController extends Controller
                                 'machine_id'    =>  $v,
                                 'old_user_id'   =>  $request->user->id,
                                 'new_user_id'   =>  $value,
-                                'state'         =>  $request->state
+                                'state'         =>  $request->state,
+                                'operate'       =>  $request->user->operate
                             ]);
                         }
                         
@@ -154,7 +156,7 @@ class TransferController extends Controller
 
         } catch (\Exception $e) {
             
-            return response()->json(['error'=>['message' => $e->getMessage()]]);
+            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
 
         }
 
@@ -188,7 +190,7 @@ class TransferController extends Controller
         
         } catch (\Exception $e) {
             
-            return response()->json(['error'=>['message' => $e->getMessage()]]);
+            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
 
         }
     }

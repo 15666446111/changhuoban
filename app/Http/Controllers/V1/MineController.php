@@ -45,7 +45,7 @@ class MineController extends Controller
 
     	} catch (\Exception $e) {
             
-            return response()->json(['error'=>['message' => $e->getMessage()]]);
+            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
 
         }
     }

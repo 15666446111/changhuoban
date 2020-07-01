@@ -81,7 +81,7 @@ class SetUserController extends Controller
 
         } catch (\Exception $e) {
             
-            return response()->json(['error'=>['message' => $e->getMessage()]]);
+            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
 
         }
         
@@ -105,7 +105,7 @@ class SetUserController extends Controller
 
     	} catch (\Exception $e) {
             
-            return response()->json(['error'=>['message' => $e->getMessage()]]);
+            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
 
         }
 
@@ -139,7 +139,7 @@ class SetUserController extends Controller
 
     	} catch (\Exception $e) {
             
-            return response()->json(['error'=>['message' => $e->getMessage()]]);
+            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
 
         }
     }
@@ -250,7 +250,7 @@ class SetUserController extends Controller
 
     	} catch (\Exception $e) {
             
-            return response()->json(['error'=>['message' => $e->getMessage()]]);
+            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
 
         }
     }
@@ -297,7 +297,7 @@ class SetUserController extends Controller
 
     	} catch (\Exception $e) {
             
-            return response()->json(['error'=>['message' => $e->getMessage()]]);
+            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
 
         }
 
@@ -369,7 +369,8 @@ class SetUserController extends Controller
                     'real_money'=> $request->money - $request->money * $request->rate - $request->rate_m,
                     'state'     => $request->state ? $request->state : '1',
                     'check_at'  => $request->state ? Carbon::now() : '',
-                    'make_state'=> '0'
+                    'make_state'=> '0',
+                    'operate'   =>  $request->user->operate
                 ]);
 
                 \App\WithdrawsData::create([
@@ -394,7 +395,7 @@ class SetUserController extends Controller
 
     	} catch (\Exception $e) {
             
-            return response()->json(['error'=>['message' => $e->getMessage()]]);
+            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
 
         }
 

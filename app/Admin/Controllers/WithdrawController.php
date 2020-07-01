@@ -31,14 +31,7 @@ class WithdrawController extends AdminController
 
         if(Admin::user()->operate != "All"){
 
-            $user_id[] = \App\User::where('operate',Admin::user()->operate)->first()->id;
-
-            $id = \App\User::where('operate',Admin::user()->operate)->first()->id;
-            $userInfo = \App\UserRelation::where('parents', 'like', "%_".$id."_%")->pluck('user_id')->toArray();
-
-            $user_id = array_merge($user_id,$userInfo);
-
-            $grid->model()->whereIn('user_id',$user_id);
+            $grid->model()->where('operate', Admin::user()->operate);
             
         }
         
@@ -95,11 +88,13 @@ class WithdrawController extends AdminController
      */
     protected function detail($id)
     {
-        if(Admin::user()->operate != "All"){
-            $model = Withdraw::where('id', $id)->first();
-            if($model->operate != Withdraw::user()->operate) return abort('403');        
-        }
+        
         $show = new Show(Withdraw::findOrFail($id));
+
+        if(Admin::user()->operate != "All"){
+            $model = Machine::where('id', $id)->first();
+            if($model->operate != Admin::user()->operate) return abort('403');        
+        }
 
         $show->field('order_no', __('提现订单号'));
 
