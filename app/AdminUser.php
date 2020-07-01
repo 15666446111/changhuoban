@@ -9,4 +9,5 @@ class AdminUser extends Model
 
     // 黑名单
     protected $guarded = [];
+
 }

@@ -47,6 +47,12 @@ Route::get('/api/getAdminStyle', 		'AdminApiController@getAdminStyle');
 
 
 /**
+ * @version [<vector>] [<后台联动Select 查询符合条件的活动>]
+ */
+Route::get('/api/getAdminUserGroup', 		'AdminApiController@getAdminUserGroup');
+
+
+/**
  * @version [<团队邀请人注册 扫描二维码>] [<description>]
  * @author  [Pudding] <[755969423@qq.com]>
  * @version [<会员注册>] [<description>]
