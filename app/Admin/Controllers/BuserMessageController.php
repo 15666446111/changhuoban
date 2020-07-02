@@ -29,7 +29,8 @@ class BuserMessageController extends AdminController
         $grid->column('id', __('索引'));
         $grid->column('user_id', __('会员'));
         $grid->column('type', __('类型'));
-        $grid->column('is_read', __('已读'));
+        $grid->column('is_read', __('已读'))->using([ '0' => '未读', '1' => '已读'])
+            ->dot([ 0 => 'danger', 1 => 'success' ], 'default');
         $grid->column('title', __('标题'));
         $grid->column('message_text', __('内容'));
         $grid->column('send_plat', __('发送方'));
@@ -57,7 +58,7 @@ class BuserMessageController extends AdminController
         $show->field('id', __('索引'));
         $show->field('user_id', __('会员'));
         $show->field('type', __('类型'));
-        $show->field('is_read', __('已读'));
+        $show->field('is_read', __('已读'))->using([0 => '未读', 1 => '已读']);
         $show->field('title', __('标题'));
         $show->field('message_text', __('内容'));
         $show->field('send_plat', __('发送方'));
