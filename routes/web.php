@@ -72,3 +72,7 @@ Route::get('/team/{code}', 'RegisterController@team');
  * @version [<会员注册>] [<description>]
  */
 Route::post('/team/{code}', 'RegisterController@team_in')->name('register');
+
+
+//微信服务端
+Route::any('/wechat', 'WeChatController@serve');

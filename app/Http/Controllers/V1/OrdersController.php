@@ -115,6 +115,13 @@ class OrdersController extends Controller
     }
 
     /**
+     * 微信支付
+     */
+    public function wechat_pay(){
+        $payment = \EasyWeChat::payment(); // 微信支付
+    }
+
+    /**
      * 修改订单状态
      */
 
@@ -137,7 +144,6 @@ class OrdersController extends Controller
 
         return 111;
     }
-
 
 
     /**
@@ -185,4 +191,5 @@ class OrdersController extends Controller
         }
 
     }
+
 }
