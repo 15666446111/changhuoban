@@ -50,11 +50,11 @@ class TradeApiController extends Controller
         // 推送的数据列表
         $dataList = $request->dataList;
 
-        foreach ($dataList as $key => $value) {
+        if ($request->dataType == 0) {
+            // 商户开通通知处理
             
-            if ($value->dataType == 0) {
+            foreach ($dataType as $key => $value) {
 
-                // 商户开通通知处理
                 $regContent = \App\RegNoticeContent::create([
                     //商户直属机构号
                     'agentId'       =>      $value->agentId,
@@ -72,9 +72,12 @@ class TradeApiController extends Controller
 
                 //压入到redis去处理剩下的逻辑
                 HandleTradeInfo::dispatch(json_encode($regContent))->onConnection('redis');
+            }
 
-            } else {
-                // 交易通知处理
+        } else {
+            // 交易通知处理
+            
+            foreach ($dataList as $key => $value) {
 
                 try{
                     // 交易冲正时可能会推送多笔交易，已平台收单应答描述前六位为"原交易已冲正"区分是否为多推送的交易，多推送的冲正类交易信息不进行保存和处理
@@ -215,8 +218,8 @@ class TradeApiController extends Controller
                 }
 
             }
-            
         }
+        
     	
 
     	return json_encode($reData);
