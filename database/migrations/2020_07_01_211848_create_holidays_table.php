@@ -19,9 +19,9 @@ class CreateHolidaysTable extends Migration
             
             $table->string('title')->comment('节假日标题');
 
-            $table->timestamp('start_time')->comment('开始时间');
+            $table->timestamp('start_time')->nullable()->comment('开始时间');
 
-            $table->timestamp('end_time')->comment('结束时间');
+            $table->timestamp('end_time')->nullable()->comment('结束时间');
 
             $table->timestamps();
         
