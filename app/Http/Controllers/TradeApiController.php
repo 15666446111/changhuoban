@@ -32,7 +32,7 @@ class TradeApiController extends Controller
 	 */
 	public function reg(Request $request)
 	{
-
+		dd($request->dataList);
 		// 如果没有包含这两个值。则结束掉程序运行
         // 因为汇付接口传递过来的只有这两个参数 且必填
         if(!isset($request->dataList) or !isset($request->dataType))  return response()->json(['error'=>['message' => '请求出错!']]);
