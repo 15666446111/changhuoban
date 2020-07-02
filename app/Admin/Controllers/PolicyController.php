@@ -100,7 +100,7 @@ class PolicyController extends AdminController
 
             $form->number('default_active', __('直推激活'))->default(2)->help('机器激活,上级获得的直推奖励.(单位为分)');
             $form->number('indirect_active', __('间推激活'))->default(1)->help('机器激活,上上级获得的间推奖励.(单位为分)');
-
+            // $form->text('title',  __('活动标题'))->hide();
             $form->fieldset('用户激活返现', function (Form $form) {
                 $form->embeds('default_active_set', '用户激活',function ($form) {
                     $form->number('return_money', '最高返现')->default(0)->rules('required')->help('(单位为分)');
