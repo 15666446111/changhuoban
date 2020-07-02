@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Alipay\EasySDK\Kernel\Factory;
 use Alipay\EasySDK\Kernel\Config;
 
+
 class OrdersController extends Controller
 {
      /**
@@ -34,13 +35,12 @@ class OrdersController extends Controller
             //     'status'=>$request->status ?? '0',  
             // ]); 
 
-
+        
             Factory::setOptions($this->getOptions());
 
             //2. 发起API调用（以支付能力下的统一收单交易创建接口为例）
-            $result = Factory::payment()->App()->pay('1', $order_no, $request->price);
+            $result = Factory::payment()->App()->pay('1', $request->$order_no, $request->price);
 
-            dd( $result);
              //3. 处理响应或异常
             if (!empty($result->code) && $result->code == 10000) {
                 echo "调用成功". PHP_EOL;
@@ -51,11 +51,8 @@ class OrdersController extends Controller
         }catch (Exception $e) {
             return response()->json(['error'=>['message' => '系统错误，请联系客服']]);
         }
-
-
-        
-
     }
+
 
     /** @Author Pudding 获取支付宝配置参数 */
     public function getOptions()
@@ -83,9 +80,9 @@ class OrdersController extends Controller
 
         //可设置异步通知接收服务地址（可选）
         $options->notifyUrl = env('APP_URL').'/api/V1/updateOrderStatus';
-        // dd($options);
+
         //可设置AES密钥，调用AES加解密相关接口时需要（可选）
-        //$options->encryptKey = config('app.alipay_encyptkey'); 
+        // $options->encryptKey = "OIWl7LvhQ2LtgDHYrw1iEA=="; 
 
         return $options;
     }
@@ -93,25 +90,26 @@ class OrdersController extends Controller
     /**
      * 修改订单状态
      */
-    public function edit_orderStatus(){
+    public function edit_orderStatus(Request $request){
 
-        $data = $request->all();
+        // $data = $request->all();
 
-        $parameters = array(
-            "charset"    =>  $data->charset,
-            "sign"       =>  $data->sign,
-            "app_id"     =>  $data->data,
-            "sign_type"  =>  $data->sign_type,
-            // "isv_ticket" =>  "",
-            "timestamp"  =>  $data->timestamp,
-            "biz_content"=>  $data->biz_content,
-            "notify_url" =>  $data->notify_url,
-            //... ... 接收到的所有参数放入这里
-        );
-        Factory::payment()->common()->verifyNotify($parameters);
+        // $parameters = array(
+        //     "charset"    =>  $data->charset,
+        //     "sign"       =>  $data->sign,
+        //     "app_id"     =>  $data->data,
+        //     "sign_type"  =>  $data->sign_type,
+        //     // "isv_ticket" =>  "",
+        //     "timestamp"  =>  $data->timestamp,
+        //     "biz_content"=>  $data->biz_content,
+        //     "notify_url" =>  $data->notify_url,
+        //     //... ... 接收到的所有参数放入这里
+        // );
+        // Factory::payment()->common()->verifyNotify($parameters);
 
-
+        return 111;
     }
+
 
 
     /**
