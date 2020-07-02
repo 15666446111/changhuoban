@@ -57,6 +57,9 @@ class RepayCjController extends Controller
      */
     protected $desc  = ""; 
 
+
+    protected $iv;
+
     /**
      * @Author    Pudding
      * @DateTime  2020-07-01
@@ -180,10 +183,36 @@ class RepayCjController extends Controller
         }
 
         #### 
-        ####    发起代付
+        ####    检查代付参数  发起代付
         ####
-        $pay = $this->pay();
+        if(!$this->withdraw->withdrawDatas) return ['code' => 10060, 'message' => '找不到提现卡信息!'];
 
+        // 收款方联行号
+        
+        $AccountBank = $this->des3($this->withdraw->withdrawDatas->banklink);
+
+        //$身份证号
+        if($this->withdraw->withdrawDatas->idcard == "") return ['code' => 10062, 'message' => '找不到身份证信息!'];
+        $idCardNo    = $this->des3($this->withdraw->withdrawDatas->idcard);
+
+        // 收款方姓名
+        if($this->withdraw->withdrawDatas->username == "") return ['code' => 10063, 'message' => '收款方姓名不能为空!'];
+
+        // 收款方银行名称
+        if($this->withdraw->withdrawDatas->bank == "") return ['code' => 10063, 'message' => '收款方银行名称不能为空!'];
+
+        // 收款方联行号
+        if($this->withdraw->withdrawDatas->banklink == "") return ['code' => 10063, 'message' => '收款方联行号不能为空!'];
+
+        // 请求代付
+        //$pay = $this->pay($AccountBank, $idCardNo);
+
+        #### 
+        ####    查询代付
+        ####
+        $query = $this->payQuery();
+
+        dd($query);
 
         return $pay;
 
@@ -296,10 +325,131 @@ class RepayCjController extends Controller
      * @version   [发起代付]
      * @return    [type]      [description]
      */
-    public function pay()
+    public function pay($bankNo, $cardNo)
     {
-        return ['code' => 10010, 'message' => 'cuow!'];
+        // 商户余额查询地址
+        $url = "/api/acq-channel-gateway/v1/wallet-manager/wallets/agents/account/payment/without";
+        // 获取到token
+        $token = $this->getToken('2051');
+        // 代理商商户号
+        $postData['agentId'] = $this->agentId;
+
+        $postData['token']   = $token->data->token;
+
+        $postData['amount']  = $this->cjPrice / 100;
+
+        $postData['bankAccountNo']  = $bankNo;
+
+        $postData['bankAccountName']= $this->withdraw->withdrawDatas->username;
+
+        $postData['idCardNo']       =  $cardNo;
+
+        $postData['bankAccountType']= 'S';
+
+        $postData['bankName']       = $this->withdraw->withdrawDatas->bank;
+
+        $postData['bankChannelNo']  = $this->withdraw->withdrawDatas->banklink;
+
+        $postData['traceNo']        = $this->withdraw->order_no;
+
+        $postData['paymentType']    = '1';
+
+        $res = $this->send($postData, $url);
+
+        return $res;
     }
+
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-07-02
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [代付查询]
+     * @return    [type]      [description]
+     */
+    public function payQuery()
+    {
+
+        // 商户余额查询地址
+        $url = "/api/acq-channel-gateway/v1/wallet-manager/wallets/agents/account/payment/query";
+        // 获取到token
+        $token = $this->getToken('2052');
+        // 代理商商户号
+        $postData['agentId'] = $this->agentId;
+
+        $postData['token']   = $token->data->token;
+
+        $postData['traceNo'] = $this->withdraw->order_no;
+
+        $res = $this->send($postData, $url);
+
+        return $res;
+    }
+
+
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-07-02
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [3DES 加密]
+     * @param     [type]      $data [description]
+     * @return    [type]            [description]
+     */
+    public function des3($param)
+    {   
+        //dd(strlen('fa48704071349482869d628880d0d5641791c9414b22a358'));
+        $key = hex2bin($this->chanKey);//str_pad($this->chanKey, 8, '0');
+
+        $size = openssl_cipher_iv_length("DES-EDE3-CBC");
+
+        $param = $this->pkcs5_pad($param, $size);
+
+        $rs = openssl_encrypt($param, "DES-EDE3-ECB", $key, OPENSSL_RAW_DATA | OPENSSL_NO_PADDING, null);
+
+        $rs = bin2hex($rs);
+
+        return $rs;
+    }
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-07-02
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [pkcs5_pad 填充]
+     * @param     [type]      $text      [description]
+     * @param     [type]      $blocksize [description]
+     * @return    [type]                 [description]
+     */
+    function pkcs5_pad($text, $blocksize)
+    {
+        $pad = $blocksize - (strlen($text) % $blocksize);
+        return $text . str_repeat(chr($pad), $pad);
+    }
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-07-02
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [pkcs5_unpad 移除填充]
+     * @param     [type]      $text [description]
+     * @return    [type]            [description]
+     */
+    function pkcs5_unpad($text)
+    {
+        $pad = ord($text{strlen($text) - 1});
+        if ($pad > strlen($text)) {
+            return false;
+        }
+        if (strspn($text, chr($pad), strlen($text) - $pad) != $pad) {
+            return false;
+        }
+        return substr($text, 0, -1 * $pad);
+    }
+
 
 
     /**
@@ -323,7 +473,21 @@ class RepayCjController extends Controller
         # 获得返回数据
         $data = $this->send_post($this->baseHttp . $url ,json_encode($postData));
         # 返回结果
-        return json_decode($data);
+        $data = json_decode($data);
+
+        if(gettype($data) != "object"){
+            throw new \Exception(" 畅捷代付出错: 返回非对象类型!");
+        } 
+
+        if(!$data->code){
+            throw new \Exception(" 畅捷代付出错: 返回非标识码!");
+        } 
+
+        if($data->code != "00" && $data->code != "20" ){
+            throw new \Exception(" 畅捷代付出错:".$data->message);
+        }
+        # 
+        return $data;
     }
 
     /**

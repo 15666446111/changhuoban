@@ -23,6 +23,6 @@ class Withdraw extends Model
      */
     public function withdrawDatas()
     {
-    	return $this->hasOne('App\User', 'order_no', 'order_no');
+    	return $this->hasOne('App\WithdrawsData', 'order_no', 'order_no');
     }
 }

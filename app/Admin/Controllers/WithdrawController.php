@@ -67,16 +67,18 @@ class WithdrawController extends AdminController
         $grid->column('created_at', __('申请时间'));
 
         $grid->disableCreateButton();
-
         $grid->actions(function ($actions) {
             // 去掉删除
             $actions->disableDelete();
             // 去掉编辑
             $actions->disableEdit();
-            // 添加通过按钮
-            $actions->add(new WithdrawAdopt());
-            // 添加驳回按钮
-            $actions->add(new WithdrawReject());
+
+            if($actions->row['state'] == "1"){
+                // 添加通过按钮
+                $actions->add(new WithdrawAdopt());
+                // 添加驳回按钮
+                $actions->add(new WithdrawReject());
+            }
 
         });
 
