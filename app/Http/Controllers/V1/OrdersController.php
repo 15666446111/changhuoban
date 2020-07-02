@@ -96,7 +96,7 @@ class OrdersController extends Controller
     /**
      * 修改订单状态
      */
-<<<<<<< HEAD
+
     public function edit_orderStatus(Request $request){
 
         // $data = $request->all();
@@ -115,14 +115,6 @@ class OrdersController extends Controller
         // Factory::payment()->common()->verifyNotify($parameters);
 
         return 111;
-=======
-    public function edit_orderStatus(){
-
-        return 1;
-
-
-
->>>>>>> 8d4e7a1daf254be54804d35fd2eae09a064aa09f
     }
 
 
