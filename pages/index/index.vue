@@ -107,7 +107,6 @@ export default {
 							uni.switchTab({ url: '/pages/Home/home' });
 							uni.setStorageSync('operate', res.data.success.operate);
 							uni.setStorageSync('type', res.data.success.type);
-							uni.switchTab({ url: '/pages/Home/shouye' });
 							uni.showToast({ title: '登录成功', icon: 'none' });
 						} else {
 							uni.showToast({ title: res.data.error.message, icon: 'none' });

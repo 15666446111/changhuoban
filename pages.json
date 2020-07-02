@@ -212,7 +212,11 @@
 			"style": {}
 		}, {
 			"path": "pages/Home/shangcheng/shangcheng",
-			"style": {}
+			"style": {
+				"enablePullDownRefresh": true,  	//设置为true表示当前页面开启下拉刷新
+				"backgroundTextStyle": "dark",
+				"navigationBarTextStyle": "black"
+			}
 		}, {
 			"path": "pages/Home/shangcheng/shangpingxinxi/shangpingxinxi",
 			"style": {}
@@ -419,7 +423,6 @@
 				"iconPath": "static/user.png",
 				"selectedIconPath": "static/user_checked.png",
 				"text": "我的"
-
 			}
 
 		]

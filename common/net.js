@@ -57,7 +57,6 @@ const net = function(options) {
 						icon: 'none',
 						mask: true
 					})
-					
 					setTimeout(function() {
 						uni.redirectTo({
 							url: '/pages/index/index'

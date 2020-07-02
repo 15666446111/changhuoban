@@ -65,12 +65,10 @@ export default {
 			address: [],
 			// 全局显示
 			pagesShow: false,
-			operate: ''
 		};
 	},
 	
 	onLoad(options) {
-		this.operate 	= uni.getStorageSync('operate');
 		if (options.num) {
 			this.num = options.num;
 		}
@@ -111,6 +109,7 @@ export default {
 		
 		// 生成订单
 		addOrderCreate(){
+
 			var address = '测试固定收货地址';
 			if (this.address == '') {
 				uni.showToast({ title: '请选择收货地址', icon: 'none' });
@@ -118,10 +117,7 @@ export default {
 			}
 			
 			// 显示加载动画
-			uni.showLoading({
-				duration: 10000,
-				mask: true,
-			})
+			uni.showLoading({ duration: 10000, mask: true })
 			
 			net({
 	        	url:"/V1/addOrderCreate",
@@ -132,22 +128,29 @@ export default {
 					'numbers' : this.num,
 					'price' : this.moneyTotal,
 					'address' : address,
-					'operate' : this.operate
 				},
 	            success: (res) => {
 					// 关闭加载动画
 					uni.hideLoading();
 					
 					if (res.data.success) {
-						uni.showToast({
-							title: '下单成功',
-							icon: 'none'
-						})
+						uni.requestPayment({
+							provider: 'alipay',
+							orderInfo: res.data.success.data.sign, //微信、支付宝订单数据
+							success: function (res) {
+								console.log(res)
+								uni.showToast({ title: '下单成功', icon: 'none'})
+								console.log('success:' + JSON.stringify(res));
+							},
+							fail: function (err) {
+								console.log(err)
+								console.log('fail:' + JSON.stringify(err));
+							}
+						});
+			
+
 					} else {
-						uni.showToast({
-							title: res.data.error.message,
-							icon: 'none'
-						})
+						uni.showToast({ title: res.data.error.message, icon: 'none' })
 					}
 	            }
 	      	})

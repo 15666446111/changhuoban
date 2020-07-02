@@ -129,7 +129,7 @@ export default {
 			uni.showLoading();
 			
 			uni.request({
-				url: 'http://zy.jiufukameng.com/api/V1/forgetPwd',
+				url: 'http://chb3.0.test/api/V1/forgetPwd',
 				method: 'POST',
 				data: {
 					account: this.account,

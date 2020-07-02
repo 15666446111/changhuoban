@@ -154,10 +154,8 @@ export default {
 		
 	// 初始化数据
 	onLoad(){
+		
 		uni.showLoading();
-	},
-	
-	onShow() {
 		this.getUserInfo();
 	},
 
