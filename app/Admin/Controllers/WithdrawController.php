@@ -31,14 +31,7 @@ class WithdrawController extends AdminController
 
         if(Admin::user()->operate != "All"){
 
-            $user_id[] = \App\User::where('operate',Admin::user()->operate)->first()->id;
-
-            $id = \App\User::where('operate',Admin::user()->operate)->first()->id;
-            $userInfo = \App\UserRelation::where('parents', 'like', "%_".$id."_%")->pluck('user_id')->toArray();
-
-            $user_id = array_merge($user_id,$userInfo);
-
-            $grid->model()->whereIn('user_id',$user_id);
+            $grid->model()->where('operate', Admin::user()->operate);
             
         }
         
@@ -50,10 +43,16 @@ class WithdrawController extends AdminController
         
         $grid->column('money', __('提现金额'))->label();
 
+        $grid->column('rate', __('提现费率'));
+
+        $grid->column('rate_m', __('手续费'))->display(function ($money) {
+            return number_format($money/100, 2, '.', ',');
+        })->label('info')->filter('range');
+
         $grid->column('real_money', __('到账金额'))->label('info');
 
         $grid->column('type', __('提现类型'))
-                ->using(['1' => '分润提现', '2' => '返现提现']);
+                ->using(['1' => '分润钱包提现', '2' => '返现钱包提现']);
 
         $grid->column('state', __('提现状态'))
                 ->using(['1' => '待审核', '2' => '通过', '3'=>'驳回'])
@@ -95,25 +94,33 @@ class WithdrawController extends AdminController
      */
     protected function detail($id)
     {
+        
+        $show = new Show(Withdraw::findOrFail($id));
+
         if(Admin::user()->operate != "All"){
             $model = Withdraw::where('id', $id)->first();
-            if($model->operate != Withdraw::user()->operate) return abort('403');        
+            if($model->operate != Admin::user()->operate) return abort('403');        
         }
-        $show = new Show(Withdraw::findOrFail($id));
 
         $show->field('order_no', __('提现订单号'));
 
         $show->field('money', __('提现金额'));
 
+        $show->field('rate', __('提现费率'));
+
+        $show->field('rate_m', __('手续费'))->display(function ($money) {
+            return number_format($money/100, 2, '.', ',');
+        })->label('info')->filter('range');
+
         $show->field('real_money', __('到账金额'));
 
-        $show->field('user_id', __('User id'));
+        $show->field('users.nickname', __('用户'));
         
-        $show->field('type', __('提现方式'));
+        $show->field('type', __('提现方式'))->using(['1' => '分润钱包提现', '2' => '返现钱包提现']);
 
-        $show->field('state', __('提现状态'));
+        $show->field('state', __('提现状态'))->using(['1' => '待审核', '2' => '通过', '3'=>'驳回']);
 
-        $show->field('make_state', __('打款状态'));
+        $show->field('make_state', __('打款状态'))->using(['0' => '未打款', '1' => '已打款']);
 
         $show->field('check_at', __('审核时间'));
 

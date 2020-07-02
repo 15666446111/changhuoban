@@ -46,6 +46,7 @@ class MerchantController extends Controller
 			 $data->machine_phone = $request->merchant_phone;
 			 $data->bind_status = 1;
 			 $data->bind_time = Carbon::now()->toDateTimeString();
+			 $data->operate	= $request->operate;
 
 			 $data->save();
             
@@ -142,7 +143,7 @@ class MerchantController extends Controller
 
     	} catch (\Exception $e) {
             
-            return response()->json(['error'=>['message' => $e->getMessage()]]);
+            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
 
         }
     }
@@ -206,7 +207,7 @@ class MerchantController extends Controller
 
     	} catch (\Exception $e) {
             
-            return response()->json(['error'=>['message' => $e->getMessage()]]);
+            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
 
 		}
 		
@@ -264,7 +265,7 @@ class MerchantController extends Controller
 
     	} catch (\Exception $e) {
             
-            return response()->json(['error'=>['message' => $e->getMessage()]]);
+            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
 
         }
 	}

@@ -20,6 +20,7 @@ class OrdersController extends Controller
 
             $order_no = $code[intval(date('Y')) - 2011] . strtoupper(dechex(date('m'))) . date('d') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));
             
+
             // $data=\App\Order::create([
             //     'user_id'=>$request->user->id,
             //     'order_no'=>$order_no,
@@ -32,6 +33,7 @@ class OrdersController extends Controller
             //     'remark'=>$request->remark,
             //     'status'=>$request->status ?? '0',  
             // ]); 
+
 
             Factory::setOptions($this->getOptions());
 
@@ -152,7 +154,7 @@ class OrdersController extends Controller
 
     	} catch (\Exception $e) {
             
-            return response()->json(['error'=>['message' => $e->getMessage()]]);
+            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
 
         }
 

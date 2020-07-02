@@ -29,14 +29,7 @@ class TradeController extends AdminController
 
         if(Admin::user()->operate != "All"){
 
-            $user_id[] = \App\User::where('operate',Admin::user()->operate)->first()->id;
-
-            $id = \App\User::where('operate',Admin::user()->operate)->first()->id;
-            $userInfo = \App\UserRelation::where('parents', 'like', "%_".$id."_%")->pluck('user_id')->toArray();
-
-            $user_id = array_merge($user_id,$userInfo);
-
-            $grid->model()->whereIn('user_id',$user_id);
+            $grid->model()->where('operate', Admin::user()->operate);
             
         }
 
@@ -161,11 +154,13 @@ class TradeController extends AdminController
      */
     protected function detail($id)
     {
+        
+        $show = new Show(Trade::findOrFail($id));
+
         if(Admin::user()->operate != "All"){
             $model = Trade::where('id', $id)->first();
             if($model->operate != Admin::user()->operate) return abort('403');        
         }
-        $show = new Show(Trade::findOrFail($id));
 
         $show->field('trade_no', __('订单编号'));
         $show->field('users.nickname', __('用户'));
