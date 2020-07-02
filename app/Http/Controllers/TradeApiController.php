@@ -78,7 +78,7 @@ class TradeApiController extends Controller
 			]);
 			
 		}
-
+		//压入到redis去处理剩下的逻辑
 		HandleTradeInfo::dispatch(json_encode($regContent))->onConnection('redis');
 
     	dd("SUCCESS");
