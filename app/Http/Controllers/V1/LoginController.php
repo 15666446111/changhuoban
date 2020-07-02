@@ -36,9 +36,13 @@ class LoginController extends Controller
 
             $User->save();
 
-            $type = \App\AdminUser::where('operate',$User->operate)->first()->type;
+            $data = \App\AdminUser::where('operate',$User->operate)->first();
 
-    		return response()->json(['success'=>['token' => $User->api_token,'operate' => $type]]);
+            $type = $data->type;
+
+            $operate = $data->operate;
+
+    		return response()->json(['success'=>['token' => $User->api_token,'operate' => $operate,'type' => $type]]);
 
     	} catch (\Exception $e) {
 

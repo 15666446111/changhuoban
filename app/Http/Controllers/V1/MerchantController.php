@@ -46,6 +46,7 @@ class MerchantController extends Controller
 			 $data->machine_phone = $request->merchant_phone;
 			 $data->bind_status = 1;
 			 $data->bind_time = Carbon::now()->toDateTimeString();
+			 $data->operate	= $request->operate;
 
 			 $data->save();
             

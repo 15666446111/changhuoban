@@ -56,22 +56,24 @@ class PolicyController extends AdminController
         $show = new Show(Policy::findOrFail($id));
 
         if(Admin::user()->operate != "All"){
-            $model = PolicyGroup::where('id', $id)->first();
+            $model = Policy::where('id', $id)->first();
             if($model->operate != Admin::user()->operate) return abort('403');        
         }
 
         $show->field('title', __('活动标题'));
 
-        $show->field('policy_group_id', __('Policy group id'));
-        $show->field('active', __('Active'));
-        $show->field('default_active', __('Default active'));
-        $show->field('indirect_active', __('Indirect active'));
-        $show->field('default_active_set', __('Default active set'));
-        $show->field('vip_active_set', __('Vip active set'));
-        $show->field('default_standard_set', __('Default standard set'));
-        $show->field('vip_standard_set', __('Vip standard set'));
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
+        $show->field('policy_groups.title', __('活动组'));
+
+        // $show->field('policy_group_id', __('Policy group id'));
+        // $show->field('active', __('Active'));
+        // $show->field('default_active', __('Default active'));
+        // $show->field('indirect_active', __('Indirect active'));
+        // $show->field('default_active_set', __('Default active set'));
+        // $show->field('vip_active_set', __('Vip active set'));
+        // $show->field('default_standard_set', __('Default standard set'));
+        // $show->field('vip_standard_set', __('Vip standard set'));
+        // $show->field('created_at', __('Created at'));
+        // $show->field('updated_at', __('Updated at'));
 
         return $show;
     }

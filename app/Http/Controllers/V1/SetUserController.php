@@ -372,7 +372,7 @@ class SetUserController extends Controller
                     'state'     => $request->state ? $request->state : '1',
                     'check_at'  => $request->state ? Carbon::now() : '',
                     'make_state'=> '0',
-                    'operate'   =>  $request->user->operate
+                    'operate'   =>  $request->operate
                 ]);
 
                 \App\WithdrawsData::create([

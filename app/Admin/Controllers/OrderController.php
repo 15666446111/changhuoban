@@ -72,7 +72,7 @@ class OrderController extends AdminController
         $show = new Show(Order::findOrFail($id));
 
         if(Admin::user()->operate != "All"){
-            $model = Machine::where('id', $id)->first();
+            $model = Order::where('id', $id)->first();
             if($model->operate != Admin::user()->operate) return abort('403');        
         }
 
