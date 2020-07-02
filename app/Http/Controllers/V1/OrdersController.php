@@ -8,7 +8,8 @@ use App\Http\Controllers\Controller;
 use Alipay\EasySDK\Kernel\Config;
 use Alipay\EasySDK\Kernel\Factory;
 
-
+use Illuminate\Support\Arr;
+use Overtrue\Socialite\User as SocialiteUser;
 
 class OrdersController extends Controller
 {
@@ -119,6 +120,21 @@ class OrdersController extends Controller
      * 微信支付
      */
     public function wechat_pay(){
+
+        //微信授权流程
+        $user = new SocialiteUser([
+            'id' => Arr::get($user, 'openid'),
+            // 'name' => Arr::get($user, 'nickname'),
+            // 'nickname' => Arr::get($user, 'nickname'),
+            // 'avatar' => Arr::get($user, 'headimgurl'),
+            // 'email' => null,
+            // 'original' => [],
+            // 'provider' => 'WeChat',
+        ]);
+
+        session(['wechat.oauth_user.default' => $user]); // 同理，`default` 可以更换为您对应的其它配置名
+
+
         $payment = \EasyWeChat::payment(); // 微信支付
     }
 
@@ -170,8 +186,6 @@ class OrdersController extends Controller
             if($type == "shop"){
                 
             }
-            
-            
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $arrs]]); 
 
 
