@@ -37,6 +37,11 @@ class TradeApiController extends Controller
         // 因为汇付接口传递过来的只有这两个参数 且必填
         if(!isset($request->dataList) or !isset($request->dataType))  return response()->json(['error'=>['message' => '请求出错!']]);
 
+		if($request != 0 ){
+
+			return response()->json(['error'=>['message' => '接收的不是开通通知内容!']]);
+
+		}
    		// 接受请求数据
 		$jsonData = $request->dataList;
 

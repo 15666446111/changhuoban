@@ -78,6 +78,19 @@ class Policy extends Model
 
 
 	/**
+	 * @Author    Pudding
+	 * @DateTime  2020-06-28
+	 * @copyright [copyright]
+	 * @license   [license]
+	 * @version   [获取器]
+	 * @param     [type]      $value [description]
+	 */
+	public function getActivePriceAttribute($value)
+    {
+    	return $value / 100;
+    }
+
+	/**
 	 * [merchants 关联终端模型]
 	 * @author Pudding
 	 * @DateTime 2020-04-10T15:33:52+0800
