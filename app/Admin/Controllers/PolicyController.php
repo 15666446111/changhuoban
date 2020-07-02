@@ -56,22 +56,24 @@ class PolicyController extends AdminController
         $show = new Show(Policy::findOrFail($id));
 
         if(Admin::user()->operate != "All"){
-            $model = PolicyGroup::where('id', $id)->first();
+            $model = Policy::where('id', $id)->first();
             if($model->operate != Admin::user()->operate) return abort('403');        
         }
 
         $show->field('title', __('活动标题'));
 
-        $show->field('policy_group_id', __('Policy group id'));
-        $show->field('active', __('Active'));
-        $show->field('default_active', __('Default active'));
-        $show->field('indirect_active', __('Indirect active'));
-        $show->field('default_active_set', __('Default active set'));
-        $show->field('vip_active_set', __('Vip active set'));
-        $show->field('default_standard_set', __('Default standard set'));
-        $show->field('vip_standard_set', __('Vip standard set'));
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
+        $show->field('policy_groups.title', __('活动组'));
+
+        // $show->field('policy_group_id', __('Policy group id'));
+        // $show->field('active', __('Active'));
+        // $show->field('default_active', __('Default active'));
+        // $show->field('indirect_active', __('Indirect active'));
+        // $show->field('default_active_set', __('Default active set'));
+        // $show->field('vip_active_set', __('Vip active set'));
+        // $show->field('default_standard_set', __('Default standard set'));
+        // $show->field('vip_standard_set', __('Vip standard set'));
+        // $show->field('created_at', __('Created at'));
+        // $show->field('updated_at', __('Updated at'));
 
         return $show;
     }
@@ -100,7 +102,11 @@ class PolicyController extends AdminController
 
             $form->number('default_active', __('直推激活'))->default(2)->help('机器激活,上级获得的直推奖励.(单位为分)');
             $form->number('indirect_active', __('间推激活'))->default(1)->help('机器激活,上上级获得的间推奖励.(单位为分)');
-
+            $form->select('active_type', __('激活标准'))->options([1 => '冻结激活', 2 => '交易量激活'])->when(1,function (Form $form) { 
+                $form->currency('active_price', __('冻结激活金额'))->symbol('￥')->help('机器激活,上级获得的直推奖励.(单位为分)');
+            })->when(2,function (Form $form) { 
+                $form->currency('active_price', __('交易量激活金额'))->symbol('￥')->help('机器激活,上级获得的直推奖励.(单位为分)');
+            });
             $form->fieldset('用户激活返现', function (Form $form) {
                 $form->embeds('default_active_set', '用户激活',function ($form) {
                     $form->number('return_money', '最高返现')->default(0)->rules('required')->help('(单位为分)');

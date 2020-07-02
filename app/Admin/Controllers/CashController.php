@@ -98,7 +98,7 @@ class CashController extends AdminController
         $show = new Show(CashsLog::findOrFail($id));
 
         if(Admin::user()->operate != "All"){
-            $model = Machine::where('id', $id)->first();
+            $model = CashsLog::where('id', $id)->first();
             if($model->operate != Admin::user()->operate) return abort('403');        
         }
 

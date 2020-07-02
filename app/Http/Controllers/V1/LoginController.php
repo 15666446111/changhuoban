@@ -32,13 +32,17 @@ class LoginController extends Controller
 
             $User->last_time=   Carbon::now();
 
-            // $User->api_token=   hash('sha256', Str::random(84));
+            //$User->api_token=   hash('sha256', Str::random(84));
 
             $User->save();
 
-            $type = \App\AdminUser::where('operate',$User->operate)->first()->type;
+            $data = \App\AdminUser::where('operate',$User->operate)->first();
 
-    		return response()->json(['success'=>['token' => $User->api_token,'operate' => $type]]);
+            $type = $data->type;
+
+            $operate = $data->operate;
+
+    		return response()->json(['success'=>['token' => $User->api_token,'operate' => $operate,'type' => $type]]);
 
     	} catch (\Exception $e) {
 

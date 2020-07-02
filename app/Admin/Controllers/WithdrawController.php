@@ -30,43 +30,42 @@ class WithdrawController extends AdminController
         $grid = new Grid(new Withdraw());
 
         if(Admin::user()->operate != "All"){
-
-            $grid->model()->where('operate', Admin::user()->operate);
-            
+            $grid->model()->where('operate', Admin::user()->operate);   
         }
         
         $grid->model()->latest();
         
         $grid->column('order_no', __('提现订单'));
 
-        $grid->column('users.nickname', __('提现代理'));
+        $grid->column('users.nickname', __('提现用户'));
         
-        $grid->column('money', __('提现金额'))->label();
+        $grid->column('money', __('提现金额'))->display(function( $cash){
+            return number_format( $cash / 100 , 2, '.', ',');
+        })->label();
 
-        $grid->column('rate', __('提现费率'));
+        $grid->column('real_money', __('到账金额'))->display(function( $cash){
+            return number_format( $cash / 100 , 2, '.', ',');
+        })->label('info');
+
+        $grid->column('type', __('提现类型'))->using(['1' => '分润提现', '2' => '返现提现'])->dot([ 1 => 'primary', 2 => 'success' ]);
+
+        $grid->column('rate', __('提现费率'))->display(function( $fee){
+            return number_format( $fee / 100 , 2, '.', ',');
+        })->label('info');
 
         $grid->column('rate_m', __('手续费'))->display(function ($money) {
             return number_format($money/100, 2, '.', ',');
         })->label('info')->filter('range');
 
-        $grid->column('real_money', __('到账金额'))->label('info');
-
-        $grid->column('type', __('提现类型'))
-                ->using(['1' => '分润提现', '2' => '返现提现']);
-
         $grid->column('state', __('提现状态'))
-                ->using(['1' => '待审核', '2' => '通过', '3'=>'驳回'])
-                ->dot([ 0 => 'success', 1 => 'danger' ], 'default');
+                ->using(['1' => '待审核', '2' => '通过', '3'=>'驳回'])->dot([ 1 => 'default', 2 => 'success', 3=> 'error' ]);
 
-        $grid->column('make_state', __('打款状态'))
-                ->using(['0' => '未打款', '1' => '已打款'])
-                ->dot([ 0 => 'danger', 1 => 'success' ], 'default');
+        $grid->column('make_state', __('打款状态'))->using(['0' => '未打款', '1' => '已打款'])->dot([ 0 => 'default', 1 => 'success' ]);
 
         $grid->column('check_at', __('审核时间'));
 
         $grid->column('created_at', __('申请时间'));
 
-        //
         $grid->disableCreateButton();
 
         $grid->actions(function ($actions) {
@@ -78,11 +77,15 @@ class WithdrawController extends AdminController
             $actions->add(new WithdrawAdopt());
             // 添加驳回按钮
             $actions->add(new WithdrawReject());
+
         });
 
         $grid->batchActions(function ($batch) {
+
             $batch->disableDelete();
+
         });
+
         return $grid;
     }
 
@@ -98,7 +101,7 @@ class WithdrawController extends AdminController
         $show = new Show(Withdraw::findOrFail($id));
 
         if(Admin::user()->operate != "All"){
-            $model = Machine::where('id', $id)->first();
+            $model = Withdraw::where('id', $id)->first();
             if($model->operate != Admin::user()->operate) return abort('403');        
         }
 
@@ -106,15 +109,21 @@ class WithdrawController extends AdminController
 
         $show->field('money', __('提现金额'));
 
+        $show->field('rate', __('提现费率'));
+
+        $show->field('rate_m', __('手续费'))->display(function ($money) {
+            return number_format($money/100, 2, '.', ',');
+        })->label('info')->filter('range');
+
         $show->field('real_money', __('到账金额'));
 
-        $show->field('user_id', __('User id'));
+        $show->field('users.nickname', __('用户'));
         
-        $show->field('type', __('提现方式'));
+        $show->field('type', __('提现方式'))->using(['1' => '分润钱包提现', '2' => '返现钱包提现']);
 
-        $show->field('state', __('提现状态'));
+        $show->field('state', __('提现状态'))->using(['1' => '待审核', '2' => '通过', '3'=>'驳回']);
 
-        $show->field('make_state', __('打款状态'));
+        $show->field('make_state', __('打款状态'))->using(['0' => '未打款', '1' => '已打款']);
 
         $show->field('check_at', __('审核时间'));
 

@@ -17,6 +17,19 @@ class TradeApiController extends Controller
 	 */
     public function index(Request $request)
     {
+
+        // 写入到推送信息
+        $trade_push = \App\RegisterNotice::create([
+            'title'     =>  '畅捷同步通知推送接口',
+            'content'   =>  json_encode(array('data'=> json_decode($request))),
+            'other'     =>  json_encode([
+                '请求方式'  => $request->getMethod(), 
+                '请求地址'  => $request->ip(), 
+                '端口'     => $request->getPort(), 
+                '请求头'   => $request->header('Connection')
+            ]),
+        ]);
+
         // 同步返回数据
         $reData = [
             'configAgentId' => $request->configAgentId,    // 交易通知配置机构号
@@ -40,16 +53,34 @@ class TradeApiController extends Controller
         foreach ($dataList as $key => $value) {
             
             if ($value->dataType == 0) {
+
                 // 商户开通通知处理
-                
+                $regContent = \App\RegNoticeContent::create([
+                    //商户直属机构号
+                    'agentId'       =>      $value->agentId,
+                    //商户号
+                    'merchantId'    =>      $value->merchantId,
+                    //终端号
+                    'termId'        =>      $value->termId,
+                    //终端SN
+                    'termSn'        =>      $value->termSn,
+                    //终端型号
+                    'termModel'     =>      $value->termModel,
+                    //助贷通版本号
+                    'version'       =>      $value->version,
+                ]);
+
+                //压入到redis去处理剩下的逻辑
+                HandleTradeInfo::dispatch(json_encode($regContent))->onConnection('redis');
+
             } else {
                 // 交易通知处理
 
                 try{
-                    // 交易冲正时可能会推送多笔交易，已平台收单应答描述前六位为"原交易已冲正"区分是否为多推送的交易
+                    // 交易冲正时可能会推送多笔交易，已平台收单应答描述前六位为"原交易已冲正"区分是否为多推送的交易，多推送的冲正类交易信息不进行保存和处理
                     $desc = substr($this->trade->sysRespDesc, 0, 18);
                     if ($desc == '原交易已冲正') {
-                        return json_encode($reData);
+                        continue;
                     }
 
                     // 新建交易订单 写入交易表 并且 分发到队列处理
