@@ -58,15 +58,22 @@ class OrdersController extends Controller
                 'operate'=>$request->user->operate
             ]); 
 
-            Factory::setOptions($this->getOptions());
-            //2. 发起API调用（以支付能力下的统一收单交易创建接口为例）
+            if($request->pay_type == '1'){
+                //支付宝支付
+                Factory::setOptions($this->getOptions());
+                //2. 发起API调用（以支付能力下的统一收单交易创建接口为例）
 
-            $result = Factory::payment()->App()->pay('1', $data->order_no, $data->price);
+                $result = Factory::payment()->App()->pay('1', $data->order_no, $data->price);
 
-            if($result && $result->body)
-                return response()->json(['success'=>['message' => '订单创建成功!', 'data'=> ['sign' => $result->body]]]);
-            else
-                return response()->json(['error'=>['message' => '生成支付签名失败']]);
+                if($result && $result->body)
+                    return response()->json(['success'=>['message' => '订单创建成功!', 'data'=> ['sign' => $result->body]]]);
+                else
+                    return response()->json(['error'=>['message' => '生成支付签名失败']]);
+
+            }else{
+                //微信支付
+            }
+            
         }catch (Exception $e) {
             return response()->json(['error'=>['message' => '系统错误，请联系客服']]);
         }
@@ -98,7 +105,7 @@ class OrdersController extends Controller
 
         //可设置异步通知接收服务地址（可选）
 
-        $options->notifyUrl = env('APP_URL').'/api/V1/updateOrderStatus';
+        $options->notifyUrl = env('APP_URL').'/callback ';
 
 
         //可设置AES密钥，调用AES加解密相关接口时需要（可选）
@@ -108,30 +115,26 @@ class OrdersController extends Controller
     }
 
     /**
-     * 修改订单状态
+     * 异步通知修改订单状态
+     * 微信支付
      */
-
-    public function edit_orderStatus(Request $request){
-
-        // $data = $request->all();
-
-        // $parameters = array(
-        //     "charset"    =>  $data->charset,
-        //     "sign"       =>  $data->sign,
-        //     "app_id"     =>  $data->data,
-        //     "sign_type"  =>  $data->sign_type,
-        //     // "isv_ticket" =>  "",
-        //     "timestamp"  =>  $data->timestamp,
-        //     "biz_content"=>  $data->biz_content,
-        //     "notify_url" =>  $data->notify_url,
-        //     //... ... 接收到的所有参数放入这里
-        // );
-        // Factory::payment()->common()->verifyNotify($parameters);
-
-        return 111;
-
+    public function wechat_pay(){
+        $payment = \EasyWeChat::payment(); // 微信支付
     }
 
+    /**
+     * 修改订单状态
+     */
+    public function AliPayCallback($order_no = ''){
+
+        if(isset($_POST['order_no']) or empty($order_no)){
+            return 'false';
+        }else{
+            $res = \App\Order::where('order_no',$order_no)->update(['status'=>1]);
+            return 'success';
+        }
+
+    }
 
 
     /**
@@ -179,4 +182,5 @@ class OrdersController extends Controller
         }
 
     }
+
 }

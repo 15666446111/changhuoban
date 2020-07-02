@@ -239,11 +239,6 @@ Route::prefix('V1')->group(function () {
      */
     Route::middleware('AuthToken')->get('/getOrderUser', 'V1\OrdersController@getOrder');
 
-    /**
-     * 修改订单状态
-     */
-    Route::middleware('AuthToken')->get('/updateOrderStatus', 'V1\OrdersController@edit_orderStatus');
-
 
     /* 收益页面接口
     */

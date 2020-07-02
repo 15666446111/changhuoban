@@ -267,9 +267,6 @@ class SetUserController extends Controller
             if(!$request->user->settings){
                 return response()->json(['message'=>['message' => '请设置您的提现信息'],'code'=>201]);
             }
-            if($request->user->settings->verify != '1'){
-                return response()->json(['message'=>['message' => '您的提现信息还未审核'],'code'=>202]);
-            }
             
             // 判断是分润钱包还是返现钱包 * 获取提现税点
             if($request->type == '1'){
@@ -310,17 +307,49 @@ class SetUserController extends Controller
     public function Withdrawal(Request $request)
     {
         try{ 
-
+            
             if(!$request->user->settings){
                 return response()->json(['message'=>['message' => '请设置您的提现信息'],'code'=>201]);
             }
-            if($request->user->settings->verify != '1'){
-                return response()->json(['message'=>['message' => '您的提现信息还未审核'],'code'=>202]);
+
+            if(!$request->money) return response()->json(['error'=>['message' => '缺少必要参数:提现金额']]);
+
+            if(!$request->blance) return response()->json(['error'=>['message' => '缺少必要参数:提现类型']]);
+
+            $bank = \App\Bank::where('id',$request->bank_id)->first();
+
+            if(!$request->user->phone) return response()->json(['error'=>['message' => '请设置您的预留手机号']]);
+
+            if(!$bank->user_name) return response()->json(['error'=>['message' => '信息不全:用户名']]);
+
+
+            if(!$bank->number) return response()->json(['error'=>['message' => '信息不全:身份证号']]);
+
+            if(!$bank->open_bank) return response()->json(['error'=>['message' => '信息不全:开户行']]);
+
+            if(!$bank->bank) return response()->json(['error'=>['message' => '信息不全:银行卡号']]);
+            
+            if($request->blance == '1'){
+                $rate = $request->user->settings->rate;
+                $rate_m = $request->user->settings->rate_m;
+                $no_check = $request->user->settings->no_check;
+            }else{
+                $rate = $request->user->settings->return_blance;
+                $rate_m = $request->user->settings->return_money;
+                $no_check = $request->user->settings->no_check_return;
             }
 
-            // if($request->user->wallets->blance_active !="1"){
-            //     return response()->json(['error'=>['message' => $request->user->wallets->blance_bak]]);
-            // }
+            if(!$rate) return response()->json(['error'=>['message' => '税点不能为空']]);
+
+            if(!$rate_m) return response()->json(['error'=>['message' => '单笔提现费不能为空']]);
+
+            if(!$no_check) return response()->json(['error'=>['message' => '免审核额度不能为空']]);
+
+            $state = '';
+            
+            if($no_check > $request->money){
+                $state = '1';
+            }
 
             $checkDayStr = date('Y-m-d ',time());
             $timeBegin1  = strtotime($checkDayStr."09:00".":00");
@@ -366,23 +395,23 @@ class SetUserController extends Controller
                     'order_no'  => $order_no,
                     'money'     => $request->money,
                     'type'      => $request->blance,
-                    'real_money'=> $request->money - $request->money * $request->rate - $request->rate_m,
-                    'rate'      => $request->rate,
-                    'rate_m'    => $request->rate_m,
-                    'state'     => $request->state ? $request->state : '1',
-                    'check_at'  => $request->state ? Carbon::now() : '',
-                    'make_state'=> '0',
-                    'operate'   =>  $request->operate
+                    'real_money'=> ( $request->user->wallets->cash_blance + $request->user->wallets->return_blance - $request->money ) * $rate - $rate_m,
+                    'rate'      => $rate,
+                    'rate_m'    => $rate_m,
+                    'state'     => $state = 2 ? 2 : '1',
+                    'check_at'  => $state = 2 ? Carbon::now() : 'NULL',
+                    'make_state'=> $state = 2 ? 1 : '',
+                    'operate'   =>  $request->user->operate
                 ]);
 
                 \App\WithdrawsData::create([
                     'order_no'  => $order_no,
-                    'phone'     => $request->phone,
-                    'username'  => $request->username,
-                    'idcard'    => $request->idcard,
-                    'bank'      => $request->bank,
-                    'bank_open' => $request->bank_open,
-                    'banklink'  => $request->banklink,
+                    'phone'     => $request->user->phone,
+                    'username'  => $bank->user_name,
+                    'idcard'    => $bank->number,
+                    'bank'      => $bank->bank_name,
+                    'bank_open' => $bank->open_bank,
+                    'banklink'  => $bank->bank,
                     'reason'    => $request->reason
                 ]);
     
@@ -397,7 +426,7 @@ class SetUserController extends Controller
 
     	} catch (\Exception $e) {
             
-            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
+            return response()->json(['error'=>['message' => $e->getMessage()]]);
 
         }
 
