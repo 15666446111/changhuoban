@@ -58,15 +58,22 @@ class OrdersController extends Controller
                 'operate'=>$request->user->operate
             ]); 
 
-            Factory::setOptions($this->getOptions());
-            //2. 发起API调用（以支付能力下的统一收单交易创建接口为例）
+            if($request->pay_type == '1'){
+                //支付宝支付
+                Factory::setOptions($this->getOptions());
+                //2. 发起API调用（以支付能力下的统一收单交易创建接口为例）
 
-            $result = Factory::payment()->App()->pay('1', $data->order_no, $data->price);
+                $result = Factory::payment()->App()->pay('1', $data->order_no, $data->price);
 
-            if($result && $result->body)
-                return response()->json(['success'=>['message' => '订单创建成功!', 'data'=> ['sign' => $result->body]]]);
-            else
-                return response()->json(['error'=>['message' => '生成支付签名失败']]);
+                if($result && $result->body)
+                    return response()->json(['success'=>['message' => '订单创建成功!', 'data'=> ['sign' => $result->body]]]);
+                else
+                    return response()->json(['error'=>['message' => '生成支付签名失败']]);
+
+            }else{
+                //微信支付
+            }
+            
         }catch (Exception $e) {
             return response()->json(['error'=>['message' => '系统错误，请联系客服']]);
         }
