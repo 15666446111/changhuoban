@@ -67,7 +67,9 @@
 			    newContent = newContent.replace(/\<img/gi, '<img style="max-width:100%;height:auto;display:inline-block;margin:10rpx auto;"');
 			    return newContent;
 			}	
-		}
+		},
+		
+		
 
 	}
 </script>

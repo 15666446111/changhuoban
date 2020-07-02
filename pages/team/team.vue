@@ -130,7 +130,7 @@
 			</view>
 		</view>
 		
-		<navigator url="jiaoyixiangqing/jiaoyixiangqing">
+		<navigator url="tradeTeam/tradeTeam">
 			<button class="button">业 务 详 情</button>
 		</navigator>
 		

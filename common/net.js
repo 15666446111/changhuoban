@@ -9,6 +9,11 @@ const net = function(options) {
 		// 获取token
 		const token 	= uni.getStorageSync('token');
 		
+		const operate 	= uni.getStorageSync('operate');
+		
+		const type 	= uni.getStorageSync('type');
+		
+		
 		if (token == ''){
 			// 如果没有token  定位到登陆页面
             uni.redirectTo({
@@ -18,6 +23,23 @@ const net = function(options) {
             return;
         }
 
+		if (operate == ''){
+			// 如果没有operate  定位到登陆页面
+            uni.redirectTo({
+                url: '/pages/index/index'
+            });
+
+            return;
+        }
+
+		if (type == ''){
+			// 如果没有operate  定位到登陆页面
+            uni.redirectTo({
+                url: '/pages/index/index'
+            });
+
+            return;
+        }
 		// 发起请求
 		uni.request({
 			url: options.url,

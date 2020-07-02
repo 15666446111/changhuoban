@@ -9,7 +9,7 @@
 		<!-- 第一栏 -->
 		<view class="selects">
 			<view class="select">
-			<navigator url="zhongduanxuanze/zhongduanxuanze">
+			<navigator url="machineChoice/machineChoice">
 				<view class="select-view">
 					<view class="select-name">终端选择</view>
 					<view class="select-text1" v-if="merchant_sn == ''">请选择</view>
@@ -59,11 +59,13 @@ export default {
 						msg: '手机号格式不正确'
 					}
 				]
-			}
+			},
+			'operate': ''
 		};
 	},
 	
 	onLoad(option) {
+		this.operate 	= uni.getStorageSync('operate');
 		this.merchant_sn = (option.merchant_sn == undefined ? '' : option.merchant_sn);
 	},
 	
@@ -109,6 +111,7 @@ export default {
 					merchant_name: this.merchant_name,
 					merchant_phone: this.merchant_phone,
 					merchant_sn: this.merchant_sn,
+					operate:this.operate
 				},
 	            success: (res) => {
 					uni.hideLoading();

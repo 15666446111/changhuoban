@@ -77,11 +77,11 @@ export default {
 			indexnavs: [
 				{ src: '/static/1.png', text: 'EPOS', url: '' },
 				{ src: '/static/2.png', text: '商户注册', url: '/pages/Home/mer_register/share_poster' },
-				{ src: '/static/3.png', text: '商户登记', url: '/pages/Home/shanghudengji/shanghudengji' },
-				{ src: '/static/13.png', text: '商户管理', url: '/pages/Home/shanghuguanli/shanghuguanli' },
+				{ src: '/static/3.png', text: '商户登记', url: '/pages/Home/machineReg/machineReg' },
+				{ src: '/static/13.png', text: '商户管理', url: '/pages/Home/shanghuguanli/machineInfo' },
 				{ src: '/static/5.png', text: '商城购买', url: '/pages/Home/shangcheng/shangcheng' },
 				{ src: '/static/4.png', text: '团队拓展', url: '/pages/Home/team_expand/team_expand' },
-				{ src: '/static/44.png', text: '伙伴管理', url: '/pages/Home/huobanguanli/huobanguanli' },
+				{ src: '/static/44.png', text: '伙伴管理', url: '/pages/Home/huobanguanli/friendsInfo' },
 				{ src: '/static/8.png', text: '在线客服', url: '/pages/Home/zaixiankefu/zaixiankefu' }
 			]
 		};
