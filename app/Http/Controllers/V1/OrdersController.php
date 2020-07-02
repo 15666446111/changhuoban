@@ -116,6 +116,14 @@ class OrdersController extends Controller
 
     /**
      * 异步通知修改订单状态
+     * 微信支付
+     */
+    public function wechat_pay(){
+        $payment = \EasyWeChat::payment(); // 微信支付
+    }
+
+    /**
+     * 修改订单状态
      */
     public function AliPayCallback($order_no = ''){
 
@@ -127,7 +135,6 @@ class OrdersController extends Controller
         }
 
     }
-
 
 
     /**
@@ -175,4 +182,5 @@ class OrdersController extends Controller
         }
 
     }
+
 }
