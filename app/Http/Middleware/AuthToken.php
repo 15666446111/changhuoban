@@ -28,7 +28,7 @@ class AuthToken
 
         $User = \App\User::where('api_token', $Bearer)->where('active', '>=', 1)->first();
 
-        if(!$User or empty($User)) return response()->json(['error'=>['message' => '非法请求!']]);
+        if(!$User or empty($User)) return response()->json(['error'=>['message' => '非法请求!']], 505);
 
         $request->user = $User;
         
