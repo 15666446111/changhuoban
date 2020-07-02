@@ -105,7 +105,7 @@ class OrdersController extends Controller
 
         //可设置异步通知接收服务地址（可选）
 
-        $options->notifyUrl = env('APP_URL').'/api/V1/updateOrderStatus';
+        $options->notifyUrl = env('APP_URL').'/callback ';
 
 
         //可设置AES密钥，调用AES加解密相关接口时需要（可选）
@@ -115,27 +115,16 @@ class OrdersController extends Controller
     }
 
     /**
-     * 修改订单状态
+     * 异步通知修改订单状态
      */
+    public function AliPayCallback($order_no = ''){
 
-    public function edit_orderStatus(Request $request){
-
-        // $data = $request->all();
-
-        // $parameters = array(
-        //     "charset"    =>  $data->charset,
-        //     "sign"       =>  $data->sign,
-        //     "app_id"     =>  $data->data,
-        //     "sign_type"  =>  $data->sign_type,
-        //     // "isv_ticket" =>  "",
-        //     "timestamp"  =>  $data->timestamp,
-        //     "biz_content"=>  $data->biz_content,
-        //     "notify_url" =>  $data->notify_url,
-        //     //... ... 接收到的所有参数放入这里
-        // );
-        // Factory::payment()->common()->verifyNotify($parameters);
-
-        return 111;
+        if(isset($_POST['order_no']) or empty($order_no)){
+            return 'false';
+        }else{
+            $res = \App\Order::where('order_no',$order_no)->update(['status'=>1]);
+            return 'success';
+        }
 
     }
 

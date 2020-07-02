@@ -72,3 +72,9 @@ Route::get('/team/{code}', 'RegisterController@team');
  * @version [<会员注册>] [<description>]
  */
 Route::post('/team/{code}', 'RegisterController@team_in')->name('register');
+
+
+/**
+ * 支付宝回调修改订单状态
+ */
+Route::any('callback ','V1\OrdersController@AliPayCallback ');
