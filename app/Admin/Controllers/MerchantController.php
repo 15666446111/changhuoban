@@ -92,7 +92,7 @@ class MerchantController extends AdminController
         $show = new Show(Merchant::findOrFail($id));
 
         if(Admin::user()->operate != "All"){
-            $model = Machine::where('id', $id)->first();
+            $model = Merchant::where('id', $id)->first();
             if($model->operate != Admin::user()->operate) return abort('403');        
         }
 

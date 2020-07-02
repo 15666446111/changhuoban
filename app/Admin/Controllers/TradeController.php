@@ -158,7 +158,7 @@ class TradeController extends AdminController
         $show = new Show(Trade::findOrFail($id));
 
         if(Admin::user()->operate != "All"){
-            $model = Machine::where('id', $id)->first();
+            $model = Trade::where('id', $id)->first();
             if($model->operate != Admin::user()->operate) return abort('403');        
         }
 

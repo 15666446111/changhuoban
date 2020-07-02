@@ -35,7 +35,7 @@ class UserGroupController extends AdminController
 
         $grid->column('level', __('级别'));
 
-        $grid->column('trade_count', __('级别'))->display(function($money){
+        $grid->column('trade_count', __('自动晋升条件'))->display(function($money){
             return number_format($money, 2, '.', ',');
         })->label();
 
