@@ -82,7 +82,7 @@ class HandleTradeInfo implements ShouldQueue
          * transDate: 接口推送的交易日期
          * rrn: 参考号
          */
-        $sameTrade = \App\Trade\::where('transDate', $this->trade->transDate)->where('rrn', $this->trade->rrn)
+        $sameTrade = \App\Trade::where('transDate', $this->trade->transDate)->where('rrn', $this->trade->rrn)
                                 ->first();
         if (empty($sameTrade)) {
             $this->trade->remark = '该交易为重复推送数据';
