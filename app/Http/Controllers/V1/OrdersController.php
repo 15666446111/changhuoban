@@ -5,8 +5,9 @@ namespace App\Http\Controllers\V1;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-use Alipay\EasySDK\Kernel\Factory;
 use Alipay\EasySDK\Kernel\Config;
+use Alipay\EasySDK\Kernel\Factory;
+
 
 
 class OrdersController extends Controller
@@ -17,41 +18,55 @@ class OrdersController extends Controller
     public function orderCreate(Request $request)
     {
         try{
+
+            $request->user;
+
+            if(!$request->address) return response()->json(['error'=>['message' => '缺少必要参数:收获地址']]);
+
+            if(!$request->numbers) return response()->json(['error'=>['message' => '缺少必要参数:购买数量']]);
+
+            if(!$request->price) return response()->json(['error'=>['message' => '缺少必要参数:订单总价']]);
+
+            if(!$request->product_id) return response()->json(['error'=>['message' => '缺少必要参数:产品']]);
+
+            if(!$request->product_price) return response()->json(['error'=>['message' => '缺少必要参数:产品单价']]);
+
+
             $code = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J');
 
             $order_no = $code[intval(date('Y')) - 2011] . strtoupper(dechex(date('m'))) . date('d') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));
-            
 
-            $data=\App\Order::create([
+            $data = \App\Order::create([
+
                 'user_id'=>$request->user->id,
+
                 'order_no'=>$order_no,
+
                 // 'address'=>$request->province.$request->area.$request->city.$request->detail,
                 'address'=>$request->address,
+
                 'numbers'=>$request->numbers,
+
                 'price'=>$request->price,
+
                 'product_id'=>$request->product_id,
+
                 'product_price'=>$request->product_price,
-                'remark'=>$request->remark,
-                'status'=>$request->status ?? '0',  
-                'operate'=>$request->operate
+
+                'remark'=>$request->remark ?? '',
+
+                'operate'=>$request->user->operate
             ]); 
 
-        
             Factory::setOptions($this->getOptions());
             //2. 发起API调用（以支付能力下的统一收单交易创建接口为例）
 
-            $result = Factory::payment()->App()->pay('1', $request->$order_no, $request->price);
+            $result = Factory::payment()->App()->pay('1', $data->order_no, $data->price);
 
-
-             //3. 处理响应或异常
-            if (!empty($result->code) && $result->code == 10000) {
-                echo "调用成功". PHP_EOL;
-                Factory::payment()->common()->verifyNotify($parameters);
-
-            } else {
-                echo "调用失败，原因：". $result->msg."，".$result->sub_msg.PHP_EOL;
-            }
-
+            if($result && $result->body)
+                return response()->json(['success'=>['message' => '订单创建成功!', 'data'=> ['sign' => $result->body]]]);
+            else
+                return response()->json(['error'=>['message' => '生成支付签名失败']]);
         }catch (Exception $e) {
             return response()->json(['error'=>['message' => '系统错误，请联系客服']]);
         }
@@ -61,18 +76,17 @@ class OrdersController extends Controller
     /** @Author Pudding 获取支付宝配置参数 */
     public function getOptions()
     {
-
         $options = new Config();
         //获取当前操盘方的属支付数据
-        $data = \App\AdminSetting::where("operate_number",request()->user->operate)->where("type",1)->first();
+        $data = \App\AdminSetting::where("operate_number",request()->user->operate)->where("type", 1)->first();
         
-        $options->protocol = 'https';
+        $options->protocol      = 'https';
         
-        $options->gatewayHost = 'openapi.alipay.com';
+        $options->gatewayHost   = 'openapi.alipay.com';
 
-        $options->signType = 'RSA2';
+        $options->signType      = 'RSA2';
 
-        $options->appId = $data->alipay_id;
+        $options->appId         = $data->alipay_id;
         
         // 为避免私钥随源码泄露，推荐从文件中读取私钥字符串而不是写入源码中
         $options->merchantPrivateKey = $data->alipay_sec;
