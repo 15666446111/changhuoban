@@ -22,28 +22,32 @@ class OrdersController extends Controller
             $order_no = $code[intval(date('Y')) - 2011] . strtoupper(dechex(date('m'))) . date('d') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));
             
 
-            // $data=\App\Order::create([
-            //     'user_id'=>$request->user->id,
-            //     'order_no'=>$order_no,
-            //     // 'address'=>$request->province.$request->area.$request->city.$request->detail,
-            //     'address'=>$request->address,
-            //     'numbers'=>$request->numbers,
-            //     'price'=>$request->price,
-            //     'product_id'=>$request->product_id,
-            //     'product_price'=>$request->product_price,
-            //     'remark'=>$request->remark,
-            //     'status'=>$request->status ?? '0',  
-            // ]); 
+            $data=\App\Order::create([
+                'user_id'=>$request->user->id,
+                'order_no'=>$order_no,
+                // 'address'=>$request->province.$request->area.$request->city.$request->detail,
+                'address'=>$request->address,
+                'numbers'=>$request->numbers,
+                'price'=>$request->price,
+                'product_id'=>$request->product_id,
+                'product_price'=>$request->product_price,
+                'remark'=>$request->remark,
+                'status'=>$request->status ?? '0',  
+                'operate'=>$request->operate
+            ]); 
 
         
             Factory::setOptions($this->getOptions());
-
             //2. 发起API调用（以支付能力下的统一收单交易创建接口为例）
+
             $result = Factory::payment()->App()->pay('1', $request->$order_no, $request->price);
+
 
              //3. 处理响应或异常
             if (!empty($result->code) && $result->code == 10000) {
                 echo "调用成功". PHP_EOL;
+                Factory::payment()->common()->verifyNotify($parameters);
+
             } else {
                 echo "调用失败，原因：". $result->msg."，".$result->sub_msg.PHP_EOL;
             }
@@ -79,7 +83,9 @@ class OrdersController extends Controller
         $options->alipayPublicKey = $data->alipay_sign; 
 
         //可设置异步通知接收服务地址（可选）
+
         $options->notifyUrl = env('APP_URL').'/api/V1/updateOrderStatus';
+
 
         //可设置AES密钥，调用AES加解密相关接口时需要（可选）
         // $options->encryptKey = "OIWl7LvhQ2LtgDHYrw1iEA=="; 
@@ -90,6 +96,7 @@ class OrdersController extends Controller
     /**
      * 修改订单状态
      */
+<<<<<<< HEAD
     public function edit_orderStatus(Request $request){
 
         // $data = $request->all();
@@ -108,6 +115,14 @@ class OrdersController extends Controller
         // Factory::payment()->common()->verifyNotify($parameters);
 
         return 111;
+=======
+    public function edit_orderStatus(){
+
+        return 1;
+
+
+
+>>>>>>> 8d4e7a1daf254be54804d35fd2eae09a064aa09f
     }
 
 
