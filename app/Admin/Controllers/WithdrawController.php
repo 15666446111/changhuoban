@@ -30,37 +30,34 @@ class WithdrawController extends AdminController
         $grid = new Grid(new Withdraw());
 
         if(Admin::user()->operate != "All"){
-
-            $grid->model()->where('operate', Admin::user()->operate);
-            
+            $grid->model()->where('operate', Admin::user()->operate);   
         }
         
         $grid->model()->latest();
         
         $grid->column('order_no', __('提现订单'));
 
-        $grid->column('users.nickname', __('提现代理'));
+        $grid->column('users.nickname', __('提现用户'));
         
-        $grid->column('money', __('提现金额'))->label();
+        $grid->column('money', __('提现金额'))->display(function( $cash){
+            return number_format( $cash / 100 , 2, '.', ',');
+        })->label();
 
-        $grid->column('real_money', __('到账金额'))->label('info');
+        $grid->column('real_money', __('到账金额'))->display(function( $cash){
+            return number_format( $cash / 100 , 2, '.', ',');
+        })->label('info');
 
-        $grid->column('type', __('提现类型'))
-                ->using(['1' => '分润提现', '2' => '返现提现']);
+        $grid->column('type', __('提现类型'))->using(['1' => '分润提现', '2' => '返现提现'])->dot([ 1 => 'primary', 2 => 'success' ]);
 
         $grid->column('state', __('提现状态'))
-                ->using(['1' => '待审核', '2' => '通过', '3'=>'驳回'])
-                ->dot([ 0 => 'success', 1 => 'danger' ], 'default');
+                ->using(['1' => '待审核', '2' => '通过', '3'=>'驳回'])->dot([ 1 => 'default', 2 => 'success', 3=> 'error' ]);
 
-        $grid->column('make_state', __('打款状态'))
-                ->using(['0' => '未打款', '1' => '已打款'])
-                ->dot([ 0 => 'danger', 1 => 'success' ], 'default');
+        $grid->column('make_state', __('打款状态'))->using(['0' => '未打款', '1' => '已打款'])->dot([ 0 => 'default', 1 => 'success' ]);
 
         $grid->column('check_at', __('审核时间'));
 
         $grid->column('created_at', __('申请时间'));
 
-        //
         $grid->disableCreateButton();
 
         $grid->actions(function ($actions) {
@@ -72,11 +69,15 @@ class WithdrawController extends AdminController
             $actions->add(new WithdrawAdopt());
             // 添加驳回按钮
             $actions->add(new WithdrawReject());
+
         });
 
         $grid->batchActions(function ($batch) {
+
             $batch->disableDelete();
+
         });
+
         return $grid;
     }
 
