@@ -21,27 +21,26 @@ class OrdersController extends Controller
             $order_no = $code[intval(date('Y')) - 2011] . strtoupper(dechex(date('m'))) . date('d') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));
             
 
-            // $data=\App\Order::create([
-            //     'user_id'=>$request->user->id,
-            //     'order_no'=>$order_no,
-            //     // 'address'=>$request->province.$request->area.$request->city.$request->detail,
-            //     'address'=>$request->address,
-            //     'numbers'=>$request->numbers,
-            //     'price'=>$request->price,
-            //     'product_id'=>$request->product_id,
-            //     'product_price'=>$request->product_price,
-            //     'remark'=>$request->remark,
-            //     'status'=>$request->status ?? '0', 
-                    // 'operate'=>$request->operate
-            // ]); 
+            $data=\App\Order::create([
+                'user_id'=>$request->user->id,
+                'order_no'=>$order_no,
+                // 'address'=>$request->province.$request->area.$request->city.$request->detail,
+                'address'=>$request->address,
+                'numbers'=>$request->numbers,
+                'price'=>$request->price,
+                'product_id'=>$request->product_id,
+                'product_price'=>$request->product_price,
+                'remark'=>$request->remark,
+                'status'=>$request->status ?? '0',  
+                'operate'=>$request->operate
+            ]); 
 
 
             Factory::setOptions($this->getOptions());
-
             //2. 发起API调用（以支付能力下的统一收单交易创建接口为例）
-            $result = Factory::payment()->App()->pay('1', $order_no, '3000.00');
-            
-            dd($result);
+            $result = Factory::payment()->App()->pay('100000.00','大乐透',$order_no,);
+        
+            dd($result->body);
              //3. 处理响应或异常
             if (!empty($result->code) && $result->code == 10000) {
                 echo "调用成功". PHP_EOL;
