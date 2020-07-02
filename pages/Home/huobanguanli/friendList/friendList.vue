@@ -48,7 +48,7 @@
 				</view>
 			</view>
 		</navigator>
-		<view class="backgroundColor" v-if="operate!==3">
+		<view class="backgroundColor" v-if="type!==3">
 			<view class="data">
 				<view class="phone">设置政策信息</view>
 			</view>
@@ -73,12 +73,12 @@ export default {
 		return {
 			UserInfo: {},
 			PolicyList: [],
-			operate: ''
+			type: ''
 		};
 	},
 	
 	onLoad: function (options){
-		this.operate 	= uni.getStorageSync('operate');
+		this.type 	= uni.getStorageSync('type');
 		
 		// 获取伙伴信息
 		this.getUserInfo(options.user);

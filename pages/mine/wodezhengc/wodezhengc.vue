@@ -1,5 +1,5 @@
 <template>
-	<view class="backgroundColor"v-if="operate!==3">
+	<view class="backgroundColor"v-if="type!==3">
 		<view class="data"><view class="phone">我的政策：</view></view>
 		<view class="dara-xian"></view>
 		<navigator class="data-list" :url="'zhengceyemian/zhengceyemian?pid=' + item.id + '&uid=' + uid" v-for="(item, index) in policyList" :key="index">
@@ -19,12 +19,12 @@ export default {
 		return {
 			uid: '',
 			policyList: [],
-			operate: ''
+			type: ''
 		};
 	},
 	
 	onLoad(options) {
-		this.operate 	= uni.getStorageSync('operate');
+		this.type 	= uni.getStorageSync('type');
 		this.uid = options.uid;
 		uni.showLoading();
 		this.getPolicyList();
