@@ -65,10 +65,12 @@ export default {
 			address: [],
 			// 全局显示
 			pagesShow: false,
+			operate: ''
 		};
 	},
 	
 	onLoad(options) {
+		this.operate 	= uni.getStorageSync('operate');
 		if (options.num) {
 			this.num = options.num;
 		}
@@ -130,6 +132,7 @@ export default {
 					'numbers' : this.num,
 					'price' : this.moneyTotal,
 					'address' : address,
+					'operate' : this.operate
 				},
 	            success: (res) => {
 					// 关闭加载动画
