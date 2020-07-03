@@ -17,7 +17,7 @@ class TradeApiController extends Controller
 	 */
     public function index(Request $request)
     {
-
+        
         // 写入到推送信息
         $trade_push = \App\RegisterNotice::create([
             'title'     =>  '畅捷同步通知推送接口',
@@ -46,55 +46,64 @@ class TradeApiController extends Controller
         if ($request->sysRespCode != '00') {
             return json_encode($reData);
         }
+        
+        /**
+         * 测试数据
+         */
+        $dataList = [
+            ['agentId'=>'1','merchantId'=>'11','termId'=>'22','termSn'=>'1','termModel'=>'1','version'=>'222']
+        ];
+        // var_dump($dataList);die;
 
         // 推送的数据列表
-        $dataList = $request->dataList;
-
-        if ($request->dataType == 0) {
+        // $dataList = $request->dataList;
+        $dataType = 0;
+        if ($dataType == 0) {
             // 商户开通通知处理
             try{
 
-                foreach ($dataType as $key => $value) {
+                foreach ($dataList as $key => $value) {
 
                     $regContent = \App\RegNoticeContent::create([
                         //商户直属机构号
-                        'agentId'       =>      $value->agentId,
+                        'agentId'       =>      $value['agentId'],
                         //商户号
-                        'merchantId'    =>      $value->merchantId,
+                        'merchantId'    =>      $value['merchantId'],
                         //终端号
-                        'termId'        =>      $value->termId,
+                        'termId'        =>      $value['termId'],
                         //终端SN
-                        'termSn'        =>      $value->termSn,
+                        'termSn'        =>      $value['termSn'],
                         //终端型号
-                        'termModel'     =>      $value->termModel,
+                        'termModel'     =>      $value['termModel'],
                         //助贷通版本号
-                        'version'       =>      $value->version,
+                        'version'       =>      $value['version'],
                     ]);
                     
-                    $machines = \App\Machine::where('sn',$value->termSn)->where('user_id','<>','')->get();
+                    $machines = \App\Machine::where('sn',$value['termSn'])->where('user_id','<>','')->first();
+                    
+                    $machines->style_id = $value['termModel'];
 
-                    foreach($machines as $k	=> $v){
+                    $machines->save();
+                    
+                    $merchants = \App\Merchant::create([
 
-                            $merchants = \App\Merchant::create([
+                        'user_id'	=>	$machines->user_id,
 
-                                'user_id'	=>	$v->user_id,
+                        'code'		=>	$value['merchantId'],
 
-                                'code'		=>	$v->merchantId,
-        
-                                'operate'	=>	\App\User::where('id',$v->user_id)->first()->operate
-        
-                            ]);
-        
-                            $v->merchant_id = $machines->id;
-        
-                            $v->save();
-                            
-                            //压入到redis去处理剩下的逻辑
-                            HandleTradeInfo::dispatch($merchants,$value->agentId,$request->configAgentId);
+                        'operate'	=>	\App\User::where('id',$machines->user_id)->first()->operate
 
-                    }
+                    ]);
+
+                    $machines->merchant_id = $merchants->id;
+
+                    $machines->save();
+                    
+                    //压入到redis去处理剩下的逻辑
+                    HandleTradeInfo::dispatch($merchants,$value['agentId'],$request->configAgentId);
+
                 }
-                
+
             } catch (\Exception $e) {
 
                 $reData['responseCode'] = '01';
@@ -250,7 +259,7 @@ class TradeApiController extends Controller
         
     	
 
-    	return json_encode($reData);
+    	// return json_encode($reData);
 	}
 
 }

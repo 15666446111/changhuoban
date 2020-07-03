@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Merchant extends Model
 {
+
+    protected $guarded = [];
+    
     /**
      * [busers 用户模型反向关联]
      * @author Pudding

@@ -65,12 +65,8 @@ Route::group([
     //订单列表管理
     $router->resource('orders', OrderController::class);
 
-    //品牌管理
-    $router->resource('brands', BrandController::class);
-
     //划拨回拨日志列表
     $router->resource('transfers', TransferController::class);
-
 
 
     //消息通知列表
@@ -78,7 +74,6 @@ Route::group([
     
     //分润管理
     $router->resource('cashs-logs', CashController::class);
-
 
 
     // 活动组管理

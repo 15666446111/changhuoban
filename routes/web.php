@@ -35,13 +35,6 @@ Route::post('/trade', 	'TradeApiController@index');
 
 
 /**
- * @version [<通知接口>] [< 助代通通知接口  助代通开通通知 ， 交易流水通知>]
- * @version [<vector>]  [<系统总平台 包括操盘方 所有的通知接口都会推送到此地址>]
- */
-Route::post('/reg', 	'TradeApiController@reg');
-
-
-/**
  * @version [<vector>] [<后台联动Select 查询符合条件的厂家>]
  */
 Route::get('/api/getAdminFactory', 		'AdminApiController@getAdminFactory');
