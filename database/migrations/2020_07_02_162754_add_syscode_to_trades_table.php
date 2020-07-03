@@ -14,7 +14,11 @@ class AddSyscodeToTradesTable extends Migration
     public function up()
     {
         Schema::table('trades', function (Blueprint $table) {
-            //
+            
+            $table->char('sysRespCode', 4)->comment('收单平台应答码');
+            
+            $table->string('sysRespDesc')->comment('收单平台应答描述');
+            
         });
     }
 

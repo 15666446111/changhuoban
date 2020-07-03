@@ -13,7 +13,13 @@ class DropTradesDeputiesTable extends Migration
      */
     public function up()
     {
-        //
+        Schema::table('trades_deputies', function (Blueprint $table) {
+
+            $table->dropColumn('sysRespCode');
+            
+            $table->dropColumn('sysRespDesc');
+
+        });
     }
 
     /**
