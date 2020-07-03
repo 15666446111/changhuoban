@@ -24,6 +24,7 @@
 			
 		</view>
 		<view class="hr"></view>
+		<radio-group >
 		<view>
 			<view class="xian"></view>
 			<view class="pay">
@@ -32,10 +33,21 @@
 					<view class="pay-text">微信支付</view>
 				</view>
 				<view class="ckeck">
-					<checkbox checked="true" color="#ED6E11"><text class="moren">默认</text></checkbox>
+					<radio class="radio" value="2" :checked="pay_type==='2'" @click="radio('2')" /></radio>
+				</view>
+			</view>
+			<view class="xian"></view>
+			<view class="pay">
+				<view class="pay-view">
+					<image class="pay-img" src="../../../../static/zfb.jpg" mode="widthFix" />
+					<view class="pay-text">支付宝支付</view>
+				</view>
+				<view class="ckeck">
+					<radio class="radio" color="#ED6E11" value="1" :checked="pay_type==='1'" @click="radio('1')" /></radio>
 				</view>
 			</view>
 		</view>
+		</radio-group>
 		<view class="pos">
 			<view class="post">实付款：</view>
 			<view class="pos-text">¥{{moneyTotal / 100}}</view>
@@ -65,6 +77,11 @@ export default {
 			address: [],
 			// 全局显示
 			pagesShow: false,
+			// 支付方式
+			radio(e){
+				// console.log(e)
+				this.pay_type=e;
+			}
 		};
 	},
 	
@@ -109,7 +126,6 @@ export default {
 		
 		// 生成订单
 		addOrderCreate(){
-
 			var address = '测试固定收货地址';
 			if (this.address == '') {
 				uni.showToast({ title: '请选择收货地址', icon: 'none' });
@@ -117,7 +133,10 @@ export default {
 			}
 			
 			// 显示加载动画
-			uni.showLoading({ duration: 10000, mask: true })
+			uni.showLoading({
+				duration: 10000,
+				mask: true,
+			})
 			
 			net({
 	        	url:"/V1/addOrderCreate",
@@ -128,29 +147,22 @@ export default {
 					'numbers' : this.num,
 					'price' : this.moneyTotal,
 					'address' : address,
+					'pay_type' : this.pay_type
 				},
 	            success: (res) => {
 					// 关闭加载动画
 					uni.hideLoading();
 					
 					if (res.data.success) {
-						uni.requestPayment({
-							provider: 'alipay',
-							orderInfo: res.data.success.data.sign, //微信、支付宝订单数据
-							success: function (res) {
-								console.log(res)
-								uni.showToast({ title: '下单成功', icon: 'none'})
-								console.log('success:' + JSON.stringify(res));
-							},
-							fail: function (err) {
-								console.log(err)
-								console.log('fail:' + JSON.stringify(err));
-							}
-						});
-			
-
+						uni.showToast({
+							title: '下单成功',
+							icon: 'none'
+						})
 					} else {
-						uni.showToast({ title: res.data.error.message, icon: 'none' })
+						uni.showToast({
+							title: res.data.error.message,
+							icon: 'none'
+						})
 					}
 	            }
 	      	})

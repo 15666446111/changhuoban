@@ -34,8 +34,15 @@
 					<view class="select-name">开户行</view>
 					<input class="select-text" placeholder="请输入开户行" v-model="BankInfo.open_bank"/>
 				</view>
+				<view class="hengxian"></view>
 				
 				<view class="select-view">
+					<view class="select-name">联行号</view>
+					<input class="select-text" placeholder="请输入联行号" v-model="BankInfo.bank_open"/>
+				</view>
+				<view class="hengxian"></view>
+				
+				<view class="select-view"> 
 					<checkbox-group @change="defaultType">
 						<label>
 							<checkbox class="se-defulat" value="1" color="#FF8C00" :checked="this.BankInfo.is_default == 1 ? true : false" />设为默认
@@ -124,6 +131,11 @@ export default {
 				return false;
 			}
 			
+			if (this.bank_open == '') {
+				uni.showToast({ title: '联行号不能为空', icon: 'none' });
+				return false;
+			}
+			
 			uni.showLoading();
 			
 			net({
@@ -137,6 +149,7 @@ export default {
 					bank: this.BankInfo.bank,
 					open_bank: this.BankInfo.open_bank,
 					is_default: this.BankInfo.is_default,
+					bank_open: this.BankInfo.bank_open,
 				},
 	            success: (res) => {
 					uni.hideLoading();
