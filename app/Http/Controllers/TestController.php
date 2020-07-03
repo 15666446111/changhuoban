@@ -23,6 +23,7 @@ class TestController extends Controller
      */
     public function index()
     {
+
     	/**
          * @version [<vector>] [< 检查该机器是否入库>]
          */
@@ -32,30 +33,30 @@ class TestController extends Controller
             return false;
         }
 
-        /**
-         * @version [<vector>] [< 检查该机器是否发货>]
-         */
+        // /**
+        //  * @version [<vector>] [< 检查该机器是否发货>]
+        //  */
         if (!$this->trade->merchants_sn->user_id || $this->trade->merchants_sn->user_id == "null") {
             $this->trade->remark = '该机器还未发货!';
             $this->trade->save();
             return false;
         }
 
-        /**
-         * @version [<vector>] [< 检查该机器所属操盘方和畅捷后台是否一致>]
-         */
+        // /**
+        //  * @version [<vector>] [< 检查该机器所属操盘方和畅捷后台是否一致>]
+        //  */
         if ($this->trade->merchants_sn->operate != $this->trade->agt_merchant_id) {
             $this->trade->remark = '该机器归属操盘方信息有误';
             $this->trade->save();
             return false;
         }
 
-        /**
-         * @version [<vector>] [< 检查是否是重复推送的数据 >]
-         * transDate: 接口推送的交易日期
-         * rrn: 参考号
-         */
-        $sameTrade = \App\Trade\::where('transDate', $this->trade->transDate)->where('rrn', $this->trade->rrn)
+        // /**
+        //  * @version [<vector>] [< 检查是否是重复推送的数据 >]
+        //  * transDate: 接口推送的交易日期
+        //  * rrn: 参考号
+        //  */
+        $sameTrade = \App\Trade::where('transDate', $this->trade->transDate)->where('rrn', $this->trade->rrn)
                                 ->first();
         if (empty($sameTrade)) {
             $this->trade->remark = '该交易为重复推送数据';
@@ -71,12 +72,17 @@ class TestController extends Controller
             
         }
 
+
+        /**
+         * 更新交易订单的用户id等信息
+         */
+        
+
         /**
          * @version [< 给当前交易进行分润发放 >]
          */
-        
         try {
-        	$cash = new \App\Http\Controllers\CashMerchantController($this->trade);
+        	$cash = new \App\Http\Controllers\CashController($this->trade);
 
             $cashResult = $cash->cash();
 

@@ -102,7 +102,7 @@ class TradeApiController extends Controller
                         'agentId'           => $value->agentId,
 
                         // 凭证号
-                        'traceNo'           => $value->traceNo,
+                        'traceNo'           => $value->traceNo ?? 0,
 
                         // 系统流水号
                         'sysTraceNo'        => $value->sysTraceNo,
@@ -120,19 +120,19 @@ class TradeApiController extends Controller
                         // 052  IC卡无密
                         // 071  闪付凭密
                         // 072  闪付无密
-                        'inputMode'         => $value->inputMode,
+                        'inputMode'         => $value->inputMode ?? 0,
 
                         // 卡类型 0:借记卡，1:信用卡
-                        'cardType'          => $value->cardType,
+                        'cardType'          => $value->cardType ?? null,
 
                         // 商户号
                         'merchant_code'     => $value->merchantId,
 
                         // 终端号
-                        'termId'            => $value->termId,
+                        'termId'            => $value->termId ?? '',
 
                         // 终端SN
-                        'sn'                => $value->termSn,
+                        'sn'                => $value->termSn ?? '',
 
                         // 交易金额，单位分
                         'amount'            => $value->amount,
@@ -151,21 +151,24 @@ class TradeApiController extends Controller
                         // 收单平台应答码
                         'sysRespCode'       => $value->sysRespCode,
 
+                        // 收单平台应答描述
+                        'sysRespDesc'       => $value->sysRespDesc,
+
                         // 原交易日期yyyymmdd
-                        'originalTranDate'  => !empty($value->originalTranDate) ?? null,
+                        'originalTranDate'  => $value->originalTranDate ?? null,
                         // 'originalTranDate'  => $value->originalTranDate,
 
                         // 原交易参考号
-                        'originalRrn'       => !empty($value->originalRrn) ?? null,
+                        'originalRrn'       => $value->originalRrn ?? null,
 
                         // 原交易凭证号
-                        'originaltraceNo'   => !empty($value->originaltraceNo) ?? null,
+                        'originaltraceNo'   => $value->originaltraceNo ?? null
 
                     ]);
 
 
                     // 推送信息的不常用交易信息，另外储存到交易副表
-                    \App\TradeDeputy::create([
+                    \App\TradesDeputy::create([
 
                         // trades表id
                         'trade_id'          => $tradeOrder->id,
@@ -174,37 +177,35 @@ class TradeApiController extends Controller
                         // 交易时间
                         'tranTime'          => $value->tranTime,
                         // 卡号(带*)
-                        'cardNo'            => $value->cardNo,
+                        'cardNo'            => $value->cardNo ?? '',
                         // 授权码
-                        'authCode'          => $value->authCode,
+                        'authCode'          => $value->authCode ?? '',
                         // 终端批次号
-                        'batchNo'           => $value->batchNo,
+                        'batchNo'           => $value->batchNo ?? 0,
                         // 订单号
-                        'orderId'           => $value->orderId,
+                        'orderId'           => $value->orderId ?? '',
                         // 发卡行
-                        'bankName'          => $value->bankName,
+                        'bankName'          => $value->bankName ?? '',
                         // 助贷通版本号
-                        'version'           => $value->version,
+                        'version'           => $value->version ?? '' ,
                         // 助贷通商户终端激活状态 0 - 未激活 1 - 已激活 2 - 已处理;
-                        'activeStat'        => $value->activeStat,
+                        'activeStat'        => $value->activeStat ?? '',
                         // 助贷通活动终端绑定日期，当本笔交易为参与 3.0以下的助贷通活动的机具的交易 则必填
-                        'termBindDate'      => $value->termBindDate,
+                        'termBindDate'      => $value->termBindDate ?? '',
                         // 商户类别 1 - A类商户； 2 - B类商户； 3 - C类商户； 4 - Z 类商户
                         'merchLevel'        => $value->merchLevel,
                         // 终端型号
-                        'termModel'         => $value->termModel,
+                        'termModel'         => $value->termModel ?? '',
                         // 商户手机号
-                        'mobileNo'          => $value->mobileNo,
+                        'mobileNo'          => $value->mobileNo ?? '',
                         // 商户名称
                         'merchantName'      => $value->merchantName,
                         // 清算日期
-                        'settleDate'        => $value->settleDate,
-                        // 收单平台应答描述
-                        'sysRespDesc'       => $value->sysRespDesc,
+                        'settleDate'        => $value->settleDate ?? 0,
                         // 原交易批次号
-                        'originalbatchNo'   => $value->originalbatchNo,
+                        'originalbatchNo'   => $value->originalbatchNo ?? '',
                         // 原交易授权码
-                        'originalAuthCode'  => $value->originalAuthCode,
+                        'originalAuthCode'  => $value->originalAuthCode ?? ''
 
                     ]);
                     
