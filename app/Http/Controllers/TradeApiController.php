@@ -46,8 +46,6 @@ class TradeApiController extends Controller
         // 推送的数据列表
         $dataList = json_decode($request->dataList);
 
-        dd($dataList);
-
         if ($request->dataType == 0) {
             // 商户开通通知处理
             
@@ -155,6 +153,7 @@ class TradeApiController extends Controller
 
                         // 原交易日期yyyymmdd
                         'originalTranDate'  => !empty($value->originalTranDate) ?? null,
+                        // 'originalTranDate'  => $value->originalTranDate,
 
                         // 原交易参考号
                         'originalRrn'       => !empty($value->originalRrn) ?? null,

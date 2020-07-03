@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class WithdrawReject extends RowAction
 {
-    public $name = '驳回';
+    public $name = '驳回申请';
 
     public function handle(Model $model, Request $request)
     {
     	try {
-    		if ($model->state != 1) return $this->response()->error('当前提现订单不允许驳回')->refresh();
+    		if ($model->state != 1) return $this->response()->error('当前提现订单不支持驳回')->refresh();
 
     		if (!$request->remark) return $this->response()->error('请填写驳回原因')->refresh();
 
