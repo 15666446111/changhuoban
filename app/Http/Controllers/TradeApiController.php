@@ -52,26 +52,54 @@ class TradeApiController extends Controller
 
         if ($request->dataType == 0) {
             // 商户开通通知处理
-            
-            foreach ($dataType as $key => $value) {
+            try{
 
-                $regContent = \App\RegNoticeContent::create([
-                    //商户直属机构号
-                    'agentId'       =>      $value->agentId,
-                    //商户号
-                    'merchantId'    =>      $value->merchantId,
-                    //终端号
-                    'termId'        =>      $value->termId,
-                    //终端SN
-                    'termSn'        =>      $value->termSn,
-                    //终端型号
-                    'termModel'     =>      $value->termModel,
-                    //助贷通版本号
-                    'version'       =>      $value->version,
-                ]);
+                foreach ($dataType as $key => $value) {
 
-                //压入到redis去处理剩下的逻辑
-                HandleTradeInfo::dispatch(json_encode($regContent))->onConnection('redis');
+                    $regContent = \App\RegNoticeContent::create([
+                        //商户直属机构号
+                        'agentId'       =>      $value->agentId,
+                        //商户号
+                        'merchantId'    =>      $value->merchantId,
+                        //终端号
+                        'termId'        =>      $value->termId,
+                        //终端SN
+                        'termSn'        =>      $value->termSn,
+                        //终端型号
+                        'termModel'     =>      $value->termModel,
+                        //助贷通版本号
+                        'version'       =>      $value->version,
+                    ]);
+                    
+                    $machines = \App\Machine::where('sn',$value->termSn)->where('user_id','<>','')->get();
+
+                    foreach($machines as $k	=> $v){
+
+                            $merchants = \App\Merchant::create([
+
+                                'user_id'	=>	$v->user_id,
+
+                                'code'		=>	$v->merchantId,
+        
+                                'operate'	=>	\App\User::where('id',$v->user_id)->first()->operate
+        
+                            ]);
+        
+                            $v->merchant_id = $machines->id;
+        
+                            $v->save();
+                            
+                            //压入到redis去处理剩下的逻辑
+                            HandleTradeInfo::dispatch($merchants,$value->agentId,$request->configAgentId);
+
+                    }
+                }
+                
+            } catch (\Exception $e) {
+
+                $reData['responseCode'] = '01';
+                $reData['responseDesc'] = $e->getMessage();
+					
             }
 
         } else {
