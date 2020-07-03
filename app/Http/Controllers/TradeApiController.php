@@ -10,12 +10,12 @@ use App\Http\Controllers\TestController;
 class TradeApiController extends Controller
 {
     
-	/**
-	 * [index 接收助代通(畅捷的推送信息)]
-	 * @author Pudding
-	 * @DateTime 2020-04-23T15:06:22+0800
-	 * @return   [type]                   [description]
-	 */
+    /**
+     * [index 接收助代通(畅捷的推送信息)]
+     * @author Pudding
+     * @DateTime 2020-04-23T15:06:22+0800
+     * @return   [type]                   [description]
+     */
     public function index(Request $request)
     {
 
@@ -226,8 +226,8 @@ class TradeApiController extends Controller
             }
         }
         
-    	
+        
 
-    	return json_encode($reData);
+        return json_encode($reData);
     }
 }

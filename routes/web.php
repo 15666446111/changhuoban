@@ -77,8 +77,8 @@ Route::post('/team/{code}', 'RegisterController@team_in')->name('register');
 /**
  * 支付宝回调修改订单状态
  */
-Route::any('callback ','V1\OrdersController@AliPayCallback ');
+Route::any('/callback ','V1\OrdersController@AliPayCallback ');
 
 
-//微信服务端
+//微信支付服务端
 Route::any('/wechat', 'WeChatController@serve');
