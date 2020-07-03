@@ -46,4 +46,13 @@ class Trade extends Model
     {
         return $this->belongsTo('\App\User', 'user_id', 'id');
     }
+
+    /**
+     * [trades_deputies 关联交易副表]
+     * @return [type] [description]
+     */
+    public function trades_deputies()
+    {
+        return $this->belongsTo('\App\TradesDeputy', 'trade_id', 'id');
+    }
 }

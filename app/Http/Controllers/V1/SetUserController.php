@@ -132,7 +132,8 @@ class SetUserController extends Controller
                 'number'=>$request->number,
                 'open_bank'=>$request->open_bank,
                 'is_del'=>0,
-                'is_default'=>$request->is_default
+                'is_default'=>$request->is_default,
+                'bank_open'=>$request->bank_open
             ]);
 
             return response()->json(['success'=>['message' => '添加成功!', []]]); 
@@ -230,6 +231,7 @@ class SetUserController extends Controller
             $query->bank_name = $request->bank_name;
             $query->bank = $request->bank;
             $query->number = $request->number;
+            $query->bank_open = $request->bank_open;
 
             if(empty($request->is_default) || $request->is_default == 0){
 
@@ -322,12 +324,13 @@ class SetUserController extends Controller
 
             if(!$bank->user_name) return response()->json(['error'=>['message' => '信息不全:用户名']]);
 
-
             if(!$bank->number) return response()->json(['error'=>['message' => '信息不全:身份证号']]);
 
             if(!$bank->open_bank) return response()->json(['error'=>['message' => '信息不全:开户行']]);
 
             if(!$bank->bank) return response()->json(['error'=>['message' => '信息不全:银行卡号']]);
+
+            if(!$bank->bank_open) return response()->json(['error'=>['message' => '信息不全:联行号']]);
             
             if($request->blance == '1'){
                 $rate = $request->user->settings->rate;
@@ -411,7 +414,8 @@ class SetUserController extends Controller
                     'idcard'    => $bank->number,
                     'bank'      => $bank->bank_name,
                     'bank_open' => $bank->open_bank,
-                    'banklink'  => $bank->bank,
+                    'banklink'  => $bank->bank_open,
+                    'bank_number'=> $bank->bank,
                     'reason'    => $request->reason
                 ]);
     
