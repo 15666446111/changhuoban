@@ -127,6 +127,8 @@ class WithdrawController extends AdminController
 
         $show->field('make_state', __('打款状态'))->using(['0' => '未打款', '1' => '已打款']);
 
+        $show->field('remark', __('驳回原因'));
+
         $show->field('check_at', __('审核时间'));
 
         $show->field('created_at', __('申请时间'));

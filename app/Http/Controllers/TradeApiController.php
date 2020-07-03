@@ -5,16 +5,17 @@ namespace App\Http\Controllers;
 use App\Jobs\HandleTradeInfo;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\TestController;
 
 class TradeApiController extends Controller
 {
     
-	/**
-	 * [index 接收助代通(畅捷的推送信息)]
-	 * @author Pudding
-	 * @DateTime 2020-04-23T15:06:22+0800
-	 * @return   [type]                   [description]
-	 */
+    /**
+     * [index 接收助代通(畅捷的推送信息)]
+     * @author Pudding
+     * @DateTime 2020-04-23T15:06:22+0800
+     * @return   [type]                   [description]
+     */
     public function index(Request $request)
     {
 
@@ -42,64 +43,31 @@ class TradeApiController extends Controller
             'sign'          => $request->sign              // 签名
         ];
 
-        // 交易失败的数据不进行处理
-        if ($request->sysRespCode != '00') {
-            return json_encode($reData);
-        }
-
         // 推送的数据列表
-        $dataList = $request->dataList;
+        $dataList = json_decode($request->dataList);
 
         if ($request->dataType == 0) {
             // 商户开通通知处理
-            try{
+            
+            foreach ($dataList as $key => $value) {
 
-                foreach ($dataType as $key => $value) {
+                $regContent = \App\RegNoticeContent::create([
+                    //商户直属机构号
+                    'agentId'       =>      $value->agentId,
+                    //商户号
+                    'merchantId'    =>      $value->merchantId,
+                    //终端号
+                    'termId'        =>      $value->termId,
+                    //终端SN
+                    'termSn'        =>      $value->termSn,
+                    //终端型号
+                    'termModel'     =>      $value->termModel,
+                    //助贷通版本号
+                    'version'       =>      $value->version,
+                ]);
 
-                    $regContent = \App\RegNoticeContent::create([
-                        //商户直属机构号
-                        'agentId'       =>      $value->agentId,
-                        //商户号
-                        'merchantId'    =>      $value->merchantId,
-                        //终端号
-                        'termId'        =>      $value->termId,
-                        //终端SN
-                        'termSn'        =>      $value->termSn,
-                        //终端型号
-                        'termModel'     =>      $value->termModel,
-                        //助贷通版本号
-                        'version'       =>      $value->version,
-                    ]);
-                    
-                    $machines = \App\Machine::where('sn',$value->termSn)->where('user_id','<>','')->get();
-
-                    foreach($machines as $k	=> $v){
-
-                            $merchants = \App\Merchant::create([
-
-                                'user_id'	=>	$v->user_id,
-
-                                'code'		=>	$v->merchantId,
-        
-                                'operate'	=>	\App\User::where('id',$v->user_id)->first()->operate
-        
-                            ]);
-        
-                            $v->merchant_id = $machines->id;
-        
-                            $v->save();
-                            
-                            //压入到redis去处理剩下的逻辑
-                            HandleTradeInfo::dispatch($merchants,$value->agentId,$request->configAgentId);
-
-                    }
-                }
-                
-            } catch (\Exception $e) {
-
-                $reData['responseCode'] = '01';
-                $reData['responseDesc'] = $e->getMessage();
-					
+                //压入到redis去处理剩下的逻辑
+                HandleTradeInfo::dispatch(json_encode($regContent))->onConnection('redis');
             }
 
         } else {
@@ -107,12 +75,16 @@ class TradeApiController extends Controller
             
             foreach ($dataList as $key => $value) {
 
-                try{
-                    // 交易冲正时可能会推送多笔交易，已平台收单应答描述前六位为"原交易已冲正"区分是否为多推送的交易，多推送的冲正类交易信息不进行保存和处理
-                    $desc = substr($this->trade->sysRespDesc, 0, 18);
-                    if ($desc == '原交易已冲正') {
+                // try{
+
+                    // $value->sysRespCode != '00'  交易失败的数据
+                    // $desc == '原交易已冲正'       无效冲正类交易
+                    // 交易冲正时可能会推送多笔交易，已平台收单应答描述前六位为"原交易已冲正"区分是否为无效的冲正类交易，无效的交易信息不进行保存和处理
+                    $desc = substr($value->sysRespDesc, 0, 18);
+                    if ($value->sysRespCode != '00' || $desc == '原交易已冲正') {
                         continue;
                     }
+
 
                     // 新建交易订单 写入交易表 并且 分发到队列处理
                     $tradeOrder = \App\Trade::create([
@@ -180,15 +152,17 @@ class TradeApiController extends Controller
                         'sysRespCode'       => $value->sysRespCode,
 
                         // 原交易日期yyyymmdd
-                        'originalTranDate'  => $value->originalTranDate,
+                        'originalTranDate'  => !empty($value->originalTranDate) ?? null,
+                        // 'originalTranDate'  => $value->originalTranDate,
 
                         // 原交易参考号
-                        'originalRrn'       => $value->originalRrn,
+                        'originalRrn'       => !empty($value->originalRrn) ?? null,
 
                         // 原交易凭证号
-                        'originaltraceNo'   => $value->originaltraceNo,
+                        'originaltraceNo'   => !empty($value->originaltraceNo) ?? null,
 
                     ]);
+
 
                     // 推送信息的不常用交易信息，另外储存到交易副表
                     \App\TradeDeputy::create([
@@ -235,22 +209,24 @@ class TradeApiController extends Controller
                     ]);
                     
                     // 分发到队列 由队列去处理剩下的逻辑
-                    // HandleTradeInfo::dispatch(json_encode($request->all()))->onConnection('redis');
-                    HandleTradeInfo::dispatch($tradeOrder);
+                    // HandleTradeInfo::dispatch($tradeOrder);
+                    
+                    // 分润测试，正式环境需分发到队列中处理
+                    $profit = new TestController($tradeOrder);
+                    $profit->index();
 
-                } catch (\Exception $e) {
+                // } catch (\Exception $e) {
 
-                    $reData['responseCode'] = '01';
-                    $reData['responseDesc'] = '系统错误';
+                //     $reData['responseCode'] = '01';
+                //     $reData['responseDesc'] = '系统错误';
 
-                }
+                // }
 
             }
         }
         
-    	
+        
 
-    	return json_encode($reData);
-	}
-
+        return json_encode($reData);
+    }
 }
