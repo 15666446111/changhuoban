@@ -96,6 +96,8 @@ class SetUserController extends Controller
 
         try{ 
             
+            if(!$request->nickname) return response()->json(['error'=>['message' => '缺少必要参数:名称']]);
+            
             $userInfo = \App\User::where('id',$request->user->id)->first();
 
             $userInfo->nickname = $request->nickname;
@@ -117,6 +119,18 @@ class SetUserController extends Controller
     public function insertBank(Request $request)
     {
         try{ 
+
+            if(!$request->nickname) return response()->json(['error'=>['message' => '缺少必要参数:名称']]);
+
+            if(!$request->bank) return response()->json(['error'=>['message' => '缺少必要参数:银行卡号']]);
+
+            if(!$request->bank_name) return response()->json(['error'=>['message' => '缺少必要参数:银行名称']]);
+
+            if(!$request->number) return response()->json(['error'=>['message' => '缺少必要参数:身份证号']]);
+
+            if(!$request->open_bank) return response()->json(['error'=>['message' => '缺少必要参数:开户行']]);
+
+            if(!$request->bank_open) return response()->json(['error'=>['message' => '缺少必要参数:联行号']]);
 
             if($request->is_default == 1){
 
@@ -169,6 +183,8 @@ class SetUserController extends Controller
     public function bankFirst(Request $request)
     {
         try{ 
+
+            if(!$request->id) return response()->json(['error'=>['message' => '缺少必要参数:请选择银行卡']]);
             
             $data=\App\Bank::where('user_id',$request->user->id)->where('id',$request->id)->first();
 
@@ -206,6 +222,8 @@ class SetUserController extends Controller
     public function unsetBank(Request $request)
     {
         try{ 
+
+            if(!$request->id) return response()->json(['error'=>['message' => '缺少必要参数:请选择银行卡']]);
             
             \App\Bank::where('user_id',$request->user->id)->where('id',$request->id)->update(['is_del'=>1]);
 
@@ -224,6 +242,8 @@ class SetUserController extends Controller
     public function updateBank(Request $request)
     {
         try{ 
+
+            if(!$request->id) return response()->json(['error'=>['message' => '缺少必要参数:请选择银行卡']]);
 
             $query = \App\Bank::where('user_id',$request->user->id)->where('id',$request->id)->first();
             
@@ -329,8 +349,6 @@ class SetUserController extends Controller
             if(!$bank->open_bank) return response()->json(['error'=>['message' => '信息不全:开户行']]);
 
             if(!$bank->bank) return response()->json(['error'=>['message' => '信息不全:银行卡号']]);
-
-            if(!$bank->bank_open) return response()->json(['error'=>['message' => '信息不全:联行号']]);
             
             if($request->blance == '1'){
                 $rate = $request->user->settings->rate;
@@ -393,6 +411,10 @@ class SetUserController extends Controller
                 $yCode = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J');
                 $order_no = $yCode[intval(date('Y')) - 2011] . strtoupper(dechex(date('m'))) . date('d') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));
                 
+                $model      = new BankController();
+
+                $banklink = $model->openBank();
+
                 \App\Withdraw::create([
                     'user_id'   => $request->user->id,
                     'order_no'  => $order_no,
@@ -414,7 +436,7 @@ class SetUserController extends Controller
                     'idcard'    => $bank->number,
                     'bank'      => $bank->bank_name,
                     'bank_open' => $bank->open_bank,
-                    'banklink'  => $bank->bank_open,
+                    'banklink'  => $bank->banklink,
                     'bank_number'=> $bank->bank,
                     'reason'    => $request->reason
                 ]);

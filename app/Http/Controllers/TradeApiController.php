@@ -81,11 +81,13 @@ class TradeApiController extends Controller
                     ]);
                     
                     $machines = \App\Machine::where('sn',$value['termSn'])->where('user_id','<>','')->first();
-                    
+                    //修改终端型号
                     $machines->style_id = $value['termModel'];
+                    //模板编号
+                    $number = \App\Policy::where('policy_id',$machines->policy_id)->where('operate',$machines->operate)->first()->number;
 
                     $machines->save();
-                    
+                    //添加商户
                     $merchants = \App\Merchant::create([
 
                         'user_id'	=>	$machines->user_id,
@@ -95,13 +97,13 @@ class TradeApiController extends Controller
                         'operate'	=>	\App\User::where('id',$machines->user_id)->first()->operate
 
                     ]);
-
+                    //修改商户id
                     $machines->merchant_id = $merchants->id;
 
                     $machines->save();
                     
-                    //压入到redis去处理剩下的逻辑
-                    HandleTradeInfo::dispatch($merchants,$value['agentId'],$request->configAgentId);
+                    //压入到队列去处理剩下的逻辑
+                    HandleTradeInfo::dispatch($merchants,$value['agentId'],$request->configAgentId,$number);
 
                 }
 

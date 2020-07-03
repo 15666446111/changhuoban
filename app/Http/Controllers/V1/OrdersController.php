@@ -127,12 +127,16 @@ class OrdersController extends Controller
      */
     public function AliPayCallback($order_no = ''){
 
-        if(isset($_POST['order_no']) or empty($order_no)){
-            return 'false';
-        }else{
+        if (!empty($_POST['code'] == 'SUCCESS')) {
+
             $res = \App\Order::where('order_no',$order_no)->update(['status'=>1]);
-            return 'success';
+
+        } else {
+
+            echo "ERROR".PHP_EOL;
+
         }
+
 
     }
 

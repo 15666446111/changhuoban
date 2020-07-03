@@ -44,6 +44,10 @@ class TransferController extends Controller
 
         try{
 
+            if(!$request->id) return response()->json(['error'=>['message' => '缺少必要参数:请选择划拨终端']]);
+
+            if(!$request->friend_id) return response()->json(['error'=>['message' => '缺少必要参数:请选择收货人']]);
+
             $merchants=\App\Machine::whereIn('id',$request->id)->get();
             
             foreach($merchants as $k=>$v){
@@ -82,6 +86,10 @@ class TransferController extends Controller
 
         try{
 
+            if(!$request->friend_id) return response()->json(['error'=>['message' => '缺少必要参数:请选择回拨会员']]);
+
+            if(!$request->policy_id) return response()->json(['error'=>['message' => '缺少必要参数:请选择终端活动']]);
+
             $list = \App\Transfer::where('old_user_id',$request->user->id)
             ->where('new_user_id',$request->friend_id)
             ->where('is_back',0)
@@ -113,6 +121,10 @@ class TransferController extends Controller
     {
 
         try{
+            
+            if(!$request->friend_id) return response()->json(['error'=>['message' => '缺少必要参数:请选择回拨会员']]);
+
+            if(!$request->merchant_id) return response()->json(['error'=>['message' => '缺少必要参数:请选择回拨终端']]);
 
             $res=\App\Machine::whereIn('user_id',$request->friend_id)
             ->whereIn('id',$request->merchant_id)
