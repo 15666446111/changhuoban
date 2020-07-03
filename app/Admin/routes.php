@@ -91,4 +91,7 @@ Route::group([
     $router->resource('policies', PolicyController::class);
 
 
+
+    // 节假日管理
+    $router->resource('holidays', HolidayController::class);
 });
