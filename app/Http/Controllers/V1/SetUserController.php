@@ -242,27 +242,49 @@ class SetUserController extends Controller
     public function updateBank(Request $request)
     {
         try{ 
-
+            
             if(!$request->id) return response()->json(['error'=>['message' => '缺少必要参数:请选择银行卡']]);
 
+            if(!$request->name) return response()->json(['error'=>['message' => '缺少必要参数:姓名']]);
+
+            if(!$request->bank) return response()->json(['error'=>['message' => '缺少必要参数:银行卡号']]);
+
+            if(!$request->bank_name) return response()->json(['error'=>['message' => '缺少必要参数:银行名称']]);
+
+            if(!$request->number) return response()->json(['error'=>['message' => '缺少必要参数:身份证号']]);
+
+            if(!$request->open_bank) return response()->json(['error'=>['message' => '缺少必要参数:开户行']]);
+
+            if(!$request->bank_open) return response()->json(['error'=>['message' => '缺少必要参数:联行号']]);
+
             $query = \App\Bank::where('user_id',$request->user->id)->where('id',$request->id)->first();
-            
-            $query->user_name = $request->name;
-            $query->bank_name = $request->bank_name;
-            $query->bank = $request->bank;
-            $query->number = $request->number;
-            $query->bank_open = $request->bank_open;
 
-            if(empty($request->is_default) || $request->is_default == 0){
-
-                $query->is_default = 0;
-                $query->save();
-
-            }else{
+            if($request->is_default == 1){
 
                 \App\Bank::where('user_id',$request->user->id)->update(['is_default'=>0]);
 
-                $query->is_default = 1;
+                \App\Bank::where('user_id',$request->user->id)->where('id',$request->id)->update([
+                    'user_id'   =>  $request->user->id,
+                    'user_name' =>  $request->name,
+                    'bank_name' =>  $request->bank_name,
+                    'bank'      =>  $request->bank,
+                    'number'    =>  $request->number,
+                    'open_bank' =>  $request->open_bank,
+                    'is_default'=>  $request->is_default,
+                    'bank_open' =>  $request->bank_open
+                ]);
+
+            }else{
+
+                $query->user_name = $request->name;
+                $query->bank_name = $request->bank_name;
+                $query->bank = $request->bank;
+                $query->number = $request->number;
+                $query->open_bank = $request->open_bank;
+                $query->bank_open = $request->bank_open;
+
+                $query->is_default = 0;
+                
                 $query->save();
 
             }
