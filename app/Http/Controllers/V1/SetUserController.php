@@ -103,11 +103,7 @@ class SetUserController extends Controller
             $userInfo->nickname = $request->nickname;
 
             $userInfo->save();
-<<<<<<< HEAD
             
-=======
-
->>>>>>> 4c40583b3326677b6280facc35cf573c8635a98a
             return response()->json(['success'=>['message' => '修改成功!', []]]); 
 
     	} catch (\Exception $e) {
