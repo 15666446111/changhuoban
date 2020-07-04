@@ -36,7 +36,7 @@ class HolidayController extends AdminController
         $grid->filter(function($filter){
             // 去掉默认的id过滤器
             $filter->disableIdFilter();
-            $filter->column(1/2, function ($filter) {
+            $filter->column(1/4, function ($filter) {
                 $filter->like('title', '标题');
             });
         });
