@@ -169,15 +169,6 @@ class WithdrawController extends AdminController
     {
         $form = new Form(new Withdraw());
 
-        $form->number('user_id', __('User id'));
-        $form->text('order_no', __('Order no'));
-        $form->number('money', __('Money'));
-        $form->number('real_money', __('Real money'));
-        $form->switch('type', __('Type'));
-        $form->switch('state', __('State'))->default(1);
-        $form->switch('make_state', __('Make state'));
-        $form->datetime('check_at', __('Check at'))->default(date('Y-m-d H:i:s'));
-
         return $form;
     }
 }
