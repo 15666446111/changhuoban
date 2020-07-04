@@ -17,7 +17,9 @@ class ProductController extends Controller
     public function getType(Request $request)
     {
     	try{
-    		$type = \App\MachinesType::where("state",1)->orderBy("sort","desc")->get();
+            $type = \App\MachinesType::where("state",1)->orderBy("sort","desc")->get();
+            
+            if(empty($type) || !$type) return response()->json(['error'=>['message' => '当前没有商品哦']]);
 
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $type]]);
 

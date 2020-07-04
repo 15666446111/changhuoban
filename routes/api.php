@@ -54,12 +54,7 @@ Route::prefix('V1')->group(function () {
      */
     Route::middleware('AuthToken')->get('/merchant_share', 'V1\ShareController@merchant');
 
-    /**
-     * @version [<APP 首页 伙伴管理>] [<description>]
-     * @return  [首页的伙伴管理直接下级列表]   [<description>]
-     * @version [<伙伴管理] [<description>]
-     */
-    Route::middleware('AuthToken')->get('/my_team', 'V1\TeamController@index');
+
 
     /**
      * @version [<APP 首页 统计信息>] [<description>]
@@ -384,6 +379,11 @@ Route::prefix('V1')->group(function () {
      * 修改个人信息
      */
     Route::middleware('AuthToken')->get('/setUserInfo', 'V1\SetUserController@setUserInfos');
+
+    /**
+     * 微信修改订单状态 
+    */
+    Route::middleware('AuthToken')->any('payments/wechat-notify', 'V1\OrdersController@paySuccess');
 
 });
 

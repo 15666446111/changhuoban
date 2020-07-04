@@ -103,7 +103,7 @@ class SetUserController extends Controller
             $userInfo->nickname = $request->nickname;
 
             $userInfo->save();
-
+            
             return response()->json(['success'=>['message' => '修改成功!', []]]); 
 
     	} catch (\Exception $e) {
@@ -132,13 +132,15 @@ class SetUserController extends Controller
 
             if(!$request->open_bank) return response()->json(['error'=>['message' => '缺少必要参数:开户行']]);
 
+            if(!$request->city) return response()->json(['error'=>['message' => '缺少必要参数:市']]);
+
+            if(!$request->province) return response()->json(['error'=>['message' => '缺少必要参数:省']]);
+
             $model = new BankController();
 
             $bank = ['bank_name'=>$request->bank_name,'city'=>$request->city,'province'=>$request->province];
-
+            
             $banklink = $model->openBank($bank);
-
-            if($banklink == '') return response()->json(['error'=>['message' => '银行卡信息不正确']]);
 
             if($request->is_default == 1){
 
@@ -154,9 +156,8 @@ class SetUserController extends Controller
                 'number'=>$request->number,
                 'open_bank'=>$request->open_bank,
                 'is_del'=>0,
-                'is_default'=>$request->is_default,
-                'bank_open'=>$request->bank_open,
-                'banklink' =>$banklink,
+                'is_default'=>$request->is_default ?? 0,
+                'bank_open' =>$banklink,
                 'city'     =>$request->city,
                 'province'  =>$request->province
             ]);
@@ -165,7 +166,7 @@ class SetUserController extends Controller
 
     	} catch (\Exception $e) {
             
-            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
+            return response()->json(['error'=>['message' => '银行卡信息不正确']]);
 
         }
     }
@@ -253,12 +254,6 @@ class SetUserController extends Controller
     public function updateBank(Request $request)
     {
         try{ 
-
-            $model = new BankController();
-
-            $banklink = $model->openBank($bank);
-
-            if($banklink == '') return response()->json(['error'=>['message' => '银行卡信息不正确']]);
             
             if(!$request->id) return response()->json(['error'=>['message' => '缺少必要参数:请选择银行卡']]);
 
@@ -272,13 +267,15 @@ class SetUserController extends Controller
 
             if(!$request->open_bank) return response()->json(['error'=>['message' => '缺少必要参数:开户行']]);
 
+            if(!$request->city) return response()->json(['error'=>['message' => '缺少必要参数:市']]);
+
+            if(!$request->province) return response()->json(['error'=>['message' => '缺少必要参数:省']]);
+
             $model = new BankController();
 
             $bank = ['bank_name'=>$request->bank_name,'city'=>$request->city,'province'=>$request->province];
-
+            
             $banklink = $model->openBank($bank);
-
-            if($banklink == '') return response()->json(['error'=>['message' => '银行卡信息不正确']]);
 
             $query = \App\Bank::where('user_id',$request->user->id)->where('id',$request->id)->first();
 
@@ -301,16 +298,18 @@ class SetUserController extends Controller
 
             }else{
 
-                $query->user_name = $request->name;
-                $query->bank_name = $request->bank_name;
-                $query->bank = $request->bank;
-                $query->number = $request->number;
-                $query->open_bank = $request->open_bank;
-                $query->bank_open = $banklink;
-
-                $query->is_default = 0;
-
-                $query->save();
+                \App\Bank::where('user_id',$request->user->id)->where('id',$request->id)->update([
+                    'user_id'   =>  $request->user->id,
+                    'user_name' =>  $request->name,
+                    'bank_name' =>  $request->bank_name,
+                    'bank'      =>  $request->bank,
+                    'number'    =>  $request->number,
+                    'open_bank' =>  $request->open_bank,
+                    'is_default'=>  0,
+                    'bank_open' =>  $banklink,
+                    'city'     =>$request->city,
+                    'province'  =>$request->province
+                ]);
 
             }
 
@@ -319,7 +318,7 @@ class SetUserController extends Controller
 
     	} catch (\Exception $e) {
             
-            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
+            return response()->json(['error'=>['message' => '银行卡信息不正确']]);
 
         }
     }
@@ -376,13 +375,12 @@ class SetUserController extends Controller
     public function Withdrawal(Request $request)
     {
         try{ 
+            
             $bank = \App\Bank::where('id',$request->bank_id)->first();
             
             $model = new BankController();
 
             $banklink = $model->openBank($bank);
-
-            if($banklink == '') return response()->json(['error'=>['message' => '银行卡信息不正确']]);
             
             if(!$request->user->settings){
                 return response()->json(['message'=>['message' => '请设置您的提现信息'],'code'=>201]);
@@ -406,12 +404,14 @@ class SetUserController extends Controller
                 $rate = $request->user->settings->rate;
                 $rate_m = $request->user->settings->rate_m;
                 $no_check = $request->user->settings->no_check;
+                $money = $request->user->wallets->cash_blance;
             }else{
                 $rate = $request->user->settings->return_blance;
                 $rate_m = $request->user->settings->return_money;
                 $no_check = $request->user->settings->no_check_return;
+                $money = $request->user->wallets->return_blance;
             }
-
+            
             if(!$rate) return response()->json(['error'=>['message' => '税点不能为空']]);
 
             if(!$rate_m) return response()->json(['error'=>['message' => '单笔提现费不能为空']]);
@@ -468,7 +468,7 @@ class SetUserController extends Controller
                     'order_no'  => $order_no,
                     'money'     => $request->money,
                     'type'      => $request->blance,
-                    'real_money'=> ( $request->user->wallets->cash_blance + $request->user->wallets->return_blance - $request->money ) * $rate - $rate_m,
+                    'real_money'=> $request->money * ( 1 -$rate * 0.01) - $rate_m / 100,
                     'rate'      => $rate,
                     'rate_m'    => $rate_m,
                     'state'     => $state = 2 ? 2 : '1',

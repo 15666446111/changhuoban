@@ -24,7 +24,7 @@ class AuthToken
             return response()->json(['error'=>['message' => '非法请求!']]);
         }
 
-        $Bearer = Str::after($request->header('Authorization'), "Bearer ");
+        $Bearer = Str::after($request->header('Authorization'), "Bearer ");  
 
         $User = \App\User::where('api_token', $Bearer)->where('active', '>=', 1)->first();
 
