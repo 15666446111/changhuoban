@@ -19,6 +19,8 @@ class WithdrawAdopt extends RowAction
 
             if(!$request->pass) return $this->response()->error('请填写提现密码')->refresh();
 
+            // 获取当前登陆的操盘方配置
+            
             $application = new RepayCjController($model);
 
             $result = $application->apply( $request->pass );

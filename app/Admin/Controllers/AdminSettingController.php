@@ -91,14 +91,15 @@ class AdminSettingController extends AdminController
 
         $form->tab('基础信息', function ($form) use ($no) {
 
-            $form->text('operate_number', __('机构/操盘号'))->value($no)->readonly();
+            $form->text('operate_number', __('机构/操盘号'))->value($no)->readonly()->help('由系统自动生成,不可更改');
 
-            $form->text('company', __('公司名称'))->required();
+            $form->text('company', __('公司名称'))->required()->help('操盘方/机构方的公司名称, 必填');
             $form->mobile('phone', __('联系电话'));
             $form->email('email', __('公司邮箱'));
             $form->text('address', __('公司地址'));
 
             $form->mobile('account', __('登陆账号'))->required()->help('机构使用此账号登陆后台,操盘使用此账号登陆后台与app');
+            
             $form->password('password', __('登陆密码'))->required()->help('密码最少6位,数字与字母的组合');
 
             $form->radioButton('type', '操盘/机构')->options([ 1 => '操盘方', 2 => '机构方' ])->when(2,function (Form $form) { 
