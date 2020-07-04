@@ -22,9 +22,9 @@ class OrdersController extends Controller
 
             if(!$request->address) return response()->json(['error'=>['message' => '缺少必要参数:收获地址']]);
 
-            $Address = \App\Address::where('id',$request->address)->first();
+            $address = \App\Address::where('id',$request->address)->first();
 
-            if(!$Address) return response()->json(['error'=>['message' => '缺少必要参数:请设置您的收货地址']]);
+            if(!$address) return response()->json(['error'=>['message' => '缺少必要参数:请设置您的收货地址']]);
 
             if(!$request->numbers) return response()->json(['error'=>['message' => '缺少必要参数:购买数量']]);
 
@@ -39,27 +39,26 @@ class OrdersController extends Controller
 
             $order_no = $code[intval(date('Y')) - 2011] . strtoupper(dechex(date('m'))) . date('d') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));
 
-            // $data = \App\Order::create([
+            $data = \App\Order::create([
 
-            //     'user_id' =>$request->user->id,
+                'user_id' =>$request->user->id,
 
-            //     'order_no'=>$order_no,
+                'order_no'=>$order_no,
 
-            //     'address'=>$request->province.$request->area.$request->city.$request->detail,
+                'address'=>$address->name.','.$address->tel.','.$address->province.','.$address->city.','.$address->area.',详细地址:'.$address->detail,
 
+                'numbers' =>$request->numbers,
 
-            //     'numbers' =>$request->numbers,
+                'price'   =>$request->price,
 
-            //     'price'   =>$request->price,
+                'product_id'   =>$request->product_id,
 
-            //     'product_id'   =>$request->product_id,
+                'product_price'=>$request->product_price,
 
-            //     'product_price'=>$request->product_price,
+                'remark'  =>$request->remark ?? '',
 
-            //     'remark'  =>$request->remark ?? '',
-
-            //     'operate' =>$request->user->operate
-            // ]); 
+                'operate' =>$request->user->operate
+            ]); 
 
             if($request->pay_type == '1'){
                 //支付宝支付
