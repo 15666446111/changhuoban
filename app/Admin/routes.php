@@ -85,5 +85,7 @@ Route::group([
     // 活动管理
     $router->resource('policies', PolicyController::class);
 
+    // 商户短信管理
+    $router->resource('admin-shorts', AdminShortController::class);
 
 });

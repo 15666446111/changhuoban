@@ -17,6 +17,9 @@ class ArticleController extends Controller
     {
     	try{
             $type_id = $request->type_id;
+
+            if(!$type_id) return response()->json(['error'=>['message' => '缺少必要参数:公告类型']]);
+
             if($type_id == 1){
                 // 获取文章类型为公告的数据
                 $Article = \App\Article::where('operate', $request->user->operate)->where('type_id', $type_id)->ApiGet()->first(['id','title','images','created_at','updated_at']);
@@ -66,6 +69,8 @@ class ArticleController extends Controller
     public function Article_detail(Request $request)
     {
         try{
+
+            if(!$request->aid) return response()->json(['error'=>['message' => '缺少必要参数:请选择文章']]);
             
             $data = \App\Article::where('active', '1')->where('verify',1)->where('id', $request->aid)->first();
 

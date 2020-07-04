@@ -8,7 +8,8 @@ use App\Http\Controllers\Controller;
 use Alipay\EasySDK\Kernel\Config;
 use Alipay\EasySDK\Kernel\Factory;
 
-
+use Illuminate\Support\Arr;
+use Overtrue\Socialite\User as SocialiteUser;
 
 class OrdersController extends Controller
 {
@@ -19,9 +20,11 @@ class OrdersController extends Controller
     {
         try{
 
-            $request->user;
-
             if(!$request->address) return response()->json(['error'=>['message' => '缺少必要参数:收获地址']]);
+            
+            $address = \App\Address::where('id',$request->address)->first();
+            
+            if(!$address) return response()->json(['error'=>['message' => '缺少必要参数:请设置您的收货地址']]);
 
             if(!$request->numbers) return response()->json(['error'=>['message' => '缺少必要参数:购买数量']]);
 
@@ -31,6 +34,7 @@ class OrdersController extends Controller
 
             if(!$request->product_price) return response()->json(['error'=>['message' => '缺少必要参数:产品单价']]);
 
+            if(!$request->pay_type) return response()->json(['error'=>['message' => '缺少必要参数:支付方式']]);
 
             $code = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J');
 
@@ -38,24 +42,23 @@ class OrdersController extends Controller
 
             $data = \App\Order::create([
 
-                'user_id'=>$request->user->id,
+                'user_id' =>$request->user->id,
 
                 'order_no'=>$order_no,
 
-                // 'address'=>$request->province.$request->area.$request->city.$request->detail,
-                'address'=>$request->address,
+                'address'=>'姓名:'.$address->name.'&电话:'.$address->tel.'&省'.$address->province.'&市'.$address->city.'&区'.$address->area.'&详细地址:'.$address->detail,
 
-                'numbers'=>$request->numbers,
+                'numbers' =>$request->numbers,
 
-                'price'=>$request->price,
+                'price'   =>$request->price,
 
-                'product_id'=>$request->product_id,
+                'product_id'   =>$request->product_id,
 
                 'product_price'=>$request->product_price,
 
-                'remark'=>$request->remark ?? '',
+                'remark'  =>$request->remark ?? '',
 
-                'operate'=>$request->user->operate
+                'operate' =>$request->user->operate
             ]); 
 
             if($request->pay_type == '1'){
@@ -63,7 +66,7 @@ class OrdersController extends Controller
                 Factory::setOptions($this->getOptions());
                 //2. 发起API调用（以支付能力下的统一收单交易创建接口为例）
 
-                $result = Factory::payment()->App()->pay('1', $data->order_no, $data->price);
+                $result = Factory::payment()->App()->pay('1', $data->order_no, $data->price / 100 );
 
                 if($result && $result->body)
                     return response()->json(['success'=>['message' => '订单创建成功!', 'data'=> ['sign' => $result->body]]]);
@@ -72,10 +75,11 @@ class OrdersController extends Controller
 
             }else{
                 //微信支付
+                $this->wechat_pay($data);
             }
             
         }catch (Exception $e) {
-            return response()->json(['error'=>['message' => '系统错误，请联系客服']]);
+            return response()->json(['error'=>['message' => $e->getMessage()]]);
         }
     }
 
@@ -84,6 +88,7 @@ class OrdersController extends Controller
     public function getOptions()
     {
         $options = new Config();
+
         //获取当前操盘方的属支付数据
         $data = \App\AdminSetting::where("operate_number",request()->user->operate)->where("type", 1)->first();
         
@@ -115,27 +120,95 @@ class OrdersController extends Controller
     }
 
     /**
-     * 异步通知修改订单状态
      * 微信支付
      */
-    public function wechat_pay(){
-        $payment = \EasyWeChat::payment(); // 微信支付
+    public function wechat_pay($data)
+    {
+        $user = \App\AdminSetting::where("operate_number",request()->user->operate)->where("type", 1)->first();
+        //支付
+        $config = [
+            // 必要配置
+            'app_id'             => md5('wxd678efh567hg6787'),
+            'mch_id'             => '14577xxxx',
+            'key'                => '12345678912345678912345678912345',   // API 密钥
+
+            'notify_url'         => env("APP_URL").'api/V1/payments/wechat-notify',
+            
+        ];
+        
+        $app = \EasyWeChat\Factory::payment($config);
+
+        //下单
+        $result = $app->order->unify([
+            'body'         => '畅伙伴-机器购买',
+
+            'out_trade_no' => $data->order_no,
+
+            'total_fee'    => $data->price,
+
+            'trade_type'   => 'APP', // 请对应换成你的支付方式对应的值类型
+
+        ]);
+       
+        
+        if( $result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS'){
+            $result = $app->jssdk->appConfig($result['prepay_id']);//第二次签名
+
+            return response()->json(['success'=>['message' => '订单创建成功!', 'data'=> ['sign' => $result]]]);
+            // return [
+            //     'code' => 'success',
+            //     'msg' => $result
+            // ];
+            
+         }else{
+            // 　　\EasyWeChat\Log::error('微信支付签名失败:'.var_export($result,1));
+            return response()->json(['error'=>['message' => '生成支付签名失败']]);
+         }
+
     }
 
     /**
      * 修改订单状态
      */
-    public function AliPayCallback($order_no = ''){
+    public function paySuccess()
+    {
+        $app = app('wechat.payment');
+        $response = $app->handlePaidNotify(function ($message, $fail) {
+            
+            //处理订单等，业务逻辑
+            if (!empty($_POST['code'] == 'SUCCESS')) {
 
-        if(isset($_POST['order_no']) or empty($order_no)){
-            return 'false';
-        }else{
-            $res = \App\Order::where('order_no',$order_no)->update(['status'=>1]);
-            return 'success';
+                $res = \App\Order::where('order_no',$order_no)->update(['status'=>1]);
+    
+            } else {
+    
+                echo "ERROR".PHP_EOL;
+    
+            }
+
+        });
+
+        return $response;
+    }
+
+
+    /**
+     * 修改订单状态
+     */
+    
+    public function AliPayCallback(){
+
+        if (!empty($_POST['code'] == 'SUCCESS')) {
+
+            $res = \App\Order::where('order_no',$_POST['out_trade_no'])->update(['status'=>1]);
+
+        } else {
+
+            echo "ERROR".PHP_EOL;
+
         }
 
     }
-
 
     /**
      * 查询订单接口
@@ -170,8 +243,6 @@ class OrdersController extends Controller
             if($type == "shop"){
                 
             }
-            
-            
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $arrs]]); 
 
 

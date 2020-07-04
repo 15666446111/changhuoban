@@ -96,11 +96,14 @@ class SetUserController extends Controller
 
         try{ 
             
+            if(!$request->nickname) return response()->json(['error'=>['message' => '缺少必要参数:名称']]);
+            
             $userInfo = \App\User::where('id',$request->user->id)->first();
 
             $userInfo->nickname = $request->nickname;
 
             $userInfo->save();
+            
             return response()->json(['success'=>['message' => '修改成功!', []]]); 
 
     	} catch (\Exception $e) {
@@ -117,6 +120,27 @@ class SetUserController extends Controller
     public function insertBank(Request $request)
     {
         try{ 
+            
+
+            if(!$request->name) return response()->json(['error'=>['message' => '缺少必要参数:姓名']]);
+
+            if(!$request->bank) return response()->json(['error'=>['message' => '缺少必要参数:银行卡号']]);
+
+            if(!$request->bank_name) return response()->json(['error'=>['message' => '缺少必要参数:银行名称']]);
+
+            if(!$request->number) return response()->json(['error'=>['message' => '缺少必要参数:身份证号']]);
+
+            if(!$request->open_bank) return response()->json(['error'=>['message' => '缺少必要参数:开户行']]);
+
+            if(!$request->city) return response()->json(['error'=>['message' => '缺少必要参数:市']]);
+
+            if(!$request->province) return response()->json(['error'=>['message' => '缺少必要参数:省']]);
+
+            $model = new BankController();
+
+            $bank = ['bank_name'=>$request->bank_name,'city'=>$request->city,'province'=>$request->province];
+            
+            $banklink = $model->openBank($bank);
 
             if($request->is_default == 1){
 
@@ -132,15 +156,17 @@ class SetUserController extends Controller
                 'number'=>$request->number,
                 'open_bank'=>$request->open_bank,
                 'is_del'=>0,
-                'is_default'=>$request->is_default,
-                'bank_open'=>$request->bank_open
+                'is_default'=>$request->is_default ?? 0,
+                'bank_open' =>$banklink,
+                'city'     =>$request->city,
+                'province'  =>$request->province
             ]);
 
             return response()->json(['success'=>['message' => '添加成功!', []]]); 
 
     	} catch (\Exception $e) {
             
-            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
+            return response()->json(['error'=>['message' => '银行卡信息不正确']]);
 
         }
     }
@@ -169,6 +195,8 @@ class SetUserController extends Controller
     public function bankFirst(Request $request)
     {
         try{ 
+
+            if(!$request->id) return response()->json(['error'=>['message' => '缺少必要参数:请选择银行卡']]);
             
             $data=\App\Bank::where('user_id',$request->user->id)->where('id',$request->id)->first();
 
@@ -206,6 +234,8 @@ class SetUserController extends Controller
     public function unsetBank(Request $request)
     {
         try{ 
+
+            if(!$request->id) return response()->json(['error'=>['message' => '缺少必要参数:请选择银行卡']]);
             
             \App\Bank::where('user_id',$request->user->id)->where('id',$request->id)->update(['is_del'=>1]);
 
@@ -224,26 +254,62 @@ class SetUserController extends Controller
     public function updateBank(Request $request)
     {
         try{ 
+            
+            if(!$request->id) return response()->json(['error'=>['message' => '缺少必要参数:请选择银行卡']]);
+
+            if(!$request->name) return response()->json(['error'=>['message' => '缺少必要参数:姓名']]);
+
+            if(!$request->bank) return response()->json(['error'=>['message' => '缺少必要参数:银行卡号']]);
+
+            if(!$request->bank_name) return response()->json(['error'=>['message' => '缺少必要参数:银行名称']]);
+
+            if(!$request->number) return response()->json(['error'=>['message' => '缺少必要参数:身份证号']]);
+
+            if(!$request->open_bank) return response()->json(['error'=>['message' => '缺少必要参数:开户行']]);
+
+            if(!$request->city) return response()->json(['error'=>['message' => '缺少必要参数:市']]);
+
+            if(!$request->province) return response()->json(['error'=>['message' => '缺少必要参数:省']]);
+
+            $model = new BankController();
+
+            $bank = ['bank_name'=>$request->bank_name,'city'=>$request->city,'province'=>$request->province];
+            
+            $banklink = $model->openBank($bank);
 
             $query = \App\Bank::where('user_id',$request->user->id)->where('id',$request->id)->first();
-            
-            $query->user_name = $request->name;
-            $query->bank_name = $request->bank_name;
-            $query->bank = $request->bank;
-            $query->number = $request->number;
-            $query->bank_open = $request->bank_open;
 
-            if(empty($request->is_default) || $request->is_default == 0){
-
-                $query->is_default = 0;
-                $query->save();
-
-            }else{
+            if($request->is_default == 1){
 
                 \App\Bank::where('user_id',$request->user->id)->update(['is_default'=>0]);
 
-                $query->is_default = 1;
-                $query->save();
+                \App\Bank::where('user_id',$request->user->id)->where('id',$request->id)->update([
+                    'user_id'   =>  $request->user->id,
+                    'user_name' =>  $request->name,
+                    'bank_name' =>  $request->bank_name,
+                    'bank'      =>  $request->bank,
+                    'number'    =>  $request->number,
+                    'open_bank' =>  $request->open_bank,
+                    'is_default'=>  $request->is_default,
+                    'bank_open' =>  $banklink,
+                    'city'     =>$request->city,
+                    'province'  =>$request->province
+                ]);
+
+            }else{
+
+                \App\Bank::where('user_id',$request->user->id)->where('id',$request->id)->update([
+                    'user_id'   =>  $request->user->id,
+                    'user_name' =>  $request->name,
+                    'bank_name' =>  $request->bank_name,
+                    'bank'      =>  $request->bank,
+                    'number'    =>  $request->number,
+                    'open_bank' =>  $request->open_bank,
+                    'is_default'=>  0,
+                    'bank_open' =>  $banklink,
+                    'city'     =>$request->city,
+                    'province'  =>$request->province
+                ]);
 
             }
 
@@ -252,7 +318,7 @@ class SetUserController extends Controller
 
     	} catch (\Exception $e) {
             
-            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
+            return response()->json(['error'=>['message' => '银行卡信息不正确']]);
 
         }
     }
@@ -310,6 +376,12 @@ class SetUserController extends Controller
     {
         try{ 
             
+            $bank = \App\Bank::where('id',$request->bank_id)->first();
+            
+            $model = new BankController();
+
+            $banklink = $model->openBank($bank);
+            
             if(!$request->user->settings){
                 return response()->json(['message'=>['message' => '请设置您的提现信息'],'code'=>201]);
             }
@@ -317,8 +389,6 @@ class SetUserController extends Controller
             if(!$request->money) return response()->json(['error'=>['message' => '缺少必要参数:提现金额']]);
 
             if(!$request->blance) return response()->json(['error'=>['message' => '缺少必要参数:提现类型']]);
-
-            $bank = \App\Bank::where('id',$request->bank_id)->first();
 
             if(!$request->user->phone) return response()->json(['error'=>['message' => '请设置您的预留手机号']]);
 
@@ -329,19 +399,19 @@ class SetUserController extends Controller
             if(!$bank->open_bank) return response()->json(['error'=>['message' => '信息不全:开户行']]);
 
             if(!$bank->bank) return response()->json(['error'=>['message' => '信息不全:银行卡号']]);
-
-            if(!$bank->bank_open) return response()->json(['error'=>['message' => '信息不全:联行号']]);
             
             if($request->blance == '1'){
                 $rate = $request->user->settings->rate;
                 $rate_m = $request->user->settings->rate_m;
                 $no_check = $request->user->settings->no_check;
+                $money = $request->user->wallets->cash_blance;
             }else{
                 $rate = $request->user->settings->return_blance;
                 $rate_m = $request->user->settings->return_money;
                 $no_check = $request->user->settings->no_check_return;
+                $money = $request->user->wallets->return_blance;
             }
-
+            
             if(!$rate) return response()->json(['error'=>['message' => '税点不能为空']]);
 
             if(!$rate_m) return response()->json(['error'=>['message' => '单笔提现费不能为空']]);
@@ -392,13 +462,13 @@ class SetUserController extends Controller
 
                 $yCode = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J');
                 $order_no = $yCode[intval(date('Y')) - 2011] . strtoupper(dechex(date('m'))) . date('d') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));
-                
+
                 \App\Withdraw::create([
                     'user_id'   => $request->user->id,
                     'order_no'  => $order_no,
                     'money'     => $request->money,
                     'type'      => $request->blance,
-                    'real_money'=> ( $request->user->wallets->cash_blance + $request->user->wallets->return_blance - $request->money ) * $rate - $rate_m,
+                    'real_money'=> $request->money * ( 1 -$rate * 0.01) - $rate_m / 100,
                     'rate'      => $rate,
                     'rate_m'    => $rate_m,
                     'state'     => $state = 2 ? 2 : '1',
@@ -414,7 +484,7 @@ class SetUserController extends Controller
                     'idcard'    => $bank->number,
                     'bank'      => $bank->bank_name,
                     'bank_open' => $bank->open_bank,
-                    'banklink'  => $bank->bank_open,
+                    'banklink'  => $banklink,
                     'bank_number'=> $bank->bank,
                     'reason'    => $request->reason
                 ]);
@@ -435,4 +505,5 @@ class SetUserController extends Controller
         }
 
     }
+
 }
