@@ -126,7 +126,15 @@ export default {
 		
 		// 生成订单
 		addOrderCreate(){
-			var address = '测试固定收货地址';
+			
+			if (!this.pay_type) {
+				uni.showToast({
+					title: '请选择支付方式',
+					icon: 'none'
+				});
+				return false;
+			}
+			
 			if (this.address == '') {
 				uni.showToast({ title: '请选择收货地址', icon: 'none' });
 				return false;
@@ -154,10 +162,30 @@ export default {
 					uni.hideLoading();
 					
 					if (res.data.success) {
-						uni.showToast({
-							title: '下单成功',
-							icon: 'none'
-						})
+						if(this.pay_type == '1'){
+							uni.requestPayment({
+							    provider: 'alipay',
+							    orderInfo: res.data.success.data.sign, //微信、支付宝订单数据
+							    success: function (res) {
+							        console.log('success:' + JSON.stringify(res));
+							    },
+							    fail: function (err) {
+							        console.log('fail:' + JSON.stringify(err));
+							    }
+							});
+						}else{
+							uni.requestPayment({
+							    provider: 'wxpay',
+							    orderInfo: res.data.success.data.sign, //微信、支付宝订单数据
+							    success: function (res) {
+							        console.log('success:' + JSON.stringify(res));
+							    },
+							    fail: function (err) {
+							        console.log('fail:' + JSON.stringify(err));
+							    }
+							});
+						}
+						
 					} else {
 						uni.showToast({
 							title: res.data.error.message,

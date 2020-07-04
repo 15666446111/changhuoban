@@ -35,8 +35,8 @@
 					<Price priceSize="font-lg" unitSize="font">￥{{ productInfo.price / 100 }}</Price>
 					<text class="d-block">{{ productInfo.title }}</text>
 				</view>
-			</view>
-			<view class="select">
+			</view> 
+			<view class="select"> 
 				<view class="type">名称</view>
 				<view class="MP70">{{ productInfo.title }}</view>
 				<view class="select-view"></view>
@@ -44,7 +44,7 @@
 					<text>购买数量</text>
 					<uni-number-box :min="1" :value="num" @change="num=$event"></uni-number-box>
 				</view>
-				
+				 
 				<navigator :url="'../querendingdan/querendingdan?product='+productInfo.id+'&num='+num">
 					<view 
 						class="main-bg-color text-white font-md d-flex a-center j-center" hover-class="main-bg-hover-color">

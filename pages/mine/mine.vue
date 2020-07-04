@@ -157,6 +157,17 @@ export default {
 		
 		uni.showLoading();
 		this.getUserInfo();
+		
+	},
+	
+	//监听下拉刷新动作的执行方法，每次手动下拉刷新都会执行一次
+	onPullDownRefresh() {
+		uni.showLoading();
+		this.getUserInfo();
+		
+	    setTimeout(function () {
+	        uni.stopPullDownRefresh();  //停止下拉刷新动画
+	    }, 2000);
 	},
 
 	methods: {

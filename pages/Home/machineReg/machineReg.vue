@@ -120,11 +120,9 @@ export default {
 						uni.showToast({
 							title: '登记成功',
 							icon: 'none',
-							success() {
+							success : function(){
 								setTimeout(function() {
-									uni.redirectTo({
-										url: 'shanghudengji'
-									})
+									uni.navigateBack();
 								}, 1500);
 							}
 						});
