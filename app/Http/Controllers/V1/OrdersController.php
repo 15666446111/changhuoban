@@ -65,7 +65,7 @@ class OrdersController extends Controller
                 Factory::setOptions($this->getOptions());
                 //2. 发起API调用（以支付能力下的统一收单交易创建接口为例）
 
-                $result = Factory::payment()->App()->pay('1', $data->order_no, $data->price);
+                $result = Factory::payment()->App()->pay('1', $data->order_no, $data->price / 100 );
 
                 if($result && $result->body)
                     return response()->json(['success'=>['message' => '订单创建成功!', 'data'=> ['sign' => $result->body]]]);
@@ -74,7 +74,7 @@ class OrdersController extends Controller
 
             }else{
                 //微信支付
-                $this->wechat_pay();
+                $this->wechat_pay($data);
             }
             
         }catch (Exception $e) {
@@ -121,8 +121,8 @@ class OrdersController extends Controller
     /**
      * 微信支付
      */
-    public function wechat_pay(){
-       
+    public function wechat_pay($data)
+    {
         $user = \App\AdminSetting::where("operate_number",request()->user->operate)->where("type", 1)->first();
         //支付
         $config = [
@@ -132,14 +132,6 @@ class OrdersController extends Controller
             'key'                => '12345678912345678912345678912345',   // API 密钥
 
             'notify_url'         => env("APP_URL").'api/V1/payments/wechat-notify',
-        
-            // 如需使用敏感接口（如退款、发送红包等）需要配置 API 证书路径(登录商户平台下载 API 证书)
-
-            // 'cert_path'          => 'path/to/your/cert.pem', // XXX: 绝对路径！！！！
-
-            // 'key_path'           => 'path/to/your/key',      // XXX: 绝对路径！！！！
-        
-            // 'sandbox' => false, // 设置为 false 或注释则关闭沙箱模式
             
         ];
         
@@ -149,15 +141,12 @@ class OrdersController extends Controller
         $result = $app->order->unify([
             'body'         => '畅伙伴-机器购买',
 
-            'out_trade_no' => 'J624833339586582',
+            'out_trade_no' => $data->order_no,
 
-            'total_fee'    => 88,
+            'total_fee'    => $data->price,
 
             'trade_type'   => 'APP', // 请对应换成你的支付方式对应的值类型
 
-            'notify_url' => 'https://pay.weixin.qq.com/wxpay/pay.action', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
-
-            // 'spbill_create_ip' => '123.12.12.123', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
         ]);
        
         
@@ -180,11 +169,22 @@ class OrdersController extends Controller
     /**
      * 修改订单状态
      */
-    public function paySuccess(){
+    public function paySuccess()
+    {
         $app = app('wechat.payment');
         $response = $app->handlePaidNotify(function ($message, $fail) {
-            //处理订单等，你的业务逻辑
             
+            //处理订单等，业务逻辑
+            if (!empty($_POST['code'] == 'SUCCESS')) {
+
+                $res = \App\Order::where('order_no',$order_no)->update(['status'=>1]);
+    
+            } else {
+    
+                echo "ERROR".PHP_EOL;
+    
+            }
+
         });
 
         return $response;
@@ -194,7 +194,8 @@ class OrdersController extends Controller
     /**
      * 修改订单状态
      */
-    public function AliPayCallback($order_no = ''){
+    public function AliPayCallback($order_no = '')
+    {
 
         if (!empty($_POST['code'] == 'SUCCESS')) {
 
@@ -205,7 +206,6 @@ class OrdersController extends Controller
             echo "ERROR".PHP_EOL;
 
         }
-
 
     }
 
