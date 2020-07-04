@@ -66,7 +66,12 @@ class OrdersController extends Controller
                 Factory::setOptions($this->getOptions());
                 //2. 发起API调用（以支付能力下的统一收单交易创建接口为例）
 
-                $result = Factory::payment()->App()->pay('1', $data->order_no, $data->price);
+                // $result = Factory::payment()->App()->pay('1', $data->order_no, $data->price / 100 );
+
+                $result = Factory::payment()->App()->pay("iPhone6 16G", "20200326235526001", "88.88", "2088002656718920");
+
+
+                // $result = Factory::payment()->common()->create("iPhone6 16G", "20200326235526001", "88.88", "2088002656718920");
 
                 if($result && $result->body)
                     return response()->json(['success'=>['message' => '订单创建成功!', 'data'=> ['sign' => $result->body]]]);
@@ -75,7 +80,7 @@ class OrdersController extends Controller
 
             }else{
                 //微信支付
-                $this->wechat_pay();
+                $this->wechat_pay($data);
             }
             
         }catch (Exception $e) {
@@ -109,38 +114,30 @@ class OrdersController extends Controller
         $options->alipayPublicKey = $data->alipay_sign; 
 
         //可设置异步通知接收服务地址（可选）
-
         $options->notifyUrl = env('APP_URL').'/callback ';
 
 
         //可设置AES密钥，调用AES加解密相关接口时需要（可选）
         // $options->encryptKey = "OIWl7LvhQ2LtgDHYrw1iEA=="; 
-
         return $options;
     }
 
     /**
      * 微信支付
      */
-    public function wechat_pay(){
-       
+    public function wechat_pay($data)
+    {
         $user = \App\AdminSetting::where("operate_number",request()->user->operate)->where("type", 1)->first();
         //支付
         $config = [
             // 必要配置
             'app_id'             => md5('wxd678efh567hg6787'),
+
             'mch_id'             => '14577xxxx',
+
             'key'                => '12345678912345678912345678912345',   // API 密钥
 
             'notify_url'         => env("APP_URL").'api/V1/payments/wechat-notify',
-        
-            // 如需使用敏感接口（如退款、发送红包等）需要配置 API 证书路径(登录商户平台下载 API 证书)
-
-            // 'cert_path'          => 'path/to/your/cert.pem', // XXX: 绝对路径！！！！
-
-            // 'key_path'           => 'path/to/your/key',      // XXX: 绝对路径！！！！
-        
-            // 'sandbox' => false, // 设置为 false 或注释则关闭沙箱模式
             
         ];
         
@@ -150,15 +147,12 @@ class OrdersController extends Controller
         $result = $app->order->unify([
             'body'         => '畅伙伴-机器购买',
 
-            'out_trade_no' => 'J624833339586582',
+            'out_trade_no' => $data->order_no,
 
-            'total_fee'    => 88,
+            'total_fee'    => $data->price,
 
             'trade_type'   => 'APP', // 请对应换成你的支付方式对应的值类型
 
-            'notify_url' => 'https://pay.weixin.qq.com/wxpay/pay.action', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
-
-            // 'spbill_create_ip' => '123.12.12.123', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
         ]);
        
         
@@ -166,10 +160,6 @@ class OrdersController extends Controller
             $result = $app->jssdk->appConfig($result['prepay_id']);//第二次签名
 
             return response()->json(['success'=>['message' => '订单创建成功!', 'data'=> ['sign' => $result]]]);
-            // return [
-            //     'code' => 'success',
-            //     'msg' => $result
-            // ];
             
          }else{
             // 　　\EasyWeChat\Log::error('微信支付签名失败:'.var_export($result,1));
@@ -179,13 +169,24 @@ class OrdersController extends Controller
     }
 
     /**
-     * 修改订单状态
+     * 修改订单状态(微信)
      */
-    public function paySuccess(){
+    public function paySuccess()
+    {
         $app = app('wechat.payment');
         $response = $app->handlePaidNotify(function ($message, $fail) {
-            //处理订单等，你的业务逻辑
             
+            //处理订单等，业务逻辑
+            if (!empty($_POST['code'] == 'SUCCESS')) {
+
+                $res = \App\Order::where('order_no',$order_no)->update(['status'=>1]);
+    
+            } else {
+    
+                echo "ERROR".PHP_EOL;
+    
+            }
+
         });
 
         return $response;
@@ -193,11 +194,16 @@ class OrdersController extends Controller
 
 
     /**
-     * 修改订单状态
+     * 修改订单状态(支付宝)
      */
     public function AliPayCallback(){
 
-        // if (!empty($_POST['code'] == 'SUCCESS')) {
+        $parameters = $_POST;
+        dd($parameters);
+
+        Factory::payment()->common()->verifyNotify($parameters);
+
+        if (!empty($_POST['code'] == 'SUCCESS')) {
 
             $res = \App\Order::where('order_no',$_POST['out_trade_no'])->update(['status'=>1]);
 
@@ -207,6 +213,7 @@ class OrdersController extends Controller
 
         // }
 
+        }
     }
 
     /**
@@ -214,7 +221,6 @@ class OrdersController extends Controller
      */
     public function  getOrder(Request $request)
     {
-
         try{ 
             
             $type = $request->type ?? 'all';
@@ -251,6 +257,36 @@ class OrdersController extends Controller
 
         }
 
+    }
+
+    /**
+     * 物流接口
+     */
+    public function orderLogistics()
+    {
+        //参数设置
+        $post_data = array();
+        $post_data["customer"] = '*****';
+        $key= '*****' ;
+        $post_data["param"] = '{"com":"*****","num":"*****"}';
+
+        $url='http://poll.kuaidi100.com/poll/query.do';
+        $post_data["sign"] = md5($post_data["param"].$key.$post_data["customer"]);
+        $post_data["sign"] = strtoupper($post_data["sign"]);
+        $o="";
+        foreach ($post_data as $k=>$v)
+        {
+            $o.= "$k=".urlencode($v)."&";		//默认UTF-8编码格式
+        }
+        $post_data=substr($o,0,-1);
+        $ch = curl_init();
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_HEADER, 0);
+            curl_setopt($ch, CURLOPT_URL,$url);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+            $result = curl_exec($ch);
+            $data = str_replace("\"",'"',$result );
+            $data = json_decode($data,true);
     }
 
 }
