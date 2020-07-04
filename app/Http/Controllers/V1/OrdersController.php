@@ -66,12 +66,7 @@ class OrdersController extends Controller
                 Factory::setOptions($this->getOptions());
                 //2. 发起API调用（以支付能力下的统一收单交易创建接口为例）
 
-                // $result = Factory::payment()->App()->pay('1', $data->order_no, $data->price / 100 );
-
-                $result = Factory::payment()->App()->pay("iPhone6 16G", "20200326235526001", "88.88", "2088002656718920");
-
-
-                // $result = Factory::payment()->common()->create("iPhone6 16G", "20200326235526001", "88.88", "2088002656718920");
+                $result = Factory::payment()->App()->pay('1', $data->order_no, $data->price / 100 );
 
                 if($result && $result->body)
                     return response()->json(['success'=>['message' => '订单创建成功!', 'data'=> ['sign' => $result->body]]]);
