@@ -19,9 +19,11 @@ class OrdersController extends Controller
     {
         try{
 
-            $request->user;
-
             if(!$request->address) return response()->json(['error'=>['message' => '缺少必要参数:收获地址']]);
+
+            $Address = \App\Address::where('id',$request->address)->first();
+
+            if(!$Address) return response()->json(['error'=>['message' => '缺少必要参数:请设置您的收货地址']]);
 
             if(!$request->numbers) return response()->json(['error'=>['message' => '缺少必要参数:购买数量']]);
 
@@ -42,8 +44,7 @@ class OrdersController extends Controller
 
                 'order_no'=>$order_no,
 
-                // 'address'=>$request->province.$request->area.$request->city.$request->detail,
-                'address'=>$request->address,
+                'address'=>$address->name.','.$address->tel.','.$address->province.','.$address->city.','.$address->area.',详细地址:'.$address->detail,
 
                 'numbers'=>$request->numbers,
 
@@ -127,12 +128,16 @@ class OrdersController extends Controller
      */
     public function AliPayCallback($order_no = ''){
 
-        if(isset($_POST['order_no']) or empty($order_no)){
-            return 'false';
-        }else{
+        if (!empty($_POST['code'] == 'SUCCESS')) {
+
             $res = \App\Order::where('order_no',$order_no)->update(['status'=>1]);
-            return 'success';
+
+        } else {
+
+            echo "ERROR".PHP_EOL;
+
         }
+
 
     }
 

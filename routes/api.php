@@ -117,12 +117,7 @@ Route::prefix('V1')->group(function () {
      * 修改用户头像
     */
     Route::middleware('AuthToken')->post('/updateUserInfo', 'V1\SetUserController@editUserInfo');
-
-
-    /**
-     * 查询联行号接口
-     */
-    Route::middleware('AuthToken')->get('/openBank', 'V1\BankController@openBank');
+    
 
     /**
      * 添加银行卡结算信息接口

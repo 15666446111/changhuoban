@@ -17,6 +17,5 @@ class VerifyCsrfToken extends Middleware
          */
            '/trade',
            'wechat',
-           '/reg',
     ];
 }

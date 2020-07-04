@@ -37,7 +37,7 @@ class HandleTradeInfo implements ShouldQueue
      */
     public $timeout = 120;
 
-    public function __construct($params,$merchant,$agId,$configId)
+    public function __construct($params = '',$merchant = '',$agId = '',$configId = '',$number = '')
     {
         $this->trade = $params;
 
@@ -46,6 +46,9 @@ class HandleTradeInfo implements ShouldQueue
         $this->agentId = $agId;
 
         $this->configAgentId = $configId;
+
+        $this->short_id = $number;
+
     }
 
     /**
@@ -60,7 +63,7 @@ class HandleTradeInfo implements ShouldQueue
     */
     public function getToken($tokenType)
     {
-        $url = $this->http.'/api/acq-channel-gateway/v1/acq-channel-auth-service/tokens/token';
+        $url = 'https://pmpos.chanpay.com/api/acq-channel-gateway/v1/acq-channel-auth-service/tokens/token';
         $postData['agentId'] = $this->agentId;
         $postData['tokenType'] = $tokenType;
         $data = $this->send($url, $postData);
@@ -71,7 +74,7 @@ class HandleTradeInfo implements ShouldQueue
     public function send($url='', $postData=[])
     {
         ksort($postData);
-        $stringA = $this->key.implode('', $postData);
+        $stringA = '490306242EC25E03'.implode('', $postData);
         $postData['sign'] = MD5($stringA);
         $data = $this->sendPost($url, json_encode($postData));
         return json_decode($data, true);
@@ -184,26 +187,28 @@ class HandleTradeInfo implements ShouldQueue
         try {
 
             $token = $this->getToken('2083');
-            $url = $this->http.'/api/acq-channel-gateway/v1/terminal-service/terms/activityReformV3/amountFrozen';
+            $url = 'https://pmpos.chanpay.com/api/acq-channel-gateway/v1/terminal-service/terms/activityReformV3/amountFrozen';
             $traceNo = $this->msectime();
+            
             $postData = [
                 'agentId' => $this->agentId,      // 渠道编号
                 'token' => $token['data']['token'],     // 令牌
                 'traceNo' => $traceNo,        // 请求流水号
-                'merchId' => $this->$merchants->merchId,      // 商户号
+                'merchId' => $this->$merchants->code,      // 商户号
                 'directAgentId' => $this->directAgentId,   // 商户直属代理商编号
                 'sn' => $this->$merchants->machines->sn,        // 终端SN序列号
                 'posCharge' => \App\Machine::where('sn',$this->$merchants->machines->sn)->first()->policys->active_price,       // POS服务费金额(元)
                 'vipCharge' => '0',         // VIP会员服务费金额(元)
                 'simCharge' => '0',       // SIM服务费金额(元)
                 'smsSend' => '1',         // 是否发送短信(1发送 0不发送)
-                'smsCode' => '20200426085542-0007',        // 短信模板编号
+                'smsCode' => $this->short_id,        // 短信模板编号
             ];
             $data = $this->send($url, $postData);
             return $data;
 
         } catch (\Exception $e) {
             
+            $e->getMessage();
 
         }
     }
