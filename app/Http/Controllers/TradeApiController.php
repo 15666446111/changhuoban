@@ -18,7 +18,7 @@ class TradeApiController extends Controller
      */
     public function index(Request $request)
     {
-
+        
         // 写入到推送信息
         $trade_push = \App\RegisterNotice::create([
             'title'     =>  '畅捷同步通知推送接口',
@@ -46,30 +46,60 @@ class TradeApiController extends Controller
         // 推送的数据列表
         $dataList = json_decode($request->dataList);
 
+        // $dataType = 0;
         if ($request->dataType == 0) {
             // 商户开通通知处理
-            
-            foreach ($dataList as $key => $value) {
+            try{
 
-                $regContent = \App\RegNoticeContent::create([
-                    //商户直属机构号
-                    'agentId'       =>      $value->agentId,
-                    //商户号
-                    'merchantId'    =>      $value->merchantId,
-                    //终端号
-                    'termId'        =>      $value->termId,
-                    //终端SN
-                    'termSn'        =>      $value->termSn,
-                    //终端型号
-                    'termModel'     =>      $value->termModel,
-                    //助贷通版本号
-                    'version'       =>      $value->version,
-                ]);
+                foreach ($dataList as $key => $value) {
 
-                //压入到redis去处理剩下的逻辑
-                HandleTradeInfo::dispatch(json_encode($regContent))->onConnection('redis');
+                    $regContent = \App\RegNoticeContent::create([
+                        //商户直属机构号
+                        'agentId'       =>      $value['agentId'],
+                        //商户号
+                        'merchantId'    =>      $value['merchantId'],
+                        //终端号
+                        'termId'        =>      $value['termId'],
+                        //终端SN
+                        'termSn'        =>      $value['termSn'],
+                        //终端型号
+                        'termModel'     =>      $value['termModel'],
+                        //助贷通版本号
+                        'version'       =>      $value['version'],
+                    ]);
+                    
+                    $machines = \App\Machine::where('sn',$value['termSn'])->where('user_id','<>','')->first();
+                    
+                    // $machines->style_id = $value['termModel'];
+
+                    $machines->save();
+                    
+                    $merchants = \App\Merchant::create([
+
+                        'user_id'	=>	$machines->user_id,
+
+                        'code'		=>	$value['merchantId'],
+
+                        'operate'	=>	\App\User::where('id',$machines->user_id)->first()->operate
+
+                    ]);
+
+                    $machines->merchant_id = $merchants->id;
+
+                    $machines->save();
+                    
+                    //压入到redis去处理剩下的逻辑
+                    HandleTradeInfo::dispatch($merchants,$value['agentId'],$request->configAgentId);
+
+                }
+
+            } catch (\Exception $e) {
+
+                $reData['responseCode'] = '01';
+                $reData['responseDesc'] = $e->getMessage();
+
             }
-
+            
         } else {
             // 交易通知处理
             
@@ -80,14 +110,14 @@ class TradeApiController extends Controller
                     // $value->sysRespCode != '00'  交易失败的数据
                     // $desc == '原交易已冲正'       无效冲正类交易
                     // 交易冲正时可能会推送多笔交易，已平台收单应答描述前六位为"原交易已冲正"区分是否为无效的冲正类交易，无效的交易信息不进行保存和处理
-                    $desc = substr($value->sysRespDesc, 0, 18);
-                    if ($value->sysRespCode != '00' || $desc == '原交易已冲正') {
-                        continue;
-                    }
+                    // $desc = substr($value->sysRespDesc, 0, 18);
+                    // if ($value->sysRespCode != '00' || $desc == '原交易已冲正') {
+                    //     continue;
+                    // }
+                    $tradeData = [
 
-
-                    // 新建交易订单 写入交易表 并且 分发到队列处理
-                    $tradeOrder = \App\Trade::create([
+                        // 交易通知配置机构号
+                        'trade_no'   => $request->transDate . $value->rrn,
 
                         // 交易通知配置机构号
                         'agt_merchant_id'   => $request->configAgentId,
@@ -128,6 +158,12 @@ class TradeApiController extends Controller
                         // 商户号
                         'merchant_code'     => $value->merchantId,
 
+                        // 商户手机号
+                        'merchant_phone'    => $value->mobileNo ?? '',
+
+                        // 商户名称
+                        'merchant_name'     => $value->merchantName,
+
                         // 终端号
                         'termId'            => $value->termId ?? '',
 
@@ -164,7 +200,29 @@ class TradeApiController extends Controller
                         // 原交易凭证号
                         'originaltraceNo'   => $value->originaltraceNo ?? null
 
-                    ]);
+                    ]
+
+                    $reduceTranCode = [
+                        '020002' => '消费撤销',
+                        '020003' => '消费冲正',
+                        'T20003' => '日结消费冲正',
+                        '024102' => '预授权完成撤销',
+                        '024103' => '预授权完成冲正',
+                        '02Y600' => '银联二维码撤销',
+                    ];
+
+                    // 为冲正和撤销类交易时，交易金额和结算金额储存负值
+                    if (!empty($reduceTranCode[$value->tranCode])) {
+
+                        $tradeData['amount']        => $value->amount * -1;
+
+                        $tradeData['settle_amount'] => $value->settleAmount * -1;
+
+                    }
+
+
+                    // 新建交易订单 写入交易表 并且 分发到队列处理
+                    $tradeOrder = \App\Trade::create();
 
 
                     // 推送信息的不常用交易信息，另外储存到交易副表
@@ -196,10 +254,6 @@ class TradeApiController extends Controller
                         'merchLevel'        => $value->merchLevel,
                         // 终端型号
                         'termModel'         => $value->termModel ?? '',
-                        // 商户手机号
-                        'mobileNo'          => $value->mobileNo ?? '',
-                        // 商户名称
-                        'merchantName'      => $value->merchantName,
                         // 清算日期
                         'settleDate'        => $value->settleDate ?? 0,
                         // 原交易批次号
@@ -210,6 +264,7 @@ class TradeApiController extends Controller
                     ]);
                     
                     // 分发到队列 由队列去处理剩下的逻辑
+                    
                     // HandleTradeInfo::dispatch($tradeOrder);
                     
                     // 分润测试，正式环境需分发到队列中处理
@@ -226,8 +281,6 @@ class TradeApiController extends Controller
             }
         }
         
-        
-
         return json_encode($reData);
     }
 }

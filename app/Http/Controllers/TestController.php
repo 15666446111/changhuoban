@@ -25,6 +25,19 @@ class TestController extends Controller
     {
 
     	/**
+    	 * @version [<vector>] [< 判断是否是成功交易>]
+    	 * $desc == '原交易已冲正'       无效冲正类交易
+    	 * 交易冲正时可能会推送多笔交易，已平台收单应答描述前六位为"原交易已冲正"区分是否为无效的冲正类交易,
+    	 * 无效的交易信息不进行保存和处理
+    	 */
+    	if ($this->trade->sysRespCode != '00' || substr($this->trade->sysRespDesc, 0, 18) == '原交易已冲正') {
+    		$this->trade->remark = '该交易为无效交易';
+    		$this->trade->is_invalid = 1;
+            $this->trade->save();
+            return false;
+    	}
+
+    	/**
          * @version [<vector>] [< 检查该机器是否入库>]
          */
         if (empty($this->trade->merchants_sn)) {
@@ -33,49 +46,71 @@ class TestController extends Controller
             return false;
         }
 
-        // /**
-        //  * @version [<vector>] [< 检查该机器是否发货>]
-        //  */
+        /**
+         * @version [<vector>] [< 检查该机器是否发货>]
+         */
         if (!$this->trade->merchants_sn->user_id || $this->trade->merchants_sn->user_id == "null") {
             $this->trade->remark = '该机器还未发货!';
             $this->trade->save();
             return false;
         }
 
-        // /**
-        //  * @version [<vector>] [< 检查该机器所属操盘方和畅捷后台是否一致>]
-        //  */
-        if ($this->trade->merchants_sn->operate != $this->trade->agt_merchant_id) {
-            $this->trade->remark = '该机器归属操盘方信息有误';
-            $this->trade->save();
-            return false;
-        }
+        /**
+         * @version [<vector>] [< 检查该机器所属操盘方和畅捷后台是否一致>]
+         */
+        // if ($this->trade->merchants_sn->operate != $this->trade->agt_merchant_id) {
+        //     $this->trade->remark = '该机器归属操盘方信息有误';
+        //     $this->trade->save();
+        //     return false;
+        // }
 
-        // /**
-        //  * @version [<vector>] [< 检查是否是重复推送的数据 >]
-        //  * transDate: 接口推送的交易日期
-        //  * rrn: 参考号
-        //  */
-        $sameTrade = \App\Trade::where('transDate', $this->trade->transDate)->where('rrn', $this->trade->rrn)
-                                ->first();
-        if (empty($sameTrade)) {
-            $this->trade->remark = '该交易为重复推送数据';
-            $this->trade->save();
-            return false;
-        }
+        /**
+         * @version [<vector>] [< 检查是否是重复推送的数据 >]
+         * transDate: 接口推送的交易日期
+         * rrn: 参考号
+         */
+      //   $sameTrade = \App\Trade::where('transDate', $this->trade->transDate)
+      //   						->where('rrn', $this->trade->rrn)
+      //   						->where('id', '<>', $this->trade->id)
+      //                           ->first();
+      //   if (!empty($sameTrade)) {
+      //       $this->trade->remark = '该交易为重复推送数据';
+    		// $this->trade->is_repeat = 1;
+      //       $this->trade->save();
+      //       return false;
+      //   }
 
+        /**
+         * 更新交易订单的用户id和机具id信息
+         */
+        $this->trade->user_id = $this->trade->merchants_sn->user_id;
+        $this->trade->machine_id = $this->trade->merchants_sn->id;
+        $this->trade->operate = $this->trade->merchants_sn->operate;
+        $this->trade->save();
 
         /**
          * @version [<vector>] [< 实行商户绑定>]
+         * 有问题
          */
-        if ($this->trade->merchants_sn->bind_status == "0" || $this->trade->merchants_sn->merchant_id == null) {
-            
+        
+        $merInfo = \App\Merchant::where('code', $this->trade->merchant_code)->first();
+
+        if (!$merInfo) {
+
+        	$merInfo = \App\Merchant::create([
+            	'user_id'		=> $this->trade->merchants_sn->user_id,
+            	'code'			=> $this->trade->merchant_code,
+            	'operate'		=> $this->trade->merchants_sn->operate,
+            	'name'			=> $this->trade->merchant_name,
+            	'phone'			=> $this->trade->merchant_phone,
+            ]);
+
+            \App\Machine::where('sn', $this->trade->sn)->update([
+            	'merchant_id' => $merInfo['id'],
+            	'bind_status' => 1
+            ]);
+
         }
-
-
-        /**
-         * 更新交易订单的用户id等信息
-         */
         
 
         /**
@@ -87,6 +122,7 @@ class TestController extends Controller
             $cashResult = $cash->cash();
 
         } catch (\Exception $e) {
+        	dd($e->getMessage());
             // $this->trade->remark = $this->trade->remark."<br/>分润:".json_encode($e->getMessage());
             // $this->trade->save();
         }

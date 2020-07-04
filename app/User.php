@@ -108,6 +108,15 @@ class User extends Authenticatable
         return $this->hasMany('\App\Merchant', 'user_id', 'id');
     }
 
+    /**
+     * [admin_user 反向关联后台用户表]
+     * @return [type] [description]
+     */
+    public function admin_user()
+    {
+        return $this->belongsTo('\App\AdminUser', 'operate', 'operate');
+    }
+
 
     /**
      * @Author    Pudding

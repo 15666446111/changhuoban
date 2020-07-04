@@ -46,6 +46,7 @@ class HandleTradeInfo implements ShouldQueue
         $this->agentId = $agId;
 
         $this->configAgentId = $configId;
+
     }
 
     /**
@@ -60,7 +61,7 @@ class HandleTradeInfo implements ShouldQueue
     */
     public function getToken($tokenType)
     {
-        $url = $this->http.'/api/acq-channel-gateway/v1/acq-channel-auth-service/tokens/token';
+        $url = 'https://pmpos.chanpay.com/api/acq-channel-gateway/v1/acq-channel-auth-service/tokens/token';
         $postData['agentId'] = $this->agentId;
         $postData['tokenType'] = $tokenType;
         $data = $this->send($url, $postData);
@@ -71,7 +72,7 @@ class HandleTradeInfo implements ShouldQueue
     public function send($url='', $postData=[])
     {
         ksort($postData);
-        $stringA = $this->key.implode('', $postData);
+        $stringA = '490306242EC25E03'.implode('', $postData);
         $postData['sign'] = MD5($stringA);
         $data = $this->sendPost($url, json_encode($postData));
         return json_decode($data, true);
@@ -184,7 +185,7 @@ class HandleTradeInfo implements ShouldQueue
         try {
 
             $token = $this->getToken('2083');
-            $url = $this->http.'/api/acq-channel-gateway/v1/terminal-service/terms/activityReformV3/amountFrozen';
+            $url = 'https://pmpos.chanpay.com/api/acq-channel-gateway/v1/terminal-service/terms/activityReformV3/amountFrozen';
             $traceNo = $this->msectime();
             $postData = [
                 'agentId' => $this->agentId,      // 渠道编号
@@ -204,6 +205,7 @@ class HandleTradeInfo implements ShouldQueue
 
         } catch (\Exception $e) {
             
+            $e->getMessage();
 
         }
     }
