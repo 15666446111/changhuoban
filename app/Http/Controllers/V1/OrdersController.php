@@ -66,7 +66,9 @@ class OrdersController extends Controller
                 Factory::setOptions($this->getOptions());
                 //2. 发起API调用（以支付能力下的统一收单交易创建接口为例）
 
-                $result = Factory::payment()->App()->pay('1', $data->order_no, $data->price / 100 );
+                // $result = Factory::payment()->App()->pay('1', $data->order_no, $data->price / 100 );
+
+                $result = Factory::payment()->common()->create("iPhone6 16G", "20200326235526001", "88.88", "2088002656718920");
 
                 if($result && $result->body)
                     return response()->json(['success'=>['message' => '订单创建成功!', 'data'=> ['sign' => $result->body]]]);
@@ -109,13 +111,11 @@ class OrdersController extends Controller
         $options->alipayPublicKey = $data->alipay_sign; 
 
         //可设置异步通知接收服务地址（可选）
-
         $options->notifyUrl = env('APP_URL').'/callback ';
 
 
         //可设置AES密钥，调用AES加解密相关接口时需要（可选）
         // $options->encryptKey = "OIWl7LvhQ2LtgDHYrw1iEA=="; 
-
         return $options;
     }
 
@@ -129,7 +129,9 @@ class OrdersController extends Controller
         $config = [
             // 必要配置
             'app_id'             => md5('wxd678efh567hg6787'),
+
             'mch_id'             => '14577xxxx',
+
             'key'                => '12345678912345678912345678912345',   // API 密钥
 
             'notify_url'         => env("APP_URL").'api/V1/payments/wechat-notify',
@@ -155,10 +157,6 @@ class OrdersController extends Controller
             $result = $app->jssdk->appConfig($result['prepay_id']);//第二次签名
 
             return response()->json(['success'=>['message' => '订单创建成功!', 'data'=> ['sign' => $result]]]);
-            // return [
-            //     'code' => 'success',
-            //     'msg' => $result
-            // ];
             
          }else{
             // 　　\EasyWeChat\Log::error('微信支付签名失败:'.var_export($result,1));
@@ -168,7 +166,7 @@ class OrdersController extends Controller
     }
 
     /**
-     * 修改订单状态
+     * 修改订单状态(微信)
      */
     public function paySuccess()
     {
@@ -193,10 +191,14 @@ class OrdersController extends Controller
 
 
     /**
-     * 修改订单状态
+     * 修改订单状态(支付宝)
      */
-    
     public function AliPayCallback(){
+
+        $parameters = $_POST;
+        dd($parameters);
+
+        Factory::payment()->common()->verifyNotify($parameters);
 
         if (!empty($_POST['code'] == 'SUCCESS')) {
 
@@ -215,7 +217,6 @@ class OrdersController extends Controller
      */
     public function  getOrder(Request $request)
     {
-
         try{ 
             
             $type = $request->type ?? 'all';
@@ -252,6 +253,36 @@ class OrdersController extends Controller
 
         }
 
+    }
+
+    /**
+     * 物流接口
+     */
+    public function orderLogistics()
+    {
+        //参数设置
+        $post_data = array();
+        $post_data["customer"] = '*****';
+        $key= '*****' ;
+        $post_data["param"] = '{"com":"*****","num":"*****"}';
+
+        $url='http://poll.kuaidi100.com/poll/query.do';
+        $post_data["sign"] = md5($post_data["param"].$key.$post_data["customer"]);
+        $post_data["sign"] = strtoupper($post_data["sign"]);
+        $o="";
+        foreach ($post_data as $k=>$v)
+        {
+            $o.= "$k=".urlencode($v)."&";		//默认UTF-8编码格式
+        }
+        $post_data=substr($o,0,-1);
+        $ch = curl_init();
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_HEADER, 0);
+            curl_setopt($ch, CURLOPT_URL,$url);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+            $result = curl_exec($ch);
+            $data = str_replace("\"",'"',$result );
+            $data = json_decode($data,true);
     }
 
 }
