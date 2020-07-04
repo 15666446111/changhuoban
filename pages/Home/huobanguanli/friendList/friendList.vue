@@ -48,18 +48,19 @@
 				</view>
 			</view>
 		</navigator>
-		<view class="backgroundColor">
+		<view class="backgroundColor" v-if="type!==3">
 			<view class="data">
 				<view class="phone">设置政策信息</view>
 			</view>
 			<view class="dara-xian"></view>
+				<navigator v-for="(item, index) in PolicyList" :key="index" :url="'../fenruencanshu/fenruencanshu?pid=' + item.id + '&uid=' + UserInfo.id">
+					<view class="data">
+						<view class="phone">{{item.title}}</view>
+						<view class="mark">设置</view>
+					</view>
+				</navigator>
 			
-			<navigator v-for="(item, index) in PolicyList" :key="index" :url="'../fenruencanshu/fenruencanshu?pid=' + item.id + '&uid=' + UserInfo.id">
-				<view class="data">
-					<view class="phone">{{item.title}}</view>
-					<view class="mark">设置</view>
-				</view>
-			</navigator>
+			
 		</view>
 	</view>
 </template>
@@ -71,11 +72,14 @@ export default {
 	data() {
 		return {
 			UserInfo: {},
-			PolicyList: []
+			PolicyList: [],
+			type: ''
 		};
 	},
 	
 	onLoad: function (options){
+		this.type 	= uni.getStorageSync('type');
+		
 		// 获取伙伴信息
 		this.getUserInfo(options.user);
 		// 获取政策信息

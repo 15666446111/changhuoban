@@ -34,8 +34,21 @@
 					<view class="select-name">开户行</view>
 					<input class="select-text" placeholder="请输入开户行" v-model="BankInfo.open_bank"/>
 				</view>
+				<view class="hengxian"></view>
 				
 				<view class="select-view">
+					<view class="select-name">省</view>
+					<input class="select-text" placeholder="请输入省" v-model="BankInfo.province"/>
+				</view>
+				<view class="hengxian"></view>
+				
+				<view class="select-view">
+					<view class="select-name">市</view>
+					<input class="select-text" placeholder="请输入市" v-model="BankInfo.city"/>
+				</view>
+				<view class="hengxian"></view>
+				
+				<view class="select-view"> 
 					<checkbox-group @change="defaultType">
 						<label>
 							<checkbox class="se-defulat" value="1" color="#FF8C00" :checked="this.BankInfo.is_default == 1 ? true : false" />设为默认
@@ -99,6 +112,7 @@ export default {
 		},
 		
 		submit(){
+			// console.log(this.BankInfo.is_default);return
 			if (this.user_name == '') {
 				uni.showToast({ title: '姓名不能为空', icon: 'none' });
 				return false;
@@ -124,6 +138,16 @@ export default {
 				return false;
 			}
 			
+			if (this.province == '') {
+				uni.showToast({ title: '省不能为空', icon: 'none' });
+				return false;
+			}
+			
+			if (this.city == '') {
+				uni.showToast({ title: '市不能为空', icon: 'none' });
+				return false;
+			}
+			
 			uni.showLoading();
 			
 			net({
@@ -137,6 +161,8 @@ export default {
 					bank: this.BankInfo.bank,
 					open_bank: this.BankInfo.open_bank,
 					is_default: this.BankInfo.is_default,
+					province: this.BankInfo.province,
+					city: this.BankInfo.city,
 				},
 	            success: (res) => {
 					uni.hideLoading();

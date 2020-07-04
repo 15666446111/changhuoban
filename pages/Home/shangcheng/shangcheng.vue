@@ -112,6 +112,17 @@ export default {
 			success: res => { this.scrollH = res.windowHeight - uni.upx2px(80); }
 		});
 	},
+
+	//监听下拉刷新动作的执行方法，每次手动下拉刷新都会执行一次
+    onPullDownRefresh() {
+		uni.showLoading();
+		// 页面加载的时候获取产品分类
+		this.getProductType();
+		//获取可视区域高度
+		uni.getSystemInfo({
+			success: res => { this.scrollH = res.windowHeight - uni.upx2px(80); }
+		});
+	},
 	
 	methods: {
 		// 获取产品类型信息

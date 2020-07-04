@@ -8,14 +8,14 @@
 		</view>
 		<view class="view" v-for="(item, index) in partnerList" :key="index" v-if="item.id != userInfo.id" @click="optPartner(item)">
 			<view class="checkbox-view">
-				<text class="checkbox-text">{{item.name}}</text>
+				<text class="checkbox-text">{{item.nickname}}</text>
 				<!-- <radio class="checkbox" :value="item.id" color="#f98021" /> -->
 			</view>
 			<view class="xian"></view>
 			<view class="phone-time">
 				<view class="phone">
 					<view class="phone-name">手机号</view>
-					<view class="phone-text">{{item.account}}</view>
+					<view class="phone-text">{{item.phone}}</view>
 				</view>
 				<view class="phone">
 					<view class="phone-name">加入时间</view>

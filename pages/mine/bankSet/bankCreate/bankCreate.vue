@@ -37,6 +37,19 @@
 				<view class="hengxian"></view>
 				
 				<view class="select-view">
+					<view class="select-name">省</view>
+					<input class="select-text" placeholder="请输入省" v-model="province"/>
+				</view>
+				<view class="hengxian"></view>
+				
+				<view class="select-view">
+					<view class="select-name">市</view>
+					<input class="select-text" placeholder="请输入市" v-model="city"/>
+				</view>
+				<view class="hengxian"></view>
+				
+				
+				<view class="select-view">
 					<checkbox-group @change="defaultType">
 						<label>
 							<checkbox class="se-defulat" value="1" color="#FF8C00" />设为默认
@@ -60,7 +73,9 @@ export default {
 			bank_name: '',
 			bank: '',
 			open_bank: '',
-			is_default: 0
+			is_default: 0,
+			province:'',
+			city: '',
 		};
 	},
 	
@@ -113,10 +128,25 @@ export default {
 				return false;
 			}
 			
+			if (this.province == '') {
+				uni.showToast({
+					title: '省份不能为空',
+					icon: 'none'
+				});
+				return false;
+			}
+			
+			if (this.city == '') {
+				uni.showToast({
+					title: '市不能为空',
+					icon: 'none'
+				});
+				return false;
+			}
+			
 			uni.showLoading({
 				mask: true
 			});
-			
 			net({
 	        	url: "/V1/createBank",
 	            method: 'POST',
@@ -127,6 +157,8 @@ export default {
 					bank: this.bank,
 					open_bank: this.open_bank,
 					is_default: this.is_default,
+					province: this.province,
+					city: this.city,
 				},
 	            success: (res) => {
 					if (res.data.success) {

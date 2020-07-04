@@ -26,7 +26,7 @@
 			// 获取用户个人信息
 				getUserInfo(){
 					net({
-			        	url:"/V1/mine",
+			        	url:"/V1/userInfo",
 			            method:'get',
 			            success: (res) => {
 							console.log(res);

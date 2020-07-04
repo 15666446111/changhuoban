@@ -59,11 +59,13 @@ export default {
 						msg: '手机号格式不正确'
 					}
 				]
-			}
+			},
+			'operate': ''
 		};
 	},
 	
 	onLoad(option) {
+		this.operate 	= uni.getStorageSync('operate');
 		this.merchant_sn = (option.merchant_sn == undefined ? '' : option.merchant_sn);
 	},
 	
@@ -109,6 +111,7 @@ export default {
 					merchant_name: this.merchant_name,
 					merchant_phone: this.merchant_phone,
 					merchant_sn: this.merchant_sn,
+					operate:this.operate
 				},
 	            success: (res) => {
 					uni.hideLoading();
@@ -117,11 +120,9 @@ export default {
 						uni.showToast({
 							title: '登记成功',
 							icon: 'none',
-							success() {
+							success : function(){
 								setTimeout(function() {
-									uni.redirectTo({
-										url: 'shanghudengji'
-									})
+									uni.navigateBack();
 								}, 1500);
 							}
 						});

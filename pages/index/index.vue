@@ -23,7 +23,7 @@
 		
 		<button class="loginButton" @click="submit">立即登录</button>
 		
-		<navigator url="register">
+		<navigator url="forgetPassword">
 			<view class="d-flex">
 				<view class="d-box">
 					<view class="forget">忘记密码？</view>
@@ -87,14 +87,8 @@ export default {
 		},
 		//提交表单
 		submit() {
-			//验证用户名
-			if (!this.validate('account')){
-				return false;
-			};
-			//验证密码
-			if (!this.validate('password')){
-				return false;
-			};
+			//验证用户名  验证密码
+			if (!this.validate('account') || !this.validate('password') ) return false; 
 			uni.showToast({ title: '登录中', icon: 'loading', mask: true, duration: 10000 });
 			
 			uni.request({
@@ -105,12 +99,15 @@ export default {
 					password: this.password
 				},
 				success: res => {
+					console.log(res);
 					uni.hideToast();
 					try {
 						if (res.data.success && res.data.success.token) {
 							uni.setStorageSync('token', res.data.success.token);
-							uni.switchTab({ url: '/pages/Home/shouye' });
+							uni.setStorageSync('operate', res.data.success.operate);
+							uni.setStorageSync('type', res.data.success.type);
 							uni.showToast({ title: '登录成功', icon: 'none' });
+							uni.switchTab({ url: '/pages/Home/home' });
 						} else {
 							uni.showToast({ title: res.data.error.message, icon: 'none' });
 						}

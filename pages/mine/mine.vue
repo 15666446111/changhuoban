@@ -39,7 +39,7 @@
 					<view class="shuxian"></view>
 					<view class="eings-view">
 						<view style="color: #666;">返现钱包(元)</view>
-						<view style="color: #EE9900;">{{UserInfo.return_blance| numberGSH }}</view>
+						<view style="color: #EE9900;">{{UserInfo.return_blance | numberGSH }}</view>
 					</view>
 				</view>
 			</view>
@@ -154,11 +154,20 @@ export default {
 		
 	// 初始化数据
 	onLoad(){
+		
 		uni.showLoading();
+		this.getUserInfo();
+		
 	},
 	
-	onShow() {
+	//监听下拉刷新动作的执行方法，每次手动下拉刷新都会执行一次
+	onPullDownRefresh() {
+		uni.showLoading();
 		this.getUserInfo();
+		
+	    setTimeout(function () {
+	        uni.stopPullDownRefresh();  //停止下拉刷新动画
+	    }, 2000);
 	},
 
 	methods: {
@@ -174,77 +183,77 @@ export default {
 	            }
 	      	})
 		},
-		changeAvatar(heading){
-		        uni.showActionSheet({
-		        // itemList按钮的文字接受的是数组
-		          itemList: ["查看头像","从相册选择图片"],
-		          success(e){
-		            var index = e.tapIndex
-		            if(index === 0){
-		            // 用户点击了预览当前图片
-		            // 可以自己实现当前头像链接的读取
-		              let url  = heading
-		              let arr=[]
-		              arr.push(url)
-		              uni.previewImage({
-		              // 预览功能图片也必须是数组的
-		                urls: arr
-		              })
-		            }else if(index === 1){
-		            // 用户点击了从图库上传
-		              uni.chooseImage({
-		                count: 1,
-		                sizeType: ["compressed"],
-		                success(response) {
+		// changeAvatar(heading){
+		//         uni.showActionSheet({
+		//         // itemList按钮的文字接受的是数组
+		//           itemList: ["查看头像","从相册选择图片"],
+		//           success(e){
+		//             var index = e.tapIndex
+		//             if(index === 0){
+		//             // 用户点击了预览当前图片
+		//             // 可以自己实现当前头像链接的读取
+		//               let url  = heading
+		//               let arr=[]
+		//               arr.push(url)
+		//               uni.previewImage({
+		//               // 预览功能图片也必须是数组的
+		//                 urls: arr
+		//               })
+		//             }else if(index === 1){
+		//             // 用户点击了从图库上传
+		//               uni.chooseImage({
+		//                 count: 1,
+		//                 sizeType: ["compressed"],
+		//                 success(response) {
 							
-		                // 选择图片后, 返回的数据
-						   var file =[];
-		                   file = response.tempFiles[0]
-						   // console.log(file);return;
-						   var formData = new FormData();
-						   formData.append('file',response.tempFiles[0]);
-						   uni.uploadFile({
-							   url: 'http://3.changhuoban.com/api/V1/updateUserInfo', 
-							   filePath: tempFilePaths[0],
-							   name: 'file',
-							   formData: {
-								   'user': 'test'
-							   },
-							   success: (uploadFileRes) => {
-								   console.log(uploadFileRes.data);
-							   }
-						   });
-							net({
-					         	 url:"/V1/updateUserInfo",
-					             method:'post',
-								 data:formData,
-								 header:{"Content-Type": "multipart/form-data"},
-					             success: (res) => {
-									uni.hideLoading();
-									if (res.data.success) {
-										uni.showToast({
-											title: res.data.success.message,
-											icon: 'none',
-											success : function(){
-												setTimeout(function() {
-													uni.navigateBack();
-												}, 1500);
-											}
-										});
-									} else {
-										uni.showToast({
-											title: res.data.error.message,
-											icon: 'none'
-										});
-									}
-					             }
-					       	})
-		                }
-		              })
-		            }
-		        }
-			})
-		}
+		//                 // 选择图片后, 返回的数据
+		// 				   var file =[];
+		//                    file = response.tempFiles[0]
+		// 				   // console.log(file);return;
+		// 				   var formData = new FormData();
+		// 				   formData.append('file',response.tempFiles[0]);
+		// 				   uni.uploadFile({
+		// 					   url: 'http://3.changhuoban.com/api/V1/updateUserInfo', 
+		// 					   filePath: tempFilePaths[0],
+		// 					   name: 'file',
+		// 					   formData: {
+		// 						   'user': 'test'
+		// 					   },
+		// 					   success: (uploadFileRes) => {
+		// 						   console.log(uploadFileRes.data);
+		// 					   }
+		// 				   });
+		// 					net({
+		// 			         	 url:"/V1/updateUserInfo",
+		// 			             method:'post',
+		// 						 data:formData,
+		// 						 header:{"Content-Type": "multipart/form-data"},
+		// 			             success: (res) => {
+		// 							uni.hideLoading();
+		// 							if (res.data.success) {
+		// 								uni.showToast({
+		// 									title: res.data.success.message,
+		// 									icon: 'none',
+		// 									success : function(){
+		// 										setTimeout(function() {
+		// 											uni.navigateBack();
+		// 										}, 1500);
+		// 									}
+		// 								});
+		// 							} else {
+		// 								uni.showToast({
+		// 									title: res.data.error.message,
+		// 									icon: 'none'
+		// 								});
+		// 							}
+		// 			             }
+		// 			       	})
+		//                 }
+		//               })
+		//             }
+		//         }
+		// 	})
+		// }
 	},
 	filters: {
 		numberGSH(value){
