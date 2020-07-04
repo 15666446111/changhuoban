@@ -166,7 +166,7 @@ class SetUserController extends Controller
 
     	} catch (\Exception $e) {
             
-            return response()->json(['error'=>['message' => $e->getMessage()]]);
+            return response()->json(['error'=>['message' => '银行卡信息不正确']]);
 
         }
     }
