@@ -21,9 +21,9 @@ class OrdersController extends Controller
         try{
 
             if(!$request->address) return response()->json(['error'=>['message' => '缺少必要参数:收获地址']]);
-
+            
             $address = \App\Address::where('id',$request->address)->first();
-
+            
             if(!$address) return response()->json(['error'=>['message' => '缺少必要参数:请设置您的收货地址']]);
 
             if(!$request->numbers) return response()->json(['error'=>['message' => '缺少必要参数:购买数量']]);
@@ -34,6 +34,7 @@ class OrdersController extends Controller
 
             if(!$request->product_price) return response()->json(['error'=>['message' => '缺少必要参数:产品单价']]);
 
+            if(!$request->pay_type) return response()->json(['error'=>['message' => '缺少必要参数:支付方式']]);
 
             $code = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J');
 
@@ -45,7 +46,7 @@ class OrdersController extends Controller
 
                 'order_no'=>$order_no,
 
-                'address'=>$address->name.','.$address->tel.','.$address->province.','.$address->city.','.$address->area.',详细地址:'.$address->detail,
+                'address'=>'姓名:'.$address->name.'&电话:'.$address->tel.'&省'.$address->province.'&市'.$address->city.'&区'.$address->area.'&详细地址:'.$address->detail,
 
                 'numbers' =>$request->numbers,
 
@@ -78,7 +79,7 @@ class OrdersController extends Controller
             }
             
         }catch (Exception $e) {
-            return response()->json(['error'=>['message' => '系统错误，请联系客服']]);
+            return response()->json(['error'=>['message' => $e->getMessage()]]);
         }
     }
 
@@ -194,12 +195,12 @@ class OrdersController extends Controller
     /**
      * 修改订单状态
      */
-    public function AliPayCallback($order_no = '')
-    {
+    
+    public function AliPayCallback(){
 
         if (!empty($_POST['code'] == 'SUCCESS')) {
 
-            $res = \App\Order::where('order_no',$order_no)->update(['status'=>1]);
+            $res = \App\Order::where('order_no',$_POST['out_trade_no'])->update(['status'=>1]);
 
         } else {
 
