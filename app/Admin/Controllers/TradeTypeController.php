@@ -155,7 +155,7 @@ class TradeTypeController extends AdminController
             '02Y600' => '银联二维码撤销'
         ])->required();
         
-        $form->multipleSelect('card_type', __('交易卡类型'))->options([ 0 => '借记卡', 1 => '信用卡'])->required();
+        $form->multipleSelect('card_type', __('交易卡类型'))->options([ 0 => '借记卡', 1 => '信用卡']);
 
         $form->multipleSelect('is_top', __('是否封顶'))->options([ 0 => '非封顶', 1 => '封顶'])->required();
 

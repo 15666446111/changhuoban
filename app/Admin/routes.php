@@ -88,4 +88,7 @@ Route::group([
     // 商户短信管理
     $router->resource('admin-shorts', AdminShortController::class);
 
+
+    // 节假日管理
+    $router->resource('holidays', HolidayController::class);
 });
