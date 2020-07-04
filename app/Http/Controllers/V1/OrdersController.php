@@ -11,8 +11,6 @@ use Alipay\EasySDK\Kernel\Factory;
 use Illuminate\Support\Arr;
 use Overtrue\Socialite\User as SocialiteUser;
 
-
-
 class OrdersController extends Controller
 {
      /**
@@ -22,9 +20,11 @@ class OrdersController extends Controller
     {
         try{
 
-            $request->user;
-
             if(!$request->address) return response()->json(['error'=>['message' => '缺少必要参数:收获地址']]);
+
+            $Address = \App\Address::where('id',$request->address)->first();
+
+            if(!$Address) return response()->json(['error'=>['message' => '缺少必要参数:请设置您的收货地址']]);
 
             if(!$request->numbers) return response()->json(['error'=>['message' => '缺少必要参数:购买数量']]);
 
@@ -45,8 +45,8 @@ class OrdersController extends Controller
 
             //     'order_no'=>$order_no,
 
-            //     // 'address'=>$request->province.$request->area.$request->city.$request->detail,
-            //     'address' =>$request->address,
+            //     'address'=>$request->province.$request->area.$request->city.$request->detail,
+
 
             //     'numbers' =>$request->numbers,
 
@@ -88,6 +88,7 @@ class OrdersController extends Controller
     public function getOptions()
     {
         $options = new Config();
+
         //获取当前操盘方的属支付数据
         $data = \App\AdminSetting::where("operate_number",request()->user->operate)->where("type", 1)->first();
         
@@ -130,13 +131,17 @@ class OrdersController extends Controller
             'app_id'             => md5('wxd678efh567hg6787'),
             'mch_id'             => '14577xxxx',
             'key'                => '12345678912345678912345678912345',   // API 密钥
+
+            'notify_url'         => env("APP_URL").'api/V1/payments/wechat-notify',
         
             // 如需使用敏感接口（如退款、发送红包等）需要配置 API 证书路径(登录商户平台下载 API 证书)
+
             // 'cert_path'          => 'path/to/your/cert.pem', // XXX: 绝对路径！！！！
+
             // 'key_path'           => 'path/to/your/key',      // XXX: 绝对路径！！！！
         
-            'notify_url'         => 'https://pay.weixin.qq.com/wxpay/pay.action',
             // 'sandbox' => false, // 设置为 false 或注释则关闭沙箱模式
+            
         ];
         
         $app = \EasyWeChat\Factory::payment($config);
@@ -144,14 +149,19 @@ class OrdersController extends Controller
         //下单
         $result = $app->order->unify([
             'body'         => '畅伙伴-机器购买',
+
             'out_trade_no' => 'J624833339586582',
+
             'total_fee'    => 88,
-            // 'spbill_create_ip' => '123.12.12.123', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
+
             'trade_type'   => 'APP', // 请对应换成你的支付方式对应的值类型
+
             'notify_url' => 'https://pay.weixin.qq.com/wxpay/pay.action', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
+
+            // 'spbill_create_ip' => '123.12.12.123', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
         ]);
        
-        dd($result);
+        
         if( $result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS'){
             $result = $app->jssdk->appConfig($result['prepay_id']);//第二次签名
 
@@ -168,8 +178,10 @@ class OrdersController extends Controller
 
     }
 
+    /**
+     * 修改订单状态
+     */
     public function paySuccess(){
-        return 111;
         $app = app('wechat.payment');
         $response = $app->handlePaidNotify(function ($message, $fail) {
             //处理订单等，你的业务逻辑
@@ -185,12 +197,16 @@ class OrdersController extends Controller
      */
     public function AliPayCallback($order_no = ''){
 
-        if(isset($_POST['order_no']) or empty($order_no)){
-            return 'false';
-        }else{
+        if (!empty($_POST['code'] == 'SUCCESS')) {
+
             $res = \App\Order::where('order_no',$order_no)->update(['status'=>1]);
-            return 'success';
+
+        } else {
+
+            echo "ERROR".PHP_EOL;
+
         }
+
 
     }
 

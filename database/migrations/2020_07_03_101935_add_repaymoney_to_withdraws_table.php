@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddSyscodeToTradesTable extends Migration
+class AddRepaymoneyToWithdrawsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,10 @@ class AddSyscodeToTradesTable extends Migration
      */
     public function up()
     {
-        Schema::table('trades', function (Blueprint $table) {
+        Schema::table('withdraws', function (Blueprint $table) {
             
-            $table->char('sysRespCode', 4)->comment('收单平台应答码');
-            
-            $table->string('sysRespDesc')->comment('收单平台应答描述');
-            
+            $table->integer('channle_money')->default(0)->comment('渠道方(畅捷)实际出款金额');
+
         });
     }
 
@@ -29,7 +27,7 @@ class AddSyscodeToTradesTable extends Migration
      */
     public function down()
     {
-        Schema::table('trades', function (Blueprint $table) {
+        Schema::table('withdraws', function (Blueprint $table) {
             //
         });
     }

@@ -40,6 +40,13 @@ class MerchantController extends Controller
     public function registers(Request $request)
     {
         try{ 
+
+			if(!$request->merchant_sn) return response()->json(['error'=>['message' => '缺少必要参数:终端号']]);
+			
+            if(!$request->merchant_name) return response()->json(['error'=>['message' => '缺少必要参数:商户名称']]);
+
+            if(!$request->merchant_phone) return response()->json(['error'=>['message' => '缺少必要参数:商户电话']]);
+
 			 $data = \App\Machine::where('user_id',$request->user->id)->where('sn',$request->merchant_sn)->first();
 			 
 			 $data->machine_name = $request->merchant_name;
@@ -222,7 +229,10 @@ class MerchantController extends Controller
         try{
 
             //参数 friends伙伴  count总  user用户
-            $Type = $request->Type;
+			$Type = $request->Type;
+			
+            if(!$Type) return response()->json(['error'=>['message' => '缺少必要参数:详情类型']]);
+
             // dd($Type);
             $server = new \App\Http\Controllers\V1\ServersController($Type, $request->user);
 
@@ -245,6 +255,8 @@ class MerchantController extends Controller
     public function merchantInfo(Request $request)
     {
         try{ 
+
+            if(!$request->id) return response()->json(['error'=>['message' => '缺少必要参数:请选择终端']]);
              
             $data=\App\Machine::where('user_id',$request->user->id)
             ->where('id',$request->id)

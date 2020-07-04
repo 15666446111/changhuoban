@@ -67,16 +67,18 @@ class WithdrawController extends AdminController
         $grid->column('created_at', __('申请时间'));
 
         $grid->disableCreateButton();
-
         $grid->actions(function ($actions) {
             // 去掉删除
             $actions->disableDelete();
             // 去掉编辑
             $actions->disableEdit();
-            // 添加通过按钮
-            $actions->add(new WithdrawAdopt());
-            // 添加驳回按钮
-            $actions->add(new WithdrawReject());
+
+            if($actions->row['state'] == "1"){
+                // 添加通过按钮
+                $actions->add(new WithdrawAdopt());
+                // 添加驳回按钮
+                $actions->add(new WithdrawReject());
+            }
 
         });
 
@@ -124,6 +126,8 @@ class WithdrawController extends AdminController
         $show->field('state', __('提现状态'))->using(['1' => '待审核', '2' => '通过', '3'=>'驳回']);
 
         $show->field('make_state', __('打款状态'))->using(['0' => '未打款', '1' => '已打款']);
+
+        $show->field('remark', __('驳回原因'));
 
         $show->field('check_at', __('审核时间'));
 
