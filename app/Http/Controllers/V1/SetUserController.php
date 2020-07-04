@@ -468,7 +468,7 @@ class SetUserController extends Controller
                     'order_no'  => $order_no,
                     'money'     => $request->money,
                     'type'      => $request->blance,
-                    'real_money'=> ($money - $request->money) * ( 1 -$rate * 0.01) - $rate_m / 100,
+                    'real_money'=> $request->money * ( 1 -$rate * 0.01) - $rate_m / 100,
                     'rate'      => $rate,
                     'rate_m'    => $rate_m,
                     'state'     => $state = 2 ? 2 : '1',
