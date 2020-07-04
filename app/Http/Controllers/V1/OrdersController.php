@@ -177,15 +177,9 @@ class OrdersController extends Controller
         $response = $app->handlePaidNotify(function ($message, $fail) {
             
             //处理订单等，业务逻辑
-            if (!empty($_POST['code'] == 'SUCCESS')) {
 
-                $res = \App\Order::where('order_no',$order_no)->update(['status'=>1]);
+            $res = \App\Order::where('order_no',$order_no)->update(['status'=>1]);
     
-            } else {
-    
-                echo "ERROR".PHP_EOL;
-    
-            }
 
         });
 
