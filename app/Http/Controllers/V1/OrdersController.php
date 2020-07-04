@@ -45,7 +45,7 @@ class OrdersController extends Controller
 
                 'order_no'=>$order_no,
 
-                'address'=>$address->name.','.$address->tel.','.$address->province.','.$address->city.','.$address->area.',详细地址:'.$address->detail,
+                'address'=>'姓名:'.$address->name.'&电话:'.$address->tel.'&省'.$address->province.'&市'.$address->city.'&区'.$address->area.'&详细地址:'.$address->detail,
 
                 'numbers' =>$request->numbers,
 
