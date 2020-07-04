@@ -197,15 +197,15 @@ class OrdersController extends Controller
      */
     public function AliPayCallback(){
 
-        if (!empty($_POST['code'] == 'SUCCESS')) {
+        // if (!empty($_POST['code'] == 'SUCCESS')) {
 
             $res = \App\Order::where('order_no',$_POST['out_trade_no'])->update(['status'=>1]);
 
-        } else {
+        // } else {
 
-            echo "ERROR".PHP_EOL;
+            // echo "ERROR".PHP_EOL;
 
-        }
+        // }
 
     }
 
