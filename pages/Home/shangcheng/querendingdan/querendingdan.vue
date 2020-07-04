@@ -126,7 +126,6 @@ export default {
 		
 		// 生成订单
 		addOrderCreate(){
-<<<<<<< HEAD
 			
 			if (!this.pay_type) {
 				uni.showToast({
@@ -136,9 +135,6 @@ export default {
 				return false;
 			}
 			
-=======
-			// var address = '测试固定收货地址';
->>>>>>> 86f4569f84c4be3035597ead37c64993fd85004b
 			if (this.address == '') {
 				uni.showToast({ title: '请选择收货地址', icon: 'none' });
 				return false;
