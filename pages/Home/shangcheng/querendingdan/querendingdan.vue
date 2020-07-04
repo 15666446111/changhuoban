@@ -146,7 +146,7 @@ export default {
 					'product_price' : this.productInfo.price,
 					'numbers' : this.num,
 					'price' : this.moneyTotal,
-					'address' : address,
+					'address' : this.address.id,
 					'pay_type' : this.pay_type
 				},
 	            success: (res) => {

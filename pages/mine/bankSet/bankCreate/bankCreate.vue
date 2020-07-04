@@ -37,10 +37,17 @@
 				<view class="hengxian"></view>
 				
 				<view class="select-view">
-					<view class="select-name">联行号</view>
-					<input class="select-text" placeholder="请输入联行号" v-model="bank_open"/>
+					<view class="select-name">省</view>
+					<input class="select-text" placeholder="请输入省" v-model="province"/>
 				</view>
 				<view class="hengxian"></view>
+				
+				<view class="select-view">
+					<view class="select-name">市</view>
+					<input class="select-text" placeholder="请输入市" v-model="city"/>
+				</view>
+				<view class="hengxian"></view>
+				
 				
 				<view class="select-view">
 					<checkbox-group @change="defaultType">
@@ -67,7 +74,8 @@ export default {
 			bank: '',
 			open_bank: '',
 			is_default: 0,
-			bank_open: '',
+			province:'',
+			city: '',
 		};
 	},
 	
@@ -120,9 +128,17 @@ export default {
 				return false;
 			}
 			
-			if (this.bank_open == '') {
+			if (this.province == '') {
 				uni.showToast({
-					title: '联行号不能为空',
+					title: '省份不能为空',
+					icon: 'none'
+				});
+				return false;
+			}
+			
+			if (this.city == '') {
+				uni.showToast({
+					title: '市不能为空',
 					icon: 'none'
 				});
 				return false;
@@ -131,7 +147,6 @@ export default {
 			uni.showLoading({
 				mask: true
 			});
-			
 			net({
 	        	url: "/V1/createBank",
 	            method: 'POST',
@@ -142,7 +157,8 @@ export default {
 					bank: this.bank,
 					open_bank: this.open_bank,
 					is_default: this.is_default,
-					bank_open: this.bank_open,
+					province: this.province,
+					city: this.city,
 				},
 	            success: (res) => {
 					if (res.data.success) {
