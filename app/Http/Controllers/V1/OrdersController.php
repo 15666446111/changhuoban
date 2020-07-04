@@ -11,6 +11,8 @@ use Alipay\EasySDK\Kernel\Factory;
 use Illuminate\Support\Arr;
 use Overtrue\Socialite\User as SocialiteUser;
 
+
+
 class OrdersController extends Controller
 {
      /**
@@ -37,27 +39,27 @@ class OrdersController extends Controller
 
             $order_no = $code[intval(date('Y')) - 2011] . strtoupper(dechex(date('m'))) . date('d') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));
 
-            $data = \App\Order::create([
+            // $data = \App\Order::create([
 
-                'user_id'=>$request->user->id,
+            //     'user_id' =>$request->user->id,
 
-                'order_no'=>$order_no,
+            //     'order_no'=>$order_no,
 
-                // 'address'=>$request->province.$request->area.$request->city.$request->detail,
-                'address'=>$request->address,
+            //     // 'address'=>$request->province.$request->area.$request->city.$request->detail,
+            //     'address' =>$request->address,
 
-                'numbers'=>$request->numbers,
+            //     'numbers' =>$request->numbers,
 
-                'price'=>$request->price,
+            //     'price'   =>$request->price,
 
-                'product_id'=>$request->product_id,
+            //     'product_id'   =>$request->product_id,
 
-                'product_price'=>$request->product_price,
+            //     'product_price'=>$request->product_price,
 
-                'remark'=>$request->remark ?? '',
+            //     'remark'  =>$request->remark ?? '',
 
-                'operate'=>$request->user->operate
-            ]); 
+            //     'operate' =>$request->user->operate
+            // ]); 
 
             if($request->pay_type == '1'){
                 //支付宝支付
@@ -73,6 +75,7 @@ class OrdersController extends Controller
 
             }else{
                 //微信支付
+                $this->wechat_pay();
             }
             
         }catch (Exception $e) {
@@ -116,27 +119,66 @@ class OrdersController extends Controller
     }
 
     /**
-     * 异步通知修改订单状态
      * 微信支付
      */
     public function wechat_pay(){
+       
+        $user = \App\AdminSetting::where("operate_number",request()->user->operate)->where("type", 1)->first();
+        //支付
+        $config = [
+            // 必要配置
+            'app_id'             => md5('wxd678efh567hg6787'),
+            'mch_id'             => '14577xxxx',
+            'key'                => '12345678912345678912345678912345',   // API 密钥
+        
+            // 如需使用敏感接口（如退款、发送红包等）需要配置 API 证书路径(登录商户平台下载 API 证书)
+            // 'cert_path'          => 'path/to/your/cert.pem', // XXX: 绝对路径！！！！
+            // 'key_path'           => 'path/to/your/key',      // XXX: 绝对路径！！！！
+        
+            'notify_url'         => 'https://pay.weixin.qq.com/wxpay/pay.action',
+            // 'sandbox' => false, // 设置为 false 或注释则关闭沙箱模式
+        ];
+        
+        $app = \EasyWeChat\Factory::payment($config);
 
-        //微信授权流程
-        $user = new SocialiteUser([
-            'id' => Arr::get($user, 'openid'),
-            // 'name' => Arr::get($user, 'nickname'),
-            // 'nickname' => Arr::get($user, 'nickname'),
-            // 'avatar' => Arr::get($user, 'headimgurl'),
-            // 'email' => null,
-            // 'original' => [],
-            // 'provider' => 'WeChat',
+        //下单
+        $result = $app->order->unify([
+            'body'         => '畅伙伴-机器购买',
+            'out_trade_no' => 'J624833339586582',
+            'total_fee'    => 88,
+            // 'spbill_create_ip' => '123.12.12.123', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
+            'trade_type'   => 'APP', // 请对应换成你的支付方式对应的值类型
+            'notify_url' => 'https://pay.weixin.qq.com/wxpay/pay.action', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
         ]);
+       
+        dd($result);
+        if( $result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS'){
+            $result = $app->jssdk->appConfig($result['prepay_id']);//第二次签名
 
-        session(['wechat.oauth_user.default' => $user]); // 同理，`default` 可以更换为您对应的其它配置名
+            return response()->json(['success'=>['message' => '订单创建成功!', 'data'=> ['sign' => $result]]]);
+            // return [
+            //     'code' => 'success',
+            //     'msg' => $result
+            // ];
+            
+         }else{
+            // 　　\EasyWeChat\Log::error('微信支付签名失败:'.var_export($result,1));
+            return response()->json(['error'=>['message' => '生成支付签名失败']]);
+         }
 
-
-        $payment = \EasyWeChat::payment(); // 微信支付
     }
+
+    public function paySuccess(){
+        return 111;
+        $app = app('wechat.payment');
+        $response = $app->handlePaidNotify(function ($message, $fail) {
+            //处理订单等，你的业务逻辑
+            
+        });
+
+        return $response;
+    }
+
 
     /**
      * 修改订单状态
@@ -151,7 +193,6 @@ class OrdersController extends Controller
         }
 
     }
-
 
     /**
      * 查询订单接口

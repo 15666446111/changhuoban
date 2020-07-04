@@ -66,6 +66,7 @@ class Kernel extends HttpKernel
         'AuthToken' => \App\Http\Middleware\AuthToken::class,
 
         'wechat.oauth' => \Overtrue\LaravelWeChat\Middleware\OAuthAuthenticate::class,
+       
         //
         //'OperationLog' => ,
     ];

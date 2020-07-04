@@ -384,6 +384,11 @@ Route::prefix('V1')->group(function () {
      */
     Route::middleware('AuthToken')->get('/setUserInfo', 'V1\SetUserController@setUserInfos');
 
+    /**
+     * 微信修改订单状态 
+    */
+    Route::middleware('AuthToken')->any('payments/wechat-notify', 'V1\OrdersController@paySuccess');
+
 });
 
 Route::fallback(function(){ 

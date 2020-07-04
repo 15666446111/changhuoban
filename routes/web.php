@@ -74,23 +74,18 @@ Route::get('/team/{code}', 'RegisterController@team');
 Route::post('/team/{code}', 'RegisterController@team_in')->name('register');
 
 
+
+
 /**
  * 支付宝回调修改订单状态
  */
 Route::any('callback ','V1\OrdersController@AliPayCallback ');
 
 
-//微信服务端
-Route::any('/wechat', 'WeChatController@serve');
+// Route::group(['middleware' => ['web', 'wechat.oauth']], function () {
+//     Route::get('/user', function () {
+//         $user = session('wechat.oauth_user.default'); // 拿到授权用户资料
 
-Route::group(['middleware' => ['web', 'wechat.oauth']], function () {
-    Route::get('/user', function () {
-        $user = session('wechat.oauth_user.default'); // 拿到授权用户资料
-    
-        dd($user);
-    });
-});
-
-Route::group(['middleware' => ['wechat.oauth:snsapi_userinfo']], function () {
-    // ...
-  });
+//         dd($user);
+//     });
+// });
