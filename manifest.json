@@ -98,25 +98,25 @@
             },
             "splashscreen" : {
                 "android" : {
-                    "hdpi" : "/Users/administrator/Desktop/3.0/WechatIMG18.png",
-                    "xhdpi" : "/Users/administrator/Desktop/3.0/WechatIMG18.png",
-                    "xxhdpi" : "/Users/administrator/Desktop/3.0/WechatIMG18.png"
+                    "hdpi" : "",
+                    "xhdpi" : "",
+                    "xxhdpi" : ""
                 },
                 "ios" : {
                     "iphone" : {
-                        "portrait-896h@3x" : "/Users/administrator/Desktop/3.0/WechatIMG18.png",
-                        "landscape-896h@3x" : "/Users/administrator/Desktop/3.0/WechatIMG18.png",
-                        "portrait-896h@2x" : "/Users/administrator/Desktop/3.0/WechatIMG18.png",
-                        "landscape-896h@2x" : "/Users/administrator/Desktop/3.0/WechatIMG18.png",
-                        "retina35" : "/Users/administrator/Desktop/3.0/WechatIMG18.png",
-                        "retina40l" : "/Users/administrator/Desktop/3.0/WechatIMG18.png",
-                        "retina40" : "/Users/administrator/Desktop/3.0/WechatIMG18.png",
-                        "retina47l" : "/Users/administrator/Desktop/3.0/WechatIMG18.png",
-                        "retina47" : "/Users/administrator/Desktop/3.0/WechatIMG18.png",
-                        "retina55l" : "/Users/administrator/Desktop/3.0/WechatIMG18.png",
-                        "retina55" : "/Users/administrator/Desktop/3.0/WechatIMG18.png",
-                        "iphonexl" : "/Users/administrator/Desktop/3.0/WechatIMG18.png",
-                        "iphonex" : "/Users/administrator/Desktop/3.0/WechatIMG18.png"
+                        "portrait-896h@3x" : "",
+                        "landscape-896h@3x" : "",
+                        "portrait-896h@2x" : "",
+                        "landscape-896h@2x" : "",
+                        "retina35" : "",
+                        "retina40l" : "",
+                        "retina40" : "",
+                        "retina47l" : "",
+                        "retina47" : "",
+                        "retina55l" : "",
+                        "retina55" : "",
+                        "iphonexl" : "",
+                        "iphonex" : ""
                     }
                 }
             }

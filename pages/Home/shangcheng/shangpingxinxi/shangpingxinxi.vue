@@ -14,6 +14,9 @@
 		<!-- 详情 -->
 		<view class="xian"></view>
 		<view class="xian-text">商品详情</view>
+		<view class="content">
+			<rich-text :nodes="productInfo.content|formatRichText"></rich-text>
+		</view>
 
 		<!-- 底部 -->
 		<!-- <view style="height: 100upx;"></view> -->
