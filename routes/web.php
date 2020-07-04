@@ -75,3 +75,5 @@ Route::any('/callback ','V1\OrdersController@AliPayCallback ');
 
 //微信支付服务端
 Route::any('/wechat', 'WeChatController@serve');
+
+

@@ -103,6 +103,7 @@ class SetUserController extends Controller
             $userInfo->nickname = $request->nickname;
 
             $userInfo->save();
+
             return response()->json(['success'=>['message' => '修改成功!', []]]); 
 
     	} catch (\Exception $e) {
@@ -119,6 +120,7 @@ class SetUserController extends Controller
     public function insertBank(Request $request)
     {
         try{ 
+            
 
             if(!$request->name) return response()->json(['error'=>['message' => '缺少必要参数:姓名']]);
 
@@ -130,7 +132,13 @@ class SetUserController extends Controller
 
             if(!$request->open_bank) return response()->json(['error'=>['message' => '缺少必要参数:开户行']]);
 
-            if(!$request->bank_open) return response()->json(['error'=>['message' => '缺少必要参数:联行号']]);
+            $model = new BankController();
+
+            $bank = ['bank_name'=>$request->bank_name,'city'=>$request->city,'province'=>$request->province];
+
+            $banklink = $model->openBank($bank);
+
+            if($banklink == '') return response()->json(['error'=>['message' => '银行卡信息不正确']]);
 
             if($request->is_default == 1){
 
@@ -147,7 +155,10 @@ class SetUserController extends Controller
                 'open_bank'=>$request->open_bank,
                 'is_del'=>0,
                 'is_default'=>$request->is_default,
-                'bank_open'=>$request->bank_open
+                'bank_open'=>$request->bank_open,
+                'banklink' =>$banklink,
+                'city'     =>$request->city,
+                'province'  =>$request->province
             ]);
 
             return response()->json(['success'=>['message' => '添加成功!', []]]); 
@@ -242,6 +253,12 @@ class SetUserController extends Controller
     public function updateBank(Request $request)
     {
         try{ 
+
+            $model = new BankController();
+
+            $banklink = $model->openBank($bank);
+
+            if($banklink == '') return response()->json(['error'=>['message' => '银行卡信息不正确']]);
             
             if(!$request->id) return response()->json(['error'=>['message' => '缺少必要参数:请选择银行卡']]);
 
@@ -255,7 +272,13 @@ class SetUserController extends Controller
 
             if(!$request->open_bank) return response()->json(['error'=>['message' => '缺少必要参数:开户行']]);
 
-            if(!$request->bank_open) return response()->json(['error'=>['message' => '缺少必要参数:联行号']]);
+            $model = new BankController();
+
+            $bank = ['bank_name'=>$request->bank_name,'city'=>$request->city,'province'=>$request->province];
+
+            $banklink = $model->openBank($bank);
+
+            if($banklink == '') return response()->json(['error'=>['message' => '银行卡信息不正确']]);
 
             $query = \App\Bank::where('user_id',$request->user->id)->where('id',$request->id)->first();
 
@@ -271,7 +294,9 @@ class SetUserController extends Controller
                     'number'    =>  $request->number,
                     'open_bank' =>  $request->open_bank,
                     'is_default'=>  $request->is_default,
-                    'bank_open' =>  $request->bank_open
+                    'bank_open' =>  $banklink,
+                    'city'     =>$request->city,
+                    'province'  =>$request->province
                 ]);
 
             }else{
@@ -281,7 +306,7 @@ class SetUserController extends Controller
                 $query->bank = $request->bank;
                 $query->number = $request->number;
                 $query->open_bank = $request->open_bank;
-                $query->bank_open = $request->bank_open;
+                $query->bank_open = $banklink;
 
                 $query->is_default = 0;
 
@@ -351,6 +376,13 @@ class SetUserController extends Controller
     public function Withdrawal(Request $request)
     {
         try{ 
+            $bank = \App\Bank::where('id',$request->bank_id)->first();
+            
+            $model = new BankController();
+
+            $banklink = $model->openBank($bank);
+
+            if($banklink == '') return response()->json(['error'=>['message' => '银行卡信息不正确']]);
             
             if(!$request->user->settings){
                 return response()->json(['message'=>['message' => '请设置您的提现信息'],'code'=>201]);
@@ -359,8 +391,6 @@ class SetUserController extends Controller
             if(!$request->money) return response()->json(['error'=>['message' => '缺少必要参数:提现金额']]);
 
             if(!$request->blance) return response()->json(['error'=>['message' => '缺少必要参数:提现类型']]);
-
-            $bank = \App\Bank::where('id',$request->bank_id)->first();
 
             if(!$request->user->phone) return response()->json(['error'=>['message' => '请设置您的预留手机号']]);
 
@@ -433,8 +463,6 @@ class SetUserController extends Controller
                 $yCode = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J');
                 $order_no = $yCode[intval(date('Y')) - 2011] . strtoupper(dechex(date('m'))) . date('d') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));
 
-                $banklink = $this->openBank();
-
                 \App\Withdraw::create([
                     'user_id'   => $request->user->id,
                     'order_no'  => $order_no,
@@ -456,7 +484,7 @@ class SetUserController extends Controller
                     'idcard'    => $bank->number,
                     'bank'      => $bank->bank_name,
                     'bank_open' => $bank->open_bank,
-                    'banklink'  => $bank->banklink,
+                    'banklink'  => $banklink,
                     'bank_number'=> $bank->bank,
                     'reason'    => $request->reason
                 ]);
@@ -478,36 +506,4 @@ class SetUserController extends Controller
 
     }
 
-
-    /**
-     * 查询联行号接口
-     */
-    public function openBank()
-    {
-        $host = "http://cnaps.market.alicloudapi.com";
-        $path = "/lianzhuo/querybankaps";
-        $method = "GET";
-        $appcode = "2b98c225a8d24644959f3c7bcec08e23";//AppCode
-        $headers = array();
-        array_push($headers, "Authorization:APPCODE " . $appcode);
-        $querys = "bank=%E5%B7%A5%E5%95%86%E9%93%B6%E8%A1%8C&card=6226286336722163&city=%E6%B5%8E%E5%8D%97%E5%B8%82&key=%E6%A7%90%E8%8D%AB&page=1&province=%E5%B1%B1%E4%B8%9C%E7%9C%81";
-        $bodys = "";
-        $url = $host . $path . "?" . $querys;
-
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($curl, CURLOPT_FAILONERROR, false);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_HEADER, false);
-        if (1 == strpos("$".$host, "https://"))
-        {
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-        }
-        $data = curl_exec($curl);
-        $bankLink = json_decode($data,true);
-        return $bankLink['data']['record'][0]['bankCode'];
-    }
 }

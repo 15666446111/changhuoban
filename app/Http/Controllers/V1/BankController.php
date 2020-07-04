@@ -11,17 +11,30 @@ class BankController extends Controller
     /**
      * 查询联行号接口
      */
-    public function openBank()
+    public function openBank($bank)
     {
-        $host = "http://cnaps.market.alicloudapi.com";
-        $path = "/lianzhuo/querybankaps";
+        $host = "https://cnaps.market.alicloudapi.com";
+        $path = "/lundroid/queryunionbankno";
         $method = "GET";
-        $appcode = "2b98c225a8d24644959f3c7bcec08e23";//AppCode
+        $appcode = "2b98c225a8d24644959f3c7bcec08e23";
         $headers = array();
         array_push($headers, "Authorization:APPCODE " . $appcode);
-        $querys = "bank=%E5%B7%A5%E5%95%86%E9%93%B6%E8%A1%8C&card=6226286336722163&city=%E6%B5%8E%E5%8D%97%E5%B8%82&key=%E6%A7%90%E8%8D%AB&page=1&province=%E5%B1%B1%E4%B8%9C%E7%9C%81";
+        $querys = 'bank='.$bank['bank_name'].'&city='.$bank['city'].'&province='.$bank['province'];
         $bodys = "";
+        // $querys = "bank=中国民生银行&city=济南市&province=山东";
         $url = $host . $path . "?" . $querys;
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($curl, CURLOPT_FAILONERROR, false);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HEADER, true);
+        if (1 == strpos("$".$host, "https://"))
+        {
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        }
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
@@ -37,6 +50,7 @@ class BankController extends Controller
         }
         $data = curl_exec($curl);
         $bankLink = json_decode($data,true);
+        if(!$bankLink) return '';
         return $bankLink['data']['record'][0]['bankCode'];
     }
 
