@@ -120,7 +120,7 @@ class SetUserController extends Controller
     {
         try{ 
 
-            if(!$request->nickname) return response()->json(['error'=>['message' => '缺少必要参数:名称']]);
+            if(!$request->name) return response()->json(['error'=>['message' => '缺少必要参数:姓名']]);
 
             if(!$request->bank) return response()->json(['error'=>['message' => '缺少必要参数:银行卡号']]);
 
