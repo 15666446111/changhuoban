@@ -126,7 +126,7 @@ export default {
 		
 		// 生成订单
 		addOrderCreate(){
-			var address = '测试固定收货地址';
+			// var address = '测试固定收货地址';
 			if (this.address == '') {
 				uni.showToast({ title: '请选择收货地址', icon: 'none' });
 				return false;
@@ -146,7 +146,7 @@ export default {
 					'product_price' : this.productInfo.price,
 					'numbers' : this.num,
 					'price' : this.moneyTotal,
-					'address' : this.address.id,
+					'address' : address,
 					'pay_type' : this.pay_type
 				},
 	            success: (res) => {
