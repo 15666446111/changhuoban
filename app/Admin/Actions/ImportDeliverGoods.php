@@ -56,6 +56,9 @@ class ImportDeliverGoods extends Action
                 /*
                     检查该会员在该政策下是否有结算激活等配置。如果没有 进行默认该政策配置
                 */
+               
+                /*
+                
                 $userPolicy  = \App\UserPolicy::where('user_id', $request->user)->where('policy_id', $request->h_policy)->first();
 
                 if(!$userPolicy or empty($userPolicy)){
@@ -80,7 +83,7 @@ class ImportDeliverGoods extends Action
                         'vip_active_set'        => $vip_active_set,
                         'standard'      =>  $standard
                     ]);
-                }
+                }*/
 
 
                 return $this->response()->success('配送成功, 配送'.count($epliceRows).'台!')->refresh();
@@ -133,7 +136,6 @@ HTML;
         }else{
 
             $user = \App\User::where('operate', Admin::user()->operate)->pluck('nickname', 'id');
-            //dd();
             $this->select('user', '配送会员')->options($user)->rules('required', ['required' => '请选择配送用户']);
 
             

@@ -8,6 +8,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Encore\Admin\Widgets\Table;
 use Encore\Admin\Facades\Admin;
+use App\Admin\Actions\DeliverGoods;
 use App\Admin\Actions\ImportMachines;
 use App\Admin\Actions\MachineHeadTail;
 use App\Admin\Actions\HeadTailDeliverGoods;
@@ -87,6 +88,11 @@ class MachineController extends AdminController
                 $filter->like('users.nickname', '所属代理');
             });
 
+        });
+
+        $grid->actions(function ($actions) {
+            // 如果机器未发货 显示发货按钮
+            if($actions->row['user_id'] == 0 or $actions->row['user_id'] == null) $actions->add(new DeliverGoods);
         });
 
         $grid->tools(function ($tools) {
