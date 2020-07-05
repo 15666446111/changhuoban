@@ -132,7 +132,7 @@ HTML;
 
         }else{
 
-            $user = \App\User::where('operate', Admin::user()->operate)->pluck('nickname', 'id');
+            $user = \App\User::where('operate', Admin::user()->operate)->get(['nickname as text', 'id']);
             //dd();
             $this->select('user', '配送会员')->options($user)->rules('required', ['required' => '请选择配送用户']);
 
