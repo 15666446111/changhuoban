@@ -3,6 +3,7 @@
 namespace App\Admin\Actions;
 
 use Illuminate\Http\Request;
+use Encore\Admin\Facades\Admin;
 use Encore\Admin\Actions\RowAction;
 use Illuminate\Database\Eloquent\Model;
 
