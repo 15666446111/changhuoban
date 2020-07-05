@@ -97,9 +97,16 @@ class HeadTailDeliverGoods extends Action
 
     public function html()
     {
-        return <<<HTML
+        if(Admin::user()->operate == 'All'){
+
+        }else{
+
+            return <<<HTML
         <a class="btn btn-sm btn-default head-tail-deliver-goods"><i class="fa fa-balance-scale" style="margin-right: 3px;"></i>首尾发货</a>
 HTML;
+
+        }
+        
     }
 
 
@@ -111,8 +118,8 @@ HTML;
      */
     public function form()
     {
-        if(Admin::user()->operate == 'All' or Admin::user()->type == '2'){
-
+        if(Admin::user()->operate == 'All'){
+            
         }else{
 
             $user_id = \App\User::where('operate',Admin::user()->operate)->first()->id;

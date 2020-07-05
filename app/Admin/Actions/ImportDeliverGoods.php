@@ -109,9 +109,16 @@ class ImportDeliverGoods extends Action
      */
     public function html()
     {
-        return <<<HTML
+        if(Admin::user()->operate == 'All'){
+
+        }else{
+
+            return <<<HTML
         <a class="btn btn-sm btn-default import-deliver-goods"><i class="fa fa-upload" style="margin-right: 3px;"></i>导入发货</a>
 HTML;
+
+        }
+        
     }
 
     /**

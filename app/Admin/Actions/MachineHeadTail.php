@@ -3,7 +3,7 @@
 namespace App\Admin\Actions;
 
 use Throwable;
-use Encore\Admin\Admin;
+use Encore\Admin\Facades\Admin;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Encore\Admin\Actions\Action;
@@ -68,9 +68,16 @@ class MachineHeadTail extends Action
 
     public function html()
     {
-        return <<<HTML
+        if(Admin::user()->operate == 'All'){
+
+        }else{
+
+            return <<<HTML
         <a class="btn btn-sm btn-default machine-head-tail" style="position:absolute;  right: 250px;"><i class="fa fa-balance-scale" style="margin-right: 3px;"></i>首尾补全</a>
 HTML;
+
+        }
+        
     }
 
 
