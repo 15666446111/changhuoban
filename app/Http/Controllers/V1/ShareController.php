@@ -23,25 +23,16 @@ class ShareController extends Controller
         try{
             /** 获取分享类型的素材  */
             // 操盘方分享素材
-            $where = [
-                'active' => 1,
-                'type_id' => 1,
-                'verify' => 1,
-                'operate' => $request->user->operate
-            ];
-            $list = \App\Share::where($where)->orderBy('sort', 'desc')->first();
+            $list = \App\Share::where('type_id', 1)->where('operate', $request->user->operate)->ApiGet()->first();
 
-            // 总后台分享素材
-            $where['operate'] = 'All';
-            $adminPoster = \App\Share::where($where)->orderBy('sort', 'desc')->first();
+            $adminPoster = \App\Share::where('type_id', 1)->where('operate', 'All')->first();
 
             $list = empty($list) ? $adminPoster : $list;
 
-            if(!$list or empty($list))
-                return response()->json(['success'=>['message' => '获取成功!', 'data' => array()]]);
+            if(!$list or empty($list)) return response()->json(['success'=>['message' => '暂无素材可以分享!', 'data' => array()]]);
 
             // 生成分享地址
-            $Url = env('APP_URL')."/team/".Hashids::encode($request->user->id);
+            $Url = "http://".$_SERVER["HTTP_HOST"]."/team/".Hashids::encode($request->user->id);
             
             // 二维码地址
             $CodePath = public_path('/share/'.$request->user->id.'/qrcodes/');
@@ -52,23 +43,23 @@ class ShareController extends Controller
             // 生成二维码
             QrCode::format('png')->size($list->code_width)->margin($list->code_margin)->generate($Url, $CodeFile);
 
-            $typeArr=getimagesize(storage_path('app/public/'.$list->images));
+            $typeArr=getimagesize(storage_path('app/public/'.$list->getOriginal('images')));
 
             switch($typeArr['mime'])
             {
                 case "image/png":
-                    $BackGroud=imagecreatefrompng(storage_path('app/public/'.$list->images));
+                    $BackGroud=imagecreatefrompng(storage_path('app/public/'.$list->getOriginal('images')));
                     break;
 
                 case "image/jpg":
-                    $BackGroud=imagecreatefromjpeg(storage_path('app/public/'.$list->images));
+                    $BackGroud=imagecreatefromjpeg(storage_path('app/public/'.$list->getOriginal('images')));
                     break;
                 case "image/jpeg":
-                    $BackGroud=imagecreatefromjpeg(storage_path('app/public/'.$list->images));
+                    $BackGroud=imagecreatefromjpeg(storage_path('app/public/'.$list->getOriginal('images')));
                     break;
 
                 case "image/gif":
-                    $BackGroud=imagecreatefromgif(storage_path('app/public/'.$list->images));
+                    $BackGroud=imagecreatefromgif(storage_path('app/public/'.$list->getOriginal('images')));
                     break;
             }
 
@@ -87,7 +78,7 @@ class ShareController extends Controller
 
             imagepng($BackGroud, $PicFile);
 
-            $link = env('APP_URL')."/share/".$request->user->id."/team_share/".$list->id.".png";
+            $link = "http://".$_SERVER["HTTP_HOST"]."/share/".$request->user->id."/team_share/".$list->id.".png";
 
             return response()->json(['success'=>['message' => '获取成功!', 'data' => ['link' => $link."?time=".time() ]]]);
 
@@ -109,20 +100,17 @@ class ShareController extends Controller
      */
     public function merchant(Request $request)
     {
-        //try{
+        try{
             
             /** 获取分享类型的素材  */
             // 操盘方分享素材
             $list = \App\Share::where('type_id', 2)->where('operate', $request->user->operate)->ApiGet()->first();
 
-            // 总后台分享素材
-            $where['operate'] = 'All';
-            $adminPoster = \App\Share::where($where)->orderBy('sort', 'desc')->first();
+            $adminPoster = \App\Share::where('type_id', 2)->where('operate', 'All')->ApiGet()->first();
 
             $list = empty($list) ? $adminPoster : $list;
 
             if(!$list or empty($list)) return response()->json(['success'=>['message' => '暂无素材可以分享!', 'data' => array()]]);
-
 
             // 分享地址
             $Url = \App\AdminSetting::where('operate_number', $request->user->operate)->value('register_merchant');
@@ -173,14 +161,14 @@ class ShareController extends Controller
 
             imagepng($BackGroud, $PicFile);
 
-            $link = env('APP_URL')."/share/".$request->user->id."/team_share/".$list->id.".png";
+            $link = "http://".$_SERVER["HTTP_HOST"]."/share/".$request->user->id."/team_share/".$list->id.".png";
 
             return response()->json(['success'=>['message' => '获取成功!', 'data' => ['link' => $link."?time=".time() ]]]);
 
-        //} catch (\Exception $e) {
+        } catch (\Exception $e) {
             
-            //return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
+            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
 
-        //}
+        }
     }
 }
