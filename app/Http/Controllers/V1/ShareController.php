@@ -137,24 +137,24 @@ class ShareController extends Controller
             $CodeFile = $CodePath."qrcode.png";
             // 生成二维码
             QrCode::format('png')->size($list->code_width)->margin($list->code_margin)->generate($Url, $CodeFile);
-            dd($list->getOriginal('images'));
-            $typeArr=getimagesize(storage_path('app/public/'.$list->getAttributes('images')));
+
+            $typeArr=getimagesize(storage_path('app/public/'.$list->getOriginal('images')));
 
             switch($typeArr['mime'])
             {
                 case "image/png":
-                    $BackGroud=imagecreatefrompng(storage_path('app/public/'.$list->images));
+                    $BackGroud=imagecreatefrompng(storage_path('app/public/'.$list->getOriginal('images')));
                     break;
 
                 case "image/jpg":
-                    $BackGroud=imagecreatefromjpeg(storage_path('app/public/'.$list->images));
+                    $BackGroud=imagecreatefromjpeg(storage_path('app/public/'.$list->getOriginal('images')));
                     break;
                 case "image/jpeg":
-                    $BackGroud=imagecreatefromjpeg(storage_path('app/public/'.$list->images));
+                    $BackGroud=imagecreatefromjpeg(storage_path('app/public/'.$list->getOriginal('images')));
                     break;
 
                 case "image/gif":
-                    $BackGroud=imagecreatefromgif(storage_path('app/public/'.$list->images));
+                    $BackGroud=imagecreatefromgif(storage_path('app/public/'.$list->getOriginal('images')));
                     break;
             }
 
