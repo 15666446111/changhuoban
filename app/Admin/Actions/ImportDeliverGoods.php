@@ -132,12 +132,12 @@ HTML;
 
         }else{
 
-            $user = \App\User::where('operate', Admin::user()->operate)->get(['nickname as text', 'id']);
+            $user = \App\User::where('operate', Admin::user()->operate)->get('nickname', 'id');
             //dd();
             $this->select('user', '配送会员')->options($user)->rules('required', ['required' => '请选择配送用户']);
 
             
-            $policyGroups = \App\PolicyGroup::where('operate', Admin::user()->operate)->pluck('title', 'id');
+            $policyGroups = \App\PolicyGroup::where('operate', Admin::user()->operate)->get('title', 'id');
             $this->select('h_title','活动组')->options($policyGroups)->load('h_policy','/api/getAdminUserGroup');
             
             $this->select('h_policy','活动')->required();
