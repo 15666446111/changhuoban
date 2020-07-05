@@ -219,7 +219,7 @@ class MachineController extends AdminController
         $form = new Form(new Machine());
 
         if(Admin::user()->operate != "All" && request()->route()->parameters()){
-            $data = Machine::where('id', request()->route()->parameters()['machines'])->first();
+            $data = Machine::where('id', request()->route()->parameters()['machine'])->first();
             if($data->operate != Admin::user()->operate) return abort('403'); 
         }
 
