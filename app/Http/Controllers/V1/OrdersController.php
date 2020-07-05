@@ -50,11 +50,11 @@ class OrdersController extends Controller
 
                 'numbers' =>$request->numbers,
 
-                'price'   =>$request->price,
+                'price'   =>$request->price * 100,
 
                 'product_id'   =>$request->product_id,
 
-                'product_price'=>$request->product_price,
+                'product_price'=>$request->product_price * 100,
 
                 'remark'  =>$request->remark ?? '',
 
@@ -66,12 +66,7 @@ class OrdersController extends Controller
                 Factory::setOptions($this->getOptions());
                 //2. 发起API调用（以支付能力下的统一收单交易创建接口为例）
 
-                // $result = Factory::payment()->App()->pay('1', $data->order_no, $data->price / 100 );
-
-                $result = Factory::payment()->App()->pay("iPhone6 16G", "20200326235526001", "88.88", "2088002656718920");
-
-
-                // $result = Factory::payment()->common()->create("iPhone6 16G", "20200326235526001", "88.88", "2088002656718920");
+                $result = Factory::payment()->App()->pay('1', $data->order_no, $data->price);
 
                 if($result && $result->body)
                     return response()->json(['success'=>['message' => '订单创建成功!', 'data'=> ['sign' => $result->body]]]);
@@ -110,7 +105,6 @@ class OrdersController extends Controller
         // dd($options->merchantPrivateKey);
         
         //注：如果采用非证书模式，则无需赋值上面的三个证书路径，改为赋值如下的支付宝公钥字符串即可
-        // $options->alipayPublicKey = '<-- 请填写您的支付宝公钥，例如：MIIBIjANBg... -->';
         $options->alipayPublicKey = $data->alipay_sign; 
 
         //可设置异步通知接收服务地址（可选）
@@ -149,7 +143,7 @@ class OrdersController extends Controller
 
             'out_trade_no' => $data->order_no,
 
-            'total_fee'    => $data->price,
+            'total_fee'    => $data->price * 100,
 
             'trade_type'   => 'APP', // 请对应换成你的支付方式对应的值类型
 
@@ -177,15 +171,7 @@ class OrdersController extends Controller
         $response = $app->handlePaidNotify(function ($message, $fail) {
             
             //处理订单等，业务逻辑
-            if (!empty($_POST['code'] == 'SUCCESS')) {
-
-                $res = \App\Order::where('order_no',$order_no)->update(['status'=>1]);
-    
-            } else {
-    
-                echo "ERROR".PHP_EOL;
-    
-            }
+            $res = \App\Order::where('order_no',$order_no)->update(['status'=>1]);
 
         });
 
@@ -199,21 +185,11 @@ class OrdersController extends Controller
     public function AliPayCallback(){
 
         $parameters = $_POST;
-        dd($parameters);
 
         Factory::payment()->common()->verifyNotify($parameters);
 
-        if (!empty($_POST['code'] == 'SUCCESS')) {
+        $res = \App\Order::where('order_no',$_POST['out_trade_no'])->update(['status'=>1]);
 
-            $res = \App\Order::where('order_no',$_POST['out_trade_no'])->update(['status'=>1]);
-
-        // } else {
-
-            // echo "ERROR".PHP_EOL;
-
-        // }
-
-        }
     }
 
     /**
@@ -265,28 +241,28 @@ class OrdersController extends Controller
     public function orderLogistics()
     {
         //参数设置
-        $post_data = array();
-        $post_data["customer"] = '*****';
-        $key= '*****' ;
-        $post_data["param"] = '{"com":"*****","num":"*****"}';
+        // $post_data = array();
+        // $post_data["customer"] = '*****';
+        // $key= '*****' ;
+        // $post_data["param"] = '{"com":"*****","num":"*****"}';
 
-        $url='http://poll.kuaidi100.com/poll/query.do';
-        $post_data["sign"] = md5($post_data["param"].$key.$post_data["customer"]);
-        $post_data["sign"] = strtoupper($post_data["sign"]);
-        $o="";
-        foreach ($post_data as $k=>$v)
-        {
-            $o.= "$k=".urlencode($v)."&";		//默认UTF-8编码格式
-        }
-        $post_data=substr($o,0,-1);
-        $ch = curl_init();
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_HEADER, 0);
-            curl_setopt($ch, CURLOPT_URL,$url);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
-            $result = curl_exec($ch);
-            $data = str_replace("\"",'"',$result );
-            $data = json_decode($data,true);
+        // $url='http://poll.kuaidi100.com/poll/query.do';
+        // $post_data["sign"] = md5($post_data["param"].$key.$post_data["customer"]);
+        // $post_data["sign"] = strtoupper($post_data["sign"]);
+        // $o="";
+        // foreach ($post_data as $k=>$v)
+        // {
+        //     $o.= "$k=".urlencode($v)."&";		//默认UTF-8编码格式
+        // }
+        // $post_data=substr($o,0,-1);
+        // $ch = curl_init();
+        //     curl_setopt($ch, CURLOPT_POST, 1);
+        //     curl_setopt($ch, CURLOPT_HEADER, 0);
+        //     curl_setopt($ch, CURLOPT_URL,$url);
+        //     curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+        //     $result = curl_exec($ch);
+        //     $data = str_replace("\"",'"',$result );
+        //     $data = json_decode($data,true);
     }
 
 }

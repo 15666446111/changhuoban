@@ -74,7 +74,7 @@ class CashController extends Controller
     	 * 020003: 消费冲正
     	 * T20003: 日结消费冲正
     	 */
-    	if ($this->trade->tranCode == '020003' || $this->trade->tranCode == 'T20003') || $this->trade->tranCode == '024103	') {
+    	if (($this->trade->tranCode == '020003' || $this->trade->tranCode == 'T20003') || ($this->trade->tranCode == '024103')) {
 
     		// 对应原交易的交易码  020000:消费，T20000:日结消费
     		$oldTranCode = $this->trade->tranCode == '020003' ? '020000' : 'T20000';
@@ -354,9 +354,9 @@ class CashController extends Controller
 		$tradePrice = \App\Trade::where('user_id', 'in', $teamUserIds)
 								->where('card_type', 'in', [1, null])	// 非借记卡
 								->where('transDate', '>', $Monthdate)	// 本月交易
-								->where('sysRespCode', '00'),			// 交易成功
-								->where('is_invalid', 0),				// 非无效交易
-								->where('is_repeat', 0),				// 非重复交易
+								->where('sysRespCode', '00')		// 交易成功
+								->where('is_invalid', 0)			// 非无效交易
+								->where('is_repeat', 0)			// 非重复交易
 								->sum('amount');
 
     }
