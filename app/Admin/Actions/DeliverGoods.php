@@ -80,4 +80,40 @@ class DeliverGoods extends RowAction
         
         $this->select('policy','活动')->required();
 	}
+
+        /**
+     * @return string
+     * 上传效果
+     */
+    public function handleActionPromise()
+    {
+        $resolve = <<<'SCRIPT'
+
+        $(".title").on('change',function(){
+            var name = $(".title option:selected").val();
+            console.log(name)
+            if(name == ""){ 
+                $(".policy").find("option").remove();
+            }else{
+                
+                $.ajax({
+                    url: '/api/getAdminUserGroup',
+                    data:{q: name},
+                    success:function(data){
+                        var options = '';
+                        $.each(data, function(i, val) {  
+                            console.log(val['text'])
+                            options += "<option value='"+val['id']+"'>"+val['text']+"</option>";
+                        });
+                        $(".policy").html(options);
+                        $(".policy").change();
+                    }
+                });
+            }
+        })
+SCRIPT;
+
+        Admin::script($resolve);
+
+    }
 }
