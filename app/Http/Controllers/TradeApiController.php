@@ -203,7 +203,7 @@ class TradeApiController extends Controller
                         // 原交易凭证号
                         'originaltraceNo'   => $value->originaltraceNo ?? null
 
-                    ]
+                    ];
 
                     $reduceTranCode = [
                         '020002' => '消费撤销',
@@ -217,9 +217,9 @@ class TradeApiController extends Controller
                     // 为冲正和撤销类交易时，交易金额和结算金额储存负值
                     if (!empty($reduceTranCode[$value->tranCode])) {
 
-                        $tradeData['amount']        => $value->amount * -1;
+                        $tradeData['amount']        = $value->amount * -1;
 
-                        $tradeData['settle_amount'] => $value->settleAmount * -1;
+                        $tradeData['settle_amount'] = $value->settleAmount * -1;
 
                     }
 

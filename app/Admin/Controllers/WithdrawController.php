@@ -42,8 +42,8 @@ class WithdrawController extends AdminController
 
         $grid->column('withdrawDatas.bank', '银行信息')->modal('提现卡信息', function ($model) {
             return new Table(['姓名', '身份证号', '银行', '开户行', '联行号', '预留手机'], [ [
-                $model->withdrawDatas->username, $model->withdrawDatas->idcard, $model->withdrawDatas->bank, 
-                $model->withdrawDatas->bank_open, $model->withdrawDatas->banklink, $model->withdrawDatas->phone
+                // $model->withdrawDatas->username, $model->withdrawDatas->idcard, $model->withdrawDatas->bank, 
+                // $model->withdrawDatas->bank_open, $model->withdrawDatas->banklink, $model->withdrawDatas->phone
             ] ]);
         });
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\MachinesFactory;
 use App\MachinesStyle;
+use App\Machine;
 use App\Policy;
 use Encore\Admin\Facades\Admin;
 use Illuminate\Http\Request;
@@ -32,6 +33,21 @@ class AdminApiController extends Controller
 
     public function getAdminStyle(Request $request){
         return MachinesStyle::where('factory_id',$request->q)->get(['style_name as text','id']);
+    }
+
+
+    /**
+     * [getAdminFactory 返回符合类型的SN 订单发货的时候使用]
+     * @author Pudding
+     * @DateTime 2020-04-21T14:08:05+0800
+     * @return   [type]                   [description]
+     */
+    public function getMachineSn(Request $request){
+        return Machine::where('style_id',$request->q)
+        ->where('operate',Admin::user()->operate)
+        ->where('bind_status',0)
+        ->where('activate_state',0)
+        ->get(['sn as text','id']);
     }
 
     /**
