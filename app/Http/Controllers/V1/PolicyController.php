@@ -20,7 +20,7 @@ class PolicyController extends Controller
     {
     	try{
             
-            $policy = \App\Policy::select(['id', 'title'])->get();
+            $policy = \App\Policy::where('operate', $request->user->operate)->select(['id', 'title'])->get();
 
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $policy]]);
 
