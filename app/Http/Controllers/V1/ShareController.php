@@ -137,7 +137,7 @@ class ShareController extends Controller
             $CodeFile = $CodePath."qrcode.png";
             // 生成二维码
             QrCode::format('png')->size($list->code_width)->margin($list->code_margin)->generate($Url, $CodeFile);
-            dd($list->getAttributes()->images);
+            dd($list->getOriginal('images'));
             $typeArr=getimagesize(storage_path('app/public/'.$list->getAttributes('images')));
 
             switch($typeArr['mime'])
