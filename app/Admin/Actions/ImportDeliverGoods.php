@@ -19,11 +19,9 @@ class ImportDeliverGoods extends Action
     {
         try {
 
-            if(!$request->h_policy)
-                return $this->response()->swal()->error('请选择活动政策');
+            if(!$request->h_policy) return $this->response()->swal()->error('请选择活动政策');
 
-            if(!$request->user)
-                return $this->response()->swal()->error('请选择配送用户');
+            if(!$request->user) return $this->response()->swal()->error('请选择配送用户');
 
             $result = Excel::toArray(null, request()->file('file1'));
 
@@ -131,12 +129,13 @@ HTML;
     {
         if(Admin::user()->operate == 'All' or Admin::user()->type == '2'){
 
+
         }else{
 
-            $user_id = \App\User::where('operate',Admin::user()->operate)->first()->id;
-        
-            $user = \App\User::where('parent', $user_id)->where('id','!=',$user_id)->pluck('nickname as name','id');
-            $this->select('user', '配送会员')->options($user)->rules('required', ['required' => '请选择品牌']);
+            $user = \App\User::where('operate', Admin::user()->operate)->pluck('nickname as name', 'id');
+
+            $this->select('user', '配送会员')->options($user)->rules('required', ['required' => '请选择配送用户']);
+            
             
             $policyGroups = \App\PolicyGroup::where('operate', Admin::user()->operate)->pluck('title','id');
             $this->select('h_title','活动组')->options($policyGroups)->load('h_policy','/api/getAdminUserGroup');

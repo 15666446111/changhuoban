@@ -225,7 +225,7 @@ class MachineController extends AdminController
 
         $type = \App\MachinesType::where('state',1)->get()->pluck('name', 'id');
 
-        $form->hidden('operate', __('操盘号'))->value(Admin::user()->operate)->readonly();
+        $form->hidden('operate', __('操盘号'))->value($form->operate ?? Admin::user()->operate)->readonly();
 
         $form->select('name','类型')->options($type)->load('factory_name','/api/getAdminFactory');
 
