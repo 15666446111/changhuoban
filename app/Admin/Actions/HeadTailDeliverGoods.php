@@ -3,9 +3,9 @@
 namespace App\Admin\Actions;
 
 use Throwable;
+use Illuminate\Http\Request;
 use Encore\Admin\Facades\Admin;
 use Encore\Admin\Actions\Action;
-use Illuminate\Http\Request;
 
 class HeadTailDeliverGoods extends Action
 {
