@@ -24,8 +24,22 @@ class Share extends Model
 	 * @param    [type]                   $query [description]
 	 * @return   [type]                          [description]
 	 */
-    // public function scopeApiGet($query)
-    // {
-    // 	return $query->where('active', '1')->where('verify', '1')->orderBy('sort', 'desc')->limit('3')->select(['images', 'link', 'href']);
-    // }
+    public function scopeApiGet($query)
+     {
+     	return $query->where('active', '1')->where('verify', '1')->orderBy('sort', 'desc');
+     }
+    // 
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-06-22
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [获取头像图片地址]
+     * @param     [type]      $value [description]
+     * @return    [type]             [description]
+     */
+    public function getImagesAttribute($value)
+    {
+        return "http://".$_SERVER["HTTP_HOST"]."/"."storage/".$value;
+    }
 }

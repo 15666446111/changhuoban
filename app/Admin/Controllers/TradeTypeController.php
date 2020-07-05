@@ -133,7 +133,7 @@ class TradeTypeController extends AdminController
 
         $form->text('name', __('交易名称'));
 
-        $form->multipleSelect('trade_type', __('交易标识'))->options([
+        $form->checkbox('trade_type', __('交易标识'))->options([
             '020000' => '消费', 
             '020002' => '消费撤销', 
             '020003' => '消费冲正',
@@ -155,11 +155,11 @@ class TradeTypeController extends AdminController
             '02Y600' => '银联二维码撤销'
         ])->required();
         
-        $form->multipleSelect('card_type', __('交易卡类型'))->options([ 0 => '借记卡', 1 => '信用卡']);
+        $form->checkbox('card_type', __('交易卡类型'))->options([ 0 => '借记卡', 1 => '信用卡']);
 
-        $form->multipleSelect('is_top', __('是否封顶'))->options([ 0 => '非封顶', 1 => '封顶'])->required();
+        $form->checkbox('is_top', __('是否封顶'))->options([ 0 => '非封顶', 1 => '封顶'])->required();
 
-        $form->multipleSelect('trade_code', __('手续费计算类型'))->options([ 
+        $form->checkbox('trade_code', __('手续费计算类型'))->options([ 
             'Y' => '优惠', 
             'M' => '减免',
             'B' => '标准',

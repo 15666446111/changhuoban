@@ -21,8 +21,6 @@ class CreateUserRealnamesTable extends Migration
 
             $table->unsignedBigInteger('user_id')->comment('会员ID');
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-
             $table->tinyInteger('status')->comment('实名状态')->default(0);
 
             $table->string('name')->nullable()->comment('姓名');

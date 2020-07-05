@@ -9,7 +9,7 @@ class CreateTransfersTable extends Migration
     /**
      * Run the migrations.
      *
-     * @return void
+     * @return void alter table user_wallets drop foreign key user_wallets_user_id_foreign;
      */
     public function up()
     {
@@ -20,8 +20,6 @@ class CreateTransfersTable extends Migration
             $table->bigIncrements('id');
 
             $table->unsignedBigInteger('machine_id')->comment('机器ID');
-
-            $table->foreign('machine_id')->references('id')->on('machines')->onDelete('cascade');
 
             $table->integer('old_user_id')->comment('划拨前用户');
 

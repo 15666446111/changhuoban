@@ -51,6 +51,46 @@ class LoginController extends Controller
         }
     }
 
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-07-05
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 忘记密码接口 ]
+     * @param     Request     $request [description]
+     * @return    [type]               [description]
+     */
+    public function forget(Request $request)
+    {
+
+        try{
+
+            if(!$request->account) return response()->json(['error'=>['message' => '请输入账号!']]);
+
+            $user = \App\User::where('account',$request->account)->first();
+
+            if(!$user or empty($user)) return response()->json(['error'=>['message' => '账号不存在!']]);
+
+            if($request->password !== $request->password1) return response()->json(['error'=>['message' => '请保持密码一致']]);
+
+            if($request->code !== '8888') return response()->json(['error'=>['message' => '验证码错误']]);
+
+            $user->password = "###" . md5(md5($request->password . 'v3ZF87bMUC5MK570QH'));
+
+            $user->save();
+
+            return response()->json(['success'=>['message' => '修改成功!', 'data'=>[]]]);
+
+        } catch (\Exception $e) {
+
+            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
+
+        }
+
+    }
+
+
     /**
      * 修改个人登录密码
      */

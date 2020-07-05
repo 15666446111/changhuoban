@@ -3,10 +3,10 @@
 namespace App\Admin\Actions;
 
 use Throwable;
-use Encore\Admin\Admin;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Encore\Admin\Actions\Action;
+use Encore\Admin\Facades\Admin;
 use Maatwebsite\Excel\Validators\ValidationException;
 
 class MachineHeadTail extends Action
@@ -51,8 +51,9 @@ class MachineHeadTail extends Action
 
             foreach ($InsertData as $key => $value) {
                 \App\Machine::create([
-                    'sn'       =>  $value,
-                    'style_id'          =>  $request->h_style_id,
+                    'sn'        =>  $value,
+                    'style_id'  =>  $request->h_style_id,
+                    'operate'   =>  Admin::user()->operate,
                 ]);
             }
 
@@ -68,9 +69,16 @@ class MachineHeadTail extends Action
 
     public function html()
     {
-        return <<<HTML
+        if(Admin::user()->operate == 'All'){
+
+        }else{
+
+            return <<<HTML
         <a class="btn btn-sm btn-default machine-head-tail" style="position:absolute;  right: 250px;"><i class="fa fa-balance-scale" style="margin-right: 3px;"></i>首尾补全</a>
 HTML;
+
+        }
+        
     }
 
 

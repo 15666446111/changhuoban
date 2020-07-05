@@ -19,9 +19,7 @@ class CreateUserWalletsTable extends Migration
 
             $table->bigIncrements('id');
 
-            $table->unsignedBigInteger('user_id')->comment('会员ID');
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->integer('user_id')->comment('会员ID');
 
             $table->integer('cash_blance')->comment('分润余额')->default(0);
 

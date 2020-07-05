@@ -19,11 +19,9 @@ class ImportDeliverGoods extends Action
     {
         try {
 
-            if(!$request->h_policy)
-                return $this->response()->swal()->error('请选择活动政策');
+            if(!$request->h_policy) return $this->response()->swal()->error('请选择活动政策');
 
-            if(!$request->user)
-                return $this->response()->swal()->error('请选择配送用户');
+            if(!$request->user) return $this->response()->swal()->error('请选择配送用户');
 
             $result = Excel::toArray(null, request()->file('file1'));
 
@@ -58,6 +56,9 @@ class ImportDeliverGoods extends Action
                 /*
                     检查该会员在该政策下是否有结算激活等配置。如果没有 进行默认该政策配置
                 */
+               
+                /*
+                
                 $userPolicy  = \App\UserPolicy::where('user_id', $request->user)->where('policy_id', $request->h_policy)->first();
 
                 if(!$userPolicy or empty($userPolicy)){
@@ -82,7 +83,7 @@ class ImportDeliverGoods extends Action
                         'vip_active_set'        => $vip_active_set,
                         'standard'      =>  $standard
                     ]);
-                }
+                }*/
 
 
                 return $this->response()->success('配送成功, 配送'.count($epliceRows).'台!')->refresh();
@@ -109,9 +110,16 @@ class ImportDeliverGoods extends Action
      */
     public function html()
     {
-        return <<<HTML
+        if(Admin::user()->operate == 'All'){
+
+        }else{
+
+            return <<<HTML
         <a class="btn btn-sm btn-default import-deliver-goods"><i class="fa fa-upload" style="margin-right: 3px;"></i>导入发货</a>
 HTML;
+
+        }
+        
     }
 
     /**
@@ -124,14 +132,14 @@ HTML;
     {
         if(Admin::user()->operate == 'All' or Admin::user()->type == '2'){
 
+
         }else{
 
-            $user_id = \App\User::where('operate',Admin::user()->operate)->first()->id;
-        
-            $user = \App\User::where('parent', $user_id)->where('id','!=',$user_id)->pluck('nickname as name','id');
-            $this->select('user', '配送会员')->options($user)->rules('required', ['required' => '请选择品牌']);
+            $user = \App\User::where('operate', Admin::user()->operate)->pluck('nickname', 'id');
+            $this->select('user', '配送会员')->options($user)->rules('required', ['required' => '请选择配送用户']);
+
             
-            $policyGroups = \App\PolicyGroup::where('operate', Admin::user()->operate)->pluck('title','id');
+            $policyGroups = \App\PolicyGroup::where('operate', Admin::user()->operate)->pluck('title', 'id');
             $this->select('h_title','活动组')->options($policyGroups)->load('h_policy','/api/getAdminUserGroup');
             
             $this->select('h_policy','活动')->required();

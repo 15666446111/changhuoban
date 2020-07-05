@@ -190,7 +190,6 @@ class OrdersController extends Controller
 
         $res = \App\Order::where('order_no',$_POST['out_trade_no'])->update(['status'=>1]);
 
-
     }
 
     /**
