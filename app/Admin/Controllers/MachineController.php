@@ -91,6 +91,10 @@ class MachineController extends AdminController
         });
 
         $grid->actions(function ($actions) {
+            // 去掉删除 编辑
+            $actions->disableDelete();
+            $actions->disableEdit();
+
             // 如果机器未发货 显示发货按钮
             if($actions->row['user_id'] == 0 or $actions->row['user_id'] == null) $actions->add(new DeliverGoods);
         });

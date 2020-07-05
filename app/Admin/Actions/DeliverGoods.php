@@ -20,7 +20,7 @@ class DeliverGoods extends RowAction
         
             $model->user_id = $request->user;
 
-            $model->policy_id = $request->h_policy;
+            $model->policy_id = $request->d_policy;
 
             $model->save();
 
@@ -76,8 +76,8 @@ class DeliverGoods extends RowAction
         $this->select('user', '配送会员')->options($user)->rules('required', ['required' => '请选择配送用户']);
 
         $policyGroups = \App\PolicyGroup::where('operate', Admin::user()->operate)->pluck('title', 'id');
-        $this->select('h_title','活动组')->options($policyGroups)->load('h_policy','/api/getAdminUserGroup');
+        $this->select('d_title','活动组')->options($policyGroups)->load('d_policy','/api/getAdminUserGroup');
         
-        $this->select('h_policy','活动')->required();
+        $this->select('d_policy','活动')->required();
 	}
 }
