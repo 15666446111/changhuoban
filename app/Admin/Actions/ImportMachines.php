@@ -49,7 +49,7 @@ class ImportMachines extends Action
                     \App\Machine::create([
                         'sn'        =>  $value,
                         'style_id'  =>  $request->style_id,
-                        'user_id'   =>  Admin::user()->id
+                        'operate'   =>  Admin::user()->operate,
                     ]);
                 }
 

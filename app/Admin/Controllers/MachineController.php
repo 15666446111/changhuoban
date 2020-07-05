@@ -12,9 +12,8 @@ use App\Admin\Actions\ImportMachines;
 use App\Admin\Actions\MachineHeadTail;
 use App\Admin\Actions\HeadTailDeliverGoods;
 use App\Admin\Actions\ImportDeliverGoods;
-
-
 use Encore\Admin\Controllers\AdminController;
+
 
 class MachineController extends AdminController
 {
@@ -219,7 +218,22 @@ class MachineController extends AdminController
     {
         $form = new Form(new Machine());
 
-        $form->select('style_id', __('所属型号'))->options([1 => 'a', 2 => 'b']);
+        if(Admin::user()->operate != "All" && request()->route()->parameters()){
+            $data = Machine::where('id', request()->route()->parameters()['machines'])->first();
+            if($data->operate != Admin::user()->operate) return abort('403'); 
+        }
+
+        $type = \App\MachinesType::where('state',1)->get()->pluck('name', 'id');
+
+        $form->hidden('operate', __('操盘号'))->value(Admin::user()->operate)->readonly();
+
+        $form->select('name','类型')->options($type)->load('factory_name','/api/getAdminFactory');
+
+        $form->select('factory_name','厂商')->load('style_id','/api/getAdminStyle');
+
+        $form->select('style_id','型号')->required();
+
+        $form->ignore(['name','factory_name']);
 
         $form->text('sn', __('机具终端'));
 

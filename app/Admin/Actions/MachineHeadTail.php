@@ -3,10 +3,10 @@
 namespace App\Admin\Actions;
 
 use Throwable;
-use Encore\Admin\Facades\Admin;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Encore\Admin\Actions\Action;
+use Encore\Admin\Facades\Admin;
 use Maatwebsite\Excel\Validators\ValidationException;
 
 class MachineHeadTail extends Action
@@ -51,8 +51,9 @@ class MachineHeadTail extends Action
 
             foreach ($InsertData as $key => $value) {
                 \App\Machine::create([
-                    'sn'       =>  $value,
-                    'style_id'          =>  $request->h_style_id,
+                    'sn'        =>  $value,
+                    'style_id'  =>  $request->h_style_id,
+                    'operate'   =>  Admin::user()->operate,
                 ]);
             }
 
