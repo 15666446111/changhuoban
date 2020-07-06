@@ -16,7 +16,7 @@ class CashsController extends Controller
      */
     public function cashsIndex(Request $request)
     {
-        try{
+        /*try{*/
 
             $type = $request->type ?? 'all';
 
@@ -101,10 +101,10 @@ class CashsController extends Controller
             
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $data]]); 
 
-    	} catch (\Exception $e) {
+/*    	} catch (\Exception $e) {
             
             return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
 
-        }
+        }*/
     }
 }
