@@ -16,11 +16,10 @@ class PolicyGroupObserver
      */
     public function created(PolicyGroup $PolicyGroup)
     {
-        if($PolicyGroup->type == "1")
-        {
-            $group = \App\UserGroup::get();
+        if($PolicyGroup->type == "1"){
+            $group = \App\UserGroup::get(); 10
 
-            $type  = \App\TradeType::get();
+            $type  = \App\TradeType::get(); 2
 
             foreach ($group as $key => $value) {
                 foreach ($type as $k => $v) {

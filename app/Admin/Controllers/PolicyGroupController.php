@@ -105,7 +105,7 @@ class PolicyGroupController extends AdminController
             // dd($form->images);
             if($form->isCreating()){
                 $count = PolicyGroup::where('operate', Admin::user()->operate)->count();
-                if($count >= 4 ){
+                if($count >= 2 ){
                     $error = new MessageBag([ 'title'   => '创建活动组失败', 'message' => '您只能创建最多4个活动组']);
                     return back()->with(compact('error'));
                 }
