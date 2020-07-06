@@ -16,7 +16,7 @@ class CashsController extends Controller
      */
     public function cashsIndex(Request $request)
     {
-        /*try{*/
+        try{
 
             $type = $request->type ?? 'all';
 
@@ -93,7 +93,7 @@ class CashsController extends Controller
                 
                 $data['cash'][] = array(
                     'title' => $dt->year."年".$dt->month."月".$dt->day."日", 
-                    'money' => number_format($value->money / 100, 2, '.', ','),, 
+                    'money' => number_format($value->money / 100, 2, '.', ','),
                     'week'  => "星期".$weekarray[$dt->dayOfWeek],
                     'list'  => $arrs,
                 );  
@@ -101,10 +101,10 @@ class CashsController extends Controller
             
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $data]]); 
 
-/*    	} catch (\Exception $e) {
+    	} catch (\Exception $e) {
             
             return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
 
-        }*/
+        }
     }
 }
