@@ -95,10 +95,7 @@ class StatisticController
         
         $Arr =  $this->getMyTeam();
         
-        return \App\Machine::where('bind_status', '1')->whereBetween('bind_time', [ 
-                    $this->StartTime,  $this->EndTime])->whereHas('users', function($q) use ($Arr){
-                        $q->whereIn('id', $Arr);
-                    })->count();     
+        return \App\Merchant::whereBetween('created_at', [ $this->StartTime,  $this->EndTime])->whereIn('user_id', $Arr)->count();     
     }
 
 
