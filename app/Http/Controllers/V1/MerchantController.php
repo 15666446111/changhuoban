@@ -86,8 +86,14 @@ class MerchantController extends Controller
 
 
 	/**
-     * 商户列表接口
-     */
+	 * @Author    Pudding
+	 * @DateTime  2020-07-06
+	 * @copyright [copyright]
+	 * @license   [license]
+	 * @version   [获取我的商户列表]
+	 * @param     Request     $request [description]
+	 * @return    [type]               [description]
+	 */
     public function merchantsList(Request $request)
     {
         try{ 
@@ -110,6 +116,7 @@ class MerchantController extends Controller
 
 					// dd($value->merchants);
 					$arrs['Bound'][] = array(
+						'id'				=>		$value->id,
 						'merchant_name'		=>		$value->name,
 						'machine_phone'		=>		$value->phone,
 						'merchant_sn'		=>		$sn,
@@ -227,27 +234,30 @@ class MerchantController extends Controller
 	
 
 	/**
-     * 个人商户详情接口
-     */
+	 * @Author    Pudding
+	 * @DateTime  2020-07-06
+	 * @copyright [copyright]
+	 * @license   [license]
+	 * @version   [商户详情]
+	 * @param     Request     $request [description]
+	 * @return    [type]               [description]
+	 */
     public function merchantInfo(Request $request)
     {
         try{ 
 
             if(!$request->id) return response()->json(['error'=>['message' => '缺少必要参数:请选择终端']]);
              
-            $data=\App\Machine::where('user_id',$request->user->id)
-            ->where('id',$request->id)
-			->first();
-			
-			$arrs;
+            $data=\App\Merchant::where('user_id',$request->user->id)->where('id',$request->id)->first();
+					
+            if(!$data or empty($data)) return response()->json(['error'=>['message' => '没有找到该机器!']]);
 
 			$arrs = array(
-
-				'merchant_sn'			=>	$data->sn,
-				'merchant_name'			=>	$data->machine_name,
-				'merchant_phone'		=>	$data->machine_phone,
-				'time'					=>	$data->bind_time ?? $data->created_at,
-				'active_status'			=>	$data->activate_state
+				'merchant_name'			=>	$data->name,
+				'merchant_phone'		=>	$data->phone,
+				'merchant_sn'			=>	$data->machines->first()->sn,
+				'active_status'			=>	$data->activate_sn,
+				'time'					=>	$data->created_at->toDateTimeString(),
 			);
             
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $arrs]]);   
