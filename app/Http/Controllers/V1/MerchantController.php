@@ -37,8 +37,14 @@ class MerchantController extends Controller
 
 
 	/**
-     * 首页商户登记绑定接口
-     */
+	 * @Author    Pudding
+	 * @DateTime  2020-07-06
+	 * @copyright [copyright]
+	 * @license   [license]
+	 * @version   [商户登记接口]
+	 * @param     Request     $request [description]
+	 * @return    [type]               [description]
+	 */
     public function registers(Request $request)
     {
         try{ 
@@ -86,7 +92,7 @@ class MerchantController extends Controller
     {
         try{ 
 
-			$data = \App\Merchant::where('user_id',/*$request->user->id*/ '5')->get();
+			$data = \App\Merchant::where('user_id',$request->user->id)->get();
 			
 			$arrs = [];
 
