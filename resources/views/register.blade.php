@@ -14,7 +14,7 @@
 
 @section('content')
 
-<header class="demos-header" style="text-align: center; padding: 20px auto; color: green">
+<header class="demos-header" style="text-align: center; padding: 50px auto; color: green">
     <h1 class="demos-title">代理注册</h1>
 </header>
 

@@ -64,7 +64,7 @@ class RegisterController extends Controller
                 'password'      =>  "###" . md5(md5($password . 'v3ZF87bMUC5MK570QH')),
                 'phone'         =>  $request->register_phone,
                 'parent'        =>  $Parent->id,
-                'group'         =>  1,
+                'user_group'    =>  1,
             ]);
 
             if(!$NewUser) return back()->withErrors(['注册失败,系统错误!'])->withInput(); 
@@ -156,13 +156,13 @@ class RegisterController extends Controller
             if(!$Parent or empty($Parent)) return back()->withErrors(['信息错误!'])->withInput();
 
             // 创建新用户
-            $NewUser = \App\Buser::create([
+            $NewUser = \App\User::create([
                 'nickname'      =>  $request->register_phone,
                 'account'       =>  $request->register_phone,
-                'password'      =>  md5($request->register_password),
+                'password'      =>  "###" . md5(md5($password . 'v3ZF87bMUC5MK570QH')),
                 'phone'         =>  $request->register_phone,
                 'parent'        =>  $Parent->id,
-                'group'         =>  1,
+                'user_group'    =>  1,
             ]);
 
             if(!$NewUser) return back()->withErrors(['注册失败,系统错误!'])->withInput(); 
