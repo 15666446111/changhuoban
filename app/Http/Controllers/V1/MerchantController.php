@@ -73,34 +73,28 @@ class MerchantController extends Controller
     {
         try{ 
 
-			$data = \App\Machine::where('bind_status',1)->where('user_id',$request->user->id)->get();
+			$data = \App\Merchant::where('user_id',$request->user->id)->get();
 			
 			$arrs = [];
 
 			if(!$data or empty($data)){
-				$arrs['Bound'][] = array(
 
-					'id'				=>		'',
-					'merchant_name'		=>		'',
-					'machine_phone'		=>		'',
-					'merchant_sn'		=>		'',
-					'money'				=>		'',
-					'merchant_number'	=>		'',
-					'machine_id'		=>		'',
-					'created_at'		=>		''
+				$arrs['Bound'] = array();
 
-				);
 			}else{
 
 				foreach($data as $key=>$value){
+
+					$sn = $value->machines->pluck('sn')->toArray();
+					$sn = implode($sn, '|');
 					// dd($value->merchants);
 					$arrs['Bound'][] = array(
 
-						'merchant_name'		=>		$value->machine_name,
-						'machine_phone'		=>		$value->machine_phone,
-						'merchant_sn'		=>		$value->sn,
+						'merchant_name'		=>		$value->name,
+						'machine_phone'		=>		$value->phone,
+						'merchant_sn'		=>		$sn,
 						'money'				=>		$value->tradess_sn->sum('amount') / 100 ?? '',
-						'merchant_number'	=>		$value->merchants->code ?? '',
+						'merchant_number'	=>		$value->merchants->code,
 						'machine_id'		=>		$value->id,
 						'created_at'		=>		$value->bind_time
 	
@@ -109,41 +103,7 @@ class MerchantController extends Controller
 
 			}
 
-			$UnBind = \App\Machine::where('user_id',$request->user->id)->where('bind_status',0)->get();
-
-			if(!$UnBind or empty($UnBind)){
-
-				$arrs['UnBound'][] = array(
-
-					'id'				=>		'',
-					'merchant_name'		=>		'',
-					'machine_phone'		=>		'',
-					'merchant_sn'		=>		'',
-					'money'				=>		0,
-					'machine_id'		=>		'',
-					'created_at'		=>		''
-
-				);
-
-			}else{
-
-				foreach($UnBind as $key=>$value){
-
-					$arrs['UnBound'][] = array(
-	
-						'id'				=>		'',
-						'merchant_name'		=>		'',
-						'machine_phone'		=>		'',
-						'merchant_sn'		=>		$value->sn,
-						'money'				=>		0,
-						'machine_id'		=>		$value->id,
-						'created_at'		=>		$value->bind_time
-	
-					);
-	
-				}
-
-			}
+			$arrs['UnBound'] = array();
             
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $arrs]]); 
 

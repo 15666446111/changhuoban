@@ -27,6 +27,11 @@ class Merchant extends Model
      */
     public function machines()
     {
-        return $this->belongsTo('\App\Machine', 'id', 'merchant_id');
+        return $this->hasMany('\App\Machine', 'id', 'merchant_id');
+    }
+
+    public function trades()
+    {
+        # code...
     }
 }
