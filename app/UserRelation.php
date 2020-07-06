@@ -9,7 +9,7 @@ class UserRelation extends Model
     protected $guarded = [];
 
     /**
-     * [busers 关联用户会员模型]
+     * [User 关联用户会员模型]
      * @author Pudding
      * @DateTime 2020-04-10T15:35:13+0800
      * @return   [type]                   [description]
