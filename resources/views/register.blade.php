@@ -15,7 +15,9 @@
 @section('content')
 
 <header class="demos-header">
-    <h1 class="demos-title">代理注册</h1>
+    <h1 class="demos-title">
+        <img class="logo" src="">
+    </h1>
 </header>
 
 <form action="" method="post" name="register" id="register_form">
