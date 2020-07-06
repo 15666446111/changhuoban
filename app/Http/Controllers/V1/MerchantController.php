@@ -115,7 +115,7 @@ class MerchantController extends Controller
 						'merchant_sn'		=>		$sn,
 						'money'				=>		$value->trades->sum('amount') / 100,
 						'merchant_number'	=>		$value->code,
-						'bind_time'			=>		$value->created_at
+						'bind_time'			=>		$value->created_at->toDateTimeString()
 					);
 				}
 
