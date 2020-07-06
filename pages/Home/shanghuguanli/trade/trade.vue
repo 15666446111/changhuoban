@@ -63,7 +63,7 @@
 				
 				value3: 'init',
 				
-				merchant_sn: "",
+				merchant: 0,
 				// 交易数据
 				tradeData: {}
 			}
@@ -72,23 +72,23 @@
 		// },
 		onLoad(options) {
 			uni.showLoading();
-			this.merchant_sn = options.merchant_sn;
+			this.merchant = options.merchant;
 			// 获取交易数据
-			this.getTradeList(options.merchant_sn, 'day');
+			this.getTradeList(options.merchant, 'day');
 		},
 		watch:{
 			value2(val){
 				uni.showLoading();
 				if(val == 0){
-					this.getTradeList(this.merchant_sn, 'count');
+					this.getTradeList(this.merchant, 'count');
 				}
 				
 				if(val == 1){
-					this.getTradeList(this.merchant_sn, 'day');
+					this.getTradeList(this.merchant, 'day');
 				}
 				
 				if(val == 2){
-					this.getTradeList(this.merchant_sn, 'month');
+					this.getTradeList(this.merchant, 'month');
 				}
 				
 			}

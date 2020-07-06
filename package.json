@@ -1,0 +1,24 @@
+{
+  "name": "changhuoban",
+  "version": "1.0.0",
+  "description": "畅伙伴3.0前段 UNI-app开发项目",
+  "main": "main.js",
+  "dependencies": {
+    "@dcloudio/uni-ui": "^1.2.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/15666446111/changhuoban.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/15666446111/changhuoban/issues"
+  },
+  "homepage": "https://github.com/15666446111/changhuoban#readme"
+}

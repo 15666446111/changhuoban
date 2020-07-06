@@ -142,9 +142,11 @@ export default {
 					uni.hideToast();
 					try {
 						if (res.data.success) {
-							uni.showToast({ title: '重置成功', icon: 'none' });
-							uni.navigateTo({ url: '/pages/index/index', animationType: 'pop-in', animationDuration: 200});
-							
+							uni.showToast({ title: '重置成功', icon: 'none', duration: 2000, position: 'bottom', success: () => {
+								setTimeout(() => {
+									uni.navigateTo({ url: '/pages/index/index', animationType: 'pop-in', animationDuration: 200});
+								}, 2000);
+							} });
 						} else {
 							uni.showToast({ title: res.data.error.message, icon: 'none' });
 						}

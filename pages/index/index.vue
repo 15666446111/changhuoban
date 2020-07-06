@@ -106,7 +106,7 @@ export default {
 							uni.setStorageSync('token', res.data.success.token);
 							uni.setStorageSync('operate', res.data.success.operate);
 							uni.setStorageSync('type', res.data.success.type);
-							uni.showToast({ title: '登录成功', icon: 'none' });
+							uni.showToast({ title: '登录成功', icon: 'none', position: 'bottom' });
 							uni.switchTab({ url: '/pages/Home/home' });
 						} else {
 							uni.showToast({ title: res.data.error.message, icon: 'none' });
