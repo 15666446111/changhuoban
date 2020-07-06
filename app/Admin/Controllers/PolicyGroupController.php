@@ -103,15 +103,15 @@ class PolicyGroupController extends AdminController
 
         $form->saving(function (Form $form) {
             // dd($form->images);
-            // if($form->isCreating()){
-            //     $count = PolicyGroup::where('operate', Admin::user()->operate)->count();
-            //     if($count >= 4 ){
-            //         $error = new MessageBag([ 'title'   => '创建活动组失败', 'message' => '您只能创建最多4个活动组']);
-            //         return back()->with(compact('error'));
-            //     }
-            //     $form->operate = Admin::user()->operate;
-            //     $form->type    = 1;     // 暂时先等于联盟模式
-            // }
+            if($form->isCreating()){
+                $count = PolicyGroup::where('operate', Admin::user()->operate)->count();
+                if($count >= 4 ){
+                    $error = new MessageBag([ 'title'   => '创建活动组失败', 'message' => '您只能创建最多4个活动组']);
+                    return back()->with(compact('error'));
+                }
+                $form->operate = Admin::user()->operate;
+                $form->type    = 1;     // 暂时先等于联盟模式
+            }
             
         });
 
