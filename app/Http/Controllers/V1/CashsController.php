@@ -82,18 +82,18 @@ class CashsController extends Controller
                 foreach ($listdata as $k => $v) {
                     
                     $arrs[] = [
-                        'id'    =>$v->id,
-                        'type'  => $v->type, 
-                        'money' => $v->money, 
-                        'sn'    => $v->trades->sn, 
-                        'orderMoney' => $v->trades->amount,
-                        'date'  => $v->created_at->toDateTimeString(),
+                        'id'            =>$v->id,
+                        'type'          => $v->cash_type, 
+                        'money'         => $v->cash_money, 
+                        'sn'            => $v->trades->sn, 
+                        'orderMoney'    => number_format($v->trades->amount / 100, 2, '.', ','),
+                        'date'          => $v->created_at->toDateTimeString(),
                     ];
                 }
                 
                 $data['cash'][] = array(
                     'title' => $dt->year."年".$dt->month."月".$dt->day."日", 
-                    'money' => $value->money, 
+                    'money' => number_format($value->money / 100, 2, '.', ','),, 
                     'week'  => "星期".$weekarray[$dt->dayOfWeek],
                     'list'  => $arrs,
                 );  

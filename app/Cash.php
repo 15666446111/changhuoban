@@ -11,4 +11,17 @@ class Cash extends Model
 
     // 黑名单
     protected $guarded = [];
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-07-06
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 关联交易表 ]
+     * @return    [type]      [description]
+     */
+    public function trades()
+    {
+    	return $this->belongsTo('\App\Trade', 'order', 'trade_no');
+    }
 }

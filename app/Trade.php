@@ -25,6 +25,20 @@ class Trade extends Model
 
 
     /**
+     * @Author    Pudding
+     * @DateTime  2020-07-06
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 关联分润表 ]
+     * @return    [type]      [description]
+     */
+    public function cashs()
+    {
+        return $this->hasMany('\App\Cash', 'order', 'trade_no');
+    }
+
+
+    /**
      * [merchants 关联商户模型 通过SN关联]
      * @author Pudding
      * @DateTime 2020-04-10T16:37:46+0800
