@@ -55,4 +55,11 @@ class Trade extends Model
     {
         return $this->belongsTo('\App\TradesDeputy', 'trade_id', 'id');
     }
+
+
+    public function merchants()
+    {
+        return $this->belongsTo('\App\Merchant', 'merchant_code', 'code');
+    }
+
 }

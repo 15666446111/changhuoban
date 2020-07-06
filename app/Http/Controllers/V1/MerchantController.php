@@ -33,6 +33,9 @@ class MerchantController extends Controller
         }
 	}
 
+
+
+
 	/**
      * 首页商户登记绑定接口
      */
@@ -46,16 +49,26 @@ class MerchantController extends Controller
 
             if(!$request->merchant_phone) return response()->json(['error'=>['message' => '缺少必要参数:商户电话']]);
 
-			 $data = \App\Machine::where('user_id',$request->user->id)->where('sn',$request->merchant_sn)->first();
+			$data = \App\Machine::where('user_id',$request->user->id)->where('sn',$request->merchant_sn)->first();
 			 
-			 $data->machine_name = $request->merchant_name;
-			 $data->machine_phone = $request->merchant_phone;
-			 $data->bind_status = 1;
-			 $data->bind_time = Carbon::now()->toDateTimeString();
-			 $data->operate	= $request->operate;
+			if(!$data or empty( $data )) return response()->json(['error'=>['message' => '找不到机器!']]);
 
-			 $data->save();
-            
+			$result = \App\Merchant::create([
+				'user_id'	=>	$data->user_id,
+				'code'		=>	-1,
+				'name'		=>	$request->merchant_name,
+				'phone'		=>  $request->merchant_phone,
+				'operate'	=>	$data->operate
+			]);
+
+			$data->merchant_id = $result->id;
+
+			$data->bind_status = 1;
+
+			$data->bind_time = Carbon::now()->toDateTimeString();
+
+			$data->save();
+
             return response()->json(['success'=>['message' => '登记成功!', []]]); 
 
     	} catch (\Exception $e) {
@@ -73,11 +86,11 @@ class MerchantController extends Controller
     {
         try{ 
 
-			$data = \App\Merchant::where('user_id',$request->user->id)->get();
+			$data = \App\Merchant::where('user_id',/*$request->user->id*/ '5')->get();
 			
 			$arrs = [];
 
-			if(!$data or empty($data)){
+			if(!$data or empty($data)){ 
 
 				$arrs['Bound'] = array();
 
@@ -86,18 +99,17 @@ class MerchantController extends Controller
 				foreach($data as $key=>$value){
 
 					$sn = $value->machines->pluck('sn')->toArray();
-					$sn = implode($sn, '|');
+
+					$sn = implode('|', $sn);
+
 					// dd($value->merchants);
 					$arrs['Bound'][] = array(
-
 						'merchant_name'		=>		$value->name,
 						'machine_phone'		=>		$value->phone,
 						'merchant_sn'		=>		$sn,
-						'money'				=>		$value->tradess_sn->sum('amount') / 100 ?? '',
-						'merchant_number'	=>		$value->merchants->code,
-						'machine_id'		=>		$value->id,
-						'created_at'		=>		$value->bind_time
-	
+						'money'				=>		$value->trades->sum('amount') / 100,
+						'merchant_number'	=>		$value->code,
+						'bind_time'			=>		$value->created_at
 					);
 				}
 
@@ -107,7 +119,7 @@ class MerchantController extends Controller
             
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $arrs]]); 
 
-    	} catch (\Exception $e) {
+   	} catch (\Exception $e) {
             
             return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
 

@@ -27,11 +27,19 @@ class Merchant extends Model
      */
     public function machines()
     {
-        return $this->hasMany('\App\Machine', 'id', 'merchant_id');
+        return $this->hasMany('\App\Machine', 'merchant_id', 'id');
     }
 
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-07-06
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [关联交易表]
+     * @return    [type]      [description]
+     */
     public function trades()
     {
-        # code...
+        return $this->hasMany('\App\Trade', 'merchant_code', 'code');
     }
 }
