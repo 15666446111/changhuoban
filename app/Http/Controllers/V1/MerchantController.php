@@ -253,6 +253,7 @@ class MerchantController extends Controller
             if(!$data or empty($data)) return response()->json(['error'=>['message' => '没有找到该机器!']]);
 
 			$arrs = array(
+				'id'					=>	$data->id,
 				'merchant_name'			=>	$data->name,
 				'merchant_phone'		=>	$data->phone,
 				'merchant_sn'			=>	$data->machines->first()->sn,
@@ -303,16 +304,23 @@ class MerchantController extends Controller
 	
 
 	/**
-     * 商户交易明细
-     */
+	 * @Author    Pudding
+	 * @DateTime  2020-07-06
+	 * @copyright [copyright]
+	 * @license   [license]
+	 * @version   [商户交易明细]
+	 * @param     Request     $request [description]
+	 */
     public function MerchantDetails(Request $request)
     {
 
         try{ 
 			
-            if(!$request->merchant){
-                return response()->json(['error'=>['message' => 'sn号无效']]);
-            }
+            if(!$request->merchant) return response()->json(['error'=>['message' => '缺少必要参数:商户号']]);
+            
+            $merchant = \App\Merchant::where('id', $request->merchant)->first();
+
+            if(!$merchant or empty($merchant)) return response()->json(['error'=>['message' => '该商户不存在！']]);
 
             switch ($request->data_type) {
                 case 'month':
@@ -332,18 +340,12 @@ class MerchantController extends Controller
             $EndTime = Carbon::now()->toDateTimeString();
 
             $data = \App\Trade::select('cardType as card_type','card_number','trade_type','amount as money','trade_time')
-            ->where('sn', $request->merchant)
-            ->whereBetween('created_at', [$StartTime,  $EndTime])
-			->get();
+            			->where('merchant_code', $merchant->code)->whereBetween('created_at', [$StartTime,  $EndTime])
+            			->orderBy('trade_time', 'desc')
+						->get();
 			
-			if(!$data or empty($data)){
-				$data[] = array(
-					'card_type'		=>	'',
-					'card_number'	=>	'',
-					'trade_type'	=>	'',
-					'money'			=>	'',
-					'trade_time'	=>	''
-				);
+			if($data->isEmpty()){
+				$data = array();
 			}
 
             return response()->json(['success'=>['message' => '获取成功!', 'data'=>$data]]);
