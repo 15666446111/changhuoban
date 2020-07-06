@@ -65,6 +65,7 @@ Route::get('/api/getMachineSn', 		'AdminApiController@getMachineSn');
  */
 Route::get('/team/{code}', 'RegisterController@team');
 
+
 /**
  * @version [<团队邀请人注册 扫描二维码>] [<description>]
  * @author  [Pudding] <[755969423@qq.com]>

@@ -53,7 +53,7 @@ class RegisterController extends Controller
                 return back()->withErrors(['两次密码不一致!'])->withInput();
 
             // 获取上级信息
-            $Parent = \App\Buser::where('id', $result[0])->first();
+            $Parent = \App\User::where('id', $result[0])->first();
 
             if(!$Parent or empty($Parent)) return back()->withErrors(['信息错误!'])->withInput();
 
@@ -151,7 +151,7 @@ class RegisterController extends Controller
                 return back()->withErrors(['两次密码不一致!'])->withInput();
 
             // 获取上级信息
-            $Parent = \App\Buser::where('id', $result[0])->first();
+            $Parent = \App\User::where('id', $result[0])->first();
 
             if(!$Parent or empty($Parent)) return back()->withErrors(['信息错误!'])->withInput();
 
