@@ -16,20 +16,20 @@
 		}, {
 			"path": "pages/team/team",
 			"style": {
-				"navigationBarTitleText": "团队",
+				"navigationBarTitleText": "我的团队",
 				"navigationBarTextStyle": "black"
 
 			}
 		}, {
 			"path": "pages/cash/cash",
 			"style": {
-				"navigationBarTitleText": "收益",
+				"navigationBarTitleText": "我的收益",
 				"navigationBarTextStyle": "black"
 			}
 		}, {
 			"path": "pages/mine/mine",
 			"style": {
-				"navigationBarTitleText": "我的",
+				"navigationBarTitleText": "个人中心",
 				"navigationBarTextStyle": "black",
 				"enablePullDownRefresh": true,  	//设置为true表示当前页面开启下拉刷新
 				"backgroundTextStyle": "dark",

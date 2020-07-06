@@ -94,6 +94,7 @@ export default {
 			if(this.index >= this.arr.length){
 				return false;
 			}
+			
 			this.getMessage(this.arr[this.index])
 		},		
 		

@@ -6,28 +6,35 @@
 				<input class="input" placeholder="请正确伙伴手机号" />
 			</view>
 		</view>
-		<view class="view" v-for="(item, index) in partnerList" :key="index" v-if="item.id != userInfo.id" @click="optPartner(item)">
-			<view class="checkbox-view">
-				<text class="checkbox-text">{{item.nickname}}</text>
-				<!-- <radio class="checkbox" :value="item.id" color="#f98021" /> -->
-			</view>
-			<view class="xian"></view>
-			<view class="phone-time">
-				<view class="phone">
-					<view class="phone-name">手机号</view>
-					<view class="phone-text">{{item.phone}}</view>
+		
+		<view  v-if="partnerList.length != 0">
+			<view class="view" v-for="(item, index) in partnerList" :key="index" v-if="item.id != userInfo.id" @click="optPartner(item)">
+				<view class="checkbox-view">
+					<text class="checkbox-text">{{item.nickname}}</text>
+					<!-- <radio class="checkbox" :value="item.id" color="#f98021" /> -->
 				</view>
-				<view class="phone">
-					<view class="phone-name">加入时间</view>
-					<view class="phone-text">{{item.created_at}}</view>
+				<view class="xian"></view>
+				<view class="phone-time">
+					<view class="phone">
+						<view class="phone-name">手机号</view>
+						<view class="phone-text">{{item.phone}}</view>
+					</view>
+					<view class="phone">
+						<view class="phone-name">加入时间</view>
+						<view class="phone-text">{{item.created_at}}</view>
+					</view>
+				</view>
+				<view class="xian"></view>
+				<view class="examine">
+					
+					<view class="shu"></view>
+					<view class="examine-text">查看更多信息</view>
 				</view>
 			</view>
-			<view class="xian"></view>
-			<view class="examine">
-				<view class="examine-text">查看分润参数</view>
-				<view class="shu"></view>
-				<view class="examine-text">查看更多信息</view>
-			</view>
+		</view>
+		
+		<view v-if="partnerList.length == 0" style="font-size: 32rpx; color:#999; padding-top: 200rpx; text-align: center;">
+			暂无可选伙伴～
 		</view>
 		
 		<!-- <button type="default" class="optPartner">确定</button> -->
@@ -40,7 +47,6 @@ export default {
 		return {
 			partnerList: {},
 			userInfo: {},
-			
 			partnerId: '',
 		};
 	},
@@ -57,8 +63,10 @@ export default {
 				url: '/V1/my_team',
 				method: 'GET',
 				success: (res) => {
-					console.log(res);
-					this.partnerList = res.data.success.data.list;
+					if(res.data.success)
+						this.partnerList = res.data.success.data.list;
+					else
+						uni.showToast({ title: res.data.error.message, icon: 'none' });
 				}
 			})
 		},

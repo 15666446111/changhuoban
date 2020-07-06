@@ -129,13 +129,13 @@ export default {
 			uni.showLoading();
 			
 			uni.request({
-				url: 'http://chb3.0.test/api/V1/forgetPwd',
+				url: 'http://livechb3.changhuoban.com/api/V1/forgetPwd',
 				method: 'POST',
 				data: {
+					code: this.code,
 					account: this.account,
 					password: this.password,
-					password1: this.confirmPassword,
-					code: '8888'
+					password1: this.confirmPassword
 				},
 				success: res => {
 					console.log(res)

@@ -92,7 +92,7 @@ export default {
 			uni.showToast({ title: '登录中', icon: 'loading', mask: true, duration: 10000 });
 			
 			uni.request({
-				url: 'http://3.changhuoban.com/api/V1/login',
+				url: 'http://livechb3.changhuoban.com/api/V1/login',
 				method: 'POST',
 				data: {
 					account: this.account,

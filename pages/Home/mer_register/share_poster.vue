@@ -1,11 +1,15 @@
 <template>
-	<view class="body">
-		<view class="container2">
+	<view style="height: 100%">
+		<view class="container2" style="flex:1" v-if="this.images">
 			<swiper class="sw">
 				<swiper-item><image mode="aspectFit" @longpress="downloadImg(images)" :src=images class="img"></image></swiper-item>
 			</swiper>
+			<button>长按图片保存</button>
 		</view>
-		<button>长按图片保存</button>
+		
+		<view style="height: 100%;  display: flex; justify-content: center;align-items: center; background-color: #f5f5f5;" v-if="!this.images">
+			<image src="/static/no-data.jpeg" mode="widthFix"></image>
+		</view>
 	</view>
 </template>
 
@@ -14,31 +18,28 @@ import net from '../../../common/net.js';
 
 export default {
 	data() {
-		return {
-			images: ''
-		};
+		return { images: "images" , data: true};
 	},
 	
 	onLoad() {
+		uni.showLoading()
 		this.getMerchantPic();
 	},
 	
 	methods: {
 		// 获取分享图
 		getMerchantPic(){
-			
-			console.log(uni.getStorageSync('token'));
+
 	    	net({
 	        	url:"/V1/merchant_share",
 	            method:'get',
 	            success: (res) => {
-					if (res.data.success) {
+					uni.hideLoading()
+					if (res.data.success && res.data.success.data.link) { 
 						this.images = res.data.success.data.link;
 					} else {
-						uni.showToast({
-							title: res.data.error.message,
-							icon: 'none'
-						})
+						this.images = null
+						uni.showToast({ title: res.data.error.message, icon: 'none', position: 'bottom'})
 					}
 	            }
 	      	})

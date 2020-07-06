@@ -50,10 +50,7 @@ import net from '../../../../common/net.js';
 				this.rules[key].forEach(v => {
 					//验证失败
 					if (!v.rule.test(this[key])) {
-						uni.showToast({
-							title: v.msg,
-							icon: 'none'
-						});
+						uni.showToast({ title: v.msg, icon: 'none', position: 'bottom'});
 						check = false;
 						return false;
 					}
@@ -75,7 +72,8 @@ import net from '../../../../common/net.js';
 				if (this.newPassAgain != this.newPass){
 					uni.showToast({
 						title: '两次输入的密码不一致',
-						icon: 'none'
+						icon: 'none',
+						position: 'bottom'
 					});
 					return false;
 				};

@@ -146,7 +146,6 @@ export default {
 		this.getUserInfo();
 		// 获取展示数据 团队信息
 		this.getTeamList();
-		
 		this.getTeamDetail();
 	},
 	
@@ -157,15 +156,16 @@ export default {
 				this.getTeamDetail(type, index);
 				this.activeIndex = index;
 			}
-			
 		},
 		changecate(index) {
 			// 按月查询 按日查询
 			if( this.activeInde !== index){
 				if(index == 0){
+					uni.showLoading()
 					this.getTeamDetail('day', this.activeIndex);
 				}
 				if(index == 1){
+					uni.showLoading()
 					this.getTeamDetail('month', this.activeIndex);
 				}
 				this.activeInde = index;
