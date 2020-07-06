@@ -16,7 +16,7 @@ class CashsController extends Controller
      */
     public function cashsIndex(Request $request)
     {
-        /*try{ */
+        try{
 
             $type = $request->type ?? 'all';
 
@@ -36,16 +36,16 @@ class CashsController extends Controller
             $list = \App\Cash::where('user_id', $request->user->id);
             // 收益类型
             if($type == 'cash'){
-                $list->whereIn('type', ['1', '2']);
+                $list->whereIn('cash_type', ['1', '2']);
             }
 
             if($type == 'return'){
-                $list->whereIn('type', ['3','4','5', '6', '7', '8']);
+                $list->whereIn('cash_type', ['3','4','5', '6', '7', '8']);
             }
 
 
             if($type == 'other'){
-                $list->whereIn('type', ['10']);
+                $list->whereIn('cash_type', ['10']);
             }        
             
             $list = $list->groupBy('date')->orderBy('date', 'desc')->get(
@@ -65,15 +65,15 @@ class CashsController extends Controller
                 $listdata = \App\Cash::where('user_id', $request->user->id)->whereDate('created_at', $value->date);
 
                 if($type == 'cash'){
-                    $listdata->whereIn('type', ['1', '2']);
+                    $listdata->whereIn('cash_type', ['1', '2']);
                 }
     
                 if($type == 'return'){
-                    $listdata->whereIn('type', ['3','4','5', '6', '7', '8']);
+                    $listdata->whereIn('cash_type', ['3','4','5', '6', '7', '8']);
                 }
     
                 if($type == 'other'){
-                    $listdata->whereIn('type', ['10']);
+                    $listdata->whereIn('cash_type', ['10']);
                 }        
                 
                 $listdata = $listdata->orderBy('created_at', 'desc')->get();
@@ -101,10 +101,10 @@ class CashsController extends Controller
             
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $data]]); 
 
-    	/*} catch (\Exception $e) {
+    	} catch (\Exception $e) {
             
             return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
 
-        }*/
+        }
     }
 }
