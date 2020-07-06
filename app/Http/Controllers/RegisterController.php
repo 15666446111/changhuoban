@@ -61,7 +61,7 @@ class RegisterController extends Controller
             $NewUser = \App\User::create([
                 'nickname'      =>  $request->register_phone,
                 'account'       =>  $request->register_phone,
-                'password'      =>  "###" . md5(md5($password . 'v3ZF87bMUC5MK570QH')),
+                'password'      =>  "###" . md5(md5($request->register_password . 'v3ZF87bMUC5MK570QH')),
                 'phone'         =>  $request->register_phone,
                 'parent'        =>  $Parent->id,
                 'user_group'    =>  1,
@@ -159,7 +159,7 @@ class RegisterController extends Controller
             $NewUser = \App\User::create([
                 'nickname'      =>  $request->register_phone,
                 'account'       =>  $request->register_phone,
-                'password'      =>  "###" . md5(md5($password . 'v3ZF87bMUC5MK570QH')),
+                'password'      =>  "###" . md5(md5($request->register_password . 'v3ZF87bMUC5MK570QH')),
                 'phone'         =>  $request->register_phone,
                 'parent'        =>  $Parent->id,
                 'user_group'    =>  1,
