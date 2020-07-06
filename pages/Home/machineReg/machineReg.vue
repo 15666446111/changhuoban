@@ -13,7 +13,7 @@
 				<view class="select-view">
 					<view class="select-name">终端选择</view>
 					<view class="select-text1" v-if="merchant_sn == ''">请选择</view>
-					<view class="select-text1">{{merchant_sn}}</view>
+					<view class="select-text1">{{ merchant_sn }}</view>
 					<image class="select-image" src="/static/EPOS/jiantou.png" />
 				</view>
 			</navigator>
@@ -30,6 +30,7 @@
 				</view>
 				<view class="hengxian"></view>
 			</view>
+			
 			<!-- 第三栏 -->
 			<view class="select">
 				<view class="select-view">
@@ -76,10 +77,7 @@ export default {
 			this.rules[key].forEach(v => {
 				//验证失败
 				if (!v.rule.test(this[key])) {
-					uni.showToast({
-						title: v.msg,
-						icon: 'none'
-					});
+					uni.showToast({ title: v.msg, icon: 'none', position: 'bottom' });
 					check = false;
 					return false;
 				}
@@ -117,13 +115,9 @@ export default {
 					uni.hideLoading();
 					
 					if (res.data.success) {
-						uni.showToast({
-							title: '登记成功',
-							icon: 'none',
+						uni.showToast({ title: '登记成功', icon: 'none',
 							success : function(){
-								setTimeout(function() {
-									uni.navigateBack();
-								}, 1500);
+								setTimeout(function() { uni.navigateBack(); }, 1500);
 							}
 						});
 					} else {

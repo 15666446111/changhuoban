@@ -12,12 +12,13 @@
 	margin-top: 3%;
 	display: flex;
 	justify-content: center;
-	border-radius: 10upx 10upx 10upx 10upx;
+	border-radius: 5rpx;
 }
 .dis-div {
 	width: 49.8%;
 	text-align: center;
 	display: flex;
+	border-radius: 5rpx;
 }
 .dis-text {
 	width: 100%;
@@ -31,12 +32,12 @@
 /*  */
 #view {
 	width: 96%;
-	height: 160rpx;
+	height: 200rpx;
 }
 .content {
 	width: 90%;
 	height: 100%;
-	border-radius: 7px 7px 7px 7px;
+	border-radius: 5rpx;
 	box-shadow: #d9d9d9 0rpx 2rpx 8rpx 0rpx;
 	margin-left: 5%;
 	position: relative;
@@ -66,7 +67,7 @@
 	display: flex;
 	width: 100%;
 	position: relative;
-	height: 60rpx;
+	height: 70rpx;
 }
 .detail-img {
 	width: 30rpx;
@@ -74,7 +75,7 @@
 }
 
 .detail-name {
-	font-size: 30rpx;
+	font-size: 32rpx;
 	font-weight: 600;
 	margin-left: 30rpx;
 	margin-top: 13rpx;
@@ -82,31 +83,31 @@
 	color: #444;
 }
 .detail-text1 {
-	font-size: 20rpx;
+	font-size: 26rpx;
 	color: #666;
 	position: absolute;
 	right: 33%;
 	top: 17rpx;
 }
 .detail-text {
-	font-size: 28rpx;
+	font-size: 32rpx;
 	font-weight: 600;
 	color: #ff9203;
 	position: absolute;
-	right: 7%;
+	right: 3%;
 	top: 17rpx;
 }
 .SN {
-	font-size: 20rpx;
+	font-size: 28rpx;
 	color: #666;
 	margin-left: 30rpx;
-	margin-top: 7rpx;
+	margin-top: 4rpx;
 }
 .money {
 	display: flex;
 }
 .money-text {
-	font-size: 20rpx;
+	font-size: 26rpx;
 	color: #666;
 	margin-left: 29rpx;
 	margin-top: 10rpx;
@@ -114,7 +115,7 @@
 }
 
 .money-time {
-	font-size: 20rpx;
+	font-size: 24rpx;
 	color: #ff9203;
 	margin-top: 10rpx;
 	position: absolute;
@@ -139,7 +140,7 @@
 	width: 92%;
 	margin-left: 4%;
 	background-color: #f3f3f3;
-	border-radius: 15upx;
+	border-radius: 5rpx;
 	box-shadow: #d9d9d9 0 0 4px 0;
 	margin-top: 0.5rem;
 	background-color: #fff;
@@ -153,9 +154,11 @@
 	width: 50rpx;
 	height: 50rpx;
 	margin-top: 10upx;
+	margin-right: 5px;
 }
 .input {
 	border: 0;
 	width: 88%;
 	height: 70rpx;
+	font-size: 28rpx;
 }

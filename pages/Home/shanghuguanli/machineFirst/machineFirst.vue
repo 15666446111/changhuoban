@@ -31,12 +31,16 @@
 				<view class="mark">{{ merchantInfo.active_status == '1' ? '已激活' : '未激活' }}</view>
 			</view>
 			<view class="dara-xian"></view>
+			
+			<!--
 			<navigator :url="'../activeFirst/activeFirst?terminal=' + merchantInfo.merchant_sn">
 			<view class="data">
 				<view class="phone">活动详情</view>
 				<view class="mark">查看</view>
 			</view>
 			</navigator>
+			-->
+			
 			<view class="dara-xian"></view>
 			<navigator :url="'../trade/trade?merchant_sn=' + merchantInfo.merchant_sn">
 				<view class="data">

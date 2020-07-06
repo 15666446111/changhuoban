@@ -135,6 +135,7 @@
 		</navigator>
 		
 		<view style="height: 130upx;"></view>
+		
 	</view>
 </template>
 
@@ -189,7 +190,10 @@ export default {
 	            method:'get',
 	            success: (res) => {
 					uni.hideLoading();
-					this.TeamInfo = res.data.success.data;
+					if(res.data.success){
+						this.TeamInfo = res.data.success.data;
+					}else
+						uni.showToast({ title: res.data.error.message, icon: 'none', position: 'bottom' });
 	            }
 	      	})
 		},

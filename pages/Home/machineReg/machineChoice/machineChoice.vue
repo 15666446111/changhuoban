@@ -7,7 +7,7 @@
 			</view>
 		</view>
 		<radio-group @change="getTermNum">
-			<view class="view">
+			<view class="view" v-if="termList.length != 0">
 				<label class="term-info" v-for="(item, index) in termList" :key="index">
 					<view class="checkbox-view">
 						<text class="checkbox-text">SN：{{ item.merchant_sn }}</text>
@@ -16,11 +16,12 @@
 					<view class="xian"></view>
 				</label>
 			</view>
+			<view class="public-empty-tips" style="padding-top: 100rpx;" v-if="termList.length == 0">
+				没有需要登记的终端信息~
+			</view>
 		</radio-group>
 		
 		<button class="term-define" @click="define">确定</button>
-		
-		<view class="public-empty-tips" v-if="termList == ''">没有需要登记的终端信息~</view>
 	</view>
 </template>
 
@@ -51,8 +52,12 @@ export default {
 	        	url:"/V1/getNoBindMerchant",
 	            method:'get',
 	            success: (res) => {
+					console.log(res);
 					uni.hideLoading();
-					this.termList = res.data.success.data;
+					if(res.data.success && res.data.success.data)
+						this.termList = res.data.success.data;
+					else
+						uni.showToast({ title: res.data.error.message, icon: 'none' });
 	            }
 	      	})
 		},

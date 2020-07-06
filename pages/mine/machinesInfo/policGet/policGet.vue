@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="view"  >
+		<view class="view" v-if="policy.length != 0">
 			<view v-for="(item,index) in policy" :key="index" @click="optPolicy(item)">
 				<view class="policy">
 					<view class="model">
@@ -12,6 +12,10 @@
 				<view class="xian"></view>
 			</view>
 		</view>
+		
+		<view v-if="policy.length == 0" style="padding-top: 200rpx; color:#999; font-size: 32rpx; text-align: center;">
+			暂无可选的活动～
+		</view>
 	</view>
 </template>
 
@@ -20,18 +24,12 @@ import net from '../../../../common/net.js';
 export default {
 	data() {
 		return {
-			// policy:[
-			// 	{
-			// 		name:"MP70",
-			// 		text:'-99返150(线下普通版)',
-			// 		amount:'500台'
-			// 	}
-			// ]
 			policy: []
 		};
 	},
 	
 	onLoad() {
+		uni.showLoading()
 		this.getPolicyList();
 	},
 	methods: {
@@ -41,8 +39,11 @@ export default {
 	        	url:"/V1/getPolicy",
 	            method: 'get',
 	            success: (res) => {
-					console.log(res);
-					this.policy = res.data.success.data;
+					uni.hideLoading()
+					if(res.data.success && res.data.success.data)
+						this.policy = res.data.success.data;
+					else
+						uni.showToast({ title: res.data.error.message, icon: 'none' });
 	            }
 	      	})
 		},

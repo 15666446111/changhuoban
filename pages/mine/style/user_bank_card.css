@@ -74,12 +74,13 @@
 }
 
 .bck {
-	width: 70%;
+	width: 90%;
 	margin: 0 auto;
-	height: 70rpx;
+	height: 80rpx;
 	color: white;
 	margin-top: 50rpx;
-	font-size: 28rpx;
+	font-size: 32rpx;
+	line-height: 80rpx;
 	background-position-x: 128rpx;
 	background-position-y: 6rpx;
 	background-color: rgb(252, 148, 50);

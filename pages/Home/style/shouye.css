@@ -82,18 +82,19 @@
 /* 公告 */
 .notice {
 	width: 92%;
-	height: 55rpx;
+	height: 75rpx;
 	border-radius: 5px;
 	box-shadow: #d3d3d3 0 0 4px 0;
 	margin: 20rpx 4%;
 	display: flex;
 	background-color: #fff;
+	line-height: 75rpx;
 }
 .notice-img {
 	width: 6%;
 	height: 6%;
 	margin-left: 4%;
-	margin-top: 0.8%;
+	margin-top: 2.5%;
 }
 
 .notice-text {

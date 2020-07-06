@@ -1,32 +1,26 @@
 .container2 {
 	width: 100%;
 	height: 100%;
-	margin-top: 50rpx;
+	margin-top: 10rpx;
 	overflow: hidden;
-}
-
-.img {
-	/* width: 90%; */
-	height: 90%;
-	margin: 50rpx auto;
 }
 
 .sw {
 	width: 100%;
-	height: 1000rpx;
+	height: 90%;
 }
 
-.back {
-	width: 100%;
-	height: 100%;
-	overflow: hidden;
-	min-height: 1300rpx;
+.img {
+	/* width: 90%; */
+	height: 93%;
+	margin: 20rpx auto;
 }
 
 button {
-	width: 80%;
+	width: 90%;
 	background-color: #f0ad4e;
 	color: white;
 	margin: 0 auto;
-	margin-top: 50rpx;
+	margin-top: 0rpx;
 }
+

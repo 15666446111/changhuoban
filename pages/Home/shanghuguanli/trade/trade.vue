@@ -4,7 +4,7 @@
 			<ms-dropdown-item v-model="value1" :list="list1"></ms-dropdown-item>
 			<ms-dropdown-item v-model="value2" :list="list"></ms-dropdown-item>
 		</ms-dropdown-menu>		
-		<view class="detail">
+		<view class="detail" v-if="tradeData.length != 0">
 			<view class="detail-view" v-for="(item, index) in tradeData" :key="index">
 				<view class="datail-name">{{ item.card_type }}/{{ item.card_number }}</view>
 				<view class="datail-way">
@@ -17,6 +17,10 @@
 				</view>
 			</view>
 			<view class="hengxian"></view>
+		</view>
+		
+		<view v-if="tradeData.length == 0" style="color: #999; font-size: 32rpx; padding-top: 200rpx; text-align: center;">
+			暂无交易数据～
 		</view>
 	</view>
 </template>
@@ -70,22 +74,20 @@
 			uni.showLoading();
 			this.merchant_sn = options.merchant_sn;
 			// 获取交易数据
-			this.getTradeList(options.merchant_sn);
+			this.getTradeList(options.merchant_sn, 'day');
 		},
 		watch:{
 			value2(val){
+				uni.showLoading();
 				if(val == 0){
-					uni.showLoading();
 					this.getTradeList(this.merchant_sn, 'count');
 				}
 				
 				if(val == 1){
-					uni.showLoading();
 					this.getTradeList(this.merchant_sn, 'day');
 				}
 				
 				if(val == 2){
-					uni.showLoading();
 					this.getTradeList(this.merchant_sn, 'month');
 				}
 				
@@ -117,9 +119,8 @@
 						if (res.data.success) {
 							this.tradeData = res.data.success.data;
 						} else {
-							uni.showToast({
-								title: res.data.error.message,
-								icon: 'none'
+							uni.showToast({ title: res.data.error.message, icon: 'none',
+								position: 'bottom'
 							})
 						}
 					}

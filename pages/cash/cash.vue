@@ -5,18 +5,18 @@
 			<view class="earnings">
 				<view class="earning">
 					<view class="earning-text">总收益(元)</view>
-					<view class="earning-figure">{{ data.revenueAll / 100 | 0}}</view>
+					<view class="earning-figure">{{ data.revenueAll / 100}}</view>
 				</view>
 				<view class="across1"></view>
 				<view class="button">
 					<view class="button-view">
 						<view class="button-text">今日收益(元)</view>
-						<view class="button-figure">{{ data.revenueDay / 100 | 0}}</view>
+						<view class="button-figure">{{ data.revenueDay / 100}}</view>
 					</view>
 					<view class="button-vertical"></view>
 					<view class="button-view">
 						<view class="button-text">本月收益(元)</view>
-						<view class="button-figure">{{ data.revenueMonth / 100 | 0}}</view>
+						<view class="button-figure">{{ data.revenueMonth / 100}}</view>
 					</view>
 				</view>
 			</view>
@@ -38,7 +38,7 @@
 		</view>
 
 		<!-- 内容栏 -->
-		<view class="content" v-for="(item, index) in data.cash" :key="index">
+		<view class="content" v-if="data.cash && data.cash.length != 0" v-for="(item, index) in data.cash" :key="index">
 			<view class="times">
 				<view class="time">{{ item.title }} {{ item.week }}</view>
 				<view class="income">收入¥{{ item.money / 100 | 0 }}</view>
@@ -88,6 +88,10 @@
 			</view>
 		</view>
 
+		<view v-if="!data.cash || data.cash.length == 0" style="padding-top: 200rpx; color:#999; font-size: 32rpx; text-align: center;">
+			暂无分润数据哦～
+		</view>
+
 		<view style="height:200upx"></view>
 	</view>
 </template>
@@ -98,7 +102,11 @@ import net from '../../common/net.js';
 export default {
 	data() {
 		return {
-			data:{},
+			data:{
+				revenueAll: 0,
+				revenueDay: 0,
+				revenueMonth: 0
+			},
 			tabIndex: 0,
 			IndexClass: 3,
 			useName: [{ name: '全部明细' }, { name: '分润明细' }, { name: '返现明细' }, { name: '其他明细' }]

@@ -7,10 +7,10 @@
 				<view class="rise"> 
 					<view class="rise-head">
 						<image class="head" :src="UserInfo.heading" @click="changeAvatar(UserInfo.heading)" mode="aspectFill" />
-						<view class="name">昵称:{{ UserInfo.account}}</view>
+						<view class="name">账号:{{ UserInfo.account}}</view>
 					</view>
 
-					<view class="ID">账号:{{ UserInfo.account }}  级别:{{ UserInfo.group }}</view>
+					<view class="ID">昵称:{{ UserInfo.nickname }}  级别:{{ UserInfo.group }}</view>
 
 				</view>
 			</view>
@@ -45,6 +45,8 @@
 			</view>
 		</view>
 		<!-- 头部数据框 -->
+		
+		
 		<!-- 内容 -->
 		<view class="NavigationBar">
 			<view class="Bar1">
@@ -69,6 +71,7 @@
 				
 				<view class="across"></view>
 				
+				<!--
 				<navigator class="url" :url="'wodezhengc/wodezhengc?uid=' + UserInfo.id">
 					<view class="div">
 						<image class="div-img" src="/static/wd/cp.png" />
@@ -79,7 +82,7 @@
 				</navigator>
 
 				<view class="across"></view>
-				
+				-->
 
 				<navigator class="url" :url="'share/wx_share?uid=' + UserInfo.id">
 					<view class="div">
@@ -91,6 +94,7 @@
 				</navigator>
 				<view class="across"></view>
 				
+				<!--
 				<navigator class="url" url="temail_share/temail_share">
 					<view class="div">
 						<image class="div-img" src="/static/yaoqing.png" />
@@ -100,6 +104,7 @@
 					<view class="across"></view>
 				</navigator>
 				<view class="across"></view>				
+				-->
 				
 				<navigator class="url" url="../Home/zaixiankefu/zaixiankefu">
 					<view class="div">

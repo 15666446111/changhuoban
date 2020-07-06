@@ -22,7 +22,9 @@
 			</view>
 		</view>
 		
-		<navigator url="../../bankSet/bankCreate/bankCreate"><button class="bck">添加银行卡</button></navigator>
+		<navigator url="../../bankSet/bankCreate/bankCreate">
+			<button class="bck">添加银行卡</button>
+		</navigator>
 	</view>
 </template>
 
@@ -50,7 +52,6 @@
 		onShow() {
 			// 获取银行卡列表
 			this.getBankList();
-			
 			// 加载动画
 			uni.showLoading();
 		},

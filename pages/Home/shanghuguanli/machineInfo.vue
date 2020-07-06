@@ -23,48 +23,52 @@
 		</view>
 		
 		<view class="content">
-			<!-- 已绑定商户 -->
-			<navigator v-if="Head == 0" v-for="(item, index) in bindList" :key="index" :url="'machineFirst/machineFirst?id=' + item.machine_id">
-				<view id="view">
-					<view class="detail">
-						<view class="detail-name">{{ item.merchant_name }}</view>
-						<view class="detail-text1">累计交易:</view>
-						<view class="detail-text">{{ item.money > 0 ? item.money : 0 }}</view>
-					</view>
-					<view class="SN">SN:{{ item.merchant_sn }}</view>
+			<view v-if="Head == 0 && bindList.length != 0">
+				<!-- 已绑定商户 -->
+				<navigator v-if="Head == 0" v-for="(item, index) in bindList" :key="index" :url="'machineFirst/machineFirst?id=' + item.machine_id">
+					<view id="view">
+						<view class="detail">
+							<view class="detail-name">{{ item.merchant_name }}</view>
+							<view class="detail-text1">累计交易:</view>
+							<view class="detail-text">{{ item.money > 0 ? item.money : 0 }}</view>
+						</view>
+						<view class="SN">SN:{{ item.merchant_sn }}</view>
 
-					<view class="money">
-						<view class="money-text">商户号:{{ item.merchant_number }}</view>
-						<view class="money-time">登记时间：{{ item.created_at }}</view>
+						<view class="money">
+							<view class="money-text">商户号:{{ item.merchant_number }}</view>
+							<view class="money-time">登记时间：{{ item.created_at }}</view>
+						</view>
 					</view>
-				</view>
-				<view class="across"></view>
-			</navigator>
+					<view class="across"></view>
+				</navigator>
+			</view>
+			<view v-if="Head == 0 && bindList.length == 0" style="height: 400rpx; text-align: center; background-color: #f5f5f5; font-size: 32rpx; color: #999; padding-top: 400rpx;">
+				没有已绑定的商户信息~
+			</view>
+			
 			
 			<!-- 未绑定商户 -->
-			<navigator v-if="Head == 1" v-for="(item, index) in unBindList" :key="index" :url="'machineFirst/machineFirst'">
-				<view id="view">
-					<view class="detail">
-						<view class="detail-name">{{ item.merchant_name }}</view>
-						<view class="detail-text1">累计交易:</view>
-						<view class="detail-text">{{ item.amount }}</view>
-					</view>
-					<view class="SN">SN:{{ item.merchant_sn }}</view>
+			<view v-if="Head == 1 && unBindList.length != 0">
+				<navigator v-if="Head == 1" v-for="(item, index) in unBindList" :key="index" :url="'machineFirst/machineFirst'">
+					<view id="view">
+						<view class="detail">
+							<view class="detail-name">{{ item.merchant_name }}</view>
+							<view class="detail-text1">累计交易:</view>
+							<view class="detail-text">{{ item.amount }}</view>
+						</view>
+						<view class="SN">SN:{{ item.merchant_sn }}</view>
 
-					<view class="money">
-						<view class="money-text">商户号:{{ item.merchant_number }}</view>
-						<view class="money-time">登记时间：{{ item.created_at }}</view>
+						<view class="money">
+							<view class="money-text">商户号:{{ item.merchant_number }}</view>
+							<view class="money-time">登记时间：{{ item.created_at }}</view>
+						</view>
 					</view>
-				</view>
-				<view class="across"></view>
-			</navigator>
-		</view>
-		
-		<view class="public-empty-tips" v-if="BindTips">
-			没有已绑定的商户信息~
-		</view>
-		<view class="public-empty-tips" v-if="unBindTips">
-			没有未绑定的商户信息~
+					<view class="across"></view>
+				</navigator>
+			</view>
+			<view v-if="Head == 1 && unBindList.length == 0" style="height: 400rpx; text-align: center; background-color: #f5f5f5; font-size: 32rpx; color: #999; padding-top: 400rpx;">
+				没有未绑定的商户信息~
+			</view>
 		</view>
 	</view>
 </template>
@@ -83,9 +87,6 @@ export default {
 			bindList: [],
 			// 未绑定商户列表
 			unBindList: [],
-			// 商户是否为空状态
-			BindTips: false,
-			unBindTips: false,
 		};
 	},
 	
@@ -97,11 +98,8 @@ export default {
 	
 	methods: {
 		HeadTab(index) {
-			if (this.Head == index) {
-				return;
-			}
+			if (this.Head == index) { return; }
 			this.Head = index;
-			
 			// 信息为空时，显示提示信息
 			this.BindTips = (this.Head == 0 && this.bindList == '');
 			this.unBindTips = (this.Head == 1 && this.unBindList == '');
@@ -113,11 +111,13 @@ export default {
 				url: '/V1/getMerchantsList',
 				method: 'GET',
 				success: (res) => {
-					console.log(res);
 					uni.hideLoading();
-					// console.log(res);
-					this.bindList = res.data.success.data.Bound;
-					this.unBindList = res.data.success.data.UnBound;
+					if(res.data.success && res.data.success.data){
+						this.bindList = res.data.success.data.Bound;
+						this.unBindList = res.data.success.data.UnBound;
+					}else{
+						uni.showToast({ title: res.data.error.message, icon: 'none' });
+					}
 				}
 			})
 		}

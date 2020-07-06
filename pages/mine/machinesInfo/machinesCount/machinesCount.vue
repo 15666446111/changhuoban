@@ -17,20 +17,24 @@
 					{{item.name}}
 				</view>
 			</view>
-			<view id="view3">
+			<view id="view3" v-if="list.length != 0">
 				<view class="view_sn" v-for="(item, index) in list" :key="index">
-					<view class="p1">SN:{{item.merchant_sn}}</view>
-					<view class="p2">{{item.bind_status == 0 ? '未绑定' : '已绑定'}}/{{item.active_status == 0 ? '未激活' : '已激活'}}</view>
-					<view class="p3">
-						活动：
-						<view class="p3_1"></view>
-						{{item.title}}
+					<view class="bk">
+						<view class="line">
+							<view class="p1">SN: {{item.merchant_sn}}</view>
+							<view class="p2">{{item.bind_status == 0 ? '未绑定' : '已绑定'}}/{{item.active_status == 0 ? '未激活' : '已激活'}}</view>
+						</view>
+						
+						<view class="line">
+							<view class="p3"> 活动：{{item.title}}</view>
+							<view class="p4">绑定时间：{{item.bind_time}}</view>						
+						</view>
 					</view>
-					<view class="p4">绑定时间：{{item.bind_time}}</view>
-					<view class="divLine"></view>
-					
-					<view class="xian"></view>
 				</view>
+			</view>
+			
+			<view v-if="list.length == 0" style="color:#999; padding-top: 200rpx; text-align: center;">
+				暂无数据～
 			</view>
 		</view>
 	</view>
@@ -89,10 +93,7 @@ export default {
 						this.merchantList = res.data.success.data;
 						this.list = this.merchantList.AllMerchants;
 					} else {
-						uni.showToast({
-							title: res.data.error.message,
-							icon: 'none'
-						})
+						uni.showToast({ title: res.data.error.message, icon: 'none',position: 'bottom'})
 					}
 				}
 			})
