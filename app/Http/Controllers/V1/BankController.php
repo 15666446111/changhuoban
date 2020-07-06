@@ -49,8 +49,13 @@ class BankController extends Controller
             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
         }
         $data = curl_exec($curl);
+
         $bankLink = json_decode($data,true);
-        
+
+
+        file_put_contents("./a.txt", json_encode($bankLink));
+
+
         if(!$bankLink) return false;
 
         if(empty($bankLink['data']['record'])) return false;
