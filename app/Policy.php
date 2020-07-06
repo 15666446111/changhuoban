@@ -89,6 +89,10 @@ class Policy extends Model
     {
     	return $value / 100;
     }
+    public function setActivePriceAttribute($value)
+    {
+        $this->attributes['active_price'] =  $value * 100;
+    }
 
 	/**
 	 * [merchants 关联终端模型]

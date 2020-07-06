@@ -43,6 +43,7 @@ class CashController extends Controller
      * @var [type]
      */
     protected $handFee;
+
     /**
      * [$isTop 是否为封顶类交易，1是，0不是]
      * @var [type]
@@ -63,6 +64,10 @@ class CashController extends Controller
 		$this->tranCode = $this->trade->tranCode;
     }
 
+    /**
+     * [cash 交易数据分润类]
+     * @return [type] [description]
+     */
     public function cash()
     {
 
@@ -74,7 +79,7 @@ class CashController extends Controller
     	 * 020003: 消费冲正
     	 * T20003: 日结消费冲正
     	 */
-    	if ($this->trade->tranCode == '020003' || $this->trade->tranCode == 'T20003') || $this->trade->tranCode == '024103	') {
+    	if ($this->trade->tranCode == '020003' || $this->trade->tranCode == 'T20003' || $this->trade->tranCode == '024103	') {
 
     		// 对应原交易的交易码  020000:消费，T20000:日结消费
     		$oldTranCode = $this->trade->tranCode == '020003' ? '020000' : 'T20000';
@@ -187,6 +192,22 @@ class CashController extends Controller
     	 */
     	if ($this->trade->card_type == 0 && $this->trade->fee_type == 'B') {
     		
+            // 查询商户当前费率
+            $pmposClass = \App\Services\Pmpos($this->trade->merchant_code, $this->trade->sn);
+            $merchantRate = $pmposClass->getMerchantFee();
+
+            if ($merchantRate['code'] == '00') {
+
+                // 如果当前交易的手续费等于商户借记卡封顶费率的话，判定为借记卡封顶类交易
+                if ($this->handFee / 100 == $merchantRate['data']['dFeeMax']) {
+                    $isTop = 1;
+                }
+
+            } else {
+
+                return array('status' =>false, 'message' => '费率查询' . json_decode($merchantRate));
+                
+            }
     	}
 
     	/**
@@ -219,15 +240,18 @@ class CashController extends Controller
      * @param  [type] $tradeTypeId [description]
      * @return [type]              [description]
      */
-    public function vipCash($tradeTypeId)
+    protected function vipCash($tradeTypeId)
     {
+    	// 当前交易的总分润金额
+    	$rateMoney = 0;
+
     	// 查询用户结算价
     	$settlement = \App\policyGroupSettlement::where('trade_type_id', $tradeTypeId)
 						->where('user_group_id', $this->trade->users->user_group)
 						->where('policy_group_id', $this->trade->merchants_sn->policys->policy_groups->id)
 						->value('set_price');
 
-    	if ($settlement > 0) {
+    	if (!empty($settlement)) {
 
     		## 计算直营分润
     		if ($this->isTop == 1) {
@@ -239,7 +263,9 @@ class CashController extends Controller
     			$selfMoney = bcsub($this->handFee, bcmul($this->trade->amount, $formatSettle, 3));
     		}
 
+
     		// $selfMoney *= $this->entryType;
+    		$rateMoney += $selfMoney;
 
 			## 增加用户余额并添加分润记录
 			$this->addUserBalance($this->trade->merchants_sn->user_id, $selfMoney, 1);
@@ -267,6 +293,7 @@ class CashController extends Controller
 							$teamMoney = bcmul($this->trade->amount, $formatSettle);
 						}
 
+						$rateMoney += $teamMoney;
 						## 增加用户余额并添加分润记录
 						$this->addUserBalance($val['user_id'], $teamMoney, 2);
 					}
@@ -275,6 +302,13 @@ class CashController extends Controller
 					// $this->upgradeGroup($this->trade->merchants_sn->user_id);
 				}
 			}
+
+			return array('status' =>true, 'message' => '订单分润完成,共分润:'.($rateMoney / 100).'元!');
+
+    	} else {
+
+    		return array('status' =>false, 'message' => '用户结算价信息获取失败');
+
     	}
     }
 
@@ -325,13 +359,13 @@ class CashController extends Controller
     public function addUserBalance($userId, $money, $type = 1)
     {
     	// 添加分润记录
-    	\App\Cashs::create([
+    	\App\Cash::create([
     		'user_id'		=> $userId,
     		'order'			=> $this->trade->trade_no,
     		'cash_money'	=> $money,
     		'is_run'		=> 1,
     		'cash_type'		=> $type,
-    		'opearte'		=> $this->trade->merchants_sn->opearte
+    		'operate'		=> $this->trade->merchants_sn->operate
     	]);
     	// 增加用户余额
     	\App\UserWallet::where('user_id', $userId)->increment('cash_blance', $money);
@@ -342,22 +376,22 @@ class CashController extends Controller
      * @param  [type] $userId [description]
      * @return [type]         [description]
      */
-    public function upgradeGroup($userId)
-    {
-    	// 团队用户id
-    	$teamUserIds = \App\UserRelation::where('parents', 'like', '%\_'.$userId.'\_%')
-										->orWhere('user_id', $userId)
-										->select('user_id');
+  //   public function upgradeGroup($userId)
+  //   {
+  //   	// 团队用户id
+  //   	$teamUserIds = \App\UserRelation::where('parents', 'like', '%\_'.$userId.'\_%')
+		// 								->orWhere('user_id', $userId)
+		// 								->select('user_id');
 
-		// 查询本月 交易成功、非借记卡、有效的团队交易
-		$Monthdate = date('Ymd', time());
-		$tradePrice = \App\Trade::where('user_id', 'in', $teamUserIds)
-								->where('card_type', 'in', [1, null])	// 非借记卡
-								->where('transDate', '>', $Monthdate)	// 本月交易
-								->where('sysRespCode', '00'),			// 交易成功
-								->where('is_invalid', 0),				// 非无效交易
-								->where('is_repeat', 0),				// 非重复交易
-								->sum('amount');
+		// // 查询本月 交易成功、非借记卡、有效的团队交易
+		// $Monthdate = date('Ymd', time());
+		// $tradePrice = \App\Trade::where('user_id', 'in', $teamUserIds)
+		// 						->where('card_type', 'in', [1, null])	// 非借记卡
+		// 						->where('transDate', '>', $Monthdate)	// 本月交易
+		// 						->where('sysRespCode', '00'),			// 交易成功
+		// 						->where('is_invalid', 0),				// 非无效交易
+		// 						->where('is_repeat', 0),				// 非重复交易
+		// 						->sum('amount');
 
-    }
+  //   }
 }

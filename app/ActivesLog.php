@@ -4,11 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Cash extends Model
+class ActivesLog extends Model
 {
 	
-	protected $table = 'cashs';
-
     // 黑名单
-    protected $guarded = [];
+	protected $guarded = [];
 }
