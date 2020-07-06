@@ -56,11 +56,6 @@ class AppServiceProvider extends ServiceProvider
         // 新增活动组的时候 监听创建各个用户组的各个结算价设置 仅限联盟模式
         \App\PolicyGroup::observe(\App\Observers\PolicyGroupObserver::class);
 
-        // 新增活动组的时候 监听创建各个用户组的各个结算价设置 仅限联盟模式
-        \App\PolicyGroup::observe(\App\Observers\PolicyGroupObserver::class);
-
-
-
         /**
          * [$table Config Database Auto Load To Config]
          * @var [自动加载配置表到Config]

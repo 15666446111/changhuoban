@@ -50,21 +50,18 @@ class MachineController extends AdminController
 
         $grid->column('users.nickname', __('所属代理'));
 
-
-        $grid->column('open_state', __('开通状态'))->using([ '0' => '未开通', '1' => '已开通'])
-                ->dot([ 0 => 'danger', 1 => 'success' ], 'default');
+        $grid->column('open_state', __('开通状态'))->using([ '0' => '未开通', '1' => '已开通'])->dot([ 0 => 'danger', 1 => 'success' ], 'default');
 
         $grid->column('open_time', __('开通时间'));
 
         $grid->column('is_self', __('活动自备机'))->using([ '0' => '不是', '1' => '是'])
                 ->dot([ 0 => 'success', 1 => 'danger' ], 'default');
 
-        $grid->column('machine_name', __('商户名称'));
+        $grid->column('merchants.name', __('商户名称'));
 
-        $grid->column('machine_phone', __('商户电话'));
+        $grid->column('merchants.phone', __('商户电话'));
 
-        $grid->column('bind_status', __('绑定状态'))->using([ '0' => '未绑定', '1' => '已绑定'])
-                ->dot([ 0 => 'default', 1 => 'success' ], 'default');
+        $grid->column('bind_status', __('绑定状态'))->using([ '0' => '未绑定', '1' => '已绑定'])->dot([ 0 => 'default', 1 => 'success' ], 'default');
 
         $grid->column('bind_time', __('绑定时间'));
 

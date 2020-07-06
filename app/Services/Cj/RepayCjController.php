@@ -140,7 +140,7 @@ class RepayCjController extends Controller
 
             if($this->chanKey == "") return ['code' => 10033, 'message' => '未找到代付设置参数信息!'];
 
-            //if($password != $this->setting->withdraw_pass) return ['code' => 10050, 'message' => '审核密码不正确!'];
+            if($password != $this->setting->withdraw_pass) return ['code' => 10050, 'message' => '审核密码不正确!'];
 
             if($this->setting->withdraw_open != "1") return ['code' => 10050, 'message' => '您未开启提现,请在设置中开启提现功能!'];
 
@@ -154,6 +154,20 @@ class RepayCjController extends Controller
     }
 
 
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-07-06
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [version]
+     * @return    [type]      [description]
+     */
+    public function auto_apply()
+    {
+        return ['code' => 10000, 'message' => 'auto pay'];
+    }
+
+    
 
     /**
      * @Author    Pudding

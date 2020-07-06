@@ -218,10 +218,7 @@ class ServerController extends Controller
     public function getIncome()
     {
     	//DB::connection()->enableQueryLog();#开启执行日志
-
-    	$select = \App\CashsLog::whereIn('user_id', $this->team);
-
-        return $select->whereBetween('created_at', [ $this->StartTime,  $this->EndTime])->sum('money');
+    	return \App\Cash::whereIn('user_id', $this->team)->whereBetween('created_at', [ $this->StartTime,  $this->EndTime])->sum('cash_money');
     }
 
     /**

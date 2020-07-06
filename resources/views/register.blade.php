@@ -14,10 +14,8 @@
 
 @section('content')
 
-<header class="demos-header">
-    <h1 class="demos-title">
-        <img class="logo" src="">
-    </h1>
+<header class="demos-header" style="text-align: center; padding: 50px auto; color: green">
+    <h1 class="demos-title" style="margin-top: 60px; margin-bottom: 40px;">代理注册</h1>
 </header>
 
 <form action="" method="post" name="register" id="register_form">

@@ -50,7 +50,7 @@ class Machine extends Model
      */
     public function merchants()
     {
-        return $this->belongsTo('\App\Merchant', 'id', 'merchant_id');
+        return $this->belongsTo('\App\Merchant', 'merchant_id', 'id');
     }
 
     /**

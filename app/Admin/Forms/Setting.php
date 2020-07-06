@@ -31,13 +31,10 @@ class Setting extends Form
     {
         
         $data = \App\Setting::where('operate', Admin::user()->operate)->first();
-        if($request->withdraw_open){
-            $withdraw_open = '1';
-        }else{
-            $withdraw_open = '0';
-        }
+        
+        $data->withdraw_open = $request->withdraw_open;
 
-        $data->withdraw_open = $withdraw_open;
+        $data->withdraw_pass = $request->withdraw_pass;
 
         $data->verify = '0';
 
@@ -69,6 +66,8 @@ class Setting extends Form
     {
 
         $this->switch('withdraw_open', '开启提现')->rules('required');
+
+        $this->text('withdraw_pass', '提现审核密码')->rules('required')->help('审核提现订单时使用');
 
         // $this->switch('verify', '是否审核')->rules('required');
 

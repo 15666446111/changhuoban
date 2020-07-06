@@ -171,7 +171,7 @@ class ActiveMerchantController extends Controller
     public function addUserBalance($userId, $money, $type)
     {
     	// 添加分润记录
-    	\App\Cashs::create([
+    	\App\Cash::create([
     		'user_id'		=> $userId,
     		'order'			=> $this->trade->trade_no,
     		'cash_money'	=> $money,

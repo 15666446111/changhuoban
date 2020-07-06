@@ -142,6 +142,8 @@ class SetUserController extends Controller
             
             $banklink = $model->openBank($bank);
 
+            if(!$banklink) return response()->json(['error'=>['message' => '请检查银行卡信息!']]);
+
             if($request->is_default == 1){
 
                 \App\Bank::where('user_id',$request->user->id)->update(['is_default'=>0]);
@@ -216,7 +218,7 @@ class SetUserController extends Controller
     {
         try{ 
             
-            $data=\App\Bank::where('user_id',$request->user->id)->where('is_default','1')->where('is_del',0)->first();
+            $data=\App\Bank::where('user_id', $request->user->id)->where('is_default','1')->where('is_del',0)->first();
 
             return response()->json(['success'=>['message' => '获取成功!', 'data'=>$data]]); 
 
@@ -330,10 +332,10 @@ class SetUserController extends Controller
     public function point(Request $request)
     {
 
-        try{ 
+        try{
 
             if(!$request->user->settings){
-                return response()->json(['message'=>['message' => '请设置您的提现信息'],'code'=>201]);
+                return response()->json(['error'=>['message' => '请设置您的提现信息']]);
             }
             
             // 判断是分润钱包还是返现钱包 * 获取提现税点
@@ -383,7 +385,7 @@ class SetUserController extends Controller
             $banklink = $model->openBank($bank);
             
             if(!$request->user->settings){
-                return response()->json(['message'=>['message' => '请设置您的提现信息'],'code'=>201]);
+                return response()->json(['error'=>['message' => '请设置您的提现信息'],'code'=>201]);
             }
 
             if(!$request->money) return response()->json(['error'=>['message' => '缺少必要参数:提现金额']]);

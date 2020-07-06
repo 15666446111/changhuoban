@@ -16,43 +16,45 @@ class CashsController extends Controller
      */
     public function cashsIndex(Request $request)
     {
-        try{ 
+        try{
 
             $type = $request->type ?? 'all';
 
             //总收益
-            $data['revenueAll'] = $request->user->cash->sum('money');
+            $data['revenueAll'] = $request->user->cash->sum('cash_money');
             
             //今日收益
-            $data['revenueDay'] = \App\CashsLog::where('user_id',$request->user->id)->whereDate('created_at', Carbon::today())->sum('money');
+            $data['revenueDay'] = \App\Cash::where('user_id', $request->user->id)->whereDate('created_at', Carbon::today())->sum('cash_money');
             
             //本月收益
-            $data['revenueMonth'] = \App\CashsLog::where('user_id',$request->user->id)->whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->sum('money');
+            $data['revenueMonth'] = \App\Cash::where('user_id', $request->user->id)->whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->sum('cash_money');
 
             // 查询用户账号余额
             $data['balance'] = $request->user->wallets->cash_blance + $request->user->wallets->return_blance;
             
             // 
-            $list = \App\CashsLog::where('user_id', $request->user->id);
+            $list = \App\Cash::where('user_id', $request->user->id);
             // 收益类型
             if($type == 'cash'){
-                $list->whereIn('type', ['1', '2']);
+                $list->whereIn('cash_type', ['1', '2']);
             }
 
             if($type == 'return'){
-                $list->whereIn('type', ['3','4','5', '6', '7', '8']);
+                $list->whereIn('cash_type', ['3','4','5', '6', '7', '8']);
             }
 
+
             if($type == 'other'){
-                $list->whereIn('type', ['9']);
+                $list->whereIn('cash_type', ['10']);
             }        
             
             $list = $list->groupBy('date')->orderBy('date', 'desc')->get(
                         array(
                             DB::raw('Date(created_at) as date'),
-                            DB::raw('SUM(money) as money')
+                            DB::raw('SUM(cash_money) as money')
                         )
                     );
+
             $weekarray=array("日","一","二","三","四","五","六");
             
             foreach ($list as $key => $value) {
@@ -60,20 +62,19 @@ class CashsController extends Controller
                 $dt = Carbon::parse($value->date);
                 
                 //dd(\App\Cash::where('user_id', $request->user->id)->whereDay('created_at', $value->date)->orderBy('created_at', 'desc')->get());
-                $listdata = \App\CashsLog::where('user_id', $request->user->id)->whereDate('created_at', $value->date);
+                $listdata = \App\Cash::where('user_id', $request->user->id)->whereDate('created_at', $value->date);
 
                 if($type == 'cash'){
-                    $listdata->whereIn('type', ['1', '2']);
+                    $listdata->whereIn('cash_type', ['1', '2']);
                 }
     
                 if($type == 'return'){
-                    $listdata->whereIn('type', ['3','4','5', '6', '7', '8']);
+                    $listdata->whereIn('cash_type', ['3','4','5', '6', '7', '8']);
                 }
     
                 if($type == 'other'){
-                    $listdata->whereIn('type', ['9']);
+                    $listdata->whereIn('cash_type', ['10']);
                 }        
-                
                 
                 $listdata = $listdata->orderBy('created_at', 'desc')->get();
 
@@ -81,18 +82,18 @@ class CashsController extends Controller
                 foreach ($listdata as $k => $v) {
                     
                     $arrs[] = [
-                        'id'    =>$v->id,
-                        'type'  => $v->type, 
-                        'money' => $v->money, 
-                        'sn'    => $v->trades->sn, 
-                        'orderMoney' => $v->trades->amount,
-                        'date'  => $v->created_at->toDateTimeString(),
+                        'id'            =>$v->id,
+                        'type'          => $v->cash_type, 
+                        'money'         => $v->cash_money, 
+                        'sn'            => $v->trades->sn, 
+                        'orderMoney'    => number_format($v->trades->amount / 100, 2, '.', ','),
+                        'date'          => $v->created_at->toDateTimeString(),
                     ];
                 }
                 
                 $data['cash'][] = array(
                     'title' => $dt->year."年".$dt->month."月".$dt->day."日", 
-                    'money' => $value->money, 
+                    'money' => number_format($value->money / 100, 2, '.', ','),
                     'week'  => "星期".$weekarray[$dt->dayOfWeek],
                     'list'  => $arrs,
                 );  

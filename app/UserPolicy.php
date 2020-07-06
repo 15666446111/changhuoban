@@ -81,7 +81,7 @@ class UserPolicy extends Model
      */
     public function busers()
     {
-    	return $this->belongsTo('\App\Buser', 'user_id', 'id');
+    	return $this->belongsTo('\App\User', 'user_id', 'id');
     }
 
 

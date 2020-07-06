@@ -95,7 +95,7 @@ class User extends Authenticatable
      */
     public function cash()
     {
-        return $this->hasMany('\App\CashsLog', 'user_id', 'id');
+        return $this->hasMany('\App\Cash', 'user_id', 'id');
     }
 
     /**

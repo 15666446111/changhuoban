@@ -24,7 +24,7 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'register_phone'    =>  'required|unique:busers,account|between:11,11',
+            'register_phone'    =>  'required|unique:users,account|between:11,11',
             'register_code'     =>  'required|between:4,6',
             'register_password' =>  'required|between:6,20|alpha_num',
             'register_confirm_password' =>  'required|between:6,20|alpha_num',
