@@ -39,7 +39,7 @@ class ImportDeliverGoods extends Action
                 $data = [];
 
                 foreach ($rows as $key => $row){
-                    if ( $key > 0 && isset($row[$headings['s_n']]) ) $data[] = $row[$headings['s_n']];
+                    if ( $key > 0 && isset($row[$headings['s_n']]) ) $data[] = (string)$row[$headings['s_n']];
                 }
 
                 $eplice = \App\Machine::whereIn('sn', $data)->pluck('sn')->toArray();
