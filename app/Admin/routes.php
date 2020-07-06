@@ -31,10 +31,13 @@ Route::group([
     // 分享管理
     $router->resource('shares', ShareController::class);
 
+
     // 代理管理
     $router->resource('users', UserController::class);
     // 用户组管理
     $router->resource('user-groups', UserGroupController::class);
+    // 联盟模式自动晋升
+    $router->resource('auto-promotions', AutoPromotionController::class);
 
     // 文章类型管理
     $router->resource('article-types', ArticleTypeController::class);

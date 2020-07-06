@@ -194,6 +194,16 @@ class AdminSettingController extends AdminController
                         'user_group'=>  $form->pattern == "1" ? 10 : 1,
                         'operate'   =>  $form->operate_number,
                     ]);
+
+                    /**
+                     * @version [<vector>] [< 如果是操盘方的联盟模式 创建用户组的晋升标准>]
+                     */
+                    if($form->pattern == "1"){
+                        $group = \App\UserGroup::get();
+                        foreach ($group as $key => $value) {
+                            \App\AutoPromotion::create([ 'operate'=> $form->operate_number, 'group_id'=> $value->id]);
+                        }
+                    }
                 }
 
             }
