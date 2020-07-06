@@ -50,8 +50,11 @@ class BankController extends Controller
         }
         $data = curl_exec($curl);
         $bankLink = json_decode($data,true);
-        if(!$bankLink) return '';
-        dd($bankLink);
+        
+        if(!$bankLink) return false;
+
+        if(empty($bankLink['data']['record'])) return false;
+
         return $bankLink['data']['record'][0]['bankCode'];
     }
 

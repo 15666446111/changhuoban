@@ -142,6 +142,8 @@ class SetUserController extends Controller
             
             $banklink = $model->openBank($bank);
 
+            if(!$banklink) return response()->json(['error'=>['message' => '请检查银行卡信息!']]);
+
             if($request->is_default == 1){
 
                 \App\Bank::where('user_id',$request->user->id)->update(['is_default'=>0]);
