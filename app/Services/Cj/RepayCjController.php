@@ -154,6 +154,20 @@ class RepayCjController extends Controller
     }
 
 
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-07-06
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [version]
+     * @return    [type]      [description]
+     */
+    public function auto_apply()
+    {
+        return ['code' => 10000, 'message' => 'auto pay'];
+    }
+
+    
 
     /**
      * @Author    Pudding
