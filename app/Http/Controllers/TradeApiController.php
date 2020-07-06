@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\HandleTradeInfo;
+use App\Jobs\HandleMachineInfo;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\TestController;
@@ -43,11 +44,12 @@ class TradeApiController extends Controller
             'sign'          => $request->sign              // 签名
         ];
 
-        // 推送的数据列表
-        $dataList = json_decode($request->dataList);
-
-        // $dataType = 0;
-        if ($request->dataType == 0) {
+        // 交易失败的数据不进行处理
+        if ($request->sysRespCode != '00') {
+            return json_encode($reData);
+        }
+        
+        if ($dataType == 0) {
             // 商户开通通知处理
             try{
 
@@ -92,7 +94,7 @@ class TradeApiController extends Controller
                     $machines->save();
                     
                     //压入到队列去处理剩下的逻辑
-                    HandleTradeInfo::dispatch($merchants,$value['agentId'],$request->configAgentId,$number);
+                    HandleMachineInfo::dispatch($regContent);
 
                 }
 

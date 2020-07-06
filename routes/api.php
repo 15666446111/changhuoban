@@ -34,6 +34,11 @@ Route::prefix('V1')->group(function () {
     Route::post('/login', 'V1\LoginController@login');
 
     /**
+     * @version  [< 忘记密码接口 >]
+     */
+    Route::post('/forgetPwd', 'V1\LoginController@forget');
+
+    /**
      * @version [<获取轮播图接口>] [<description>]
      * @return  [<返回显示中的轮播图>]
      * @version [<首页轮播图>] 

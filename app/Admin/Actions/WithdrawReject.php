@@ -18,7 +18,9 @@ class WithdrawReject extends RowAction
     		if (!$request->remark) return $this->response()->error('请填写驳回原因')->refresh();
 
     		$model->state = 3;
+
     		$model->remark = $request->remark;
+    		
     		$model->save();
 
     		// 增加用户钱包余额

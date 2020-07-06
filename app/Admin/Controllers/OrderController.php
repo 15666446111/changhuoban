@@ -8,6 +8,8 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Encore\Admin\Facades\Admin;
+use App\Admin\Actions\OrderRegis;
+use App\Admin\Actions\OrderTracking;
 
 class OrderController extends AdminController
 {
@@ -49,13 +51,28 @@ class OrderController extends AdminController
         $grid->column('address', __('配送地址'));
         $grid->column('status', __('订单状态'))->using(['0' => '未支付', '1' => '已支付']);
         $grid->column('remark', __('订单备注'));
+        $grid->column('tracking_status', __('物流状态'))->using(['0' => '未发货', '1' => '已发货']);
+        $grid->column('tracking_num', __('物流单号'));
         $grid->column('created_at', __('创建时间'));
+        
         $grid->disableCreateButton();
 
         $grid->actions(function ($actions) {
  
             //关闭行操作 删除 
             $actions->disableDelete();
+            
+
+            if($actions->row['tracking_status'] == '1'){
+
+                $actions->add(new OrderTracking());
+
+            }else{
+                
+                $actions->add(new OrderRegis());
+
+            }
+
            
         });
         return $grid;
@@ -86,6 +103,7 @@ class OrderController extends AdminController
         $show->field('status', __('订单状态'));
         $show->field('remark', __('订单备注'));
         $show->field('created_at', __('创建时间'));
+        $show->field('tracking_num', __('物流单号'));
 
         return $show;
     }
@@ -111,4 +129,5 @@ class OrderController extends AdminController
 
         return $form;
     }
+
 }

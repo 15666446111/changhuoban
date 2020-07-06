@@ -27,7 +27,7 @@ class AddSnSaveToTradesTable extends Migration
 
             $table->string('agentId')->default('')->change();
 
-            $table->string('sysRespDesc')->default('')->change();
+            //$table->string('sysRespDesc')->default('')->change();
 
         });
     }

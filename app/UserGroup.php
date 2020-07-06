@@ -19,6 +19,17 @@ class UserGroup extends Model
 	}
 
 	/**
+	 * [users  关联User模型]
+	 * @author Pudding
+	 * @DateTime 2020-04-20T13:43:38+0800
+	 * @return   [type]                   [description]
+	 */
+	public function auto_promos()
+	{
+		return $this->HasMany('\App\AutoPromotion', 'group_id', 'id');
+	}
+
+	/**
 	 * [users  关联活动组结算价模型]
 	 * @author Pudding
 	 * @DateTime 2020-04-20T13:43:38+0800

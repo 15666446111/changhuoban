@@ -3,6 +3,7 @@ namespace App\Services\Cj;
 
 use App\Withdraw;
 use Carbon\Carbon;
+use App\Jobs\WithdrawQuery;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -187,9 +188,9 @@ class RepayCjController extends Controller
         ####
         if(!$this->withdraw->withdrawDatas) return ['code' => 10060, 'message' => '找不到提现卡信息!'];
 
-        // 收款方联行号
-        
-        $AccountBank = $this->des3($this->withdraw->withdrawDatas->banklink);
+        // 收款方卡号
+        if($this->withdraw->withdrawDatas->bank_number == "") return ['code' => 10062, 'message' => '找不到收款卡信息!'];
+        $AccountBank = $this->des3($this->withdraw->withdrawDatas->bank_number);
 
         //$身份证号
         if($this->withdraw->withdrawDatas->idcard == "") return ['code' => 10062, 'message' => '找不到身份证信息!'];
@@ -207,15 +208,31 @@ class RepayCjController extends Controller
         // 请求代付
         //$pay = $this->pay($AccountBank, $idCardNo);
 
-        #### 
-        ####    查询代付
-        ####
-        $query = $this->payQuery();
+        $pay = (object)['code' => 00, 'message' => 111];
 
-        dd($query);
+        // 交易受理的情况下 更改订单信息 压入redis
+        if($pay->code == "00"){
 
-        return $pay;
+            $this->withdraw->state = 4;
 
+            $this->withdraw->check_at = Carbon::now()->toDateTimeString();
+
+            $this->withdraw->channle_money = $this->cjPrice;
+
+            $this->withdraw->api_return_data = json_encode($pay);
+
+            $this->withdraw->save();
+
+            // 押入redis队列处理  30分钟后查询
+            WithdrawQuery::dispatch($this->withdraw)/*->onQueue('Withdraw')*/->delay(now()->addMinutes(1));
+
+            return ['code' => 10000, 'message' => "代付交易已受理,订单状态会在30分钟内自动同步更新!"];
+       
+       }else{
+       
+            // 请求代付失败
+            return ['code' => 10099, 'message' => "畅捷代付失败:".$pay->message];
+        }
     }
 
     /**

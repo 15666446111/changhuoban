@@ -33,7 +33,6 @@ class MerchantController extends Controller
         }
 	}
 
-
 	/**
      * 首页商户登记绑定接口
      */
