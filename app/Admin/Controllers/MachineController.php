@@ -36,53 +36,56 @@ class MachineController extends AdminController
         $grid = new Grid(new Machine());
         
         if(Admin::user()->operate != "All"){
-
             $grid->model()->where('operate', Admin::user()->operate);
-            
         }
         
         // 倒叙
         $grid->model()->latest();
 
-        $grid->column('sn', __('终端SN'));
+        $grid->column('sn', __('终端SN'))->help('终端机具背面的SN序列号');
 
-        $grid->column('machines_styles.style_name', __('终端类型'));
+        $grid->column('machines_styles.style_name', __('终端类型'))->help('终端机具的所属类型');
 
-        $grid->column('users.nickname', __('所属代理'));
+        $grid->column('users.nickname', __('所属代理'))->help('终端机具所属的账号昵称');
 
-        $grid->column('open_state', __('开通状态'))->using([ '0' => '未开通', '1' => '已开通'])->dot([ 0 => 'danger', 1 => 'success' ], 'default');
+        $grid->column('open_state', __('开通状态'))->using([ '0' => '未开通', '1' => '已开通'])->dot([ 0 => 'danger', 1 => 'success' ], 'default')->help('终端机具的开通状态');
 
-        $grid->column('open_time', __('开通时间'));
+        $grid->column('open_time', __('开通时间'))->help('终端机具的开通时间');
 
         $grid->column('is_self', __('活动自备机'))->using([ '0' => '不是', '1' => '是'])
-                ->dot([ 0 => 'success', 1 => 'danger' ], 'default');
+                ->dot([ 0 => 'success', 1 => 'danger' ], 'default')->help('是否是活动自备机');
 
-        $grid->column('merchants.name', __('商户名称'));
+        $grid->column('merchants.name', __('商户名称'))->help('终端机具所归属的商户名称');
 
-        $grid->column('merchants.phone', __('商户电话'));
+        $grid->column('merchants.phone', __('商户电话'))->help('终端机具所归属的商户电话');
 
-        $grid->column('bind_status', __('绑定状态'))->using([ '0' => '未绑定', '1' => '已绑定'])->dot([ 0 => 'default', 1 => 'success' ], 'default');
+        $grid->column('bind_status', __('绑定状态'))->using([ '0' => '未绑定', '1' => '已绑定'])->dot([ 0 => 'default', 1 => 'success' ], 'default')->help('终端机具的绑定状态');
 
-        $grid->column('bind_time', __('绑定时间'));
+        $grid->column('bind_time', __('绑定时间'))->help('终端机具所归属的绑定时间');
 
         $grid->column('standard_status', __('达标状态'))->using([ '0' => '默认', '1' => '连续达标', '-1' => '达标中断'])
-                ->dot([ 0 => 'default', 1 => 'success', -1 => 'error'], 'default');
+                ->dot([ 0 => 'default', 1 => 'success', -1 => 'error'], 'default')->help('终端机具的达标状态');
         //$grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s');
 
         $grid->filter(function ($filter) {
             // 去掉默认的id过滤器
             $filter->disableIdFilter();
 
-            $filter->column(1/3, function ($filter) {
-                $filter->like('sn', '终端编号');
+            $filter->column(1/4, function ($filter) {
+                $filter->like('sn', 'SN');
             });
 
             $filter->column(1/4, function ($filter) {
-                $filter->equal('open_state', '状态')->select(['0' => '未开通', '1' => '已开通']);
+                $filter->equal('open_state', '开通')->select(['0' => '未开通', '1' => '已开通']);
             });
 
-            $filter->column(1/3, function ($filter) {
-                $filter->like('users.nickname', '所属代理');
+            $filter->column(1/4, function ($filter) {
+                $data = Admin::user()->operate == "All" ? array() : array('operate' => Admin::user()->operate);
+                $filter->equal('user_id', '代理')->select(\App\User::where($data)->get()->pluck('nickname', 'id'));
+            });
+
+            $filter->column(1/4, function ($filter) {
+                $filter->equal('bind_status', '绑定状态')->select(['0' => '未绑定', '1' => '已绑定']);
             });
 
         });

@@ -34,14 +34,30 @@ class PolicyController extends AdminController
         $grid->model()->latest();
 
         //$grid->column('id', __('Id'));
-        $grid->column('title', __('活动标题'));
+        $grid->column('title', __('活动标题'))->help('活动的标题');
 
-        $grid->column('policy_groups.title', __('所属活动组'));
+        $grid->column('policy_groups.title', __('所属活动组'))->help('此活动属于哪一个活动组');
 
         $grid->column('active', __('状态'))->using([ 0 => '关闭', '1' => '正常'])->dot([ 0 => 'danger', 1 => 'success' ]);
 
-        $grid->column('created_at', __('创建时间'));
+        $grid->column('created_at', __('创建时间'))->help('活动的创建时间');
         //$grid->column('updated_at', __('Updated at'));
+        //
+        $grid->filter(function($filter){
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+
+            $filter->column(1/4, function ($filter) {
+                $filter->like('title', '标题');
+            });
+
+            $filter->column(1/4, function ($filter) {
+                $data =  Admin::user()->operate == 'All' ? array() : array('operate' => Admin::user()->operate);
+
+                $filter->equal('policy_group_id', '活动组')->select(\App\PolicyGroup::where($data)->get()->pluck('title', 'id'));
+            }); 
+            
+        });
         return $grid;
     }
 

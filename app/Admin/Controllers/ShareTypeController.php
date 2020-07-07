@@ -31,13 +31,13 @@ class ShareTypeController extends AdminController
         
         $grid->column('id', __('索引'))->sortable();
 
-        $grid->column('name', __('类型'));
+        $grid->column('name', __('类型'))->help('分享展示的位置,由系统内置');
 
-        $grid->column('active', __('状态'))->switch()->sortable();
+        $grid->column('active', __('状态'))->switch()->sortable()->help('分享位置的状态,关闭后 新增分享将无法选择此位置');
 
-        $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s');
+        $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s')->help('此信息的创建时间');
 
-        $grid->column('updated_at', __('删除时间'))->date('Y-m-d H:i:s');
+        $grid->column('updated_at', __('删除时间'))->date('Y-m-d H:i:s')->help('此信息的最后修改时间');
 
         $grid->filter(function($filter){
             // 去掉默认的id过滤器

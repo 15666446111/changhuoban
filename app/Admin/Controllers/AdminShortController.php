@@ -30,10 +30,11 @@ class AdminShortController extends AdminController
         if(Admin::user()->operate != "All"){
             $grid->model()->where('operate', Admin::user()->operate);
         }
-
-        $grid->column('id', __('索引'));
+        //$grid->column('id', __('索引'));
         $grid->column('number', __('短信编号'));
+
         $grid->column('content', __('短信内容'));
+
         $grid->column('created_at', __('创建时间'));
 
         return $grid;
@@ -53,8 +54,7 @@ class AdminShortController extends AdminController
             $model = Article::where('id', $id)->first();
             if($model->operate != Admin::user()->operate) return abort('403');        
         }
-
-
+        
         $show->field('id', __('索引'));
         $show->field('number', __('短信编号'));
         $show->field('content', __('短信内容'));

@@ -17,6 +17,7 @@ class PolicyGroupObserver
     public function created(PolicyGroup $PolicyGroup)
     {
         if($PolicyGroup->type == "1"){
+            
             $group = \App\UserGroup::get();
 
             $type  = \App\TradeType::get();

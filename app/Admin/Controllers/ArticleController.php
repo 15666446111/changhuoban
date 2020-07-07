@@ -38,21 +38,21 @@ class ArticleController extends AdminController
 
         //$grid->column('id', __('Id'));
         
-        $grid->column('title', __('标题'));
+        $grid->column('title', __('标题'))->help('文章的标题');
 
-        $grid->column('active', __('状态'))->switch()->sortable();
+        $grid->column('active', __('状态'))->switch()->sortable()->help('文章的状态,关闭后 app将不会展示');
 
-        $grid->column('images', __('图片'))->image('', 100, 30);
+        $grid->column('images', __('图片'))->image('', 100, 30)->help('文章的缩略图图片');
 
-        $grid->column('article_types.name', __('文章类型'));
+        $grid->column('article_types.name', __('文章类型'))->help('文章的展示位置');
 
-        $grid->column('sort', __('排序'))->sortable()->label();
+        $grid->column('sort', __('排序'))->sortable()->label()->help('文章的排序权重, 值约高越靠前');
 
         $grid->column('verify', __('审核'))
                 ->using([ '0' => '待审核', '1' => '正常', '-1' => '拒绝'])
-                ->dot([ 0 => 'danger', 1 => 'success' ], 'default');
+                ->dot([ 0 => 'danger', 1 => 'success' ], 'default')->help('文章的审核状态,新增文章默认为未审核,由总后台审核后方可展示');
 
-        $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s');
+        $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s')->help('文章的创建时间');
 
         //$grid->column('updated_at', __('Updated at'));
         //
@@ -69,17 +69,22 @@ class ArticleController extends AdminController
             });
             
         }
+        
         $grid->filter(function($filter){
             // 去掉默认的id过滤器
             $filter->disableIdFilter();
 
-                $filter->column(1/4, function ($filter) {
-                    
-                    $filter->like('title', '标题');
-                    
-                });
-                // 在这里添加字段过滤器
+            $filter->column(1/4, function ($filter) {
+                $filter->like('title', '标题');
+            });
+            // 在这里添加字段过滤器
+            $filter->column(1/4, function ($filter) {
+                $filter->equal('verify', '审核')->select(['0' => '待审核', '1' => '正常', '2'=> '拒绝']);
+            }); 
 
+            $filter->column(1/4, function ($filter) {
+                $filter->equal('type_id', '类型')->select(\App\ArticleType::get()->pluck('name', 'id'));
+            }); 
             
         });
 

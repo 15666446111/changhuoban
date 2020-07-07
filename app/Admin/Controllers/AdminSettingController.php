@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use Route;
 use App\AdminSetting;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -29,23 +30,45 @@ class AdminSettingController extends AdminController
 
         $grid->model()->latest();
 
-        $grid->column('operate_number', __('机构/操盘号'));
+        $grid->column('operate_number', __('机构/操盘号'))->help('此列为机构/操盘方的唯一标识,代表此机构或操盘在本系统的标准');
 
-        $grid->column('open', __('状态'))->using([ 0 =>'禁止', 1 =>'正常' ], '未知')->dot([ 0 => 'danger', 1 => 'success' ], 'default');
+        $grid->column('open', __('状态'))->using([ 0 =>'禁止', 1 =>'正常' ], '未知')->dot([ 0 => 'danger', 1 => 'success' ], 'default')->help('操盘或者机构的状态,若禁止 则此操盘或机构下的所有用户都无法登陆app');
 
-        $grid->column('type', __('模式'))->using([ 1 =>'联盟模式', 2 =>'操盘模式' ])->dot([ 1 => 'primary', 2 => 'success' ]);
+        $grid->column('type', __('模式'))->using([ 1 =>'操盘方', 2 =>'机构方' ])->dot([ 1 => 'primary', 2 => 'success' ])->help('此主体的类型, 操盘或者机构');
 
-        $grid->column('company', __('公司'));
+        $grid->column('company', __('公司'))->help('操盘方或者机构方的公司主体');
 
-        $grid->column('phone', __('联系电话'));
+        $grid->column('phone', __('联系电话'))->help('操盘方或者机构方负责人联系电话');
 
-        $grid->column('email', __('公司邮箱'));
+        $grid->column('email', __('公司邮箱'))->help('操盘方或者机构方联系邮箱,发送统计报表,信息等');
 
-        $grid->column('address', __('公司地址'));
+        $grid->column('address', __('公司地址'))->help('操盘方或者机构方公司地址');
 
-        $grid->column('created_at', __('开通时间'));
+        $grid->column('created_at', __('开通时间'))->help('操盘方或者机构方在本平台的入驻时间');
 
         $grid->disableCreateButton(false);
+
+        $grid->filter(function($filter){
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+
+            $filter->column(1/4, function ($filter) {
+                $filter->like('operate_number', '操盘号');
+            });
+
+            $filter->column(1/4, function ($filter) {
+                $filter->like('company', '公司');
+            });
+
+            $filter->column(1/4, function ($filter) {
+                $filter->equal('type', '类型')->select(['1' => '操盘', '2' => '机构']);
+            });
+            
+            $filter->column(1/4, function ($filter) {
+                $filter->equal('pattern', '模式')->select(['1' => '联盟模式', '2' => '工具模式']);
+            });
+                
+        });
 
         return $grid;
     }
@@ -87,9 +110,11 @@ class AdminSettingController extends AdminController
     {
         $form   = new Form(new AdminSetting());
 
+        $host = explode('/',Route::getFacadeRoot()->current()->uri);
+    
         $no     = date('Ymd').substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
 
-        $form->tab('基础信息', function ($form) use ($no) {
+        $form->tab('基础信息', function ($form) use ($no, $host) {
 
             $form->text('operate_number', __('机构/操盘号'))->value($no)->readonly()->help('由系统自动生成,不可更改');
 
@@ -98,9 +123,13 @@ class AdminSettingController extends AdminController
             $form->email('email', __('公司邮箱'));
             $form->text('address', __('公司地址'));
 
-            $form->mobile('account', __('登陆账号'))->required()->help('机构使用此账号登陆后台,操盘使用此账号登陆后台与app');
+            if( empty($host[3])){
+
+                $form->text('account', __('登陆账号'))->required()->help('机构使用此账号登陆后台,操盘使用此账号登陆后台与app');
             
-            $form->password('password', __('登陆密码'))->required()->help('密码最少6位,数字与字母的组合');
+                $form->password('password', __('登陆密码'))->required()->help('密码最少6位,数字与字母的组合');
+
+            }
 
             $form->radioButton('type', '操盘/机构')->options([ 1 => '操盘方', 2 => '机构方' ])->when(2,function (Form $form) { 
                 $form->listbox('sons', __('包含操盘'))->options([1 => 'foo', 2 => 'bar', 'val' => 'Option name']);

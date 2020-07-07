@@ -28,22 +28,20 @@ class CashController extends AdminController
         $grid = new Grid(new CashsLog());
 
         if(Admin::user()->operate != "All"){
-
             $grid->model()->where('operate', Admin::user()->operate);
-            
         }
-
-        $grid->column('id', __('索引'));
-        $grid->column('users.nickname', __('会员昵称'));
-        $grid->column('machines.sn', __('终端号'));
-        $grid->column('trades.order_no', __('交易流水号'));
+        $grid->model()->latest();
+        //$grid->column('id', __('索引'));
+        $grid->column('users.nickname', __('会员昵称'))->help('分润所归属的用户昵称');
+        $grid->column('machines.sn', __('终端号'))->help('分润的终端机具SN');
+        $grid->column('trades.order_no', __('交易流水号'))->help('分润的交易订单流水号');
         $grid->column('money', __('分润金额'))->display(function ($money) {
             return number_format($money / 100, 2, '.', ',');
-        })->label();
-        $grid->column('is_run', __('方式'))->using(['1' => '分润', '2' => '返现']);
+        })->label()->help('本次分润金额');
+        $grid->column('is_run', __('方式'))->using(['1' => '分润', '2' => '返现'])->help('分润类型,分为分润与返现');
         $grid->column('type', __('类型'))->using(['1' => '直营分润', '2' => '团队分润','3'=>'激活返现'
-        ,'4'=>'间推激活返现','5'=>'间间推激活返现','6'=>'达标返现','7'=>'二次达标返现','8'=>'三次达标返现','9'=>'财商学院推荐奖励']);
-        $grid->column('created_at', __('分润时间'));
+        ,'4'=>'间推激活返现','5'=>'间间推激活返现','6'=>'达标返现','7'=>'二次达标返现','8'=>'三次达标返现','9'=>'财商学院推荐奖励'])->help('分润的详细类型');
+        $grid->column('created_at', __('分润时间'))->help('分润下发的时间');
 
         $grid->disableCreateButton();
         $grid->actions(function ($actions) {

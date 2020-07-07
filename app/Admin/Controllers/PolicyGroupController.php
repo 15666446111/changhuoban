@@ -35,15 +35,15 @@ class PolicyGroupController extends AdminController
         
         //$grid->column('id', __('Id'));
         //
-        $grid->column('title', __('组名称'));
+        $grid->column('title', __('组名称'))->help('活动组的名称');
 
-        $grid->column('operate', __('操盘方'));
+        $grid->column('operate', __('操盘方'))->help('活动组所属的操盘方标识');
 
         $grid->column('type', __('组类别'))
                 ->using([ '1' => '联盟模式', '2' => '工具模式'])
-                ->dot([ 1 => 'danger', 2 => 'success' ], 'default');
+                ->dot([ 1 => 'danger', 2 => 'success' ], 'default')->help('活动组所属的操盘方发展模式');
 
-        $grid->column('created_at', __('创建时间'));
+        $grid->column('created_at', __('创建时间'))->help('活动组的创建时间');
 
         //$grid->column('updated_at', __('修改时间'));
 
@@ -54,6 +54,15 @@ class PolicyGroupController extends AdminController
                 $grid->disableCreateButton();
             }
         }
+
+        $grid->filter(function($filter){
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+
+            $filter->column(1/4, function ($filter) {
+                $filter->like('title', '组名');
+            });
+        });
 
         return $grid;
     }
@@ -79,11 +88,24 @@ class PolicyGroupController extends AdminController
 
         $show->settsprice('结算价设置', function ($settsprice) {
             $settsprice->resource('/manage/policy-group-settlements');
-            $settsprice->column('user_groups.name', __('用户组'));
-            $settsprice->column('trade_types.name', __('交易类型'));
-            $settsprice->column('set_price', __('结算价'))->editable();
+            $settsprice->column('user_groups.name', __('用户组'))->help('当前活动组下的当前用户组');
+            $settsprice->column('trade_types.name', __('交易类型'))->help('当前活动组下的当前用户组的结算类型');
+            $settsprice->column('set_price', __('结算价'))->editable()->help('当前活动组下的当前用户组的结算类型的结算底价,单位为十万分位, 例如:万525,填写525');
             $settsprice->disableCreateButton();
             $settsprice->disableActions();
+
+            $settsprice->filter(function($filter){
+                // 去掉默认的id过滤器
+                $filter->disableIdFilter();
+
+                $filter->column(1/4, function ($filter) {
+                    $filter->equal('user_group_id', '用户组')->select(\App\UserGroup::get()->pluck('name', 'id'));
+                });
+
+                $filter->column(1/4, function ($filter) {
+                    $filter->equal('trade_type_id', '结算类型')->select(\App\TradeType::get()->pluck('name', 'id'));
+                });
+            });
         });
         return $show;
     }

@@ -36,31 +36,31 @@ class UserController extends AdminController
 
         $grid->model()->latest();
 
-        $grid->column('avatar', __('头像'))->image('', 30, 30);
+        $grid->column('avatar', __('头像'))->image('', 30, 30)->help('用户的头像');
 
-        $grid->column('nickname', __('昵称'))->copyable();
+        $grid->column('nickname', __('昵称'))->copyable()->help('用户的昵称,可在app修改');
 
-        $grid->column('account', __('账号'))->copyable();
+        $grid->column('account', __('账号'))->copyable()->help('用户的app登陆账号');
 
-        $grid->column('group.name', __('用户组'));
+        $grid->column('group.name', __('用户组'))->help('用户所属的用户组,联盟模式独有');
 
-        $grid->column('parent', __('父级'));
+        $grid->column('parent', __('父级'))->help('用户的直属上级');
 
-        $grid->column('active', __('状态'))->switch();
+        $grid->column('active', __('状态'))->switch()->help('用户的活动状态,关闭后将无法在app登陆');
 
         $grid->column('wallets.cash_blance', __('分润余额'))->display(function( $cash){
             return number_format( $cash , 2, '.', ',');
-        })->label();
+        })->label()->help('用户分润钱包余额');
 
         $grid->column('wallets.return_blance', __('返现余额'))->display(function($cash){
             return number_format($cash , 2, '.', ',');
-        })->label('info');
+        })->label('info')->help('用户返现钱包余额');
 
-        $grid->column('last_ip', __('最后登录地址'));
+        $grid->column('last_ip', __('最后登录地址'))->help('用户最后登陆的IP地址');
 
-        $grid->column('last_time', __('最后登录时间'))->sortable();
+        $grid->column('last_time', __('最后登录时间'))->sortable()->help('用户最后登陆的时间');
 
-        $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s');
+        $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s')->help('用户注册的时间');
 
         //$grid->column('updated_at', __('修改时间'))->date('Y-m-d H:i:s');
         $grid->disableCreateButton();
@@ -68,11 +68,23 @@ class UserController extends AdminController
         $grid->actions(function ($actions) {
             // 去掉删除  编辑
             $actions->disableDelete();
-            $actions->disableEdit();
+            $actions->disableEdit(false);
         });
 
         $grid->batchActions(function ($batch) {
             $batch->disableDelete();
+        });
+
+        $grid->filter(function($filter){
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+
+            $filter->column(1/4, function ($filter) {
+                $filter->like('nickname', '昵称');
+            });
+            $filter->column(1/4, function ($filter) {
+                $filter->like('account', '账号');
+            });            
         });
 
         return $grid;
@@ -182,15 +194,11 @@ class UserController extends AdminController
 
         $form->text('nickname', __('昵称'));
 
-        $form->text('account', __('账号'));
+        $form->text('account', __('账号'))->readonly();
 
         $form->image('avatar', __('头像'))->default('images/avatar.png')->uniqueName();
 
-        $form->password('password', __('密码'));
-
-        $form->number('user_group', __('用户组'))->default(1);
-
-        $form->number('parent', __('上级'))->default(0);
+        $form->select('user_group', __('用户组'))->options(\App\UserGroup::get()->pluck('name', 'id'));
 
         $form->switch('active', __('状态'))->default(1);
 

@@ -33,13 +33,13 @@ class MachinesFactoryController extends AdminController
         
         $grid->column('id', __('索引'))->sortable();
 
-        $grid->column('factory_name', __('厂商名称'));
+        $grid->column('factory_name', __('厂商名称'))->help('机具厂商的名称');
 
-        $grid->column('machines_types.name', __('所属类型'));
+        $grid->column('machines_types.name', __('所属类型'))->help('机具厂商所属的类型');
 
-        $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s');
+        $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s')->help('机具厂商的创建时间');
 
-        $grid->column('updated_at', __('修改时间'))->date('Y-m-d H:i:s');
+        $grid->column('updated_at', __('修改时间'))->date('Y-m-d H:i:s')->help('机具厂商的最后修改时间');
 
         return $grid;
     }

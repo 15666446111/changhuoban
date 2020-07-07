@@ -31,13 +31,23 @@ class ArticleTypeController extends AdminController
 
         $grid->column('id', __('索引'))->sortable();
 
-        $grid->column('name', __('类型'));
+        $grid->column('name', __('类型'))->help('文章的展示位置,由系统内置');
 
-        $grid->column('active', __('状态'))->sortable()->switch();
+        $grid->column('active', __('状态'))->sortable()->switch()->help('文章位置的状态,关闭后 新增文章将不可选择此位置');
 
-        $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s');
+        $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s')->help('信息的创建时间');
 
-        $grid->column('updated_at', __('修改时间'))->date('Y-m-d H:i:s');
+        $grid->column('updated_at', __('修改时间'))->date('Y-m-d H:i:s')->help('信息的最后修改时间');
+
+        $grid->filter(function($filter){
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+
+            $filter->column(1/4, function ($filter) {
+                $filter->like('name', '类型');
+            });
+
+        });
 
         return $grid;
     }

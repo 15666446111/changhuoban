@@ -41,23 +41,23 @@ class PlugController extends AdminController
         //倒叙
         //$grid->column('id', __('索引'))->sortable();
 
-        $grid->column('images', __('图片'))->lightbox(['width' => 100, 'height' => 30]);
+        $grid->column('images', __('图片'))->lightbox(['width' => 100, 'height' => 30])->help('轮播图的图片');
 
-        $grid->column('name', __('标题'))->filter();
+        $grid->column('name', __('标题'))->filter()->help('轮播图展示的标题');
 
-        $grid->column('active', __('状态'))->sortable()->switch();
+        $grid->column('active', __('状态'))->sortable()->switch()->help('轮播图的状态,关闭后app端将不展示');
 
-        $grid->column('plug_types.name', __('类型'));
+        $grid->column('plug_types.name', __('类型'))->help('轮播图所在的位置');
         
-        $grid->column('sort', __('排序'))->sortable()->label();
+        $grid->column('sort', __('排序'))->sortable()->label()->help('排序权重的大小,越大越靠前');
         
-        $grid->column('href', __('链接'))->link();
+        $grid->column('href', __('链接'))->link()->help('点击此轮播图跳转的链接');
 
         $grid->column('verify', __('审核'))
                 ->using([ '0' => '待审核', '1' => '正常', '-1' => '拒绝'])
-                ->dot([ 0 => 'danger', 1 => 'success' ], 'default');
+                ->dot([ 0 => 'danger', 1 => 'success' ], 'default')->help('轮播图的审核状态,提交后默认未审核的状态,由总后台审核,审核成功后方可在app展示');
         
-        $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s');
+        $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s')->help('轮播图的添加时间');
 
         if(Admin::user()->type == "2" or Admin::user()->operate == "All"){
                 
@@ -70,23 +70,27 @@ class PlugController extends AdminController
                 $actions->disableDelete(true);
 
             });
-
-            $grid->filter(function($filter){
-                // 去掉默认的id过滤器
-                $filter->disableIdFilter();
-
-
-                $filter->column(1/4, function ($filter) {
-                    
-                    $filter->like('name', '标题');
-                    
-                });
-                // 在这里添加字段过滤器
-                
-            });
-            
         }
 
+        /**
+         * @version [<vector>] [< 头部筛选 >]
+         */
+        $grid->filter(function($filter){
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+
+            $filter->column(1/4, function ($filter) {
+                $filter->like('name', '标题');
+            });
+           
+            $filter->column(1/4, function ($filter) {
+                $filter->equal('verify', '审核')->select(['0' => '待审核', '1' => '正常', '2'=> '拒绝']);
+            }); 
+
+            $filter->column(1/4, function ($filter) {
+                $filter->equal('type_id', '类型')->select(\App\PlugType::get()->pluck('name', 'id'));
+            }); 
+        });
         
 
         return $grid;
