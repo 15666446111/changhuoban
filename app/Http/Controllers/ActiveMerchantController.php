@@ -42,7 +42,7 @@ class ActiveMerchantController extends Controller
 
     	$this->policy 		= $trade->merchants_sn->policys;
 
-      	$this->user   		= $trade->merchants_sn->busers;
+      	$this->user   		= $trade->merchants_sn->users;
 
       	$this->machine 		= $trade->merchant_sn;
     }
