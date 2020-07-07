@@ -57,8 +57,8 @@ class TradeType extends Model
         return explode(",", $value);
     } 
     // 设置是否封顶
-    public function setIsTopAttribute($value)
-    {
-    	$this->attributes['is_top'] = implode( ",", $value);
-    } 
+    // public function setIsTopAttribute($value)
+    // {
+    // 	$this->attributes['is_top'] = implode( ",", $value);
+    // }
 }
