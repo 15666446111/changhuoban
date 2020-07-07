@@ -390,6 +390,13 @@ Route::prefix('V1')->group(function () {
     */
     Route::middleware('AuthToken')->any('payments/wechat-notify', 'V1\OrdersController@paySuccess');
 
+    /**
+     * @version [<获取微信分享文案>] [<description>]
+     * @return  [<返回微信分享文案列表>]
+     * @version [<微信分享文案列表>] 
+     */
+    Route::middleware('AuthToken')->get('/wx_share_list', 'V1\ArticleController@wxShare');
+
 });
 
 Route::fallback(function(){ 
