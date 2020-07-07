@@ -66,7 +66,14 @@ class ShareController extends AdminController
             $filter->column(1/4, function ($filter) {
                 $filter->like('name', '标题');
             });
-            // 在这里添加字段过滤器
+
+            $filter->column(1/4, function ($filter) {
+                $filter->equal('verify', '审核')->select(['0' => '待审核', '1' => '正常', '2'=> '拒绝']);
+            }); 
+
+            $filter->column(1/4, function ($filter) {
+                $filter->equal('type_id', '类型')->select(\App\ShareType::get()->pluck('name', 'id'));
+            }); 
             
         });
         return $grid;

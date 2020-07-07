@@ -68,11 +68,23 @@ class UserController extends AdminController
         $grid->actions(function ($actions) {
             // 去掉删除  编辑
             $actions->disableDelete();
-            $actions->disableEdit();
+            $actions->disableEdit(false);
         });
 
         $grid->batchActions(function ($batch) {
             $batch->disableDelete();
+        });
+
+        $grid->filter(function($filter){
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+
+            $filter->column(1/4, function ($filter) {
+                $filter->like('nickname', '昵称');
+            });
+            $filter->column(1/4, function ($filter) {
+                $filter->like('account', '账号');
+            });            
         });
 
         return $grid;
@@ -182,15 +194,11 @@ class UserController extends AdminController
 
         $form->text('nickname', __('昵称'));
 
-        $form->text('account', __('账号'));
+        $form->text('account', __('账号'))->readonly();
 
         $form->image('avatar', __('头像'))->default('images/avatar.png')->uniqueName();
 
-        $form->password('password', __('密码'));
-
-        $form->number('user_group', __('用户组'))->default(1);
-
-        $form->number('parent', __('上级'))->default(0);
+        $form->select('user_group', __('用户组'))->options(\App\UserGroup::get()->pluck('name', 'id'));
 
         $form->switch('active', __('状态'))->default(1);
 

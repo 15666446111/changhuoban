@@ -55,6 +55,15 @@ class PolicyGroupController extends AdminController
             }
         }
 
+        $grid->filter(function($filter){
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+
+            $filter->column(1/4, function ($filter) {
+                $filter->like('title', '组名');
+            });
+        });
+
         return $grid;
     }
 
@@ -84,6 +93,19 @@ class PolicyGroupController extends AdminController
             $settsprice->column('set_price', __('结算价'))->editable();
             $settsprice->disableCreateButton();
             $settsprice->disableActions();
+
+            $settsprice->filter(function($filter){
+                // 去掉默认的id过滤器
+                $filter->disableIdFilter();
+
+                $filter->column(1/4, function ($filter) {
+                    $filter->equal('user_group_id', '用户组')->select(\App\UserGroup::get()->pluck('name', 'id'));
+                });
+
+                $filter->column(1/4, function ($filter) {
+                    $filter->equal('trade_type_id', '结算类型')->select(\App\TradeType::get()->pluck('name', 'id'));
+                });
+            });
         });
         return $show;
     }

@@ -39,6 +39,16 @@ class ArticleTypeController extends AdminController
 
         $grid->column('updated_at', __('修改时间'))->date('Y-m-d H:i:s');
 
+        $grid->filter(function($filter){
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+
+            $filter->column(1/4, function ($filter) {
+                $filter->like('name', '类型');
+            });
+
+        });
+
         return $grid;
     }
 

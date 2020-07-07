@@ -28,12 +28,10 @@ class CashController extends AdminController
         $grid = new Grid(new CashsLog());
 
         if(Admin::user()->operate != "All"){
-
             $grid->model()->where('operate', Admin::user()->operate);
-            
         }
-
-        $grid->column('id', __('索引'));
+        $grid->model()->latest();
+        //$grid->column('id', __('索引'));
         $grid->column('users.nickname', __('会员昵称'));
         $grid->column('machines.sn', __('终端号'));
         $grid->column('trades.order_no', __('交易流水号'));

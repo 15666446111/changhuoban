@@ -28,9 +28,7 @@ class TransferController extends AdminController
         $grid = new Grid(new Transfer());
 
         if(Admin::user()->operate != "All"){
-
-            $grid->model()->where('operate', Admin::user()->operate);
-            
+            $grid->model()->where('operate', Admin::user()->operate);   
         }
 
         $grid->model()->latest();
@@ -51,15 +49,7 @@ class TransferController extends AdminController
         $grid->filter(function($filter){
             // 去掉默认的id过滤器
             $filter->disableIdFilter();
-
-
-            $filter->column(1/4, function ($filter) {
-                
-                $filter->like('machine.sn', '终端号');
-                
-            });
             // 在这里添加字段过滤器
-            
         });
 
         return $grid;

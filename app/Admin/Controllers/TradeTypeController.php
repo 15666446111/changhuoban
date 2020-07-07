@@ -15,7 +15,7 @@ class TradeTypeController extends AdminController
      *
      * @var string
      */
-    protected $title = '交易类型管理';
+    protected $title = '结算类型管理';
 
     /**
      * Make a grid builder.

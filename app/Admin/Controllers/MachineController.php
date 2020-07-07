@@ -36,9 +36,7 @@ class MachineController extends AdminController
         $grid = new Grid(new Machine());
         
         if(Admin::user()->operate != "All"){
-
             $grid->model()->where('operate', Admin::user()->operate);
-            
         }
         
         // 倒叙
@@ -73,16 +71,21 @@ class MachineController extends AdminController
             // 去掉默认的id过滤器
             $filter->disableIdFilter();
 
-            $filter->column(1/3, function ($filter) {
-                $filter->like('sn', '终端编号');
+            $filter->column(1/4, function ($filter) {
+                $filter->like('sn', 'SN');
             });
 
             $filter->column(1/4, function ($filter) {
-                $filter->equal('open_state', '状态')->select(['0' => '未开通', '1' => '已开通']);
+                $filter->equal('open_state', '开通')->select(['0' => '未开通', '1' => '已开通']);
             });
 
-            $filter->column(1/3, function ($filter) {
-                $filter->like('users.nickname', '所属代理');
+            $filter->column(1/4, function ($filter) {
+                $data = Admin::user()->operate == "All" ? array() : array('operate' => Admin::user()->operate);
+                $filter->equal('user_id', '代理')->select(\App\User::where($data)->get()->pluck('nickname', 'id'));
+            });
+
+            $filter->column(1/4, function ($filter) {
+                $filter->equal('bind_status', '绑定状态')->select(['0' => '未绑定', '1' => '已绑定']);
             });
 
         });

@@ -55,26 +55,21 @@ class MerchantController extends AdminController
                 
         $grid->column('created_at', __('创建时间'));
 
-        $grid->filter(function($filter){
 
+        $grid->filter(function ($filter) {
             // 去掉默认的id过滤器
             $filter->disableIdFilter();
 
-            // 在这里添加字段过滤器
-            $filter->column(1/3, function ($filter) {
-                $filter->equal('users.account', '代理账号');
+            $filter->column(1/4, function ($filter) {
+                $filter->like('code', '商户号');
             });
 
-            $filter->column(1/3, function ($filter) {
-                $filter->equal('code', '商户号');
+            $filter->column(1/4, function ($filter) {
+                $data = Admin::user()->operate == "All" ? array() : array('operate' => Admin::user()->operate);
+                $filter->equal('user_id', '代理')->select(\App\User::where($data)->get()->pluck('nickname', 'id'));
             });
-
-            $filter->column(1/3, function ($filter) {
-                $filter->equal('machines.sn', 'SN');
-            });
-
         });
-        
+
         // 禁用添加按钮
         $grid->disableCreateButton();
 

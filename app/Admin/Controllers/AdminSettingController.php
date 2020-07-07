@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use Route;
 use App\AdminSetting;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -47,6 +48,28 @@ class AdminSettingController extends AdminController
 
         $grid->disableCreateButton(false);
 
+        $grid->filter(function($filter){
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+
+            $filter->column(1/4, function ($filter) {
+                $filter->like('operate_number', '操盘号');
+            });
+
+            $filter->column(1/4, function ($filter) {
+                $filter->like('company', '公司');
+            });
+
+            $filter->column(1/4, function ($filter) {
+                $filter->equal('type', '类型')->select(['1' => '操盘', '2' => '机构']);
+            });
+            
+            $filter->column(1/4, function ($filter) {
+                $filter->equal('pattern', '模式')->select(['1' => '联盟模式', '2' => '工具模式']);
+            });
+                
+        });
+
         return $grid;
     }
 
@@ -87,9 +110,11 @@ class AdminSettingController extends AdminController
     {
         $form   = new Form(new AdminSetting());
 
+        $host = explode('/',Route::getFacadeRoot()->current()->uri);
+    
         $no     = date('Ymd').substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
 
-        $form->tab('基础信息', function ($form) use ($no) {
+        $form->tab('基础信息', function ($form) use ($no, $host) {
 
             $form->text('operate_number', __('机构/操盘号'))->value($no)->readonly()->help('由系统自动生成,不可更改');
 
@@ -98,9 +123,13 @@ class AdminSettingController extends AdminController
             $form->email('email', __('公司邮箱'));
             $form->text('address', __('公司地址'));
 
-            $form->mobile('account', __('登陆账号'))->required()->help('机构使用此账号登陆后台,操盘使用此账号登陆后台与app');
+            if( empty($host[3])){
+
+                $form->text('account', __('登陆账号'))->required()->help('机构使用此账号登陆后台,操盘使用此账号登陆后台与app');
             
-            $form->password('password', __('登陆密码'))->required()->help('密码最少6位,数字与字母的组合');
+                $form->password('password', __('登陆密码'))->required()->help('密码最少6位,数字与字母的组合');
+
+            }
 
             $form->radioButton('type', '操盘/机构')->options([ 1 => '操盘方', 2 => '机构方' ])->when(2,function (Form $form) { 
                 $form->listbox('sons', __('包含操盘'))->options([1 => 'foo', 2 => 'bar', 'val' => 'Option name']);
