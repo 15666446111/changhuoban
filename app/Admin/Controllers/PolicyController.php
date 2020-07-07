@@ -52,7 +52,7 @@ class PolicyController extends AdminController
             });
 
             $filter->column(1/4, function ($filter) {
-                $data =  Admin::user()->operate == 'All' ? array() : array('operate', Admin::user()->operate);
+                $data =  Admin::user()->operate == 'All' ? array() : array('operate' => Admin::user()->operate);
 
                 $filter->equal('policy_group_id', '活动组')->select(\App\PolicyGroup::where($data)->get()->pluck('title', 'id'));
             }); 
