@@ -157,7 +157,7 @@ class TradeTypeController extends AdminController
         
         $form->checkbox('card_type', __('交易卡类型'))->options([ 0 => '借记卡', 1 => '信用卡']);
 
-        $form->checkbox('is_top', __('是否封顶'))->options([ 0 => '非封顶', 1 => '封顶'])->required();
+        $form->radio('is_top', __('是否封顶'))->options([ 0 => '非封顶', 1 => '封顶'])->required();
 
         $form->checkbox('trade_code', __('手续费计算类型'))->options([ 
             'Y' => '优惠', 
