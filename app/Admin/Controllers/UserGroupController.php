@@ -31,23 +31,14 @@ class UserGroupController extends AdminController
         
         $grid->column('id', __('索引'))->sortable();
 
-        $grid->column('name', __('组名称'));
+        $grid->column('name', __('组名称'))->help('用户组名称');
 
-        $grid->column('level', __('级别'));
+        $grid->column('level', __('级别'))->label('primary')->help('用户组级别, 由系统内置');
 
-        $grid->column('trade_count', __('自动晋升条件'))->display(function($money){
-            return number_format($money, 2, '.', ',');
-        })->label();
-
-        if(Admin::user()->operate != "All"){
-            $grid->disableCreateButton();
-            // 全部关闭
-            $grid->disableActions();
-        }
-        // $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s');
-
-        // $grid->column('updated_at', __('修改时间'))->date('Y-m-d H:i:s');
-
+        $grid->disableCreateButton();
+        // 全部关闭
+        $grid->disableActions();
+        
         $grid->disableCreateButton();
 
         return $grid;

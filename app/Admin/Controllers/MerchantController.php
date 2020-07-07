@@ -29,31 +29,29 @@ class MerchantController extends AdminController
         $grid = new Grid(new Merchant());
 
         if(Admin::user()->operate != "All"){
-
             $grid->model()->where('operate', Admin::user()->operate);
-            
         }
         
         // 倒叙
         $grid->model()->latest();
 
-        $grid->column('id', __('索引'));
+        //$grid->column('id', __('索引'));
 
-        $grid->column('users.nickname', __('代理昵称'));
+        $grid->column('users.nickname', __('代理昵称'))->help('终端机具商户的所属代理昵称');
 
-        $grid->column('users.account', __('代理账号'));
+        $grid->column('users.account', __('代理账号'))->help('终端机具商户的所属代理账号');
 
-        $grid->column('code', __('商户号'));
+        $grid->column('code', __('商户号'))->help('终端机具商户的商户号');
 
-        $grid->column('name', __('商户名称'));
+        $grid->column('name', __('商户名称'))->help('终端机具商户的商户名称');
 
-        $grid->column('phone', __('商户电话'));
+        $grid->column('phone', __('商户电话'))->help('终端机具商户的商户电话');
 
         $grid->column('trade_amount', __('累计交易金额'))->display(function ($money) {
             return number_format($money / 100, 2, '.', ',');
-        })->label('info');
+        })->label('info')->help('终端机具商户的累积交易量');
                 
-        $grid->column('created_at', __('创建时间'));
+        $grid->column('created_at', __('创建时间'))->help('终端机具商户的开通时间');
 
 
         $grid->filter(function ($filter) {

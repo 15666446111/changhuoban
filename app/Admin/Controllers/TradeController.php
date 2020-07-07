@@ -28,52 +28,50 @@ class TradeController extends AdminController
         $grid = new Grid(new Trade());
 
         if(Admin::user()->operate != "All"){
-
-            $grid->model()->where('operate', Admin::user()->operate);
-            
+            $grid->model()->where('operate', Admin::user()->operate);   
         }
 
         $grid->model()->latest();
         
-        $grid->column('trade_no',        __('系统流水号'));
+        $grid->column('trade_no',__('系统流水号'))->help('交易订单的流水号,畅捷支付的订单号');
 
-        $grid->column('rrn',            __('参考号'));
+        $grid->column('rrn', __('参考号'))->help('交易订单的参考号,畅捷支付的参考号');
 
-        $grid->column('users.nickname',        __('所属代理'));
+        $grid->column('users.nickname', __('所属代理'))->help('交易订单所归属的代理昵称');
 
-        $grid->column('sn',             __('机器序列号'));
+        $grid->column('sn', __('机器序列号'))->help('交易订单所归属的终端机具SN');
 
-        $grid->column('merchant_code',  __('商户号'));
+        $grid->column('merchant_code',  __('商户号'))->help('交易订单所归属的商户号');
 
-        $grid->column('agt_merchant_name', __('渠道商名称'));
+        $grid->column('agt_merchant_name', __('渠道商名称'))->help('交易订单所归属的渠道商名称');
 
-        $grid->column('rate',  __('交易费率'));
+        $grid->column('rate',  __('交易费率'))->help('当前交易订单的交易费率');
 
         $grid->column('amount',         __('交易金额'))->display(function($amount){
             return number_format($amount / 100, 2, '.', ',');
-        })->label();
+        })->label()->help('当前交易订单的交易金额');
 
         $grid->column('rate_money', __('手续费'))->display(function ($money) {
             return number_format($money / 100, 2, '.', ',');
-        })->label('warning')->filter('range');
+        })->label('warning')->filter('range')->help('当前交易订单的手续费');
 
         $grid->column('settle_amount', __('结算金额'))->display(function($amount){
             return number_format($amount / 100, 2, '.', ',');
-        })->label('info');
+        })->label('info')->help('当前交易订单的实际结算金额');
 
-        $grid->column('trade_time',        __('交易时间'));
+        $grid->column('trade_time', __('交易时间'))->help('当前交易订单的交易时间');
 
-        $grid->column('trade_type', __('交易类型'));
+        $grid->column('trade_type', __('交易类型'))->help('当前交易订单的交易类型');
 
         $grid->column('cardType', __('交易卡类型'))->using([
             '0' => '贷记卡', '1' => '借记卡'
         ])->label([
             '0' =>  'warning', '1' => 'success'
-        ]);
+        ])->help('当前交易订单的交易卡类型');
 
-        $grid->column('is_send', __('分润发放'))->bool();
+        $grid->column('is_send', __('分润发放'))->bool()->help('当前交易订单是否发放分润');
 
-        $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s');
+        $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s')->help('当前交易订单的执行时间');
 
         $grid->disableCreateButton();
 

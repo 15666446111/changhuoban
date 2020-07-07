@@ -30,8 +30,8 @@ class HolidayController extends AdminController
         $grid->column('title', __('标题'))->help('节日标题');
         $grid->column('start_time', __('开始时间'))->help('节日开始时间');
         $grid->column('end_time', __('结束时间'))->help('节日结束时间');
-        $grid->column('created_at', __('创建时间'));
-        $grid->column('updated_at', __('修改时间'));
+        $grid->column('created_at', __('创建时间'))->help('节日信息的创建时间');
+        $grid->column('updated_at', __('修改时间'))->help('节日信息的最后修改时间');
 
         $grid->filter(function($filter){
             // 去掉默认的id过滤器

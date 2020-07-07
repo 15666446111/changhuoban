@@ -36,7 +36,7 @@ class WithdrawController extends AdminController
         
         $grid->model()->latest();
         
-        $grid->column('order_no', __('提现订单'));
+        $grid->column('order_no', __('提现订单'))->help('提现订单的流水号,由系统自动生成');
 
         $grid->column('users.nickname', __('提现用户'))->help('提现人昵称');
 
@@ -45,7 +45,7 @@ class WithdrawController extends AdminController
                 // $model->withdrawDatas->username, $model->withdrawDatas->idcard, $model->withdrawDatas->bank, 
                 // $model->withdrawDatas->bank_open, $model->withdrawDatas->banklink, $model->withdrawDatas->phone
             ] ]);
-        });
+        })->help('提现人的提现卡资料');
 
         $grid->column('money', __('提现金额'))->display(function( $cash){
             return number_format( $cash / 100 , 2, '.', ',');
@@ -70,9 +70,10 @@ class WithdrawController extends AdminController
         $grid->column('type', __('提现类型'))->using(['1' => '分润提现', '2' => '返现提现'])->dot([ 1 => 'primary', 2 => 'success' ]);
 
         $grid->column('state', __('提现状态'))->using(['1' => '待审核', '2' => '通过', '3'=>'驳回', '4'=> '交易受理中'])
-                                                        ->dot([ 1 => 'default', 2 => 'success', 3 => 'danger', 4 =>'primary' ]);
+                                                        ->dot([ 1 => 'default', 2 => 'success', 3 => 'danger', 4 =>'primary' ])->help('交易处理中的状态为正在处理,一般会在30分钟内自动同步');
+
         $grid->column('make_state', __('打款状态'))->using(['0' => '待处理', '1' => '已打款', '2' => '打款失败'])
-                                                        ->dot([ 0 => 'default', 1 => 'success', 2 => 'danger' ]);
+                                                        ->dot([ 0 => 'default', 1 => 'success', 2 => 'danger' ])->help('打款状态为用户实际是否收到该笔提现费用');
 
         $grid->column('check_at', __('审核时间'))->help('该笔订单处理时间');
 

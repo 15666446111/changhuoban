@@ -32,13 +32,13 @@ class MachinesStyleController extends AdminController
         
         $grid->column('id', __('索引'))->sortable();
 
-        $grid->column('style_name', __('型号名称'));
+        $grid->column('style_name', __('型号名称'))->help('机具的型号名称');
 
-        $grid->column('machines_fact.factory_name', __('所属厂商'));
+        $grid->column('machines_fact.factory_name', __('所属厂商'))->help('机具型号所属的厂商');
 
-        $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s');
+        $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s')->help('机具型号的创建时间');
 
-        $grid->column('updated_at', __('修改时间'))->date('Y-m-d H:i:s');
+        $grid->column('updated_at', __('修改时间'))->date('Y-m-d H:i:s')->help('机具型号的最后修改时间');
 
         return $grid;
     }

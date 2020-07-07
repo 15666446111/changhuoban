@@ -36,26 +36,26 @@ class ShareController extends AdminController
         $grid->model()->latest();
         //$grid->column('id', __('索引'))->sortable();
 
-        $grid->column('images', __('图片'))->image('', 100, 30);
+        $grid->column('images', __('图片'))->image('', 100, 30)->help('分享的素材底图');
 
-        $grid->column('title', __('标题'));
+        $grid->column('title', __('标题'))->help('分享展示的标题');
 
-        $grid->column('active', __('状态'))->switch()->sortable();
+        $grid->column('active', __('状态'))->switch()->sortable()->help('分享的状态,关闭后 app将不会展示此条分享');
 
-        $grid->column('share_types.name', __('类型'));
+        $grid->column('share_types.name', __('类型'))->help('此次分享的展示位置');
 
-        $grid->column('sort', __('排序'))->sortable()->label('danger');
+        $grid->column('sort', __('排序'))->sortable()->label('danger')->help('分享素材的排序权重,值越大 越在前');
 
-        $grid->column('code_size', __('二维码大小'))->label('success');
+        $grid->column('code_size', __('二维码大小'))->label('success')->help('分享素材所需要的二维码大小');
 
-        $grid->column('code_x', __('X轴位置'))->label('info');
+        $grid->column('code_x', __('X轴位置'))->label('info')->help('二维码在此素材的X轴位置,单位为像素(px)');
 
-        $grid->column('code_y', __('Y轴位置'))->label('info');
+        $grid->column('code_y', __('Y轴位置'))->label('info')->help('二维码在此素材的Y轴位置,单位为像素(px)');
 
         $grid->column('verify', __('审核'))->using([ '0' => '待审核', '1' => '正常', '-1' => '拒绝'])
-                ->dot([ 0 => 'danger', 1 => 'success' ], 'default');
+                ->dot([ 0 => 'danger', 1 => 'success' ], 'default')->help('添加素材之后默认为未审核的状态,由总后台审核后方可展示');
 
-        $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s');
+        $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s')->help('此次分享信息的创建时间');
 
         //$grid->column('updated_at', __('修改时间'))->date('Y-m-d H:i:s');
 

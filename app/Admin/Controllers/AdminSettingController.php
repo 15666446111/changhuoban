@@ -30,21 +30,21 @@ class AdminSettingController extends AdminController
 
         $grid->model()->latest();
 
-        $grid->column('operate_number', __('机构/操盘号'));
+        $grid->column('operate_number', __('机构/操盘号'))->help('此列为机构/操盘方的唯一标识,代表此机构或操盘在本系统的标准');
 
-        $grid->column('open', __('状态'))->using([ 0 =>'禁止', 1 =>'正常' ], '未知')->dot([ 0 => 'danger', 1 => 'success' ], 'default');
+        $grid->column('open', __('状态'))->using([ 0 =>'禁止', 1 =>'正常' ], '未知')->dot([ 0 => 'danger', 1 => 'success' ], 'default')->help('操盘或者机构的状态,若禁止 则此操盘或机构下的所有用户都无法登陆app');
 
-        $grid->column('type', __('模式'))->using([ 1 =>'联盟模式', 2 =>'操盘模式' ])->dot([ 1 => 'primary', 2 => 'success' ]);
+        $grid->column('type', __('模式'))->using([ 1 =>'操盘方', 2 =>'机构方' ])->dot([ 1 => 'primary', 2 => 'success' ])->help('此主体的类型, 操盘或者机构');
 
-        $grid->column('company', __('公司'));
+        $grid->column('company', __('公司'))->help('操盘方或者机构方的公司主体');
 
-        $grid->column('phone', __('联系电话'));
+        $grid->column('phone', __('联系电话'))->help('操盘方或者机构方负责人联系电话');
 
-        $grid->column('email', __('公司邮箱'));
+        $grid->column('email', __('公司邮箱'))->help('操盘方或者机构方联系邮箱,发送统计报表,信息等');
 
-        $grid->column('address', __('公司地址'));
+        $grid->column('address', __('公司地址'))->help('操盘方或者机构方公司地址');
 
-        $grid->column('created_at', __('开通时间'));
+        $grid->column('created_at', __('开通时间'))->help('操盘方或者机构方在本平台的入驻时间');
 
         $grid->disableCreateButton(false);
 

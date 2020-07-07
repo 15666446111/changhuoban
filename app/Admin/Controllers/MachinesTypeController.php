@@ -31,13 +31,13 @@ class MachinesTypeController extends AdminController
         
         $grid->column('id', __('索引'))->sortable();
 
-        $grid->column('name', __('类型名称'));
+        $grid->column('name', __('类型名称'))->help('机器类型的名称');
 
-        $grid->column('state', __('状态'))->sortable()->switch();
+        $grid->column('state', __('状态'))->sortable()->switch()->help('机器类型的状态,关闭后在新增厂商时无法选择此类型');
 
-        $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s');
+        $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s')->help('类型的创建的时间');
 
-        $grid->column('updated_at', __('修改时间'))->date('Y-m-d H:i:s');
+        $grid->column('updated_at', __('修改时间'))->date('Y-m-d H:i:s')->help('类型的创最后修改时间');
 
         $grid->actions(function ($actions) {
 

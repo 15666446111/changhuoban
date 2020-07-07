@@ -31,13 +31,13 @@ class PlugTypeController extends AdminController
         
         $grid->column('id', __('索引'))->sortable();
 
-        $grid->column('name', __('类型'));
+        $grid->column('name', __('类型'))->help('轮播图展示的位置,由系统内置');
 
-        $grid->column('active', __('状态'))->sortable()->switch();
+        $grid->column('active', __('状态'))->sortable()->switch()->help('轮播图位置的状态,关闭后无法在新增轮播图中选择');
 
-        $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s');
+        $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s')->help('此信息的添加时间');
 
-        $grid->column('updated_at', __('修改时间'))->date('Y-m-d H:i:s');
+        $grid->column('updated_at', __('修改时间'))->date('Y-m-d H:i:s')->help('此信息的最后修改时间');
 
         $grid->disableCreateButton(false);
 

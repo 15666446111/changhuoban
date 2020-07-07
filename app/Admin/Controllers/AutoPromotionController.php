@@ -33,9 +33,9 @@ class AutoPromotionController extends AdminController
 
         //$grid->column('id', __('Id'));
         //$grid->column('operate', __('Operate'));
-        $grid->column('groups.name', __('用户组'));
-        $grid->column('trade_count', __('月交易量'))->editable();
-        $grid->column('created_at', __('创建时间'));
+        $grid->column('groups.name', __('用户组'))->help('要晋升的用户组');
+        $grid->column('trade_count', __('月交易量(元)'))->editable()->help('考核的交易量');
+        $grid->column('created_at', __('创建时间'))->help('考核标准创建时间');
         //$grid->column('updated_at', __('Updated at'));
 
         $grid->disableCreateButton();
