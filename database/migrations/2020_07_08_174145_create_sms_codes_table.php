@@ -22,9 +22,9 @@ class CreateSmsCodesTable extends Migration
 
             $table->tinyInteger('is_use')->default(0)->comment('是否使用');
 
-            $table->timestamp('send_time')->comment('发送时间');
+            $table->timestamp('send_time')->nullable()->comment('发送时间');
 
-            $table->timestamp('out_time')->comment('失效时间');
+            $table->timestamp('out_time')->nullable()->comment('失效时间');
 
             $table->timestamps();
         });
