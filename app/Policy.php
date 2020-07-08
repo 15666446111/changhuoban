@@ -33,6 +33,7 @@ class Policy extends Model
             foreach ($attr as $key => $value) {
                 $attr[$key]['standard_agent_price'] = $value['standard_agent_price'] / 100;
                 $attr[$key]['standard_trade'] = $value['standard_trade'] / 100;
+                $attr[$key]['standard_agent_price'] = $value['standard_agent_price'] / 100;
                 $attr[$key]['standard_price'] = $value['standard_price'] / 100;
                 $attr[$key]['standard_parent_price'] = $value['standard_parent_price'] / 100;
             }
@@ -49,9 +50,9 @@ class Policy extends Model
     	foreach ($extra as $key => $value) {
             $extra[$key]['index'] = $value['index'] ?? $i;
     		$extra[$key]['standard_trade'] = $value['standard_trade'] * 100;
-            $extra[$key]['standard_agent_price'] = $value['standard_agent_price'] * 100;
-    		$extra[$key]['standard_price'] = $value['standard_price'] * 100;
-    		$extra[$key]['standard_parent_price'] = $value['standard_parent_price'] * 100;
+            $extra[$key]['standard_agent_price'] = $value['standard_agent_price'] ? $value['standard_agent_price'] * 100 : 0;
+    		$extra[$key]['standard_price'] = $value['standard_price'] ? $value['standard_price'] * 100 : 0;
+    		$extra[$key]['standard_parent_price'] = $value['standard_parent_price'] ? $value['standard_parent_price'] * 100 : 0;
             $i = isset($value['index']) ? $value['index'] + 1 : $i + 1;
     	}
         $this->attributes['default_standard_set'] = json_encode(array_values($extra));
@@ -93,6 +94,44 @@ class Policy extends Model
     {
         $this->attributes['active_price'] =  $value * 100;
     }
+
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-06-28
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [获取器]
+     * @param     [type]      $value [description]
+     */
+    public function getDefaultActiveAttribute($value)
+    {
+        return $value / 100;
+    }
+    public function setDefaultActiveAttribute($value)
+    {
+        $this->attributes['default_active'] =  $value * 100;
+    }    
+
+
+    public function getIndirectActiveAttribute($value)
+    {
+        return $value / 100;
+    }
+    public function setIndirectActiveAttribute($value)
+    {
+        $this->attributes['indirect_active'] =  $value * 100;
+    }    
+
+
+    public function getInIndirectActiveAttribute($value)
+    {
+        return $value / 100;
+    }
+    public function setInIndirectActiveAttribute($value)
+    {
+        $this->attributes['in_indirect_active'] =  $value * 100;
+    }    
 
 	/**
 	 * [merchants 关联终端模型]

@@ -15,6 +15,11 @@ class HomeController extends Controller
 	 */
     public function index(Request $request)
     {
+
+        // 发送验证码
+        $appliction = new 
+
+
     	return view('login');
     }
 

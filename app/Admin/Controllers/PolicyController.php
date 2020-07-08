@@ -103,28 +103,32 @@ class PolicyController extends AdminController
     {
         $form = new Form(new Policy());
 
-
         $form->tab('基础信息配置', function ($form) {
-
-            $form->text('title', __('活动标题'));
 
             $form->switch('active', __('活动状态'))->default(1)->help('关闭活动状态时,配送无法选择此活动,已配送机器分润等不受影响');
 
-            $form->hidden('operate', __('Operate'))->readonly();
+            $form->text('title', __('活动标题'));
 
             $form->select('policy_group_id', __('所属活动组'))->options(\App\PolicyGroup::where('operate', Admin::user()->operate)->get()->pluck('title', 'id'));
-            
+
+            $form->hidden('operate', __('Operate'))->readonly();
+
         })->tab('激活返现设置', function ($form) {
 
-            $form->number('default_active', __('直推激活'))->default(2)->help('机器激活,机器归属人奖励.(单位为分)');
-            $form->number('indirect_active', __('间推激活'))->default(1)->help('机器激活,上级获得的间推奖励.(单位为分)');
-            $form->number('in_indirect_active', __('间推激活'))->default(1)->help('机器激活,上上级获得的间推奖励.(单位为分)');
+            $form->currency('default_active', __('直推激活'))->default(0)->help('机器激活,机器归属人奖励');
+
+            $form->currency('indirect_active', __('间推激活'))->default(0)->help('机器激活,上级获得的间推奖励');
+
+            $form->currency('in_indirect_active', __('间间推激活'))->default(0)->help('机器激活,上上级获得的间推奖励.(单位为分)');
+
             $form->select('short_id', __('短信模板'))->options(\App\AdminShort::where('operate', Admin::user()->operate)->get()->pluck('number', 'id'));
+
             $form->select('active_type', __('激活标准'))->options([1 => '冻结激活', 2 => '交易量激活'])->when(1,function (Form $form) { 
-                $form->currency('active_price', __('冻结激活金额'))->symbol('￥')->help('机器激活,上级获得的直推奖励.(单位为分)');
+                $form->currency('active_price', __('冻结激活金额'))->symbol('￥')->help('机器激活,上级获得的直推奖励');
             })->when(2,function (Form $form) { 
-                $form->currency('active_price', __('交易量激活金额'))->symbol('￥')->help('机器激活,上级获得的直推奖励.(单位为分)');
+                $form->currency('active_price', __('交易量激活金额'))->symbol('￥')->help('机器激活,上级获得的直推奖励');
             });
+            
             // $form->fieldset('用户激活返现', function (Form $form) {
             //     $form->embeds('default_active_set', '用户激活',function ($form) {
             //         $form->number('return_money', '最高返现')->default(0)->rules('required')->help('(单位为分)');
