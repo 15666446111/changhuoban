@@ -15,6 +15,15 @@ class HomeController extends Controller
 	 */
     public function index(Request $request)
     {
+        // \App\User::create([
+        //     'nickname'      => '测试c1',
+        //     'account'       => '15666446115',
+        //     'phone'         => '15666446115',
+        //     'password'      => "###" . md5(md5('123456' . 'v3ZF87bMUC5MK570QH')),
+        //     'user_group'    => 1,
+        //     'parent'        => 9,
+        //     'operate'       => 'CP1002020041714132163',
+        // ]);
     	return view('login');
     }
 

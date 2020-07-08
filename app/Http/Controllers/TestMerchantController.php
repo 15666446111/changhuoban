@@ -1,21 +1,13 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Http\Controllers;
 
-use App\RegNoticeContent;
-use App\Http\Controllers\MachineConfig;
+use Illuminate\Http\Request;
 use App\Services\Pmpos\PmposController;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-
-class HandleMachineInfo implements ShouldQueue
+class TestMerchantController extends Controller
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
+    
     /**
      * 接口推送的商户信息
      * @var [type]
@@ -30,20 +22,13 @@ class HandleMachineInfo implements ShouldQueue
     protected $machine;
 
 
-    /**
-     * 任务可以执行的最大秒数 (超时时间)。
-     *
-     * @var int
-     */
-    public $timeout = 120;
-
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(RegNoticeContent $regContent)
+    public function __construct($regContent)
     {
         
         $this->regContent = $regContent;
@@ -52,19 +37,12 @@ class HandleMachineInfo implements ShouldQueue
 
     }
 
-     /**
-     * 任务可以尝试的最大次数。
-     *
-     * @var int
-     */
-    public $tries = 1;
-
     /**
      * Execute the job.
      *
      * @return void
      */
-    public function handle()
+    public function index()
     {
 
         /**
@@ -141,7 +119,7 @@ class HandleMachineInfo implements ShouldQueue
                 \App\Machine::where('sn', $this->regContent->termSn)->update([
                     'merchant_id'       => $merchant->id,
                     'bind_status'       => 1,
-                    'bind_time'         => date('Y-m-d H:i:s', time())
+                    'bind_time'			=> date('Y-m-d H:i:s', time())
                 ]);
             } else {
                 // 判断当前机器绑定商户和推送信息是否一致，信息不一致时，更新商户信息
@@ -208,7 +186,7 @@ class HandleMachineInfo implements ShouldQueue
             }
         } else {
 
-            $this->regContent->remark .= '服务费冻结:active_type' . $this->machine->policys->active_type . 'active_price' . $this->machine->policys->active_price;
+        	$this->regContent->remark .= '服务费冻结:active_type' . $this->machine->policys->active_type . 'active_price' . $this->machine->policys->active_price;
             $this->regContent->save();
             return false;
 

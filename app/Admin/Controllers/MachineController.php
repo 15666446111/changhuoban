@@ -46,14 +46,16 @@ class MachineController extends AdminController
 
         $grid->column('machines_styles.style_name', __('终端类型'))->help('终端机具的所属类型');
 
+        $grid->column('policys.title', __('所属活动'))->help('终端机具的所属活动');
+
         $grid->column('users.nickname', __('所属代理'))->help('终端机具所属的账号昵称');
 
         $grid->column('open_state', __('开通状态'))->using([ '0' => '未开通', '1' => '已开通'])->dot([ 0 => 'danger', 1 => 'success' ], 'default')->help('终端机具的开通状态');
 
         $grid->column('open_time', __('开通时间'))->help('终端机具的开通时间');
 
-        $grid->column('is_self', __('活动自备机'))->using([ '0' => '不是', '1' => '是'])
-                ->dot([ 0 => 'success', 1 => 'danger' ], 'default')->help('是否是活动自备机');
+        // $grid->column('is_self', __('活动自备机'))->using([ '0' => '不是', '1' => '是'])
+        //         ->dot([ 0 => 'success', 1 => 'danger' ], 'default')->help('是否是活动自备机');
 
         $grid->column('merchants.name', __('商户名称'))->help('终端机具所归属的商户名称');
 

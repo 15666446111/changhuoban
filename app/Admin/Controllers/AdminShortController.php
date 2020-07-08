@@ -33,6 +33,9 @@ class AdminShortController extends AdminController
         //$grid->column('id', __('索引'));
         $grid->column('number', __('短信编号'));
 
+        $grid->column('type', __('短信类型'))
+                ->using([ '1' => 'POS服务费', '2' => '通讯（流量卡）费', '3' => 'VIP会员费']);
+
         $grid->column('content', __('短信内容'));
 
         $grid->column('created_at', __('创建时间'));
@@ -72,6 +75,7 @@ class AdminShortController extends AdminController
     {
         $form = new Form(new AdminShort());
 
+        $form->select('type', __('短信类型'))->options([1 => 'POS服务费', 2 => '流量卡费', 3 => 'VIP会员费']);
         $form->text('number', __('短信编号'));
         $form->text('content', __('短信内容'));
 
