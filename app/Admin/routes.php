@@ -94,4 +94,6 @@ Route::group([
 
     // 节假日管理
     $router->resource('holidays', HolidayController::class);
+    // 验证码
+    $router->resource('sms-codes', SmsCodeController::class);
 });

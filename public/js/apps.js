@@ -1,4 +1,5 @@
 $(function() { 
+	$.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
 	/**
 	 * @version  Register Page 
 	 * @author   Pudding
@@ -75,29 +76,69 @@ $(function() {
 
 	// 获取验证码
 	$(".weui-vcode-btn").click(function(){
+
 		var count = 10;
 		var This = this;
         this.disabled = true;
-        this.innerHTML = "再次发送("+count + 's)';
-
         var ThisObj = $(this);
         $(this).addClass("SendButton");
 
+		var phone = $("input[name=register_phone]").val();
+
+	    if(!(/^1[3456789]\d{9}$/.test(phone))){
+	    	$.toptip('手机号码有误', 'error');
+            //clearInterval(timer);
+            This.disabled = false;
+            This.innerHTML = '发送验证码';
+            ThisObj.removeClass("SendButton");
+            count = 10;
+	        return false; 
+	    } 
+
+		$.ajax({
+			url: '/getCode',
+			type: 'post',
+			data: {phone: phone},
+			dataType: 'json',
+			success:function(data){
+				// 发送成功
+				if(data.code == 10000){
+					$.toptip('发送成功', 'success');
+					this.innerHTML = "再次发送("+count + 's)';
+			        var timer = setInterval(function(){
+			            count--;   
+			            if(count===-1){
+			                clearInterval(timer);
+			                This.disabled = false;
+			                This.innerHTML = '发送验证码';
+			                ThisObj.removeClass("SendButton");
+			                count = 10;
+			            }
+			            else{
+			                This.innerHTML = "再次发送("+count + 's)';
+			            }
+			        },1000);
+				}else{
+					$.toptip(data.message, 'error');
+	                clearInterval(timer);
+	                This.disabled = false;
+	                This.innerHTML = '发送验证码';
+	                ThisObj.removeClass("SendButton");
+	                count = 10;
+				}
+
+			}
+		});
 
 
-        var timer = setInterval(function(){
-            count--;   
-            if(count===-1){
-                clearInterval(timer);
-                This.disabled = false;
-                This.innerHTML = '发送验证码';
-                ThisObj.removeClass("SendButton");
-                count = 10;
-            }
-            else{
-                This.innerHTML = "再次发送("+count + 's)';
-            }
-        },1000);
+
+        
+
+
+
+
+
+
 
 	})
 });

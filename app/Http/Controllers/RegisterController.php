@@ -175,4 +175,33 @@ class RegisterController extends Controller
 
         }
     }
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-07-08
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [注册发送验证码]
+     * @param     Request     $request [description]
+     * @return    [type]               [description]
+     */
+    public function code(Request $request)
+    {
+        try{
+
+            if(!$request->phone) return json_encode(array('code'=> -999, 'message' => '手机号不存在!'));
+
+            // 发送验证码
+            $appliction = new \App\Services\Sms\SendSmsController;
+
+            $res = $appliction->send($request->phone, rand(1000,9999));
+
+            return $res;
+            
+        } catch (\Exception $e) {
+
+             return json_encode(array('code'=> -999, 'message' => '发送失败!'));
+
+        }
+    }
 }
