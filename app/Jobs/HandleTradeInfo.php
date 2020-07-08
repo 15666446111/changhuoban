@@ -18,12 +18,6 @@ class HandleTradeInfo implements ShouldQueue
      */
     protected $trade;
 
-    protected $merchants;
-
-    protected $agentId;
-
-    protected $configAgentId;
-
     /**
      * Create a new job instance.
      *
@@ -37,18 +31,9 @@ class HandleTradeInfo implements ShouldQueue
      */
     public $timeout = 120;
 
-    public function __construct($params = '',$merchant = '',$agId = '',$configId = '',$number = '')
+    public function __construct($params)
     {
         $this->trade = $params;
-
-        $this->merchants = $merchant;
-
-        $this->agentId = $agId;
-
-        $this->configAgentId = $configId;
-
-        $this->short_id = $number;
-
     }
 
     
@@ -60,6 +45,18 @@ class HandleTradeInfo implements ShouldQueue
      */
     public function handle()
     {
+        /**
+         * @version [<vector>] [< 判断是否是成功交易>]
+         * $desc == '原交易已冲正'       无效冲正类交易
+         * 交易冲正时可能会推送多笔交易，已平台收单应答描述前六位为"原交易已冲正"区分是否为无效的冲正类交易,
+         * 无效的交易信息不进行保存和处理
+         */
+        if ($this->trade->sysRespCode != '00' || substr($this->trade->sysRespDesc, 0, 18) == '原交易已冲正') {
+            $this->trade->remark = '该交易为无效交易';
+            $this->trade->is_invalid = 1;
+            $this->trade->save();
+            return false;
+        }
 
         /**
          * @version [<vector>] [< 检查该机器是否入库>]
@@ -82,7 +79,8 @@ class HandleTradeInfo implements ShouldQueue
         /**
          * @version [<vector>] [< 检查该机器所属操盘方和畅捷后台是否一致>]
          */
-        if ($this->trade->merchants_sn->operate != $this->trade->agt_merchant_id) {
+        $systemCode = \App\AdminSetting::where('operate_number', $this->trade->merchants_sn->operate)->value('system_merchant');
+        if ($systemCode != $this->trade->agt_merchant_id) {
             $this->trade->remark = '该机器归属操盘方信息有误';
             $this->trade->save();
             return false;
@@ -93,64 +91,139 @@ class HandleTradeInfo implements ShouldQueue
          * transDate: 接口推送的交易日期
          * rrn: 参考号
          */
-        $sameTrade = \App\Trade::where('transDate', $this->trade->transDate)->where('rrn', $this->trade->rrn)
+        $sameTrade = \App\Trade::where('transDate', $this->trade->transDate)
+                                ->where('rrn', $this->trade->rrn)
+                                ->where('id', '<>', $this->trade->id)
                                 ->first();
-        if (empty($sameTrade)) {
+        if (!empty($sameTrade)) {
             $this->trade->remark = '该交易为重复推送数据';
+            $this->trade->is_repeat = 1;
             $this->trade->save();
             return false;
         }
 
-
+        /**
+         * @version [<vector>] [< 更新交易订单的用户id和机具id信息 >]
+         */
+        $this->trade->user_id = $this->trade->merchants_sn->user_id;
+        $this->trade->machine_id = $this->trade->merchants_sn->id;
+        $this->trade->operate = $this->trade->merchants_sn->operate;
+        $this->trade->save();
 
         /**
          * @version [<vector>] [< 实行商户绑定>]
+         *
+         * 1.判断当前商户是否存在
+         *      存在: 判断当前机具是否绑定商户
+         *          已绑定：判断绑定的和交易数据中的是否一致
+         *              不一致时：？？
+         *      不存在：添加商户信息
+         *          判断机具是否绑定商户
+         *              未绑定：更新绑定商户信息
+         *              已绑定？？
          */
-        if ($this->trade->merchants_sn->bind_status == "0" || $this->trade->merchants_sn->merchant_id == null) {
-            
+        $merInfo = \App\Merchant::where('code', $this->trade->merchant_code)->first();
+
+        if (!$merInfo) {
+
+            // 添加商户信息
+            $merInfo = \App\Merchant::create([
+                'user_id'       => $this->trade->merchants_sn->user_id,
+                'code'          => $this->trade->merchant_code,
+                'operate'       => $this->trade->merchants_sn->operate,
+                'name'          => $this->trade->merchant_name,
+                'phone'         => $this->trade->merchant_phone
+            ]);
+
+            if ($this->trade->merchants_sn->bind_status == 0) {
+                
+                // 绑定商户
+                \App\Machine::where('sn', $this->trade->sn)->update([
+                    'merchant_id'   => $merInfo['id'],
+                    'bind_status'   => 1,
+                    'bind_time'     => date('Y-m-d H:i:s', time())
+                ]);
+
+            } else {
+
+                // 已绑定商户，但是推送的商户信息和之前绑定的不一致时
+                // ？？
+
+            }
+
+        } else {
+
+            // 完善商户信息
+            if (!empty($merInfo['name']) || !empty($merInfo['phone'])) {
+
+                \App\Merchant::where('id', $merInfo->id)->update([
+                    'name'          => $this->trade->merchant_name,
+                    'phone'         => $this->trade->merchant_phone,
+                ]);
+            }
+
+            if ($this->trade->merchants_sn->bind_status == 0) {
+
+                // 绑定商户
+                \App\Machine::where('sn', $this->trade->sn)->update([
+                    'merchant_id'   => $merInfo['id'],
+                    'bind_status'   => 1,
+                    'bind_time'     => date('Y-m-d H:i:s', time())
+                ]);
+
+            } else {
+
+                // 已绑定商户，但是绑定商户信息和推送数据中的商户信息不一致时，
+                if ($this->trade->merchants_sn->merchant_id != $merInfo['id']) {
+
+                    // ？
+                    
+                }
+
+            }
+
         }
+        
 
         /**
          * @version [< 给当前交易进行分润发放 >]
          */
-        
         try {
+            $cash = new \App\Http\Controllers\CashController($this->trade);
 
+            $cashResult = $cash->cash();
+
+            $this->trade->remark = $this->trade->remark."<br/>分润:".$cashResult['message'];
+
+            if($cashResult['status'] && $cashResult['status'] !== false){
+                $this->trade->is_send = 1;
+            }
+
+            $this->trade->save();
 
         } catch (\Exception $e) {
-            // $this->trade->remark = $this->trade->remark."<br/>分润:".json_encode($e->getMessage());
-            // $this->trade->save();
+            $this->trade->remark = $this->trade->remark."<br/>分润:".json_encode($e->getMessage());
+            $this->trade->save();
         }
+        
 
         /**
-         * 服务费代收
+         * @version [< 激活返现处理 >]
          */
-        try { 
+        try {
+            $cash = new \App\Http\Controllers\ActiveMerchantController($this->trade);
 
-            $token = $this->getToken('2083');
-            $url = 'https://pmpos.chanpay.com/api/acq-channel-gateway/v1/terminal-service/terms/activityReformV3/amountFrozen';
-            $traceNo = $this->msectime();
-            
-            $postData = [
-                'agentId' => $this->agentId,      // 渠道编号
-                'token' => $token['data']['token'],     // 令牌
-                'traceNo' => $traceNo,        // 请求流水号
-                'merchId' => $this->$merchants->code,      // 商户号
-                'directAgentId' => $this->directAgentId,   // 商户直属代理商编号
-                'sn' => $this->$merchants->machines->sn,        // 终端SN序列号
-                'posCharge' => \App\Machine::where('sn',$this->$merchants->machines->sn)->first()->policys->active_price,       // POS服务费金额(元)
-                'vipCharge' => '0',         // VIP会员服务费金额(元)
-                'simCharge' => '0',       // SIM服务费金额(元)
-                'smsSend' => '1',         // 是否发送短信(1发送 0不发送)
-                'smsCode' => $this->short_id,        // 短信模板编号
-            ];
-            $data = $this->send($url, $postData);
-            return $data;
+            $returnCash = $cash->active();
+
+            if (!empty($returnCash['message'])) {
+                $this->trade->remark = $this->trade->remark."<br/>激活:".$returnCash['message'];
+            }
+
+            $this->trade->save();
 
         } catch (\Exception $e) {
-            
-            $e->getMessage();
-
+            $this->trade->remark = $this->trade->remark."<br/>激活:".json_encode($e->getMessage());
+            $this->trade->save();
         }
     }
 }

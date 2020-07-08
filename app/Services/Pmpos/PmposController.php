@@ -109,10 +109,10 @@ class PmposController extends Controller
 		$token = $this->getToken('2084');
 		$url = $this->http.'/api/acq-channel-gateway/v1/terminal-service/terms/activity/queryFrozenOpt';
 		$postData = [
-			'agentId' => $this->agentId,
-			'token' => $token['data']['token'],
-			'merchId' => $this->merchId,
-			'optNo' => $optNo,
+			'agentId' 	=> $this->agentId,
+			'token' 	=> $token['data']['token'],
+			'merchId' 	=> $this->merchId,
+			'optNo' 	=> $optNo,
 		];
 		$data = $this->send($url, $postData);
 		return $data;
@@ -128,9 +128,9 @@ class PmposController extends Controller
 		$token = $this->getToken('2087');
 		$traceNo = $this->msectime();	// 请求流水号
 		$postData = [
-			'agentId' => $this->agentId,
-			'token' => $token['data']['token'],
-			'traceNo' => $traceNo,
+			'agentId' 	=> $this->agentId,
+			'token' 	=> $token['data']['token'],
+			'traceNo' 	=> $traceNo,
 		];
 		if (!empty($optNo)) {
 			$postData['optNo'] = $optNo;
@@ -151,16 +151,16 @@ class PmposController extends Controller
 		}
 		$url = $this->http.'/api/acq-channel-gateway/v1/acq-channel-service/merchant/fee/updateNonAudit';
 		$postData = [
-			'agentId' => $this->agentId,
-			'token' => $token['data']['token'],
-			'merchId' => $this->merchId,
-			'cFeeRate' => $param['cFeeRate'],
-			'dFeeRate' => $param['dFeeRate'],
-			'dFeeMax' => $param['dFeeMax'],
-			'wechatPayFeeRate' => $param['wechatPayFeeRate'],
-			'alipayFeeRate' => $param['alipayFeeRate'],
-			'ycFreeFeeRate' => $param['ycFreeFeeRate'],
-			'ydFreeFeeRate' => $param['ydFreeFeeRate'],
+			'agentId' 			=> $this->agentId,
+			'token' 			=> $token['data']['token'],
+			'merchId' 			=> $this->merchId,
+			'cFeeRate' 			=> $param['cFeeRate'],
+			'dFeeRate' 			=> $param['dFeeRate'],
+			'dFeeMax' 			=> $param['dFeeMax'],
+			'wechatPayFeeRate' 	=> $param['wechatPayFeeRate'],
+			'alipayFeeRate' 	=> $param['alipayFeeRate'],
+			'ycFreeFeeRate' 	=> $param['ycFreeFeeRate'],
+			'ydFreeFeeRate' 	=> $param['ydFreeFeeRate'],
 		];
 		$data = $this->send($url, $postData);
 		return $data;
@@ -174,9 +174,9 @@ class PmposController extends Controller
 		$token = $this->getToken('2062');
 		$url = $this->http.'/api/acq-channel-gateway/v1/acq-channel-service/getMerchantFeeInfo';
 		$postData = [
-			'agentId' => $this->agentId,
-			'token' => $token['data']['token'],
-			'merchId' => $this->merchId,
+			'agentId' 	=> $this->agentId,
+			'token' 	=> $token['data']['token'],
+			'merchId' 	=> $this->merchId,
 		];
 		$data = $this->send($url, $postData);
 		return json_decode($data, true);
@@ -190,10 +190,11 @@ class PmposController extends Controller
 		$tokenType = '2085';
 		$token = $this->getToken($tokenType);
 		$url = $this->http . '/api/acq-channel-gateway/v1/terminal-service/terms/activityReformV3/queryMerchWithAmtList';
-		$postData['agentId'] = $this->agentId;
-		$postData['token'] = $token['data']['token'];
-		$postData['merchId'] = $this->merchId;
-		$postData['sn'] = $this->merchSn;
+		
+		$postData['agentId'] 	= $this->agentId;
+		$postData['token'] 		= $token['data']['token'];
+		$postData['merchId'] 	= $this->merchId;
+		$postData['sn'] 		= $this->merchSn;
 
 		$data = $this->send($url, $postData);
 		return $data;

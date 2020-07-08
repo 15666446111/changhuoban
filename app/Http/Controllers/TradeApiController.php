@@ -57,25 +57,25 @@ class TradeApiController extends Controller
 
                     $regContent = \App\RegNoticeContent::create([
                         //商户直属机构号
-                        'agentId'       =>      $value['agentId'],
+                        'config_agent_id'       =>      $request->configAgentId,
+                        //商户直属机构号
+                        'agentId'               =>      $value['agentId'],
                         //商户号
-                        'merchantId'    =>      $value['merchantId'],
+                        'merchantId'            =>      $value['merchantId'],
                         //终端号
-                        'termId'        =>      $value['termId'],
+                        'termId'                =>      $value['termId'],
                         //终端SN
-                        'termSn'        =>      $value['termSn'],
+                        'termSn'                =>      $value['termSn'],
                         //终端型号
-                        'termModel'     =>      $value['termModel'],
+                        'termModel'             =>      $value['termModel'],
                         //助贷通版本号
-                        'version'       =>      $value['version'],
+                        'version'               =>      $value['version'] ?? '',
                     ]);
                     
                     $machines = \App\Machine::where('sn',$value['termSn'])->where('user_id','<>','')->first();
 
-                    //修改终端型号
-                    $machines->style_id = $value['termModel'];
                     //模板编号
-                    $number = \App\Policy::where('policy_id',$machines->policy_id)->where('operate',$machines->operate)->first()->number;
+                    $number = \App\Policy::where('policy_id',$machines->policy_id)->where('operate',$machines->operate)->value('number');
 
                     $machines->save();
                     //添加商户
@@ -110,7 +110,7 @@ class TradeApiController extends Controller
             
             foreach ($dataList as $key => $value) {
 
-                // try{
+                try{
 
                     // $value->sysRespCode != '00'  交易失败的数据
                     // $desc == '原交易已冲正'       无效冲正类交易
@@ -270,18 +270,18 @@ class TradeApiController extends Controller
                     
                     // 分发到队列 由队列去处理剩下的逻辑
                     
-                    // HandleTradeInfo::dispatch($tradeOrder);
+                    HandleTradeInfo::dispatch($tradeOrder);
                     
                     // 分润测试，正式环境需分发到队列中处理
-                    $profit = new TestController($tradeOrder);
-                    $profit->index();
+                    // $profit = new TestController($tradeOrder);
+                    // $profit->index();
 
-                // } catch (\Exception $e) {
+                } catch (\Exception $e) {
 
-                //     $reData['responseCode'] = '01';
-                //     $reData['responseDesc'] = '系统错误';
+                    $reData['responseCode'] = '01';
+                    $reData['responseDesc'] = '系统错误';
 
-                // }
+                }
 
             }
         }
