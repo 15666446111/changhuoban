@@ -16,11 +16,14 @@ use Illuminate\Support\Facades\Route;
 // 访问项目主地址
 Route::get('/', 		'HomeController@index');
 
+
+
 // 忘记密码地址
 Route::get('/forget', 	'RegisterController@forget');
 
 // 项目登录之后的主页面
 Route::get('/home', 	'HomeController@home');
+
 
 Auth::routes();
 
@@ -73,7 +76,8 @@ Route::get('/team/{code}', 'RegisterController@team');
  */
 Route::post('/team/{code}', 'RegisterController@team_in')->name('register');
 
-
+// 注册发送验证码
+Route::post('/getCode', 	'RegisterController@code');
 
 
 /**

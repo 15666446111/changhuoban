@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', '畅伙伴'),
 
     /*
     |--------------------------------------------------------------------------
@@ -138,6 +138,17 @@ return [
     // public key
     'alipay_publickey'  =>  env('ALIPAY_PUBLICKEY', ''),
     
+    /*
+    |--------------------------------------------------------------------------
+    | TencentCloud Config。SMS
+    |--------------------------------------------------------------------------
+    |
+    */
+    'TxSign'            =>  env('TXSIGN', '畅伙伴'),
+    'TxAppId'           =>  env('TXAPPID', '1400172317'),
+    'TxTemplateId'      =>  env('TXTEMPLATE', '251768'),
+    'TxSecretId'        =>  env('TX_SECRETID', 'AKIDcHwW2RYyX1Oi9Wmw34ysheWILJAwCDh8'),
+    'TxSecretKey'       =>  env('TXSECRETKEY', 'XyJjDaqyxrdGAvYAezCF9uaCi9hEfzDL'),
 
     /*
     |--------------------------------------------------------------------------
