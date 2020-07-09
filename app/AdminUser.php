@@ -25,6 +25,6 @@ class AdminUser extends Model
      */
     public function admin_setting()
     {
-    	return $this->belongsTo('\App\AdminSetting', 'operate', 'operate');
+    	return $this->belongsTo('\App\AdminSetting', 'operate', 'operate_number');
     }
 }
