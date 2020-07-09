@@ -46,6 +46,10 @@ class SyncSms extends Action
                      */
                     $exits = \App\AdminShort::where('operate', Admin::user()->operate)->where('template_id', $value->id)->first();
 
+                    $create = substr($value->createTime, 0, strlen($value->createTime) - 3);
+
+                    $last   = substr($value->lastModTime, 0, strlen($value->createTime) - 3);
+
                     if(!$exits or empty($exits)){
                         \App\AdminShort::create([
                             'template_id'   =>  $value->id,
@@ -54,9 +58,9 @@ class SyncSms extends Action
                             'number'        =>  $value->smsCode,
                             'content'       =>  $value->message,
                             'status'        =>  $value->status,
-                            'create'        =>  date("Y-m-d H:i:s", $value->createTime),
+                            'create'        =>  Carbon::createFromTimestamp($create)->toDateTimeString(),
                             'create_user_id'=>  $value->createUserId,
-                            'last'          =>  date("Y-m-d H:i:s", $value->lastModTime),
+                            'last'          =>  Carbon::createFromTimestamp($last)->toDateTimeString(),
                             'last_user_id'  =>  $value->lastUserId,
                             'operate'       =>  Admin::user()->operate
                         ]);
@@ -67,10 +71,11 @@ class SyncSms extends Action
                         $exits->number      = $value->smsCode;
                         $exits->content     = $value->message;
                         $exits->status      = $value->status;
-                        $exits->create      = date("Y-m-d H:i:s", $value->createTime);
+                        $exits->create      = Carbon::createFromTimestamp($create)->toDateTimeString();
                         $exits->create_user_id = $value->createUserId;
-                        $exits->last        = date("Y-m-d H:i:s", $value->lastModTime);
+                        $exits->last        = Carbon::createFromTimestamp($last)->toDateTimeString();
                         $exits->last_user_id= $value->lastUserId;
+                        $exits->save();
                     }
                 }
 
