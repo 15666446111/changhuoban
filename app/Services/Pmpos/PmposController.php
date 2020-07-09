@@ -17,6 +17,12 @@ class PmposController extends Controller
     protected $agentId;
 
     /**
+     * 直属机构编号
+     * @var [type]
+     */
+    protected $directAgentId;
+
+    /**
      * 签名秘钥
      * @var [type]
      */
@@ -71,6 +77,9 @@ class PmposController extends Controller
 
     	// 初始化机构号
     	$this->agentId = $adminSetting->system_merchant;
+
+    	// 初始化直属机构编号
+    	$this->directAgentId = $adminSetting->system_merchant;
 
     	// 初始化秘钥
     	$this->key = $adminSetting->system_secret;
@@ -191,7 +200,7 @@ class PmposController extends Controller
 			'merchId' 	=> $this->merchId,
 		];
 		$data = $this->send($url, $postData);
-		return json_decode($data, true);
+		return $data;
 	}
 
 	/**
@@ -258,7 +267,7 @@ class PmposController extends Controller
 
 
 	/* 封装发送 */
-	public function send($url='', $postData=[])
+	public function send($url='', $postData=[], $jl = false)
 	{
 		$postData['agentId'] = $this->agentId;
 
@@ -266,11 +275,12 @@ class PmposController extends Controller
 
 		$stringA = $this->key . implode('', $postData);
 
+
 		$postData['sign'] 	  = MD5($stringA);
 
 		$data = $this->sendPost($this->http . $url, json_encode($postData));
 
-		return $data;
+		return $jl ? ['return_data' => $data, 'send_data' => json_encode($postData)] : $data;
 	}
 
 	/*封装接口 起始位置*/

@@ -29,12 +29,6 @@ class ActiveMerchantController extends Controller
      */
     protected $user;
 
-    /**
-     * [$user 该笔交易所属的机器信息]
-     * @var [orm model]
-     */
-    protected $machine;
-
 
     public function __construct(Trade $trade)
     {
@@ -43,8 +37,6 @@ class ActiveMerchantController extends Controller
     	$this->policy 		= $trade->merchants_sn->policys;
 
       	$this->user   		= $trade->merchants_sn->users;
-
-      	$this->machine 		= $trade->merchant_sn;
     }
 
     /**
@@ -84,16 +76,16 @@ class ActiveMerchantController extends Controller
     		return array('status' => false, 'message' => '该商户已有激活记录,不再发放激活返现');
     	}
 
-
     	/**
     	 * 检查机器是否过期
     	 */
-    	if (strtotime($this->trade->merchants_sn) <= time()) {
+    	if (!empty($this->trade->merchants_sn->active_end_time) && 
+            strtotime($this->trade->merchants_sn->active_end_time) <= time()) {
 
 			// 更新机器过期状态
     		if ($this->trade->merchants_sn->overdue_state == 0) {
-    			$this->machine->overdue_state = 1;
-    			$this->machine->save();
+    			$this->trade->merchants_sn->overdue_state = 1;
+    			$this->trade->merchants_sn->save();
     		}
 
     		return array('status' => false, 'message' => '');
@@ -103,10 +95,13 @@ class ActiveMerchantController extends Controller
     	## 激活标准大于0时，处理激活
     	if ($this->policy->active_price > 0) {
 
+            // 总返现金额
+            $totalMoney = 0;
+
     		// 查询当前机器的累计交易金额
     		$tradePrice = \App\Trade::where('sn', $this->trade->sn)
     								->where('merchant_code', $this->trade->merchant_code)
-									->where('card_type', 'in', [1, null])	// 非借记卡
+									->whereIn('cardType', [1, null])	// 非借记卡
 									->where('sysRespCode', '00')			// 交易成功
 									->where('is_invalid', 0)				// 非无效交易
 									->where('is_repeat', 0)				    // 非重复交易
@@ -134,38 +129,38 @@ class ActiveMerchantController extends Controller
                     'type'              => 1
                 ]);
                 
-				
 				// 激活返现金额大于0时，增加用户余余额并添加分润记录
 				if ($this->policy->default_active > 0) {
                     // 直推激活返现
 					$this->addUserBalance($this->user->id, $this->policy->default_active, 3);
 				}
 				
-				if ($this->user->pid > 0) {
+				if ($this->user->parent > 0) {
 
                     // 间推激活返现
 					if ($this->policy->indirect_active > 0) {
-						$this->addUserBalance($this->user->pid, $this->policy->indirect_active, 4);
+						$this->addUserBalance($this->user->parent, $this->policy->indirect_active, 4);
 					}
 
                     // 间间推激活返现
-                    $ppid = \App\User::where('id', $this->user->pid)->value('pid');
+                    $ppid = \App\User::where('id', $this->user->parent)->value('parent');
                     if ($ppid > 0 && $this->policy->in_indirect_active > 0) {
                         $this->addUserBalance($ppid, $this->policy->in_indirect_active, 5);
                     }
 
 				}
 
-			}
+                $totalMoney = ($this->policy->default_active + $this->policy->indirect_active + $this->policy->in_indirect_active);
 
-            return array('status' => true, 'message' => '激活成功');
+                return array('status' => true, 'message' => '激活成功，返现' . $totalMoney . '元');
+			}
     	}
     }
 
     /**
      * [addUserBalance 增加用户余额 分润余额 分润记录]
      * @param [type]  $userId [用户id]
-     * @param [type]  $money  [分润金额]
+     * @param [type]  $money  [分润金额(元)]
      * @param integer $type   [类型，3激活返现(直营)，4激活返现(间推)，5激活返现(间间推)]
      */
     public function addUserBalance($userId, $money, $type)
@@ -174,12 +169,12 @@ class ActiveMerchantController extends Controller
     	\App\Cash::create([
     		'user_id'		=> $userId,
     		'order'			=> $this->trade->trade_no,
-    		'cash_money'	=> $money,
+    		'cash_money'	=> $money * 100,
     		'is_run'		=> 0,
     		'cash_type'		=> $type,
-    		'opearte'		=> $this->trade->merchants_sn->opearte
+    		'operate'		=> $this->trade->merchants_sn->operate
     	]);
     	// 增加用户余额
-    	\App\UserWallet::where('user_id', $userId)->increment('return_blance', $money);
+    	\App\UserWallet::where('user_id', $userId)->increment('return_blance', $money * 100);
     }
 }

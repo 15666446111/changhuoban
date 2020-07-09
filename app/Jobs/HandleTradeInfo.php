@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Trade;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -31,7 +32,7 @@ class HandleTradeInfo implements ShouldQueue
      */
     public $timeout = 120;
 
-    public function __construct($params)
+    public function __construct(Trade $params)
     {
         $this->trade = $params;
     }

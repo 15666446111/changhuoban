@@ -76,7 +76,7 @@ class Policy extends Model
     public function setVipStandardSetAttribute($extra)
     {
         $this->attributes['vip_standard_set'] = json_encode(array_values($extra));
-    }    
+    }
 
 
 	/**

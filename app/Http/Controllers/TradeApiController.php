@@ -19,11 +19,11 @@ class TradeApiController extends Controller
      */
     public function index(Request $request)
     {
-        
+
         // 写入到推送信息
         $trade_push = \App\RegisterNotice::create([
             'title'     =>  '畅捷同步通知推送接口',
-            'content'   =>  json_encode(array('data'=> json_decode($request))),
+            'content'   =>  json_encode(array('data'=> $request->all())),
             'other'     =>  json_encode([
                 '请求方式'  => $request->getMethod(), 
                 '请求地址'  => $request->ip(), 
@@ -44,14 +44,11 @@ class TradeApiController extends Controller
             'sign'          => $request->sign              // 签名
         ];
 
-        // 交易失败的数据不进行处理
-        if ($request->sysRespCode != '00') {
-            return json_encode($reData);
-        }
+        $dataList = json_decode($request->dataList);
         
-        if ($dataType == 0) {
+        if ($request->dataType == 0) {
             // 商户开通通知处理
-            try{
+            // try{
 
                 foreach ($dataList as $key => $value) {
 
@@ -59,58 +56,41 @@ class TradeApiController extends Controller
                         //商户直属机构号
                         'config_agent_id'       =>      $request->configAgentId,
                         //商户直属机构号
-                        'agentId'               =>      $value['agentId'],
+                        'agentId'               =>      $value->agentId,
                         //商户号
-                        'merchantId'            =>      $value['merchantId'],
+                        'merchantId'            =>      $value->merchantId,
                         //终端号
-                        'termId'                =>      $value['termId'],
+                        'termId'                =>      $value->termId,
                         //终端SN
-                        'termSn'                =>      $value['termSn'],
+                        'termSn'                =>      $value->termSn,
                         //终端型号
-                        'termModel'             =>      $value['termModel'],
+                        'termModel'             =>      $value->termModel,
                         //助贷通版本号
-                        'version'               =>      $value['version'] ?? '',
+                        'version'               =>      $value->version ?? '',
                     ]);
-                    
-                    $machines = \App\Machine::where('sn',$value['termSn'])->where('user_id','<>','')->first();
-
-                    //模板编号
-                    $number = \App\Policy::where('policy_id',$machines->policy_id)->where('operate',$machines->operate)->value('number');
-
-                    $machines->save();
-                    //添加商户
-                    $merchants = \App\Merchant::create([
-
-                        'user_id'	=>	$machines->user_id,
-
-                        'code'		=>	$value['merchantId'],
-
-                        'operate'	=>	\App\User::where('id',$machines->user_id)->first()->operate
-
-                    ]);
-                    //修改商户id
-                    $machines->merchant_id = $merchants->id;
-
-                    $machines->save();
                     
                     //压入到队列去处理剩下的逻辑
-                    HandleMachineInfo::dispatch($regContent);
+                    // HandleMachineInfo::dispatch($regContent);
+                    
+                    // 开通通知测试，正式环境需分发到队列中处理
+                    $profit = new TestMerchantController($regContent);
+                    $profit->index();
 
                 }
 
-            } catch (\Exception $e) {
+            // } catch (\Exception $e) {
 
-                $reData['responseCode'] = '01';
-                $reData['responseDesc'] = $e->getMessage();
+            //     $reData['responseCode'] = '01';
+            //     $reData['responseDesc'] = $e->getMessage();
 
-            }
+            // }
             
         } else {
             // 交易通知处理
             
             foreach ($dataList as $key => $value) {
 
-                try{
+                // try{
 
                     // $value->sysRespCode != '00'  交易失败的数据
                     // $desc == '原交易已冲正'       无效冲正类交易
@@ -218,21 +198,17 @@ class TradeApiController extends Controller
 
                     // 为冲正和撤销类交易时，交易金额和结算金额储存负值
                     if (!empty($reduceTranCode[$value->tranCode])) {
-
                         $tradeData['amount']        = $value->amount * -1;
-
                         $tradeData['settle_amount'] = $value->settleAmount * -1;
-
                     }
 
 
-                    // 新建交易订单 写入交易表 并且 分发到队列处理
+                    // 新建交易订单 写入交易表
                     $tradeOrder = \App\Trade::create($tradeData);
 
 
                     // 推送信息的不常用交易信息，另外储存到交易副表
                     \App\TradesDeputy::create([
-
                         // trades表id
                         'trade_id'          => $tradeOrder->id,
                         // 交易通知推送批次号
@@ -269,19 +245,33 @@ class TradeApiController extends Controller
                     ]);
                     
                     // 分发到队列 由队列去处理剩下的逻辑
+                    // 为冲正和撤销类交易时，延迟5分钟后执行
+                    // if (!empty($reduceTranCode[$value->tranCode])) {
+
+                    //     HandleTradeInfo::dispatch($tradeOrder)->delay(now()->addMinutes(5));
+
+                    // // 撤销冲正类交易，延迟10分钟后执行
+                    // } else if ($value->tranCode == '020023' || $value->tranCode == '024123') {
+                        
+                    //     HandleTradeInfo::dispatch($tradeOrder)->delay(now()->addMinutes(10));
+
+                    // } else {
+
+                    //     HandleTradeInfo::dispatch($tradeOrder);
+
+                    // }
                     
-                    HandleTradeInfo::dispatch($tradeOrder);
                     
                     // 分润测试，正式环境需分发到队列中处理
-                    // $profit = new TestController($tradeOrder);
-                    // $profit->index();
+                    $profit = new TestController($tradeOrder);
+                    $profit->index();
 
-                } catch (\Exception $e) {
+                // } catch (\Exception $e) {
 
-                    $reData['responseCode'] = '01';
-                    $reData['responseDesc'] = '系统错误';
+                //     $reData['responseCode'] = '01';
+                //     $reData['responseDesc'] = '系统错误';
 
-                }
+                // }
 
             }
         }
