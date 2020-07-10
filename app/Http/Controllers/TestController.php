@@ -92,74 +92,73 @@ class TestController extends Controller
          * @version [<vector>] [< 实行商户绑定>]
          *
          * 1.判断当前商户是否存在
-         * 		存在: 判断当前机具是否绑定商户
-         * 			已绑定：判断绑定的和交易数据中的是否一致
-         * 				不一致时：？？
-         * 		不存在：添加商户信息
-         * 			判断机具是否绑定商户
-         * 				未绑定：更新绑定商户信息
-         * 				已绑定？？
+         *      不存在：添加商户信息
+         * 		判断机具是否绑定商户
+         * 			未绑定：更新绑定商户信息
+         * 			已绑定？？
          */
-        $merInfo = \App\Merchant::where('code', $this->trade->merchant_code)->first();
+        try {
+            $merInfo = \App\Merchant::where('code', $this->trade->merchant_code)->first();
 
-        if (!$merInfo) {
+            // 商户不存在时，添加商户信息
+            if (!$merInfo || empty($merInfo)) {
 
-        	// 添加商户信息
-        	$merInfo = \App\Merchant::create([
-            	'user_id'		=> $this->trade->merchants_sn->user_id,
-            	'code'			=> $this->trade->merchant_code,
-            	'operate'		=> $this->trade->merchants_sn->operate,
-            	'name'			=> $this->trade->merchant_name,
-            	'phone'			=> $this->trade->merchant_phone
-            ]);
+                $merInfo = \App\Merchant::create([
+                    'user_id'       => $this->trade->merchants_sn->user_id,
+                    'code'          => $this->trade->merchant_code,
+                    'operate'       => $this->trade->merchants_sn->operate,
+                    'name'          => $this->trade->merchant_name,
+                    'phone'         => $this->trade->merchant_phone
+                ]);
 
-            if ($this->trade->merchants_sn->bind_status == 0) {
-            	
-            	// 绑定商户
-            	\App\Machine::where('sn', $this->trade->sn)->update([
-	            	'merchant_id' 	=> $merInfo['id'],
-	            	'bind_status' 	=> 1,
-	            	'bind_time'		=> date('Y-m-d H:i:s', time())
-	            ]);
+                // 添加绑定记录
+                \App\MerchantsBindLog::create([
+                    'merchant_code'     => $merInfo->code,
+                    'sn'                => $this->trade->sn
+                ]);
 
             } else {
 
-            	// 已绑定商户，但是推送的商户信息和之前绑定的不一致时
-            	// ？？
+                // 完善商户信息
+                if (!empty($merInfo['name']) || !empty($merInfo['phone'])) {
+
+                    \App\Merchant::where('id', $merInfo->id)->update([
+                        'name'          => $this->trade->merchant_name,
+                        'phone'         => $this->trade->merchant_phone,
+                    ]);
+                }
 
             }
 
-        } else {
+            // 机器未绑定商户时，绑定商户
+            if ($this->trade->merchants_sn->bind_status == 0 || $this->trade->merchants_sn->merchant_id == 0) {
 
-        	// 完善商户信息
-        	if (!empty($merInfo['name']) || !empty($merInfo['phone'])) {
+                \App\Machine::where('sn', $this->trade->sn)->update([
+                    'merchant_id'   => $merInfo->id,
+                    'bind_status'   => 1,
+                    'bind_time'     => date('Y-m-d H:i:s', time())
+                ]);
 
-        		\App\Merchant::where('id', $merInfo->id)->update([
-	            	'name'			=> $this->trade->merchant_name,
-	            	'phone'			=> $this->trade->merchant_phone,
-	            ]);
-        	}
+            } else {
 
-        	if ($this->trade->merchants_sn->bind_status == 0) {
+                // 已绑定商户，但是绑定商户信息和推送数据中的商户信息不一致时，
+                if ($this->trade->merchants_sn->merchant_id != $merInfo->id) {
 
-        		// 绑定商户
-            	\App\Machine::where('sn', $this->trade->sn)->update([
-	            	'merchant_id' 	=> $merInfo['id'],
-	            	'bind_status' 	=> 1,
-	            	'bind_time'		=> date('Y-m-d H:i:s', time())
-	            ]);
+                    // 更新商户信息
+                    \App\Machine::where('sn', $this->trade->sn)->update([
+                        'merchant_id'       => $merInfo->id
+                    ]);
 
-        	} else {
+                    // 更新绑定记录的解绑状态
+                    \App\MerchantsBindLog::where('sn', $this->trade->sn)
+                                        ->where('bind_state', 1)
+                                        ->update(['bind_state' => 0]);
+                }
 
-        		// 已绑定商户，但是绑定商户信息和推送数据中的商户信息不一致时，
-        		if ($this->trade->merchants_sn->merchant_id != $merInfo['id']) {
-
-        			// ？
-        			
-        		}
-
-        	}
-
+            }
+        } catch (\Exception $e) {
+            $this->trade->remark = $this->trade->remark."<br/>绑定商户:".json_encode($e->getMessage());
+            $this->trade->save();
         }
         
 

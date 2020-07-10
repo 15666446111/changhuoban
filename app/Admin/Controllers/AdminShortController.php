@@ -6,7 +6,9 @@ use App\AdminShort;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use App\Admin\Actions\SyncSms;
 use Encore\Admin\Facades\Admin;
+use Encore\Admin\Controllers\AdminController;
 
 use Encore\Admin\Controllers\AdminController;
 
@@ -32,6 +34,9 @@ class AdminShortController extends AdminController
             $grid->model()->where('operate', Admin::user()->operate);
         }
         //$grid->column('id', __('索引'));
+        //
+        //$grid->column('template_id', __('短信ID'));
+        //
         $grid->column('number', __('短信编号'));
 
         $grid->column('type', __('短信类型'))
@@ -39,7 +44,27 @@ class AdminShortController extends AdminController
 
         $grid->column('content', __('短信内容'));
 
-        $grid->column('created_at', __('创建时间'));
+        $grid->column('status', __('状态'))->using([0 => '关闭', 1=>'可用'])->dot([0=>'danger', 1=>'success']);
+
+        $grid->column('create', __('创建时间'));
+
+        $grid->column('create_user_id', __('创建人'));
+
+        $grid->column('last', __('最后修改时间'));
+
+        $grid->column('last_user_id', __('最后修改人'));
+
+        $grid->tools(function ($tools) {
+
+            $tools->append(new SyncSms());
+
+        });
+
+        $grid->disableCreateButton();
+        // 全部关闭
+        $grid->disableActions();
+        
+        $grid->disableCreateButton();
 
         return $grid;
     }

@@ -202,7 +202,7 @@ class CashController extends Controller
             $pmposClass = new \App\Services\Pmpos\PmposController($this->trade->merchant_code, $this->trade->sn);
             $merchantRate = $pmposClass->getMerchantFee();
 
-            $merchantRate = json_decode($merchantRate['return_data'], true);
+            $merchantRate = json_decode($merchantRate, true);
 
             if ($merchantRate['code'] == '00') {
 
