@@ -35,7 +35,7 @@ class TradeController extends AdminController
         
         $grid->column('trade_no',__('系统流水号'))->help('交易订单的流水号,畅捷支付的订单号');
 
-        $grid->column('rrn', __('参考号'))->help('交易订单的参考号,畅捷支付的参考号');
+        // $grid->column('rrn', __('参考号'))->help('交易订单的参考号,畅捷支付的参考号');
 
         $grid->column('users.nickname', __('所属代理'))->help('交易订单所归属的代理昵称');
 
@@ -43,28 +43,52 @@ class TradeController extends AdminController
 
         $grid->column('merchant_code',  __('商户号'))->help('交易订单所归属的商户号');
 
-        $grid->column('agt_merchant_name', __('渠道商名称'))->help('交易订单所归属的渠道商名称');
-
-        $grid->column('rate',  __('交易费率'))->help('当前交易订单的交易费率');
+        $grid->column('agt_merchant_id', __('渠道商机构号'))->help('交易订单所归属的渠道商机构号');
 
         $grid->column('amount',         __('交易金额'))->display(function($amount){
             return number_format($amount / 100, 2, '.', ',');
         })->label()->help('当前交易订单的交易金额');
 
-        $grid->column('rate_money', __('手续费'))->display(function ($money) {
-            return number_format($money / 100, 2, '.', ',');
-        })->label('warning')->filter('range')->help('当前交易订单的手续费');
+        // $grid->column('rate_money', __('手续费'))->display(function ($money) {
+        //     return number_format($money / 100, 2, '.', ',');
+        // })->label('warning')->filter('range')->help('当前交易订单的手续费');
 
         $grid->column('settle_amount', __('结算金额'))->display(function($amount){
             return number_format($amount / 100, 2, '.', ',');
         })->label('info')->help('当前交易订单的实际结算金额');
 
-        $grid->column('trade_time', __('交易时间'))->help('当前交易订单的交易时间');
+        $grid->column('trades_deputies.tranTime', __('交易时间'))->help('当前交易订单的交易时间');
 
-        $grid->column('trade_type', __('交易类型'))->help('当前交易订单的交易类型');
+        $grid->column('tranCode', __('交易类型'))->using([
+            '020000' => '消费', 
+            '020002' => '消费撤销', 
+            '020003' => '消费冲正',
+            '020023' => '消费撤销冲正',
+            'U20000' => '电子现金',
+            'T20003' => '日结消费冲正',
+            'T20000' => '日结消费',
+            '024100' => '预授权完成',
+            '024102' => '预授权完成撤销',
+            '024103' => '预授权完成冲正',
+            '024123' => '预授权完成撤销 冲正',
+            '020001' => '退货',
+            '02B100' => '支付宝被扫',
+            '02B200' => '支付宝主扫',
+            '02W100' => '微信被扫',
+            '02W200' => '微信主扫',
+            '02Y100' => '银联被扫',
+            '02Y200' => '银联主扫',
+            '02Y600' => '银联二维码撤销'
+        ])->help('当前交易订单的交易类型');
+
+        $grid->column('fee_type', __('手续费计算类型'))->using([
+            'B' => '标准', 'YN' => '云闪付NFC', 'YM' => '云闪付双免'
+        ])->label([
+            'YN' =>  'info', 'YM' => 'warning'
+        ])->help('当前交易订单的手续费计算类型');
 
         $grid->column('cardType', __('交易卡类型'))->using([
-            '0' => '贷记卡', '1' => '借记卡'
+            '0' => '借记卡', '1' => '贷记卡'
         ])->label([
             '0' =>  'warning', '1' => 'success'
         ])->help('当前交易订单的交易卡类型');
@@ -90,36 +114,44 @@ class TradeController extends AdminController
             // 去掉默认的id过滤器
             $filter->disableIdFilter();
 
-            $filter->column(1/4, function ($filter) {
+            $filter->column(1/3, function ($filter) {
                 $filter->like('trade_no', '订单');
             });
-            $filter->column(1/4, function ($filter) {
+            $filter->column(1/3, function ($filter) {
                 $filter->like('sn', 'SN');
             });
-            $filter->column(1/4, function ($filter) {
+            $filter->column(1/3, function ($filter) {
                 $filter->like('merchant_code', '商户');
             });
-            $filter->column(1/4, function ($filter) {
+            $filter->column(1/3, function ($filter) {
                 $filter->equal('is_send', '状态')->select(['0' => '失败', '1' => '成功']);
+            });
+            $filter->column(1/3, function ($filter) {
+                $filter->equal('is_send', '分润状态')->select(['0' => '未发放', '1' => '已发放']);
             });
 
             // 交易类型
             $filter->column(1/3, function ($filter) {
                 $filter->equal('trade_type', '交易类型')->select([
-                    'CLOUDPAY'      => '云闪付', 
-                    'SMALLFREEPAY'  => '小额双免',
-                    'VIPPAY'        => '激活交易',
-                    'CARDPAYRVS'    => '消费冲正',
-                    'CARDPAY'       => '刷卡消费',
-                    'CARDCANCEL'    => '消费撤销',
-                    'QUICKPAY'      => '快捷支付',
-                    'WXQRPAY'       => '微信扫码',
-                    'ALIQRPAY'      => '支付宝扫码',
-                    'UNIONQRPAY'    => '银联扫码',
-                    'CARDAUTH'      => '预授权',
-                    'CARDCANCELAUTH'=> '预授权撤销',
-                    'CARDAUTHED'    => '预授权完成',
-                    'CARDCANCELAUTHED' => '预授权完成撤销',
+                    '020000' => '消费', 
+                    '020002' => '消费撤销', 
+                    '020003' => '消费冲正',
+                    '020023' => '消费撤销冲正',
+                    'U20000' => '电子现金',
+                    'T20003' => '日结消费冲正',
+                    'T20000' => '日结消费',
+                    '024100' => '预授权完成',
+                    '024102' => '预授权完成撤销',
+                    '024103' => '预授权完成冲正',
+                    '024123' => '预授权完成撤销 冲正',
+                    '020001' => '退货',
+                    '02B100' => '支付宝被扫',
+                    '02B200' => '支付宝主扫',
+                    '02W100' => '微信被扫',
+                    '02W200' => '微信主扫',
+                    '02Y100' => '银联被扫',
+                    '02Y200' => '银联主扫',
+                    '02Y600' => '银联二维码撤销'
                 ]);
             });
             // 在这里添加字段过滤器
@@ -160,98 +192,106 @@ class TradeController extends AdminController
             if($model->operate != Admin::user()->operate) return abort('403');        
         }
 
-        $show->field('trade_no', __('订单编号'));
-        $show->field('users.nickname', __('用户'));
+        $show->field('trade_no', __('系统流水号'));
+        $show->field('users.nickname', __('代理昵称'));
+        $show->field('users.account', __('代理账号'));
+        $show->field('sn', __('机器SN'));
         $show->field('merchant_code', __('商户号'));
-        $show->field('agt_merchant_id', __('渠道商户号'));
-        $show->field('agt_merchant_name', __('渠道商名称'));
-        $show->field('agt_merchant_level', __('渠道商级别'));
+        $show->field('agt_merchant_id', __('渠道机构号'));
 
-        $show->field('sn', __('终端SN'));
         $show->field('merchant_name', __('商户名称'));
 
-        $show->field('money', __('交易金额'))->as(function ($money) {
+        $show->field('amount', __('交易金额'))->as(function ($money) {
             return number_format($money / 100, 2, '.', ',');
         })->label();
-
-        $show->field('rate', __('交易费率'))->as(function ($rate) {
-            return $rate / 10000;
-        })->label('warning');
-
-        $show->field('rate_money', __('手续费'))->as(function ($money) {
-            return number_format($money / 100, 2, '.', ',');
-        })->label('info');
-
-        $show->field('fee_type', __('手续费类型'))->using(['1' => '非封顶', '2' => '封顶']);
 
         $show->field('settle_amount', __('结算金额'))->as(function ($money) {
             return number_format($money / 100, 2, '.', ',');
         })->label();
 
-        $show->field('cardType', __('交易卡类型'))->using([
-            '0' => '贷记卡', '1' => '借记卡'
+        $show->field('trades_deputies.tranTime', __('交易时间'))->as(function ($tranTime) {
+            return date('Y-m-d H:i:s', strtotime($tranTime));
+        });
+
+        $show->field('tranCode', __('交易类型'))->using([
+            '020000' => '消费', 
+            '020002' => '消费撤销', 
+            '020003' => '消费冲正',
+            '020023' => '消费撤销冲正',
+            'U20000' => '电子现金',
+            'T20003' => '日结消费冲正',
+            'T20000' => '日结消费',
+            '024100' => '预授权完成',
+            '024102' => '预授权完成撤销',
+            '024103' => '预授权完成冲正',
+            '024123' => '预授权完成撤销 冲正',
+            '020001' => '退货',
+            '02B100' => '支付宝被扫',
+            '02B200' => '支付宝主扫',
+            '02W100' => '微信被扫',
+            '02W200' => '微信主扫',
+            '02Y100' => '银联被扫',
+            '02Y200' => '银联主扫',
+            '02Y600' => '银联二维码撤销'
         ]);
 
-        $show->field('card_number', __('交易卡号'));
 
-        $show->field('trade_type', __('交易类型'));
+        $show->field('trades_deputies.fee_type', __('手续费计算类型'))->using([
+            'B' => '标准', 'YN' => '云闪付NFC', 'YM' => '云闪付双免'
+        ])->label();
 
-        $show->field('collection_type', __('收款类型'));
+        $show->field('cardType', __('交易卡类型'))->using([
+            '0' => '借记卡', '1' => '贷记卡'
+        ])->label();
 
-        $show->field('audit_status', __('清算状态'))->using(['S' => '已清算', 'C' => '未清算', 'N'=> '未上传']);
-
-        $show->field('is_sim', __('流量卡费'))->using(['0' => '正常交易', '1' => '全扣', '2'=> '内扣']);
-
-        $show->field('stl_type', __('结算标示'))->using(['0' => 'TS', '1' => 'T1']);
-
-        $show->field('scan_flag', __('正反扫标示'))->using(['POSITIVE' => '正扫', 'NEGATIVE' => '反扫', 'N' => '未上传']);
-
-        $show->field('clr_flag', __('是否调价'))->using(['0' => '上调', '1' => '下调', ''=>'不调']);
-
-        $show->field('is_auth_credit_card', __('是否本人卡'))->using(['0' => '否', '1' => '他人信用卡', '2'=> '本人认证信用卡']);
-
-        $show->field('trade_time', __('交易时间'));
-
-        $show->field('trade_actime', __('交易接收时间'));
+        $show->field('trades_deputies.cardNo', __('交易卡号'));
         
-        $show->field('is_cash', __('是否分润'))->using(['0' => '否', '1' => '是']);
+        $show->field('is_send', __('是否分润'))->using(['0' => '否', '1' => '是']);
+
+        $show->field('sysRespCode', __('收单平台应答码'));
+
+        $show->field('sysRespDesc', __('收单平台应答描述'));
 
         $show->field('remark', __('本条交易备注'));
 
         $show->field('created_at', __('推送接收时间'));
 
-        $show->field('trade_post', __('推送报文'))->json();
+        $show->cashs('分润返现', function ($cashs) {
 
-        $show->trades_cash('分润返现', function ($cashs) {
-
-            $cashs->setResource('/admin/cashs');
+            $cashs->setResource('/manage/cashs');
             
             $cashs->model()->latest();
-            
-            $cashs->id('索引')->sortable();
-            $cashs->column('order', __('分润订单'));
-            $cashs->column('users.nickname', __('分润会员'));
-            $cashs->column('users.account', __('会员账号'));
+
+            $cashs->column('users.nickname', __('会员昵称'))->help('分润所归属的用户昵称');
+            $cashs->column('users.account', __('会员账号'))->help('分润所归属的用户账号');
+            $cashs->column('trades.sn', __('SN号'))->help('分润的终端机具SN');
+            $cashs->column('trades.merchant_code', __('商户号'))->help('分润的终端机具商户号');
+            $cashs->column('trades.trade_no', __('交易订单号'))->help('分润的交易订单号');
+            $cashs->column('trades.amount', __('交易金额'))->display(function ($money) {
+                return number_format($money / 100, 2, '.', ',');
+            })->label()->help('交易金额');
             $cashs->column('cash_money', __('分润金额'))->display(function ($money) {
                 return number_format($money / 100, 2, '.', ',');
-            })->label();
-            $cashs->column('cash_type', __('分润类型'))->using([
-                '1' => '直营分润', '2' => '团队分润' , '3' => '直推分润' , '4' => '间推分润' ,  
-                '5' => '激活返现', '6' => '直推激活' , '7' => '间推激活' , '8' => '团队激活'
-            ]);
-            $cashs->column('status', __('分润状态'))->bool();
-            $cashs->column('remark', __('分润备注'));
-            $cashs->column('created_at', __('分润时间'));
+            })->label()->help('本次分润金额');
+            $cashs->column('is_run', __('方式'))->using(['1' => '分润', '0' => '返现'])->help('分润类型,分为分润与返现');
+            $cashs->column('cash_type', __('类型'))->using(['1' => '直营分润', '2' => '团队分润','3'=>'激活返现'
+            ,'4'=>'间推激活返现','5'=>'间间推激活返现','6'=>'达标返现','7'=>'二次达标返现','8'=>'三次达标返现','9'=>'财商学院推荐奖励'])->help('分润的详细类型');
+            $cashs->column('created_at', __('分润时间'))->help('分润下发的时间');
 
-            $cashs->disableCreateButton();
-
-            $cashs->filter(function ($filter) {
-
-                // $filter->like('title', '标题');
-
+            $cashs->actions(function ($actions) {
+                // 去掉删除
+                $actions->disableDelete();
+                // 去掉编辑
+                $actions->disableEdit();
             });
-            
 
+            // 禁用创建按钮
+            $cashs->disableCreateButton();
+            // 禁用查询过滤器
+            $cashs->disableFilter();
+            // 禁用行选择checkbox
+            $cashs->disableRowSelector();
+            
         });
 
 

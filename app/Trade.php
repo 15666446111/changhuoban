@@ -12,17 +12,6 @@ class Trade extends Model
      */
     protected $guarded = [];
 
-    /**
-	 * [merchants 反向关联收益]
-	 * @author Pudding
-	 * @DateTime 2020-04-10T16:37:46+0800
-	 * @return   [type]                   [description]
-	 */
-    public function trades_cash()
-    {
-    	return $this->hasMany('\App\CashsLog', 'trade_id', 'id');
-    }
-
 
     /**
      * @Author    Pudding
@@ -67,10 +56,13 @@ class Trade extends Model
      */
     public function trades_deputies()
     {
-        return $this->belongsTo('\App\TradesDeputy', 'trade_id', 'id');
+        return $this->belongsTo('\App\TradesDeputy', 'id', 'trade_id');
     }
 
-
+    /**
+     * [merchants 关联商户表]
+     * @return [type] [description]
+     */
     public function merchants()
     {
         return $this->belongsTo('\App\Merchant', 'merchant_code', 'code');
