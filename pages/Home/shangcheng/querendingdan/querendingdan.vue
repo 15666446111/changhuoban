@@ -3,7 +3,7 @@
 		<view class="xian"></view>
 		<view class="addressBar">
 			
-			<navigator url="../dizhi/dizhi?pages=place_order" v-if="address == ''">
+			<navigator  hover-class="none"  url="../dizhi/dizhi?pages=place_order" v-if="address == ''">
 				<view class="addressBar-name">选择收货地址</view>
 				<image class="addressBar-image" src="/static/jiantou.png"></image>
 				<view class="d-flex">
@@ -12,7 +12,7 @@
 				<view class="caution"><text class="">为减少接触，您可以在收货详细地址后增加如小区北门、保安亭、等方便提货的地址</text></view>
 			</navigator>
 			
-			<navigator url="../dizhi/dizhi?pages=place_order" v-else>
+			<navigator  hover-class="none"  url="../dizhi/dizhi?pages=place_order" v-else>
 				<view class="addressBar-name">{{address.name}} {{address.tel}}</view>
 				<image class="addressBar-image" src="/static/jiantou.png"></image>
 				<view class="d-flex">

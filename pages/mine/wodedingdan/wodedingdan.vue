@@ -83,7 +83,7 @@
 						<view class="inquire-mark" style="position: relative;">
 							<view class="message-mark">订单号SC2019122109551972539097</view>
 							<view class="message-inquire">
-								<navigator url="" open-type="navigate"><view class="inquire-text">进度查询</view></navigator>
+								<navigator  hover-class="none"  url="" open-type="navigate"><view class="inquire-text">进度查询</view></navigator>
 							</view>
 						</view>
 					</view>

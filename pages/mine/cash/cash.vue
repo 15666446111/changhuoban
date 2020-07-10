@@ -1,9 +1,13 @@
 <template>
 	<view class="background">
-		<navigator url="bankList/bankList?pages=cash">
+		<navigator  hover-class="none"  url="bankList/bankList?pages=cash">
 			<view class="top">
 				<!-- <image src="/static/minsheng.png" class="img"></image> -->
-				<view class="fview">
+				<view class="fview" v-if="bankCard == null">
+					<view style="font-size: 30rpx;">{{ bank_name }}</view>
+					<view style="font-size: 30rpx;"></view>
+				</view>
+				<view class="fview" v-else>
 					<view style="font-size: 30rpx;">{{ bankCard.bank_name }}</view>
 					<view style="font-size: 30rpx;">{{ bankCard.bank }}</view>
 				</view>
@@ -75,9 +79,9 @@ export default {
 			cashsetUp: [],
 			// 结算卡信息
 			bankCard: {
-				bank_name: '请选择提现银行卡'
+				bank_name: '请选择提现银行卡',
 			},
-			bank_name: '',
+			bank_name: '请选择提现银行卡',
 			// 可提现金额
 			balance: '',
 			// 应到账金额
@@ -102,9 +106,10 @@ export default {
 		onConfirm(val) {
 			// 获取提现设置信息
 			this.getPoint(val.checkArr.value);
-			// console.log(val);
 			this.resultInfo = { ...val };
 			this.balance = val.checkArr.value == 1 ? this.UserInfo.cash_blance : this.UserInfo.return_blance;
+			
+			uni.showLoading();
 		},
 		
 		// 获取用户个人信息
@@ -126,19 +131,15 @@ export default {
 	            method:'get',
 				data:{type:val},
 	            success: (res) => {
-					console.log(res);
-					if(res.data.code == 201){
-						uni.showToast({
-						    title: res.data.message.message,
-						    icon: 1500
-						});
-					}else if(res.data.code == 202){
-						uni.showToast({
-						    title: res.data.message.message,
-						    icon: 1500
-						});
-					}else{
+					uni.hideLoading();
+					// console.log(res);
+					if (res.data.success) {
 						this.cashsetUp = res.data.success.data;
+					} else {
+						uni.showToast({
+						    title: res.data.error.message,
+						    icon: 1500
+						});
 					}
 	            }
 	      	})
@@ -150,7 +151,6 @@ export default {
 	        	url:"/V1/getBankDefault",
 	            method:'get',
 	            success: (res) => {
-					// console.log(res);
 					this.bankCard = res.data.success.data;
 	            }
 	      	})
@@ -161,6 +161,10 @@ export default {
 			// console.log(this.bankCard.id);return;
 			if (this.resultInfo.checkArr == undefined) {
 				uni.showToast({ title: '请选择提现钱包', icon: 'none' })
+				return false;
+			}
+			if (this.bankCard == null) {
+				uni.showToast({ title: '请选择提现银行卡', icon: 'none' })
 				return false;
 			}
 			// 加载动画
@@ -184,16 +188,6 @@ export default {
 								this.balance = this.balance - this.money;
 							}
 						})
-					}else if(res.data.code == 201){
-						uni.showToast({
-						    title: res.data.message.message,
-						    icon: 1500
-						});
-					}else if(res.data.code == 202){
-						uni.showToast({
-						    title: res.data.message.message,
-						    icon: 1500
-						});
 					} else {
 						uni.showToast({
 							title: res.data.error.message,

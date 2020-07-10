@@ -1,7 +1,7 @@
 <template>
 	<view v-if="merchantData != ''">
 		<view class="class">
-			<navigator url="machinesCount/machinesCount?type=count" class="class-view">
+			<navigator  hover-class="none"  url="machinesCount/machinesCount?type=count" class="class-view">
 				<view class="class-text">机具总数(台):</view>
 				<view class="class-figure">{{merchantData.count.all}}</view>
 				<view class="chakan">查 看 ></view>
@@ -30,7 +30,7 @@
 			</view>
 		</view>
 		<view class="class">
-			<navigator url="machinesCount/machinesCount?type=user" class="class-view">
+			<navigator  hover-class="none"  url="machinesCount/machinesCount?type=user" class="class-view">
 				<view class="class-text">我的机具(台):</view>
 				<view class="class-figure">{{merchantData.user.all}}</view>
 				<view class="chakan">查 看 ></view>
@@ -60,7 +60,7 @@
 		</view>
 		
 		<view class="class">
-			<navigator url="machinesCount/machinesCount?type=friend" class="class-view">
+			<navigator  hover-class="none"  url="machinesCount/machinesCount?type=friend" class="class-view">
 				<view class="class-text">伙伴机具(台):</view>
 				<view class="class-figure">{{merchantData.friend.all}}</view>
 				<view class="chakan">查 看 ></view>
@@ -90,7 +90,7 @@
 		</view>
 		<view class="class-view3">
 			<view class="view-text">
-				<navigator url="callSet/callSet">
+				<navigator  hover-class="none"  url="callSet/callSet">
 					<image src="../../../static/jjhb.png" class="image"></image>
 					<view class="figure">机具划拨</view>
 				</navigator>
@@ -98,21 +98,21 @@
 
 			<view class="shuxian1"></view>
 			<view class="view-text">
-				<navigator url="callSet/call_back">
+				<navigator  hover-class="none"  url="callSet/call_back">
 					<image src="../../../static/jjhuib.png" class="image"></image>
 					<view class="figure">机具回拨</view>
 				</navigator>
 			</view>
 			<view class="shuxian1"></view>
 			<view class="view-text">
-				<navigator url="callLog/callLog"> 
+				<!-- <navigator  hover-class="none"  url="callLog/callLog"> -->
 					<image src="../../../static/hbjl.png" class="image"></image>
 					<view class="figure">调拨记录</view>
-				</navigator>
+				<!-- </navigator> -->
 			</view>
 			<!-- <view class="shuxian1"></view>
 			<view class="view-text">
-				<navigator url="zhongduandingjia/zhongduandingjia">
+				<navigator  hover-class="none"  url="zhongduandingjia/zhongduandingjia">
 					<image src="../../../static/zddj.png" class="image"></image>
 					<view class="figure">终端定价</view>
 				</navigator>

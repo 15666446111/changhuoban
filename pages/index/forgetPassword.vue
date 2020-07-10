@@ -44,12 +44,12 @@ export default {
 			
 			//验证规则
 			rules: {
-				account: [
-					{
-						rule: /^1[356789]\d{9}$/,
-						msg: '手机号格式不正确'
-					}
-				],
+				// account: [
+				// 	{
+				// 		rule: /^1[356789]\d{9}$/,
+				// 		msg: '手机号格式不正确'
+				// 	}
+				// ],
 				password: [
 					{
 						rule: /^.{6,16}$/,
@@ -110,9 +110,9 @@ export default {
 		submit(){
 			//表单验证
 			//验证用户名
-			if (!this.validate('account')){
-				return false;
-			};
+			// if (!this.validate('account')){
+			// 	return false;
+			// };
 			//验证密码
 			if (!this.validate('password')){
 				return false;

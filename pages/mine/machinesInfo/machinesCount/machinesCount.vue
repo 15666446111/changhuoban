@@ -13,7 +13,9 @@
 					:key="index" 
 					class="views" 
 					:id="tabIndex == index ? 'v1' : ''"
-					@click="changTab(index)">
+					@click="changTab(index)" 
+					style="height:70upx;"
+					>
 					{{item.name}}
 				</view>
 			</view>

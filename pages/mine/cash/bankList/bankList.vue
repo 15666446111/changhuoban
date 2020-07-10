@@ -22,7 +22,7 @@
 			</view>
 		</view>
 		
-		<navigator url="../../bankSet/bankCreate/bankCreate">
+		<navigator  hover-class="none"  url="../../bankSet/bankCreate/bankCreate">
 			<button class="bck">添加银行卡</button>
 		</navigator>
 	</view>

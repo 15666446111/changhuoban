@@ -9,7 +9,7 @@
 		<!-- 第一栏 -->
 		<view class="selects">
 			<view class="select">
-			<navigator url="machineChoice/machineChoice">
+			<navigator  hover-class="none"  url="machineChoice/machineChoice">
 				<view class="select-view">
 					<view class="select-name">终端选择</view>
 					<view class="select-text1" v-if="merchant_sn == ''">请选择</view>
@@ -40,7 +40,7 @@
 			</view>
 		</view>
 		<button class="button1" @click="submit()">确 认 登 记</button>
-		<!-- <navigator url="shanghuxinxi/shanghuxinxi"><button class="button2">A 类 商 户 入 网</button></navigator> -->
+		<!-- <navigator  hover-class="none"  url="shanghuxinxi/shanghuxinxi"><button class="button2">A 类 商 户 入 网</button></navigator> -->
 	</view>
 </template>
 

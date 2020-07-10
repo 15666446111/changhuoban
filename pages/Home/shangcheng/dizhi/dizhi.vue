@@ -1,7 +1,7 @@
 <template>
 	<view class="ID">
 		<!-- 按钮 -->
-		<navigator url="../xinzeng/xinzeng" open-type="navigate">
+		<navigator  hover-class="none"  url="../xinzeng/xinzeng" open-type="navigate">
 			<view id="button">
 				<image class="button-img" src="../../../../static/+.png" mode="widthFix"></image>
 				<view class="button-text">添加新的发货地址</view>
@@ -28,7 +28,7 @@
 						<image class="for-img" src="../../../../static/shanchu.png" mode="widthFix"></image>
 						<view class="for-text">删除</view>
 					</view>
-					<navigator :url="'../xinzeng/address_edit?address_id=' + item.id">
+					<navigator  hover-class="none"  :url="'../xinzeng/address_edit?address_id=' + item.id">
 						<view class="for">
 								<image class="for-img" src="../../../../static/xiugai.png" mode="widthFix"></image>
 								<view class="for-text">编辑</view>

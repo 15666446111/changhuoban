@@ -74,7 +74,7 @@
 			</view>
 		</view>
 
-		<navigator url="jiaoyixiangqing/jiaoyixiangqing"><button class="button">确 认 修 改</button></navigator>
+		<navigator  hover-class="none"  url="jiaoyixiangqing/jiaoyixiangqing"><button class="button">确 认 修 改</button></navigator>
 	</view>
 </template>
 

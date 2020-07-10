@@ -199,7 +199,7 @@
 				"navigationBarTextStyle": "black"
 			}
 		}, {
-			"path": "pages/mine/share/wx_share",
+			"path": "pages/mine/share/wechat_share",
 			"style": {
 				"navigationBarTitleText": "微信分享",
 				"navigationBarTextStyle": "black"

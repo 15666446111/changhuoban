@@ -9,7 +9,7 @@
 /* 公共样式 */
 @import url('/common/common.css');
 /* 全局图标样式*/
-@import "/common/iconfont.css";
+@import '/common/iconfont.css';
 uni-checkbox .uni-checkbox-input {
 	border-radius: 50% !important;
 	color: #ffffff !important;
@@ -18,23 +18,31 @@ uni-checkbox .uni-checkbox-input {
 
 uni-checkbox .uni-checkbox-input.uni-checkbox-input-checked {
 	color: #fff;
-	border-color: #EE4000;
-	background: #EE4000;
+	border-color: #ee4000;
+	background: #ee4000;
 }
 uni-checkbox .uni-checkbox-input.uni-checkbox-input-checked:after {
 	font-size: 18px;
 }
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 5132c9b66f6c71b21f8ca570e9abe87598bfd113
-::-webkit-scrollbar {
-    display: none;
-    width: 0 !important;
-    height: 0 !important;
-    -webkit-appearance: none;
-    background: transparent;
+<<<<<<< head =======>>>>>>>5132c9b66f6c71b21f8ca570e9abe87598bfd113 ::-webkit-scrollbar {
+	display: none;
+	width: 0 !important;
+	height: 0 !important;
+	-webkit-appearance: none;
+	background: transparent;
 }
-
+*,
+*:after,
+*:before {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	-webkit-touch-callout: none;
+	-webkit-user-drag: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	-ms-touch-action: none;
+	-moz-user-select: -moz-none;
+}
 </style>

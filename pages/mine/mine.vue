@@ -17,7 +17,7 @@
 
 			<view class="earnings">
 				
-				<navigator url="cash/cash">
+				<navigator  hover-class="none"  url="cash/cash">
 					<view class="tixian">提现</view>
 				</navigator>
 				
@@ -51,7 +51,7 @@
 		<view class="NavigationBar">
 			<view class="Bar1">
 				
-				<navigator class="url" url="machinesInfo/machinesInfo">
+				<navigator  hover-class="none"  class="url" url="machinesInfo/machinesInfo">
 					<view class="div">
 						<image class="div-img" src="/static/wd/jj.png" />
 						<view class="div-text">机具管理</view>
@@ -60,19 +60,19 @@
 					<view class="across"></view>
 				</navigator>
 				
-				<navigator class="url" url="wodedingdan/wodedingdan">
+				<navigator  hover-class="none"  class="url" url="wodedingdan/wodedingdan">
 					<view class="div">
 						<image class="div-img" src="/static/wd/sh.png" />
 						<view class="div-text">我的订单</view>
 						<image class="arrows" src="/static/jiantou.png" />
 					</view>
-					<view class="across"></view>
+					
 				</navigator>
 				
 				<view class="across"></view>
 				
 				<!--
-				<navigator class="url" :url="'wodezhengc/wodezhengc?uid=' + UserInfo.id">
+				<navigator  hover-class="none"  class="url" :url="'wodezhengc/wodezhengc?uid=' + UserInfo.id">
 					<view class="div">
 						<image class="div-img" src="/static/wd/cp.png" />
 						<view class="div-text">我的政策</view>
@@ -84,18 +84,18 @@
 				<view class="across"></view>
 				-->
 
-				<navigator class="url" :url="'share/wx_share?uid=' + UserInfo.id">
+				<navigator  hover-class="none"  class="url" :url="'share/wechat_share?uid=' + UserInfo.id">
 					<view class="div">
 						<image class="div-img" src="/static/wx.png" />
 						<view class="div-text">微信分享</view>
 						<image class="arrows" src="/static/jiantou.png" />
 					</view>
-					<view class="across"></view>
+					
 				</navigator>
 				<view class="across"></view>
 				
 				<!--
-				<navigator class="url" url="temail_share/temail_share">
+				<navigator  hover-class="none"  class="url" url="temail_share/temail_share">
 					<view class="div">
 						<image class="div-img" src="/static/yaoqing.png" />
 						<view class="div-text">推广商户</view>
@@ -106,7 +106,7 @@
 				<view class="across"></view>				
 				-->
 				
-				<navigator class="url" url="../Home/zaixiankefu/zaixiankefu">
+				<navigator  hover-class="none"  class="url" url="../Home/zaixiankefu/zaixiankefu">
 					<view class="div">
 						<image class="div-img" src="/static/wd/kf.png" />
 						<view class="div-text">在线客服</view>
@@ -115,7 +115,7 @@
 					<view class="across"></view>
 				</navigator>
 
-				<navigator class="url" url="xiaoxitongzhi/xiaoxitongzhi">
+				<navigator  hover-class="none"  class="url" url="xiaoxitongzhi/xiaoxitongzhi">
 					<view class="div">
 						<image class="div-img" src="/static/wd/xiaoxi.png" />
 						<view class="div-text">消息通知</view>
@@ -123,13 +123,13 @@
 					</view>
 					<view class="across"></view>
 				</navigator>
-				<navigator class="url" url="bankSet/bankSet">
+				<navigator  hover-class="none"  class="url" url="bankSet/bankSet">
 					<view class="div">
 						<image class="div-img" src="/static/xtsz.png" />
 						<view class="div-text">系统设置</view>
 						<image class="arrows" src="/static/jiantou.png" />
 					</view>
-					<view class="across"></view>
+					
 				</navigator>
 				
 			</view>

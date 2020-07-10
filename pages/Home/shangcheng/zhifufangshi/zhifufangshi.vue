@@ -12,7 +12,7 @@
 
 		<!-- 提交栏 -->
 		<view class="pos">
-			<navigator url="../zhifu/zhifu" open-type="navigate"><view class="pos-text">去支付549.00</view></navigator>
+			<navigator  hover-class="none"  url="../zhifu/zhifu" open-type="navigate"><view class="pos-text">去支付549.00</view></navigator>
 		</view>
 	</view>
 </template>

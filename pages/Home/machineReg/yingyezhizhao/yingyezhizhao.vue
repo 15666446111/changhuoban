@@ -61,7 +61,7 @@
 			<view class="photograph1"><image class="photograph-image" src="../../../../static/shuzi/yyzz.png"></image></view>
 		</view>
 
-		<navigator url="../yinhangka/yinhangka"><button id="button-1">下 一 步</button></navigator>
+		<navigator  hover-class="none"  url="../yinhangka/yinhangka"><button id="button-1">下 一 步</button></navigator>
 	</view>
 </template>
 

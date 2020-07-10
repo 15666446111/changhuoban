@@ -29,7 +29,7 @@
 			</view>
 		</view>
 		
-		<navigator url="shimingxinxi/shimingxinxi" class="url">
+		<navigator  hover-class="none"  url="shimingxinxi/shimingxinxi" class="url">
 			<button class="button-1" id="button-1">下 一 步</button>
 		</navigator>
 		

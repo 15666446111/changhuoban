@@ -70,7 +70,7 @@
 			<view class="photograph1"><image class="photograph-image" src="../../../../static/shuzi/Idcard3.png"></image></view>
 		</view>
 
-		<navigator url="../yingyezhizhao/yingyezhizhao"><button>下 一 步</button></navigator>
+		<navigator  hover-class="none"  url="../yingyezhizhao/yingyezhizhao"><button>下 一 步</button></navigator>
 	</view>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
 	<view class="background">
-		<navigator url="tijiaoyinhangka/tijiaoyinhangka">
+		<navigator  hover-class="none"  url="tijiaoyinhangka/tijiaoyinhangka">
 			<view class="top">
 				<image src="/static/minsheng.png" class="img"></image>
 				<view class="fview">

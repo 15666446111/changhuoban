@@ -2,7 +2,7 @@
 	<view>
 		<view class="back">
 			<view class="view">
-				<navigator url="../policGet/policGet">
+				<navigator  hover-class="none"  url="../policGet/policGet">
 					<view class="policy">
 						<view class="model">选择划拨机具政策</view>
 						<view class="amount" v-if="policyInfo.id == undefined">请选择</view>
@@ -12,7 +12,7 @@
 				</navigator>
 			</view>
 			<view class="view">
-				<navigator url="../friendsGet/friendsGet">
+				<navigator  hover-class="none"  url="../friendsGet/friendsGet">
 				<view class="policy">
 					<view class="model">选择划拨伙伴</view>
 					<view class="amount" v-if="partnerInfo.id == undefined">请选择</view>
@@ -23,7 +23,7 @@
 			</view>
 			<view class="bottom">
 				<view class="bview">
-					<navigator class="cancel" url="../qujianhuabo/qujianhuabo"><view>区间划拨</view></navigator>
+					<view class="cancel"><view>区间划拨</view></view>
 					<view class="confirm" @click="transfer">选择划拨</view>
 				</view>
 			</view>

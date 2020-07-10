@@ -48,7 +48,7 @@
 					<uni-number-box :min="1" :value="num" @change="num=$event"></uni-number-box>
 				</view>
 				 
-				<navigator :url="'../querendingdan/querendingdan?product='+productInfo.id+'&num='+num">
+				<navigator  hover-class="none"  :url="'../querendingdan/querendingdan?product='+productInfo.id+'&num='+num">
 					<view 
 						class="main-bg-color text-white font-md d-flex a-center j-center" hover-class="main-bg-hover-color">
 						立即购买

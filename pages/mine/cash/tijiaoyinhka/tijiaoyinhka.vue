@@ -25,7 +25,7 @@
 		<!-- 第二栏 -->
 		<view class="bank-card">
 			<view class="bankCard-for">
-				<navigator url="../xuanzeyinhang/xuanzeyinhang" open-type="navigate">
+				<navigator  hover-class="none"  url="../xuanzeyinhang/xuanzeyinhang" open-type="navigate">
 					<view class="bank">
 						<view class="bank-name">开户行：</view>
 						<view class="bank-text">请选择开户行</view>

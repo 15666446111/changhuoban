@@ -96,7 +96,8 @@ export default {
 					if (res.data.success) {
 						uni.showToast({
 							title: '划拨成功',
-							icon: 'none'
+							icon: 'none',
+							position: 'bottom'
 						})
 						setTimeout(function() {
 							uni.redirectTo({

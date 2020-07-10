@@ -33,7 +33,7 @@
 			<view class="dara-xian"></view>
 			
 			<!--
-			<navigator :url="'../activeFirst/activeFirst?terminal=' + merchantInfo.merchant_sn">
+			<navigator  hover-class="none"  :url="'../activeFirst/activeFirst?terminal=' + merchantInfo.merchant_sn">
 			<view class="data">
 				<view class="phone">活动详情</view>
 				<view class="mark">查看</view>
@@ -42,7 +42,7 @@
 			-->
 			
 			<view class="dara-xian"></view>
-			<navigator :url="'../trade/trade?merchant_sn=' + merchantInfo.merchant_sn">
+			<navigator  hover-class="none"  :url="'../trade/trade?merchant_sn=' + merchantInfo.merchant_sn">
 				<view class="data">
 					<view class="phone">交易明细</view>
 					<view class="mark">查看</view>

@@ -38,7 +38,7 @@
 					</view>
 					
 					<view class="data">
-						<navigator url="../jinrijiaoyi/jinrijiaoyi">
+						<navigator  hover-class="none"  url="../jinrijiaoyi/jinrijiaoyi">
 							<view class="data-s">
 								<view class="deal">今日交易</view>
 								<view class="money">{{ datalist.trade }}</view>
@@ -49,7 +49,7 @@
 					</view>
 
 					<view class="data">
-						<navigator :url="'../jihuozongshu/jihuozongshu?uid='+activeIndex">
+						<navigator  hover-class="none"  :url="'../jihuozongshu/jihuozongshu?uid='+activeIndex">
 							<view class="data-s">
 								<view class="deal">激活总数</view>
 								<view class="money">{{ datalist.activeCount }}</view>
@@ -60,7 +60,7 @@
 					</view>		
 
 					<view class="data">
-						<navigator :url="'../TemailCount/TemailCount?uid='+activeIndex">
+						<navigator  hover-class="none"  :url="'../TemailCount/TemailCount?uid='+activeIndex">
 							<view class="data-s">
 								<view class="deal">机具总数</view>
 								<view class="money">{{ datalist.merchants }}</view>
@@ -71,7 +71,7 @@
 					</view>					
 
 					<view class="data">
-						<navigator url="../shouyizongshu/shouyizongshu">
+						<navigator  hover-class="none"  url="../shouyizongshu/shouyizongshu">
 							<view class="data-s">
 								<view class="deal">收益总数</view>
 								<view class="money">{{ datalist.income }}</view>
@@ -82,7 +82,7 @@
 					</view>	
 
 					<view class="data">
-						<navigator :url="'../huobanzongshu/huobanzongshu?uid='+activeIndex">
+						<navigator  hover-class="none"  :url="'../huobanzongshu/huobanzongshu?uid='+activeIndex">
 							<view class="data-s">
 								<view class="deal">伙伴总数</view>
 								<view class="money">{{ datalist.friends }}</view>
@@ -93,7 +93,7 @@
 					</view>	
 
 					<view class="data">
-						<navigator :url="'../shanghuzongshu/shanghuzongshu?uid='+activeIndex">
+						<navigator  hover-class="none"  :url="'../shanghuzongshu/shanghuzongshu?uid='+activeIndex">
 							<view class="data-s">
 								<view class="deal">商户总数</view>
 								<view class="money">{{ datalist.merchants }}</view>
@@ -104,7 +104,7 @@
 					</view>
 
 					<view class="data">
-						<navigator url="../taijunjiaoyi/taijunjiaoyi">
+						<navigator  hover-class="none"  url="../taijunjiaoyi/taijunjiaoyi">
 							<view class="data-s">
 								<view class="deal">台均交易量</view>
 								<view class="money">{{ datalist.Avg }}</view>

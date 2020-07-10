@@ -2,7 +2,6 @@
 	<view class="background">
 		<view class="top">
 			<view class="view1">
-				
 				<view class="fview">
 					<image src="/static/minsheng.png" class="img"></image>
 					<view class="ms">民生银行/8888</view>

@@ -23,7 +23,7 @@
 		
 		<button class="loginButton" @click="submit">立即登录</button>
 		
-		<navigator url="forgetPassword">
+		<navigator  hover-class="none"  url="forgetPassword">
 			<view class="d-flex">
 				<view class="d-box">
 					<view class="forget">忘记密码？</view>
@@ -49,12 +49,12 @@ export default {
 			applyText: '<div>345</div>',
 			//验证规则
 			rules: {
-				account: [
-					{
-						rule: /^1[356789]\d{9}$/,
-						msg: '手机号格式不正确'
-					}
-				],
+				// account: [
+				// 	{
+				// 		rule: /^1[356789]\d{9}$/,
+				// 		msg: '手机号格式不正确'
+				// 	}
+				// ],
 				password: [
 					{
 						rule: /^.{6,16}$/,
@@ -88,7 +88,7 @@ export default {
 		//提交表单
 		submit() {
 			//验证用户名  验证密码
-			if (!this.validate('account') || !this.validate('password') ) return false; 
+			if (!this.validate('password') ) return false; 
 			uni.showToast({ title: '登录中', icon: 'loading', mask: true, duration: 10000 });
 			
 			uni.request({

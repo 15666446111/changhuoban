@@ -59,7 +59,7 @@
 										<view class="list-scroll-view">
 											
 											<view class="course-card" v-for="(item, index) in product" :key="index">
-												<navigator :url="'shangpingxinxi/shangpingxinxi?product='+item.id">
+												<navigator  hover-class="none"  :url="'shangpingxinxi/shangpingxinxi?product='+item.id">
 													<view>
 														<image :src=item.image mode="widthFix"></image>
 													</view>
