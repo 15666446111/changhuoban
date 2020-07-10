@@ -7,11 +7,11 @@ const net = function(options) {
 	// 尝试请求接口
     try {
 		// 获取token
-		const token 	= uni.getStorageSync('token');
+		const token 		= uni.getStorageSync('token');
 		
-		const operate 	= uni.getStorageSync('operate');
+		const operate 		= uni.getStorageSync('operate');
 		
-		const type 	= uni.getStorageSync('type');
+		const type 			= uni.getStorageSync('type');
 		
 		
 		if (token == ''){
@@ -53,15 +53,9 @@ const net = function(options) {
 				}
 				// token失效时，跳转登录页面
 				if (res.statusCode == 505) {
-					uni.showToast({
-						title: res.data.error.message,
-						icon: 'none',
-						mask: true
-					})
+					uni.showToast({ title: res.data.error.message, icon: 'none', mask: true, position: 'bottom'})
 					setTimeout(function() {
-						uni.redirectTo({
-							url: '/pages/index/index'
-						})
+						uni.redirectTo({ url: '/pages/index/index' })
 					}, 1000);
 					return;
 				}
@@ -72,7 +66,8 @@ const net = function(options) {
 		// 如果请求出错  打印错误信息
       	uni.showToast({
 			title: '系统错误，请联系客服',
-			icon: 'none'
+			icon: 'none',
+			position: 'bottom'
 		})
     }
 	

@@ -25,7 +25,8 @@
 		<view class="content">
 			<view v-if="Head == 0 && bindList.length != 0">
 				<!-- 已绑定商户 -->
-				<navigator  hover-class="none"  v-if="Head == 0" v-for="(item, index) in bindList" :key="index" :url="'machineFirst/machineFirst?id=' + item.machine_id">
+				<!-- <navigator  hover-class="none"  v-if="Head == 0" v-for="(item, index) in bindList" :key="index" :url="'machineFirst/machineFirst?id=' + item.machine_id"> -->
+				<navigator v-if="Head == 0" v-for="(item, index) in bindList" :key="index" :url="'machineFirst/machineFirst?id=' + item.id">
 					<view id="view">
 						<view class="detail">
 							<view class="detail-name">{{ item.merchant_name }}</view>
@@ -36,7 +37,7 @@
 
 						<view class="money">
 							<view class="money-text">商户号:{{ item.merchant_number }}</view>
-							<view class="money-time">登记时间：{{ item.created_at }}</view>
+							<view class="money-time">登记时间：{{ item.bind_time }}</view>
 						</view>
 					</view>
 					<view class="across"></view>
@@ -60,7 +61,7 @@
 
 						<view class="money">
 							<view class="money-text">商户号:{{ item.merchant_number }}</view>
-							<view class="money-time">登记时间：{{ item.created_at }}</view>
+							<view class="money-time">登记时间：{{ item.bind_time }}</view>
 						</view>
 					</view>
 					<view class="across"></view>

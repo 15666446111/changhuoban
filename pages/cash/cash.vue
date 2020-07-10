@@ -149,7 +149,6 @@ export default {
 	            method:'get',
 				data:{ type: type},
 	            success: (res) => {
-					console.log(res)
 					uni.hideLoading();
 					if(res.data.error){
 						uni.showToast({ title: res.data.error.message, icon: 'none' });

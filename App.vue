@@ -24,7 +24,7 @@ uni-checkbox .uni-checkbox-input.uni-checkbox-input-checked {
 uni-checkbox .uni-checkbox-input.uni-checkbox-input-checked:after {
 	font-size: 18px;
 }
-<<<<<<< head =======>>>>>>>5132c9b66f6c71b21f8ca570e9abe87598bfd113 ::-webkit-scrollbar {
+::-webkit-scrollbar {
 	display: none;
 	width: 0 !important;
 	height: 0 !important;

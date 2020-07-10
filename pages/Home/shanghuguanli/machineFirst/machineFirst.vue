@@ -42,7 +42,7 @@
 			-->
 			
 			<view class="dara-xian"></view>
-			<navigator  hover-class="none"  :url="'../trade/trade?merchant_sn=' + merchantInfo.merchant_sn">
+			<navigator :url="'../trade/trade?merchant=' + merchantInfo.id">
 				<view class="data">
 					<view class="phone">交易明细</view>
 					<view class="mark">查看</view>
@@ -76,14 +76,17 @@ export default {
 			net({
 				url: '/V1/getMerchantInfo',
 				method: 'GET',
-				data:{
-					id:mid
-				},
+				data:{ id:mid },
 				success: (res) => {
 					if(res.data.success){
 						this.merchantInfo = res.data.success.data;
+					}else{
+						uni.showToast({
+							title:red.data.error.message,
+							icon: 'none',
+							position: 'bottom'
+						})
 					}
-					console.log(res)
 				}
 			})
 		}

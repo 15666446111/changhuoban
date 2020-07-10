@@ -1,14 +1,21 @@
 <template>
 	<view>
-		<view class="title">
-			<text>{{article.title}}</text>
+		<view v-if="article.length != 0">
+			<view class="title">
+				<text>{{article.title}}</text>
+			</view>
+			<view class="add_time">
+				发布时间：{{article.created_at}}
+			</view>
+			<view class="content">
+				<rich-text :nodes="article.content|formatRichText"></rich-text>
+			</view>
 		</view>
-		<view class="add_time">
-			发布时间：{{article.created_at}}
+		
+		<view v-if="article.length == 0"  style="height: 100%;  display: flex; justify-content: center;align-items: center; background-color: #f5f5f5;">
+			<image src="/static/no-data.jpeg" mode="widthFix"></image>
 		</view>
-		<view class="content">
-			<rich-text :nodes="article.content|formatRichText"></rich-text>
-		</view>
+		
 	</view>
 	
 </template>
@@ -19,12 +26,13 @@
 	export default {
 		data() {
 			return {
-				article: []
+				article: {ci : 0 }
 			};
 		},
 		
 		// 页面初始化执行
 		onLoad(options){
+			uni.showLoading()
 			this.getArticle(options.aid);
 		},
 		
@@ -36,7 +44,16 @@
 					data:{aid:aid},
 		            success: (res) => {
 						console.log(res.data.success.data);
-						this.article = res.data.success.data;
+						uni.hideLoading()
+						if(res.data.success && res.data.success.data){
+							this.article = res.data.success.data;
+						}else{
+							uni.showToast({
+								title: res.data.error.message,
+								icon:'none',
+								position: 'bottom'
+							})
+						}
 		            } 
 		      	})
 			}
@@ -68,9 +85,6 @@
 			    return newContent;
 			}	
 		},
-		
-		
-
 	}
 </script>
 
@@ -92,7 +106,7 @@
 		color: #999;
 	}
 	.content {
-		text-indent: 44rpx;
+		//text-indent: 44rpx;
 	}
 	.content img {
 		max-width: 100%;
