@@ -48,7 +48,7 @@ class TradeApiController extends Controller
         
         if ($request->dataType == 0) {
             // 商户开通通知处理
-            // try{
+            try{
 
                 foreach ($dataList as $key => $value) {
 
@@ -78,19 +78,19 @@ class TradeApiController extends Controller
 
                 }
 
-            // } catch (\Exception $e) {
+            } catch (\Exception $e) {
 
-            //     $reData['responseCode'] = '01';
-            //     $reData['responseDesc'] = $e->getMessage();
+                $reData['responseCode'] = '01';
+                $reData['responseDesc'] = $e->getMessage();
 
-            // }
+            }
             
         } else {
             // 交易通知处理
             
             foreach ($dataList as $key => $value) {
 
-                // try{
+                try{
 
                     // $value->sysRespCode != '00'  交易失败的数据
                     // $desc == '原交易已冲正'       无效冲正类交易
@@ -266,12 +266,12 @@ class TradeApiController extends Controller
                     $profit = new TestController($tradeOrder);
                     $profit->index();
 
-                // } catch (\Exception $e) {
+                } catch (\Exception $e) {
 
-                //     $reData['responseCode'] = '01';
-                //     $reData['responseDesc'] = '系统错误';
+                    $reData['responseCode'] = '01';
+                    $reData['responseDesc'] = '系统错误';
 
-                // }
+                }
 
             }
         }

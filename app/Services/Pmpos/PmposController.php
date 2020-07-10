@@ -214,18 +214,14 @@ class PmposController extends Controller
 	 */
 	public function smsQuery()
 	{
-		header("Content-type:text/html;charset=utf-8");
 		$tokenType = '2086';
 		$token = $this->getToken($tokenType);
-		if ($token['code'] != '00') {
-			return $this->error('凭证获取失败');
-		}
 		$url = $this->http . '/api/acq-channel-gateway/v1/terminal-service/terms/activityReformV3/querySmsList';
 		$postData['agentId'] = $this->agentId;
 		$postData['token'] = $token['data']['token'];
 
 		$data = $this->send($url, $postData);
-		return $data;
+		return json_encode($data);
 	}
 
 	/**

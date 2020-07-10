@@ -108,7 +108,7 @@ class ActiveMerchantController extends Controller
 									->sum('amount');
 
 			// 机器的累计交易金额大于激活标准时，发放激活返现
-			if ($tradePrice >= $this->policy->active_price) {
+			if ($tradePrice >= $this->policy->active_price * 100) {
 
                 // 更新机具激活状态
                 \App\Machine::where('sn', $this->trade->sn)->update([
