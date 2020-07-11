@@ -53,7 +53,7 @@ class TradeApiController extends Controller
                 foreach ($dataList as $key => $value) {
 
                     $regContent = \App\RegNoticeContent::create([
-                        //商户直属机构号
+                        //商户通知配置机构号
                         'config_agent_id'       =>      $request->configAgentId,
                         //商户直属机构号
                         'agentId'               =>      $value->agentId,
@@ -247,7 +247,7 @@ class TradeApiController extends Controller
                     // 分发到队列 由队列去处理剩下的逻辑
                     // 为冲正和撤销类交易时，延迟5分钟后执行
                     if (!empty($reduceTranCode[$value->tranCode])) {
-
+                        
                         HandleTradeInfo::dispatch($tradeOrder)->delay(now()->addMinutes(3));
 
                     // 撤销冲正类交易，延迟10分钟后执行

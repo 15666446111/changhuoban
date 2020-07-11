@@ -71,8 +71,9 @@ class HandleMachineInfo implements ShouldQueue
          * 检查机器sn是否入库
          * @var [type]
          */
-        if ( empty($this->machine) || !$this->machine) {
+        if (empty($this->machine) || !$this->machine) {
             $this->regContent->remark = '该机器还未入库';
+            $this->regContent->state = '2';
             $this->regContent->save();
             return false;
         }
@@ -83,6 +84,7 @@ class HandleMachineInfo implements ShouldQueue
          */
         if (empty($this->machine->user_id)) {
             $this->regContent->remark = '该机器还未发货';
+            $this->regContent->state = '2';
             $this->regContent->save();
             return false;
         }
@@ -93,6 +95,40 @@ class HandleMachineInfo implements ShouldQueue
          */
         if (empty($this->machine->operate)) {
             $this->regContent->remark = '未查询到机器归属操盘信息';
+            $this->regContent->state = '2';
+            $this->regContent->save();
+            return false;
+        }
+
+        /**
+         * 检查机器归属活动信息是否存在
+         * @var [type]
+         */
+        if (!$this->machine->policys || empty($this->machine->policys)) {
+            $this->regContent->remark = '该机器活动信息不存在';
+            $this->regContent->state = '2';
+            $this->regContent->save();
+            return false;
+        }
+
+        /**
+         * 检查是否是按冻结状态激活的机器
+         * @var [type]
+         */
+        if ($this->machine->policys->active_type != 1) {
+            $this->regContent->remark = '该机器非冻结机器';
+            $this->regContent->state = '2';
+            $this->regContent->save();
+            return false;
+        }
+
+        /**
+         * 检查是否设置冻结金额
+         * @var [type]
+         */
+        if ($this->machine->policys->active_price == 0) {
+            $this->regContent->remark = '该机器未设置冻结金额';
+            $this->regContent->state = '2';
             $this->regContent->save();
             return false;
         }
@@ -104,6 +140,7 @@ class HandleMachineInfo implements ShouldQueue
         $systemMerchant = \App\AdminSetting::where('operate_number', $this->machine->operate)->value('system_merchant');
         if ($systemMerchant != $this->regContent->config_agent_id) {
             $this->regContent->remark = '该机器归属操盘信息有误';
+            $this->regContent->state = '2';
             $this->regContent->save();
             return false;
         }
@@ -114,6 +151,7 @@ class HandleMachineInfo implements ShouldQueue
          */
         if ($this->regContent->config_agent_id != $this->regContent->agentId) {
             $this->regContent->remark = '该机器不在您的畅捷一级后台';
+            $this->regContent->state = '2';
             $this->regContent->save();
             return false;
         }
@@ -172,43 +210,39 @@ class HandleMachineInfo implements ShouldQueue
         }
 
         /**
-         * 如果机器是按冻结金额激活，并且冻结金额大于0时，发起冻结
+         * 发起冻结
          */
-        if ($this->machine->policys->active_type == 1 && $this->machine->policys->active_price > 0) {
+        try {
 
-            try {
+            // 短信模板编号
+            $simCharge = \App\AdminShort::where('id', $this->machine->policys->short_id)->value('number');
 
-                // 短信模板编号
-                $simCharge = \App\AdminShort::where('id', $this->machine->policys->short_id)->value('number');
+            // 发起冻结
+            $pmpos = new PmposController($this->regContent->merchantId, $this->regContent->termSn);
 
-                // 发起冻结
-                $pmpos = new PmposController($this->regContent->merchantId, $this->regContent->termSn);
+            $data = $pmpos->feeFrozen($simCharge, $this->machine->policys->active_price, 0);
 
-                $data = $pmpos->feeFrozen($simCharge, $this->machine->policys->active_price, 0);
+            $returnData = json_decode($data['return_data']);
 
-                $returnData = json_decode($data['return_data']);
+            // 添加冻结记录
+            \App\MerchantsFrozenLog::create([
+                'merchant_code'     => $this->regContent->merchantId,
+                'sn'                => $this->regContent->termSn,
+                'type'              => 1,
+                'frozen_money'      => $this->machine->policys->active_price,
+                'state'             => $returnData->code == '00' ? 1 : 0,
+                'return_data'       => $data['return_data'],
+                'send_data'         => $data['send_data']
+            ]);
 
-                // 添加冻结记录
-                \App\MerchantsFrozenLog::create([
-                    'merchant_code'     => $this->regContent->merchantId,
-                    'sn'                => $this->regContent->termSn,
-                    'type'              => 1,
-                    'frozen_money'      => $this->machine->policys->active_price,
-                    'state'             => $returnData->code == '00' ? 1 : 0,
-                    'return_data'       => $data['return_data'],
-                    'send_data'         => $data['send_data']
-                ]);
+            $this->regContent->remark .= '服务费冻结:' . json_encode($returnData);
+            $this->regContent->state = $returnData->code == '00' ? 1 : 2;
+            $this->regContent->save();
 
-            } catch (\Exception $e) {
+        } catch (\Exception $e) {
 
-                $this->regContent->remark .= '服务费冻结:' . json_encode($e->getMessage());
-                $this->regContent->save();
-                return false;
-
-            }
-        } else {
-
-            $this->regContent->remark .= '服务费冻结:active_type' . $this->machine->policys->active_type . 'active_price' . $this->machine->policys->active_price;
+            $this->regContent->remark .= '服务费冻结:' . json_encode($e->getMessage());
+            $this->regContent->state = '2';
             $this->regContent->save();
             return false;
 
