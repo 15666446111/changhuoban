@@ -72,10 +72,19 @@ class HandleMachineInfo implements ShouldQueue
          * @var [type]
          */
         if (empty($this->machine) || !$this->machine) {
+
             $this->regContent->remark = '该机器还未入库';
             $this->regContent->state = '2';
             $this->regContent->save();
             return false;
+
+        } else {
+
+            // 更新机器开通状态
+            $this->machine->open_state  = 1;
+            $this->machine->open_time   = date('Y-m-d H:i:s', time());
+            $this->machine->save();
+            
         }
 
         /**
@@ -157,10 +166,12 @@ class HandleMachineInfo implements ShouldQueue
         }
 
         /**
-         * 更新商户和机具绑定状态
+         * 更新商户和机具的开通和绑定状态
          * @var [type]
          */
         try {
+
+
             $merchant = \App\Merchant::where('code', $this->regContent->merchantId)->first();
 
             if (!$merchant || empty($merchant)) {

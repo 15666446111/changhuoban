@@ -44,6 +44,35 @@ class TradeApiController extends Controller
             'sign'          => $request->sign              // 签名
         ];
 
+        ## 签名验证
+        $key = '16D0462C164CB0E3AD6EF2B0B9514092';
+
+        // 参与验签的数据
+        $signData = [
+            'configAgentId' => $request->configAgentId,
+            'sendBatchNo'   => $request->sendBatchNo,
+            'sendTime'      => $request->sendTime,
+            'sendNum'       => $request->sendNum,
+            'transDate'     => $request->transDate,
+            'dataType'      => $request->dataType,
+        ];
+
+        // 1.按照参数名ASCII码从小到大排序
+        ksort($signData);
+
+        // 2.将key和参数值拼接成字符串
+        $stringA = $key . implode('', $signData);
+
+        // 3.将拼接的字符串进行md5加密
+        $reData['sign'] = MD5($stringA);
+        
+        if ($request->sign != MD5($stringA)) {
+            $reData['responseCode'] = '01';
+            $reData['responseDesc'] = '验签失败';
+            $reData['revTime'] = date('YmdHis', time());
+            return json_encode($reData);
+        }
+
         $dataList = json_decode($request->dataList);
         
         if ($request->dataType == 0) {
