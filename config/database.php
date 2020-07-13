@@ -150,7 +150,7 @@ return [
             'database'  => env('REDIS_DB', '15'),
         ],
 
-        
+
         'chb_trade' => [
             'url'       => env('REDIS_URL'),
             'host'      => env('REDIS_HOST', '127.0.0.1'),
@@ -159,6 +159,13 @@ return [
             'database'  => env('REDIS_DB', '14'),
         ],
 
+        'chb_merchant_open'=> [
+            'url'       => env('REDIS_URL'),
+            'host'      => env('REDIS_HOST', '127.0.0.1'),
+            'password'  => env('REDIS_PASSWORD', null),
+            'port'      => env('REDIS_PORT', '6379'),
+            'database'  => env('REDIS_DB', '13'),
+        ],
 
         'cache' => [
             'url' => env('REDIS_URL'),
