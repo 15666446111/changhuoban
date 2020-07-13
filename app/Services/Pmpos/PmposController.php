@@ -101,11 +101,13 @@ class PmposController extends Controller
 	public function feeFrozen($smsCode='', $posCharge='0', $simCharge='0')
 	{
 		$token = $this->getToken('2083');
-		$url = $this->http.'/api/acq-channel-gateway/v1/terminal-service/terms/activityReformV3/amountFrozen';
+
+		$url = '/api/acq-channel-gateway/v1/terminal-service/terms/activityReformV3/amountFrozen';
+
 		$traceNo = $this->msectime();
+
 		$postData = [
-			'agentId' => $this->agentId,						// 渠道编号
-			'token' => $token['data']['token'],					// 令牌
+			'token' => $token,									// 令牌
 			'traceNo' => $traceNo,								// 请求流水号
 			'merchId' => $this->merchId,						// 商户号
 			'directAgentId' => $this->directAgentId,			// 商户直属代理商编号
@@ -116,7 +118,7 @@ class PmposController extends Controller
 			'smsSend' => '1',									// 是否发送短信(1发送 0不发送)
 			'smsCode' => $smsCode,								// 短信模板编号
 		];
-		$data = $this->send($url, $postData);
+		$data = $this->send($url, $postData, true);
 		return $data;
 	}
 
@@ -167,9 +169,6 @@ class PmposController extends Controller
 	{
 		header("Content-type:text/html;charset=utf-8");
 		$token = $this->getToken('2061');
-		if ($token['code'] != '00') {
-			return $this->error('系统错误');
-		}
 		$url = $this->http.'/api/acq-channel-gateway/v1/acq-channel-service/merchant/fee/updateNonAudit';
 		$postData = [
 			'agentId' 			=> $this->agentId,
@@ -193,13 +192,16 @@ class PmposController extends Controller
 	public function getMerchantFee()
 	{
 		$token = $this->getToken('2062');
-		$url = $this->http.'/api/acq-channel-gateway/v1/acq-channel-service/getMerchantFeeInfo';
+
+		$url = '/api/acq-channel-gateway/v1/acq-channel-service/getMerchantFeeInfo';
+
 		$postData = [
-			'agentId' 	=> $this->agentId,
-			'token' 	=> $token['data']['token'],
+			'token' 	=> $token,
 			'merchId' 	=> $this->merchId,
 		];
+
 		$data = $this->send($url, $postData);
+
 		return $data;
 	}
 

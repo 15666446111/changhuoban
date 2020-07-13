@@ -24,4 +24,13 @@ class Cash extends Model
     {
     	return $this->belongsTo('\App\Trade', 'order', 'trade_no');
     }
+
+    /**
+     * [users 反向关联用户表]
+     * @return [type] [description]
+     */
+    public function users()
+    {
+        return $this->belongsTo('\App\User', 'user_id', 'id');
+    }
 }

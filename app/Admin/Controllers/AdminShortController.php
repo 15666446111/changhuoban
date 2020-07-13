@@ -10,6 +10,8 @@ use App\Admin\Actions\SyncSms;
 use Encore\Admin\Facades\Admin;
 use Encore\Admin\Controllers\AdminController;
 
+use Encore\Admin\Controllers\AdminController;
+
 class AdminShortController extends AdminController
 {
     /**
@@ -83,6 +85,7 @@ class AdminShortController extends AdminController
         }
         
         $show->field('id', __('索引'));
+        $show->field('type', __('短信类型'))->using([1 => 'POS服务费', 2 => '流量卡费', 3 => 'VIP会员费']);
         $show->field('number', __('短信编号'));
         $show->field('content', __('短信内容'));
         $show->field('created_at', __('创建时间'));

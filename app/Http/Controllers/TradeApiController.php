@@ -44,16 +44,45 @@ class TradeApiController extends Controller
             'sign'          => $request->sign              // 签名
         ];
 
+        ## 签名验证
+        $key = '16D0462C164CB0E3AD6EF2B0B9514092';
+
+        // 参与验签的数据
+        $signData = [
+            'configAgentId' => $request->configAgentId,
+            'sendBatchNo'   => $request->sendBatchNo,
+            'sendTime'      => $request->sendTime,
+            'sendNum'       => $request->sendNum,
+            'transDate'     => $request->transDate,
+            'dataType'      => $request->dataType,
+        ];
+
+        // 1.按照参数名ASCII码从小到大排序
+        ksort($signData);
+
+        // 2.将key和参数值拼接成字符串
+        $stringA = $key . implode('', $signData);
+
+        // 3.将拼接的字符串进行md5加密
+        $reData['sign'] = MD5($stringA);
+        
+        if ($request->sign != MD5($stringA)) {
+            $reData['responseCode'] = '01';
+            $reData['responseDesc'] = '验签失败';
+            $reData['revTime'] = date('YmdHis', time());
+            return json_encode($reData);
+        }
+
         $dataList = json_decode($request->dataList);
         
         if ($request->dataType == 0) {
             // 商户开通通知处理
-            // try{
+            try{
 
                 foreach ($dataList as $key => $value) {
 
                     $regContent = \App\RegNoticeContent::create([
-                        //商户直属机构号
+                        //商户通知配置机构号
                         'config_agent_id'       =>      $request->configAgentId,
                         //商户直属机构号
                         'agentId'               =>      $value->agentId,
@@ -70,27 +99,27 @@ class TradeApiController extends Controller
                     ]);
                     
                     //压入到队列去处理剩下的逻辑
-                    // HandleMachineInfo::dispatch($regContent);
+                    HandleMachineInfo::dispatch($regContent);
                     
                     // 开通通知测试，正式环境需分发到队列中处理
-                    $profit = new TestMerchantController($regContent);
-                    $profit->index();
+                    // $profit = new TestMerchantController($regContent);
+                    // $profit->index();
 
                 }
 
-            // } catch (\Exception $e) {
+            } catch (\Exception $e) {
 
-            //     $reData['responseCode'] = '01';
-            //     $reData['responseDesc'] = $e->getMessage();
+                $reData['responseCode'] = '01';
+                $reData['responseDesc'] = $e->getMessage();
 
-            // }
+            }
             
         } else {
             // 交易通知处理
             
             foreach ($dataList as $key => $value) {
 
-                // try{
+                try{
 
                     // $value->sysRespCode != '00'  交易失败的数据
                     // $desc == '原交易已冲正'       无效冲正类交易
@@ -246,32 +275,32 @@ class TradeApiController extends Controller
                     
                     // 分发到队列 由队列去处理剩下的逻辑
                     // 为冲正和撤销类交易时，延迟5分钟后执行
-                    // if (!empty($reduceTranCode[$value->tranCode])) {
-
-                    //     HandleTradeInfo::dispatch($tradeOrder)->delay(now()->addMinutes(5));
-
-                    // // 撤销冲正类交易，延迟10分钟后执行
-                    // } else if ($value->tranCode == '020023' || $value->tranCode == '024123') {
+                    if (!empty($reduceTranCode[$value->tranCode])) {
                         
-                    //     HandleTradeInfo::dispatch($tradeOrder)->delay(now()->addMinutes(10));
+                        HandleTradeInfo::dispatch($tradeOrder)->delay(now()->addMinutes(3));
 
-                    // } else {
+                    // 撤销冲正类交易，延迟10分钟后执行
+                    } else if ($value->tranCode == '020023' || $value->tranCode == '024123') {
+                        
+                        HandleTradeInfo::dispatch($tradeOrder)->delay(now()->addMinutes(6));
 
-                    //     HandleTradeInfo::dispatch($tradeOrder);
+                    } else {
 
-                    // }
+                        HandleTradeInfo::dispatch($tradeOrder);
+
+                    }
                     
                     
                     // 分润测试，正式环境需分发到队列中处理
-                    $profit = new TestController($tradeOrder);
-                    $profit->index();
+                    // $profit = new TestController($tradeOrder);
+                    // $profit->index();
 
-                // } catch (\Exception $e) {
+                } catch (\Exception $e) {
 
-                //     $reData['responseCode'] = '01';
-                //     $reData['responseDesc'] = '系统错误';
+                    $reData['responseCode'] = '01';
+                    $reData['responseDesc'] = '系统错误';
 
-                // }
+                }
 
             }
         }

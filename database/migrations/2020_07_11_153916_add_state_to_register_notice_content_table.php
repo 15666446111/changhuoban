@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddTypeToAdminShortTable extends Migration
+class AddStateToRegisterNoticeContentTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class AddTypeToAdminShortTable extends Migration
      */
     public function up()
     {
-        Schema::table('admin_short', function (Blueprint $table) {
+        Schema::table('register_notice_content', function (Blueprint $table) {
             
-            $table->tinyInteger('type')->default(0)->comment('类型，1: 服务费短信，2: 流量卡费短信，3:vip会员费短信');
+            $table->tinyInteger('state')->default(0)->comment('冻结状态，1正常，2异常')->after('remark');
 
         });
     }
@@ -27,7 +27,7 @@ class AddTypeToAdminShortTable extends Migration
      */
     public function down()
     {
-        Schema::table('admin_short', function (Blueprint $table) {
+        Schema::table('register_notice_content', function (Blueprint $table) {
             //
         });
     }
