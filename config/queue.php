@@ -59,14 +59,44 @@ return [
             'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
         ],
 
+
+        // 默认的队列
         'redis' => [
-            'driver' => 'redis',
-            'connection' => 'default',
-            'queue' => env('REDIS_QUEUE', 'default'),
-            'retry_after' => 90,
-            'block_for' => null,
+            'driver'        => 'redis',
+            'connection'    => 'chb',
+            'queue'         => env('REDIS_QUEUE', 'default'),
+            'retry_after'   => 90,
+            'block_for'     => null,
         ],
 
+
+        // 提现的队列
+        'redis' => [
+            'driver'        => 'redis',
+            'connection'    => 'chb_withdraw',
+            'queue'         => 'withdraw',
+            'retry_after'   => 90,
+            'block_for'     => null,
+        ],
+
+
+        // 交易的队列
+        'redis' => [
+            'driver'        => 'redis',
+            'connection'    => 'chb_trade',
+            'queue'         => 'trade',
+            'retry_after'   => 90,
+            'block_for'     => null,
+        ],
+
+        // 商户开通通知队列
+        'redis' => [
+            'driver'        => 'redis',
+            'connection'    => 'chb_merchant_open',
+            'queue'         => 'merchant_open',
+            'retry_after'   => 90,
+            'block_for'     => null,
+        ],
     ],
 
     /*

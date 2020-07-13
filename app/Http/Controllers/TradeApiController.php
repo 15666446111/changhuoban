@@ -99,7 +99,7 @@ class TradeApiController extends Controller
                     ]);
                     
                     //压入到队列去处理剩下的逻辑
-                    HandleMachineInfo::dispatch($regContent);
+                    HandleMachineInfo::dispatch($regContent)->onQueue('merchant_open');
                     
                     // 开通通知测试，正式环境需分发到队列中处理
                     // $profit = new TestMerchantController($regContent);
@@ -277,16 +277,16 @@ class TradeApiController extends Controller
                     // 为冲正和撤销类交易时，延迟5分钟后执行
                     if (!empty($reduceTranCode[$value->tranCode])) {
                         
-                        HandleTradeInfo::dispatch($tradeOrder)->delay(now()->addMinutes(3));
+                        HandleTradeInfo::dispatch($tradeOrder)->onQueue('trade')->delay(now()->addMinutes(5));
 
                     // 撤销冲正类交易，延迟10分钟后执行
                     } else if ($value->tranCode == '020023' || $value->tranCode == '024123') {
                         
-                        HandleTradeInfo::dispatch($tradeOrder)->delay(now()->addMinutes(6));
+                        HandleTradeInfo::dispatch($tradeOrder)->onQueue('trade')->delay(now()->addMinutes(10));
 
                     } else {
 
-                        HandleTradeInfo::dispatch($tradeOrder);
+                        HandleTradeInfo::dispatch($tradeOrder)->onQueue('trade');
 
                     }
                     

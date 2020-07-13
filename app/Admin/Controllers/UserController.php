@@ -29,9 +29,15 @@ class UserController extends AdminController
         $grid = new Grid(new User());
 
         //$grid->column('id', __('索引'))->sortable();
+        //
+        $type = false;
 
         if(Admin::user()->operate != "All"){
+
             $grid->model()->where('operate', Admin::user()->operate);
+
+            $type = \App\AdminSetting::where('operate_number', Admin::user()->operate)->value('pattern');
+
         }
 
         $grid->model()->latest();
@@ -42,9 +48,12 @@ class UserController extends AdminController
 
         $grid->column('account', __('账号'))->copyable()->help('用户的app登陆账号');
 
-        $grid->column('group.name', __('用户组'))->help('用户所属的用户组,联盟模式独有');
+        if( $type != 2 ){
+            $grid->column('group.name', __('用户组'))->help('用户所属的用户组,联盟模式独有');
+        }
+        
 
-        $grid->column('parent', __('父级'))->help('用户的直属上级');
+        $grid->column('parent_user.nickname', __('父级'))->help('用户的直属上级');
 
         $grid->column('active', __('状态'))->switch()->help('用户的活动状态,关闭后将无法在app登陆');
 

@@ -238,7 +238,7 @@ class RepayCjController extends Controller
             $this->withdraw->save();
 
             // 押入redis队列处理  30分钟后查询
-            WithdrawQuery::dispatch($this->withdraw)/*->onQueue('Withdraw')*/->delay(now()->addMinutes(1));
+            WithdrawQuery::dispatch($this->withdraw)->onQueue('withdraw')->delay(now()->addMinutes(10));
 
             return ['code' => 10000, 'message' => "代付交易已受理,订单状态会在30分钟内自动同步更新!"];
        
