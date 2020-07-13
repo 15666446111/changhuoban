@@ -99,8 +99,8 @@
             "splashscreen" : {
                 "android" : {
                     "hdpi" : "",
-                    "xhdpi" : "",
-                    "xxhdpi" : ""
+                    "xhdpi" : "C:/Users/86319/Desktop/微信图片_20181215144431.png",
+                    "xxhdpi" : "C:/Users/86319/Desktop/微信图片_20181215144431.png"
                 },
                 "ios" : {
                     "iphone" : {
@@ -112,11 +112,11 @@
                         "retina40l" : "",
                         "retina40" : "",
                         "retina47l" : "",
-                        "retina47" : "",
+                        "retina47" : "C:/Users/86319/Desktop/微信图片_20181215144431.png",
                         "retina55l" : "",
                         "retina55" : "",
                         "iphonexl" : "",
-                        "iphonex" : ""
+                        "iphonex" : "C:/Users/86319/Desktop/微信图片_20181227165745.png"
                     }
                 }
             }
