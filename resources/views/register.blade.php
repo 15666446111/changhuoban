@@ -69,7 +69,7 @@
 <label for="weuiAgree" class="weui-agree">
       <input id="weuiAgree" type="checkbox" class="weui-agree__checkbox">
       <span class="weui-agree__text">
-        阅读并同意<a href="javascript:void(0);">{{ config('app.name', 'Laravel') }}《相关条款》</a>
+        阅读并同意<a href="javascript:void(0);">{{ config('app.name', '畅伙伴') }}《相关条款》</a>
       </span>
 </label>
 
