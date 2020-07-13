@@ -19,8 +19,8 @@ class HomeController extends Controller
     {
         return $content->title('欢迎回家👏')->description('信息基础统计...')
 
-                ->row(function (Row $row) {
-                    $row->column(12, function (Column $column) {
+            ->row(function (Row $row) {
+                $row->column(8, function (Column $column) {
                     $UserBox = new Box('代理增长统计', $this->usersGrowth()); 
                     $UserBox->removable();
                     $UserBox->collapsable();
@@ -30,7 +30,18 @@ class HomeController extends Controller
                     $column->append($UserBox);
                 });
 
+                $row->column(4, function (Column $column) {
+                    $UserBox1 = new Box('机具类型统计', $this->typeOfJJ()); 
+                    $UserBox1->removable();
+                    $UserBox1->collapsable();
+                    $UserBox1->style('info');
+                    $UserBox1->solid();
+                    $UserBox1->scrollable();
+                    $column->append($UserBox1);
+                });
+
             });
+                
     }
 
 
@@ -50,18 +61,45 @@ class HomeController extends Controller
         // 获取当前天
         $day = $now->day;
 
-        //
-        $range = Carbon::now()->subDays( $day -1 )->toDateString();
+        // 当前月的第一天
+        $range = Carbon::now()->subDays( $day - 1 )->toDateString();
+        
+        // 获取当前月
+        $month = Carbon::now()->month;
 
         // 构建查询构造器
-        //$user = \App\User::where()->
-        $stats = \App\User::where('created_at', '>=', $range)->groupBy('date')->orderBy('date', 'DESC')
-            //->remember(1440)
-            ->get([
+        $currentData = \App\User::where('created_at', '>=', $range)->groupBy('date')->orderBy('date', 'DESC')->get([ 
                 DB::raw('Date(created_at) as date'),
                 DB::raw('COUNT(*) as value')
-            ])
-            ->toJSON();
-        return view('admin.usersGrowth', compact('day'));
+            ]);
+
+        $arrs = array();
+
+        $arrs['month'] = $month;
+
+        // 循环这个月从1号到现在的数据    
+        for($d=1; $d<= $day; $d++){
+
+            $currentDate = $currentData;
+
+
+            $arrs['current'][] = array('day' => $d, 'count' => 0); 
+        }
+
+        return view('admin.usersGrowth', compact('day', 'month', 'arrs'));
+    }
+
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-07-13
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [机具类型统计]
+     * @return    [type]      [description]
+     */
+    public function typeOfJJ()
+    {
+        return view('admin.typeOfJJ');
     }
 }

@@ -102,7 +102,7 @@ class WithdrawQuery implements ShouldQueue
 
         }else{
 
-            self::dispatch($this->withdraw)/*->onQueue('Withdraw')*/->delay(now()->addMinutes(1));
+            self::dispatch($this->withdraw)->onQueue('withdraw')->delay(now()->addMinutes(10));
 
             $this->withdraw->remark = "查询错误!";
 

@@ -1,4 +1,4 @@
-<canvas id="myChart" width="400" height="150"></canvas>
+<canvas id="myChart1"></canvas>
 <script type="text/javascript" src="https://www.chartjs.org/samples/latest/utils.js"></script>
 <script>
 
@@ -7,8 +7,8 @@ var MONTHS = [];
 var labels = [];
 
 for(var i = 1; i<= {{$day}}; i++){
-    MONTHS.push(i)
-    labels.push(i)
+    //MONTHS.push(i)
+    labels.push('{{$month}}.'+i)
 }
 
 var data = {
@@ -79,7 +79,7 @@ var options = {
 }
 
 window.onload = function() {
-    var ctx = document.getElementById('myChart').getContext('2d');
+    var ctx = document.getElementById('myChart1').getContext('2d');
     var myLineChart = new Chart(ctx, {type: 'line', data: data, options: options});
     //window.myLine = new Chart(ctx, config);
 };

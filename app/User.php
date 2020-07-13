@@ -168,6 +168,20 @@ class User extends Authenticatable
     }
 
 
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-07-13
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [父级信息]
+     * @return    [type]      [description]
+     */
+    public function parent_user()
+    {
+        return $this->hasOne('App\User', 'parent', 'id')->withDefault(['nickname' => '平台直属下级']);
+    }
+
+
      /**
      * 关联税点表
      */

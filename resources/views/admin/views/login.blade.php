@@ -2,19 +2,19 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>{{config('admin.title')}} | {{ trans('admin.login') }}</title>
-
-    <link rel="stylesheet" media="screen" href="{{ URL::asset('css/admin.css') }}" />
-
+    
     @if(!is_null($favicon = Admin::favicon()))
     <link rel="shortcut icon" href="{{$favicon}}">
     @endif
 
-    <meta name="referrer" content="origin">
-    <meta http-equiv="Cache-Control" content="no-store"/>
-    <meta http-equiv="Pragma" content="no-cache"/>
-    <meta http-equiv="Expires" content="0"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>{{config('admin.title')}} | {{ trans('admin.login') }}</title>
+
+    <link rel="stylesheet" media="screen" href="{{ URL::asset('css/admin.css') }}" />
+
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    
     <style>
         .dowebok {animation-delay: .5s;-webkit-animation-delay:.5s;}
     </style>
