@@ -39,7 +39,7 @@ class MineController extends Controller
             //用户级别
             $data['group'] = $userFirst->group->name;
             //注册时间
-            $data['created_at'] = $userFirst->created_at;
+            $data['created_at'] = $userFirst->created_at->toDateTimeString();
 
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $data]]);
 

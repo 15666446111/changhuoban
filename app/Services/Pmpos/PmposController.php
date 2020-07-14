@@ -48,7 +48,7 @@ class PmposController extends Controller
     public function __construct($merchantCode = false, $sn = false, $adminSetting = false)
     {
 
-    	if(	$merchantCode && $sn){
+    	if(	$merchantCode && $sn ){
 
 	    	$operate = \App\Merchant::where('code', $merchantCode)->value('operate');
 
@@ -210,12 +210,9 @@ class PmposController extends Controller
 	 */
 	public function recordQuery()
 	{
-		$tokenType = '2085';
-		$token = $this->getToken($tokenType);
-		$url = $this->http . '/api/acq-channel-gateway/v1/terminal-service/terms/activityReformV3/queryMerchWithAmtList';
+		$url = '/api/acq-channel-gateway/v1/terminal-service/terms/activityReformV3/queryMerchWithAmtList';
 		
-		$postData['agentId'] 	= $this->agentId;
-		$postData['token'] 		= $token['data']['token'];
+		$postData['token'] 		= $this->getToken(2085);
 		$postData['merchId'] 	= $this->merchId;
 		$postData['sn'] 		= $this->merchSn;
 
