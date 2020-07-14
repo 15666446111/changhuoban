@@ -22,7 +22,7 @@ class CrontabController extends Controller
 
 		foreach ($machineList as $k => $v) {
 			$pmpos = new PmposController($v->sn, $v->merchants->code);
-			// $
+			// $data = 
 		}
 	}
 }
