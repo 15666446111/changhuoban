@@ -118,6 +118,10 @@ Route::prefix('V1')->group(function () {
     */
     Route::middleware('AuthToken')->post('/updateUserInfo', 'V1\SetUserController@editUserInfo');
     
+    /**
+     * 修改用户头像
+    */
+    Route::middleware('AuthToken')->post('/editAvatar', 'V1\SetUserController@editUserInfo');
 
     /**
      * 添加银行卡结算信息接口

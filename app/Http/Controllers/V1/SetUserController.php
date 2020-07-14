@@ -60,30 +60,38 @@ class SetUserController extends Controller
      */
     public function editUserInfo(Request $request){
 
-        try{
-            $User = \App\User::where('id', $request->user->id)->first(); 
-            
-            $heading = $request->avatar;
-            var_dump($request->all());
-            $filename = uniqid() . '.' . $heading->getClientOriginalExtension();
-            
-            Storage::disk('file')->put('/'.$filename,file_get_contents($heading->getRealPath()));
+        //try{
 
-            $User->avatar = "images/".$filename;
+            $tmp = $request->file('file');
 
-            $res = $User->save();
+            //判断文件上传是否有效
+            if($tmp->isValid()) {
+                //获取文件后缀
+                $FileType = $tmp->getClientOriginalExtension(); 
 
-            if($res){
+                //获取文件临时存放位置
+                $FilePath = $tmp->getRealPath(); 
 
-                return response()->json(['success'=>['message' => '修改成功!', []]]); 
+                //定义文件名
+                $FileName = date('Ymd') . uniqid() . '.' . $FileType; 
 
+                //存储文件
+                Storage::disk('avatar')->put($FileName, file_get_contents($FilePath));
+
+                $request->user->avatar = "avatar/".$FileName;
+
+                $request->user->save();
+
+                return response()->json(['success'=>['message' => '修改成功!', 'link' => "http://".$_SERVER["HTTP_HOST"]."/avatar/" . $FileName ]]);
             }
 
-        } catch (\Exception $e) {
+            return response()->json(['error'=>['message' => '头像上传失败!']]);
+
+        /*} catch (\Exception $e) {
             
             return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
 
-        }
+        }*/
         
     }
 
