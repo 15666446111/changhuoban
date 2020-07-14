@@ -41,7 +41,8 @@ class ShareController extends Controller
             //二维码文件
             $CodeFile = $CodePath."qrcode.png";
             // 生成二维码
-            QrCode::format('png')->size($list->code_size)->margin($list->code_margin)->generate($Url, $CodeFile);
+            
+            QrCode::format('png')->size((int)$list->code_size)->margin(1)->generate($Url, $CodeFile);
 
             $typeArr=getimagesize(storage_path('app/public/'.$list->getOriginal('images')));
 
@@ -68,7 +69,7 @@ class ShareController extends Controller
             //$BackGroud =  imagecreatefromjpeg(storage_path('app/public/'.$list->image));
             $qrcode    =  imagecreatefrompng($CodeFile);
 
-            imagecopyresampled($BackGroud, $qrcode, $list->code_x, $list->code_y, 0, 0, 112, 112, imagesx($qrcode), imagesy($qrcode));
+            imagecopyresampled($BackGroud, $qrcode, $list->code_x, $list->code_y, 0, 0, imagesx($qrcode), imagesy($qrcode), imagesx($qrcode), imagesy($qrcode));
 
             // 海报生成位置
             $PicPath   = public_path('/share/'.$request->user->id.'/team_share/');
@@ -124,7 +125,7 @@ class ShareController extends Controller
             //二维码文件
             $CodeFile = $CodePath."qrcode.png";
             // 生成二维码
-            QrCode::format('png')->size($list->code_size)->margin($list->code_margin)->generate($Url, $CodeFile);
+            QrCode::format('png')->size($list->code_size)->margin(1)->generate($Url, $CodeFile);
 
             $typeArr=getimagesize(storage_path('app/public/'.$list->getOriginal('images')));
 
@@ -151,7 +152,7 @@ class ShareController extends Controller
             //$BackGroud =  imagecreatefromjpeg(storage_path('app/public/'.$list->image));
             $qrcode    =  imagecreatefrompng($CodeFile);
 
-            imagecopyresampled($BackGroud, $qrcode, $list->code_x, $list->code_y, 0, 0, 200, 200, imagesx($qrcode), imagesy($qrcode));
+            imagecopyresampled($BackGroud, $qrcode, $list->code_x, $list->code_y, 0, 0, imagesx($qrcode), imagesy($qrcode), imagesx($qrcode), imagesy($qrcode));
 
             // 海报生成位置
             $PicPath   = public_path('/share/'.$request->user->id.'/team_share/');
