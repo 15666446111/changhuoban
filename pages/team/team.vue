@@ -130,9 +130,9 @@
 			</view>
 		</view>
 		
-		<!-- <navigator  hover-class="none"  url="tradeTeam/tradeTeam">
+		<navigator  hover-class="none"  url="tradeTeam/tradeTeam">
 			<button class="button">业 务 详 情</button>
-		</navigator> -->
+		</navigator>
 		
 		<view style="height: 130upx;"></view>
 		

@@ -6,7 +6,7 @@
 			<view class="titlebar">
 				<view class="rise"> 
 					<view class="rise-head">
-						<image class="head" :src="UserInfo.heading" @click="changeAvatar(UserInfo.heading)" mode="aspectFill" />
+						<image class="head" :src="UserInfo.heading" @click="changeAvatar()" mode="aspectFill" />
 						<view class="name">账号:{{ UserInfo.account}}</view>
 					</view>
 
@@ -188,77 +188,44 @@ export default {
 	            }
 	      	})
 		},
-		// changeAvatar(heading){
-		//         uni.showActionSheet({
-		//         // itemList按钮的文字接受的是数组
-		//           itemList: ["查看头像","从相册选择图片"],
-		//           success(e){
-		//             var index = e.tapIndex
-		//             if(index === 0){
-		//             // 用户点击了预览当前图片
-		//             // 可以自己实现当前头像链接的读取
-		//               let url  = heading
-		//               let arr=[]
-		//               arr.push(url)
-		//               uni.previewImage({
-		//               // 预览功能图片也必须是数组的
-		//                 urls: arr
-		//               })
-		//             }else if(index === 1){
-		//             // 用户点击了从图库上传
-		//               uni.chooseImage({
-		//                 count: 1,
-		//                 sizeType: ["compressed"],
-		//                 success(response) {
-							
-		//                 // 选择图片后, 返回的数据
-		// 				   var file =[];
-		//                    file = response.tempFiles[0]
-		// 				   // console.log(file);return;
-		// 				   var formData = new FormData();
-		// 				   formData.append('file',response.tempFiles[0]);
-		// 				   uni.uploadFile({
-		// 					   url: 'http://3.changhuoban.com/api/V1/updateUserInfo', 
-		// 					   filePath: tempFilePaths[0],
-		// 					   name: 'file',
-		// 					   formData: {
-		// 						   'user': 'test'
-		// 					   },
-		// 					   success: (uploadFileRes) => {
-		// 						   console.log(uploadFileRes.data);
-		// 					   }
-		// 				   });
-		// 					net({
-		// 			         	 url:"/V1/updateUserInfo",
-		// 			             method:'post',
-		// 						 data:formData,
-		// 						 header:{"Content-Type": "multipart/form-data"},
-		// 			             success: (res) => {
-		// 							uni.hideLoading();
-		// 							if (res.data.success) {
-		// 								uni.showToast({
-		// 									title: res.data.success.message,
-		// 									icon: 'none',
-		// 									success : function(){
-		// 										setTimeout(function() {
-		// 											uni.navigateBack();
-		// 										}, 1500);
-		// 									}
-		// 								});
-		// 							} else {
-		// 								uni.showToast({
-		// 									title: res.data.error.message,
-		// 									icon: 'none'
-		// 								});
-		// 							}
-		// 			             }
-		// 			       	})
-		//                 }
-		//               })
-		//             }
-		//         }
-		// 	})
-		// }
+		changeAvatar(){
+			var that =this;
+			uni.chooseImage({
+				count: 1,
+				//可以指定是原图还是压缩图，默认二者都有
+				sizeType: ['original', 'compressed'], 
+				//从相册选择
+				sourceType: ['album'], 
+				success: function (res) {
+					const tempFilePaths = res.tempFilePaths;
+					// 获取token
+					const token   = uni.getStorageSync('token');
+					const uploadTask = uni.uploadFile({
+						url : 'http://livechb3.changhuoban.com/api/V1/editAvatar',
+						header: {'Authorization' : 'Bearer ' + token},
+						filePath: tempFilePaths[0],
+						name: 'file',
+						dataType: 'json',
+						success: function (uploadFileRes) {
+							var result = JSON.parse(uploadFileRes.data);
+							if(result.success && result.success.link){
+								uni.showToast({ title: result.success.message, icon: 'none', position: 'bottom' })
+								//console.log(that.UserInfo.heading)
+								that.UserInfo.heading = result.success.link;
+								//console.log(that.UserInfo.heading)
+								//that.$forceUpdate();
+							}else{
+								uni.showToast({
+									title:result.error.message,
+									icon: 'none',
+									position: 'bottom'
+								})
+							}
+						}
+					})
+				},
+			});
+		},
 	},
 	filters: {
 		numberGSH(value){
