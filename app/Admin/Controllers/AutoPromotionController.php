@@ -48,6 +48,10 @@ class AutoPromotionController extends AdminController
 
         });
 
+        $grid->header(function ($query) {
+            return '<code>自动晋升标准说明: 系统会在每月1号进行交易量检测, 交易检测日的上一月月初与月末的交易量满足对应的用户组标准,交易检测月按照对应用户组晋升, 最低为C1</code>';
+        });
+
         return $grid;
     }
 

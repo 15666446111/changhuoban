@@ -10,8 +10,6 @@ use App\Admin\Actions\SyncSms;
 use Encore\Admin\Facades\Admin;
 use Encore\Admin\Controllers\AdminController;
 
-use Encore\Admin\Controllers\AdminController;
-
 class AdminShortController extends AdminController
 {
     /**

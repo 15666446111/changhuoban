@@ -77,6 +77,13 @@ return [
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
         ],
+
+        'avatar' => [
+            'driver'        => 'local',
+            'root'          => storage_path('app/public/avatar'), // public_path 就是public的路径 
+            'url'           => env('APP_URL').'/storage',
+            'visibility'    => 'public',
+        ],
     ],
 
     /*
