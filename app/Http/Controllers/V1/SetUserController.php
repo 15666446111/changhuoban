@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\V1\BankController;
 
 class SetUserController extends Controller
 {
@@ -146,7 +147,12 @@ class SetUserController extends Controller
 
             $model = new BankController();
 
-            $bank = ['bank_name'=>$request->bank_name,'city'=>$request->city,'province'=>$request->province];
+            $bank = [
+                'bank_name' => $request->bank_name,
+                'city'      => $request->city,
+                'province'  => $request->province,
+                'card'      => $request->bank
+            ];
             
             $banklink = $model->openBank($bank);
 

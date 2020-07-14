@@ -14,15 +14,24 @@ class BankController extends Controller
     public function openBank($bank)
     {
         $host = "https://cnaps.market.alicloudapi.com";
-        $path = "/lundroid/queryunionbankno";
+        $path = "/lianzhuo/querybankaps";
         $method = "GET";
-        $appcode = "2b98c225a8d24644959f3c7bcec08e23";
+        $appcode = "2b98c225a8d24644959f3c7bcec08e23";//AppCode
         $headers = array();
         array_push($headers, "Authorization:APPCODE " . $appcode);
-        $querys = 'bank='.$bank['bank_name'].'&city='.$bank['city'].'&province='.$bank['province'];
+
+        $data = [
+            'bank'      => $bank['bank_name'],
+            'card'      => $bank['card'],
+            'city'      => $bank['city'],
+            'province'  => $bank['province'],
+        ];
+        $querys = http_build_query($data , '' , '&');
         $bodys = "";
-        // $querys = "bank=中国民生银行&city=济南市&province=山东";
         $url = $host . $path . "?" . $querys;
+
+        // dd($url);
+
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt($curl, CURLOPT_URL, $url);
