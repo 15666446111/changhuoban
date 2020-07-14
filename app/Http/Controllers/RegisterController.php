@@ -228,7 +228,7 @@ class RegisterController extends Controller
             // 获取到该用户的最后一条可用的验证码
             $codeMsg = \App\SmsCode::where('phone', $phone)
                                     ->where('is_use', 0)
-                                    ->where('out_time', Carbon::now()->toDateTimeString())
+                                    ->where('out_time', '>=', Carbon::now()->toDateTimeString())
                                     ->orderBy('id', 'desc')->first();
 
             if(empty($codeMsg) or !$codeMsg){
