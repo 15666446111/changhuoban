@@ -21,8 +21,11 @@ class CrontabController extends Controller
 									->select();
 
 		foreach ($machineList as $k => $v) {
+			
 			$pmpos = new PmposController($v->sn, $v->merchants->code);
-			// $data = 
+
+			$data = $pmpos->recordQuery();
+
 		}
 	}
 }
