@@ -129,7 +129,7 @@ class User extends Authenticatable
      */
     public function getAvatarAttribute($value)
     {
-        return "http://".$_SERVER["HTTP_HOST"]."/".$value;
+        return "http://".$_SERVER["HTTP_HOST"]."/storage/".$value;
     }
 
 

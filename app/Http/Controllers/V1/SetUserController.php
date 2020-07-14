@@ -82,7 +82,7 @@ class SetUserController extends Controller
 
                 $request->user->save();
 
-                return response()->json(['success'=>['message' => '修改成功!', 'link' => "http://".$_SERVER["HTTP_HOST"]."/avatar/" . $FileName ]]);
+                return response()->json(['success'=>['message' => '修改成功!', 'link' => "http://".$_SERVER["HTTP_HOST"]."/storage/avatar/" . $FileName ]]);
             }
 
             return response()->json(['error'=>['message' => '头像上传失败!']]);
