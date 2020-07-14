@@ -151,7 +151,7 @@ class ShareController extends Controller
             //$BackGroud =  imagecreatefromjpeg(storage_path('app/public/'.$list->image));
             $qrcode    =  imagecreatefrompng($CodeFile);
 
-            imagecopyresampled($BackGroud, $qrcode, $list->code_x, $list->code_y, 0, 0, 112, 112, imagesx($qrcode), imagesy($qrcode));
+            imagecopyresampled($BackGroud, $qrcode, $list->code_x, $list->code_y, 0, 0, 200, 200, imagesx($qrcode), imagesy($qrcode));
 
             // 海报生成位置
             $PicPath   = public_path('/share/'.$request->user->id.'/team_share/');
