@@ -10,7 +10,7 @@ use App\Http\Controllers\TestController;
 
 class TradeApiController extends Controller
 {
-    
+
     /**
      * [index 接收助代通(畅捷的推送信息)]
      * @author Pudding
@@ -73,7 +73,7 @@ class TradeApiController extends Controller
             return json_encode($reData);
         }
 
-        $dataList = json_decode(json_encode($request->dataList));
+        $dataList = json_decode($request->dataList);
         
         if ($request->dataType == 0) {
             // 商户开通通知处理
