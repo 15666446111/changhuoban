@@ -71,6 +71,7 @@ class RegisterController extends Controller
                 'password'      =>  "###" . md5(md5($request->register_password . 'v3ZF87bMUC5MK570QH')),
                 'phone'         =>  $request->register_phone,
                 'parent'        =>  $Parent->id,
+                'operate'       =>  $Parent->operate,
                 'user_group'    =>  1,
             ]);
 
