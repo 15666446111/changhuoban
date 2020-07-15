@@ -73,7 +73,7 @@ class TradeApiController extends Controller
             return json_encode($reData);
         }
 
-        $dataList = json_decode($request->dataList);
+        $dataList = json_decode(json_encode($request->dataList));
         
         if ($request->dataType == 0) {
             // 商户开通通知处理
