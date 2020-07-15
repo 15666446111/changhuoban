@@ -58,13 +58,28 @@ class MerchantController extends AdminController
             // 去掉默认的id过滤器
             $filter->disableIdFilter();
 
-            $filter->column(1/4, function ($filter) {
-                $filter->like('code', '商户号');
+            $filter->column(1/3, function ($filter) {
+                $filter->like('code', '商户编号')->placeholder('机具开通的商户编号,模糊匹配');;
             });
 
-            $filter->column(1/4, function ($filter) {
-                $data = Admin::user()->operate == "All" ? array() : array('operate' => Admin::user()->operate);
-                $filter->equal('user_id', '代理')->select(\App\User::where($data)->get()->pluck('nickname', 'id'));
+            $filter->column(1/3, function ($filter) {
+                $filter->like('name', '商户名称')->placeholder('机具开通的商户名称,模糊匹配');;
+            });
+
+            $filter->column(1/3, function ($filter) {
+                $filter->like('phone', '商户电话')->placeholder('机具开通的商户电话,模糊匹配');;
+            });
+
+            $filter->column(1/3, function ($filter) {
+                $filter->like('users.account', '持有人')->placeholder('商户归属人的登陆账号,模糊匹配');
+            });
+
+            $filter->column(1/3, function ($filter) {
+                $filter->like('machines.sn', 'SN')->placeholder('商户所拥有的SN编号,模糊匹配');
+            });
+
+            $filter->column(1/3, function ($filter) {
+                $filter->between('created_at', '开通时间')->datetime();
             });
         });
 

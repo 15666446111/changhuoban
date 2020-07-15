@@ -30,6 +30,7 @@ class CashController extends AdminController
         if(Admin::user()->operate != "All"){
             $grid->model()->where('operate', Admin::user()->operate);
         }
+        
         $grid->model()->latest();
         //$grid->column('id', __('索引'));
         $grid->column('users.nickname', __('会员昵称'))->help('分润所归属的用户昵称');
@@ -63,10 +64,18 @@ class CashController extends AdminController
             $filter->disableIdFilter();
 
             $filter->column(1/3, function ($filter) {
-                $filter->like('order', '订单');
+                $filter->like('order', '订单')->placeholder('交易的订单编号,模糊匹配');
             });
 
-            // 交易类型
+            $filter->column(1/3, function ($filter) {
+                $filter->like('users.account', '账号')->placeholder('分润的代理登陆账号,模糊匹配');
+            });
+
+            $filter->column(1/3, function ($filter) {
+                $filter->like('trades.merchant_code', '交易商户')->placeholder('交易的商户号编号,模糊匹配');
+            });
+
+            // 分润类型
             $filter->column(1/3, function ($filter) {
                 $filter->equal('cash_type', '分润类型')->select([
                     '1'      => '直营分润', 
@@ -80,6 +89,32 @@ class CashController extends AdminController
                     '9'      => '财商学院推荐奖励'
                 ]);
             });
+
+            // 交易类型
+            $filter->column(1/3, function ($filter) {
+                $filter->equal('trades.trade_type', '交易类型')->select([
+                    '020000' => '消费', 
+                    '020002' => '消费撤销', 
+                    '020003' => '消费冲正',
+                    '020023' => '消费撤销冲正',
+                    'U20000' => '电子现金',
+                    'T20003' => '日结消费冲正',
+                    'T20000' => '日结消费',
+                    '024100' => '预授权完成',
+                    '024102' => '预授权完成撤销',
+                    '024103' => '预授权完成冲正',
+                    '024123' => '预授权完成撤销 冲正',
+                    '020001' => '退货',
+                    '02B100' => '支付宝被扫',
+                    '02B200' => '支付宝主扫',
+                    '02W100' => '微信被扫',
+                    '02W200' => '微信主扫',
+                    '02Y100' => '银联被扫',
+                    '02Y200' => '银联主扫',
+                    '02Y600' => '银联二维码撤销'
+                ]);
+            });
+
             // 在这里添加字段过滤器
             $filter->column(1/3, function ($filter) {
                 $filter->between('created_at', '分润时间')->datetime();

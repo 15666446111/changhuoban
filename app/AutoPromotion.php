@@ -20,6 +20,20 @@ class AutoPromotion extends Model
 
     /**
      * @Author    Pudding
+     * @DateTime  2020-07-15
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 关联操盘方]
+     * @return    [type]      [description]
+     */
+    public function operates()
+    {
+        return $this->belongsTo('\App\AdminSetting', 'operate', 'operate_number');
+    }
+
+
+    /**
+     * @Author    Pudding
      * @DateTime  2020-06-28
      * @copyright [copyright]
      * @license   [license]
