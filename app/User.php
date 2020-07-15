@@ -178,7 +178,7 @@ class User extends Authenticatable
      */
     public function parent_user()
     {
-        return $this->hasOne('App\User', 'parent', 'id')->withDefault(['nickname' => '平台直属下级']);
+        return $this->hasOne('App\User', 'id', 'parent')->withDefault(['nickname' => '平台直属下级']);
     }
 
 
