@@ -71,6 +71,7 @@ class RegisterController extends Controller
                 'password'      =>  "###" . md5(md5($request->register_password . 'v3ZF87bMUC5MK570QH')),
                 'phone'         =>  $request->register_phone,
                 'parent'        =>  $Parent->id,
+                'operate'       =>  $Parent->operate,
                 'user_group'    =>  1,
             ]);
 
@@ -228,7 +229,7 @@ class RegisterController extends Controller
             // 获取到该用户的最后一条可用的验证码
             $codeMsg = \App\SmsCode::where('phone', $phone)
                                     ->where('is_use', 0)
-                                    ->where('out_time', Carbon::now()->toDateTimeString())
+                                    ->where('out_time', '>=', Carbon::now()->toDateTimeString())
                                     ->orderBy('id', 'desc')->first();
 
             if(empty($codeMsg) or !$codeMsg){

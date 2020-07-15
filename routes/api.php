@@ -400,6 +400,17 @@ Route::prefix('V1')->group(function () {
      * @version [<微信分享文案列表>] 
      */
     Route::middleware('AuthToken')->get('/wx_share_list', 'V1\ArticleController@wxShare');
+    
+
+    /**
+     * @version [<APP 获取某代理的商户分布情况 >] [<description>]
+     * @return  [代理的商户分布情况]   [<description>]
+     * @version [<获取某代理的商户分布情况] [<description>]
+     */
+    Route::middleware('AuthToken')->get('/getAgentMerchant', 'V1\AgentController@getAgentDetail');
+    Route::middleware('AuthToken')->get('/getAgentTeam',     'V1\AgentController@getAgentTeamDetail');
+    Route::middleware('AuthToken')->get('/getAgentTemail',   'V1\AgentController@getAgentTemail');
+    Route::middleware('AuthToken')->get('/getAgentActive',   'V1\AgentController@getAgentActive');
 
 });
 

@@ -14,10 +14,16 @@ class HandleTradeInfo implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
-     * [$podcast 用来接收参数的变量]
+     * [$trade 用来接收参数的变量]
      * @var [type]
      */
     protected $trade;
+
+    /**
+     * [$tradesDeputy 当前交易订单对应的交易副表的信息]
+     * @var [type]
+     */
+    protected $tradesDeputy;
 
     /**
      * Create a new job instance.
@@ -35,6 +41,8 @@ class HandleTradeInfo implements ShouldQueue
     public function __construct(Trade $params)
     {
         $this->trade = $params;
+
+        $this->tradesDeputy = $this->trade->trades_deputies;
     }
 
     
@@ -113,12 +121,6 @@ class HandleTradeInfo implements ShouldQueue
 
         /**
          * @version [<vector>] [< 实行商户绑定>]
-         *
-         * 1.判断当前商户是否存在
-         *      不存在：添加商户信息
-         *      判断机具是否绑定商户
-         *          未绑定：更新绑定商户信息
-         *          已绑定？？
          */
         try {
             $merInfo = \App\Merchant::where('code', $this->trade->merchant_code)->first();

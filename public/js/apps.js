@@ -77,7 +77,7 @@ $(function() {
 	// 获取验证码
 	$(".weui-vcode-btn").click(function(){
 
-		var count = 10;
+		var count = 60;
 		var This = this;
         this.disabled = true;
         var ThisObj = $(this);
@@ -91,7 +91,7 @@ $(function() {
             This.disabled = false;
             This.innerHTML = '发送验证码';
             ThisObj.removeClass("SendButton");
-            count = 10;
+            count = 60;
 	        return false; 
 	    } 
 

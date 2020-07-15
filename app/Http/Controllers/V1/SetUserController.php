@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\V1\BankController;
 
 class SetUserController extends Controller
 {
@@ -127,7 +128,7 @@ class SetUserController extends Controller
      */
     public function insertBank(Request $request)
     {
-        //try{ 
+        try{ 
             
 
             if(!$request->name) return response()->json(['error'=>['message' => '缺少必要参数:姓名']]);
@@ -146,7 +147,12 @@ class SetUserController extends Controller
 
             $model = new BankController();
 
-            $bank = ['bank_name'=>$request->bank_name,'city'=>$request->city,'province'=>$request->province];
+            $bank = [
+                'bank_name' => $request->bank_name,
+                'city'      => $request->city,
+                'province'  => $request->province,
+                'card'      => $request->bank
+            ];
             
             $banklink = $model->openBank($bank);
 
@@ -174,11 +180,11 @@ class SetUserController extends Controller
 
             return response()->json(['success'=>['message' => '添加成功!', []]]); 
 
-/*    	} catch (\Exception $e) {
+    	} catch (\Exception $e) {
             
             return response()->json(['error'=>['message' => '银行卡信息不正确']]);
 
-        }*/
+        }
     }
 
     /**
@@ -283,7 +289,12 @@ class SetUserController extends Controller
 
             $model = new BankController();
 
-            $bank = ['bank_name'=>$request->bank_name,'city'=>$request->city,'province'=>$request->province];
+            $bank = [
+                'bank_name' => $request->bank_name,
+                'city'      => $request->city,
+                'province'  => $request->province,
+                'card'      => $request->bank
+            ];
             
             $banklink = $model->openBank($bank);
 
