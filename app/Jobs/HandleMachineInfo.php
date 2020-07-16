@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use Carbon\Carbon;
 use App\RegNoticeContent;
 use App\Http\Controllers\MachineConfig;
 use App\Services\Pmpos\PmposController;
@@ -83,6 +84,11 @@ class HandleMachineInfo implements ShouldQueue
             // 更新机器开通状态
             $this->machine->open_state  = 1;
             $this->machine->open_time   = date('Y-m-d H:i:s', time());
+
+            // 机器过期状态
+            if (!empty($this->machine->active_end_time) && Carbon::now() > $this->machine->active_end_time) {
+                $this->machine->overdue_state = 1;
+            }
             $this->machine->save();
             
         }
@@ -166,11 +172,10 @@ class HandleMachineInfo implements ShouldQueue
         }
 
         /**
-         * 更新商户和机具的开通和绑定状态
+         * 添加和更新商户绑定信息
          * @var [type]
          */
         try {
-
 
             $merchant = \App\Merchant::where('code', $this->regContent->merchantId)->first();
 
@@ -180,7 +185,8 @@ class HandleMachineInfo implements ShouldQueue
                 $merchant = \App\Merchant::create([
                     'user_id'       => $this->machine->user_id,
                     'code'          => $this->regContent->merchantId,
-                    'operate'       => $this->machine->operate
+                    'operate'       => $this->machine->operate,
+                    'open_time'     => Carbon::now()
                 ]);
 
             }
@@ -252,7 +258,7 @@ class HandleMachineInfo implements ShouldQueue
 
         } catch (\Exception $e) {
 
-            $this->regContent->remark .= '服务费冻结:' . json_encode($e->getMessage());
+            $this->regContent->remark .= '服务费冻结Catch:' . json_encode($e->getMessage());
             $this->regContent->state = '2';
             $this->regContent->save();
             return false;

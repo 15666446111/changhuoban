@@ -51,6 +51,7 @@ class ImportDeliverGoods extends Action
                 \App\Machine::whereIn('sn', $epliceRows)->whereNull('user_id')->update([
                     'user_id'   => $request->user,
                     'policy_id' => $request->h_policy,
+                    'active_end_time' =>  $request->active_end_time,
                 ]);
 
                 /*
@@ -143,6 +144,8 @@ HTML;
             $this->select('h_title','活动组')->options($policyGroups)->load('h_policy','/api/getAdminUserGroup');
             
             $this->select('h_policy','活动')->required();
+
+            $this->datetime('active_end_time', '激活截止时间')->format('YYYY-MM-DD HH:mm:ss');
 
             $this->file('file1', '上传导入模版')->rules('required', ['required' => '文件不能为空']);
 

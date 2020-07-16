@@ -50,7 +50,8 @@ class HeadTailDeliverGoods extends Action
 
             \App\Machine::whereIn('sn', $data)->where('bind_status', '0')->whereNull('user_id')->update([
                 'user_id'   =>  $request->user,
-                'policy_id' =>  $request->policy
+                'policy_id' =>  $request->policy,
+                'active_end_time' =>  $request->active_end_time,
             ]);
 
 
@@ -129,6 +130,8 @@ HTML;
             $this->select('title','活动组')->options($policyGroups)->load('policy','/api/getAdminUserGroup');
             
             $this->select('policy','活动')->required();
+
+            $this->datetime('active_end_time', '激活截止时间')->format('YYYY-MM-DD HH:mm:ss');
 
             $this->text('head', '机具首行终端sn')->rules('required', ['required' => '首行不能为空']);
 

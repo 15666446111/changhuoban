@@ -92,6 +92,16 @@ class ActiveMerchantController extends Controller
 
     	}
 
+        /**
+         * @var [检查机器是否在激活考核周期内]
+         */
+        // 审核截止时间
+        $assessEndTime = strtotime($this->trade->merchants_sn->open_time . '+' . $this->policy->active_cycle . 'day');
+        // 设置了考核周期，并且不在考核周期内时，不处理激活
+        if ($this->policy->active_cycle > 0 && time() > $assessEndTime) {
+            return array('status' => false, 'message' => '该机器已过激活截止时间');
+        }
+
     	## 激活标准大于0时，处理激活
     	if ($this->policy->active_price > 0) {
 
