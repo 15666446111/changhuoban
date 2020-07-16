@@ -54,6 +54,7 @@ class HandleTradeInfo implements ShouldQueue
      */
     public function handle()
     {
+
         /**
          * @version [<vector>] [< 判断是否是成功交易>]
          * $desc == '原交易已冲正'       无效冲正类交易
@@ -86,6 +87,14 @@ class HandleTradeInfo implements ShouldQueue
         }
 
         /**
+         * @version [<vector>] [< 更新交易订单的用户id和机具id信息 >]
+         */
+        $this->trade->user_id = $this->trade->merchants_sn->user_id;
+        $this->trade->machine_id = $this->trade->merchants_sn->id;
+        $this->trade->operate = $this->trade->merchants_sn->operate;
+        $this->trade->save();
+
+        /**
          * @version [<vector>] [< 检查该机器所属操盘方和畅捷后台是否一致>]
          */
         $systemCode = \App\AdminSetting::where('operate_number', $this->trade->merchants_sn->operate)->value('system_merchant');
@@ -110,14 +119,6 @@ class HandleTradeInfo implements ShouldQueue
             $this->trade->save();
             return false;
         }
-
-        /**
-         * @version [<vector>] [< 更新交易订单的用户id和机具id信息 >]
-         */
-        $this->trade->user_id = $this->trade->merchants_sn->user_id;
-        $this->trade->machine_id = $this->trade->merchants_sn->id;
-        $this->trade->operate = $this->trade->merchants_sn->operate;
-        $this->trade->save();
 
 
         /**
