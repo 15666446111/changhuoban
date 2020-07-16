@@ -53,16 +53,16 @@ class TeamController extends Controller
      */
     public function data(Request $request)
     {
-        try{
+        /*try{*/
 
             /**
              * @version [<vector>] [<获得团队日数据 , 日交易数据 >]
              */
             $model      = new StatisticController($request->user, 'day');
             // 日交易数据
-            $DayTrade = number_format(($model->getTradeSum() / 100), 2, ".", "," );
+            $DayTrade   = number_format(($model->getTradeSum() / 100), 2, ".", "," );
             // 日激活数据
-            $DayActive= $model->getMachineCount();
+            $DayActive  = $model->getMachineCount();
             // 日商户个数
             $DayMerchant = $model->getNewAddMerchant();
             // 日收益数据
@@ -145,10 +145,10 @@ class TeamController extends Controller
             ]);
 
 
-        } catch (\Exception $e) {
+        /*} catch (\Exception $e) {
 
             return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
 
-        }
+        }*/
     }
 }
