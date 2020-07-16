@@ -32,7 +32,7 @@ class LoginController extends Controller
 
             $User->last_time=   Carbon::now();
 
-            //$User->api_token=   hash('sha256', Str::random(84));
+            $User->api_token=   hash('sha256', Str::random(84));
 
             $User->save();
 
