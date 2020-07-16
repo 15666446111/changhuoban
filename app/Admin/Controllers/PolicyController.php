@@ -121,6 +121,8 @@ class PolicyController extends AdminController
             $form->hidden('operate', __('Operate'))->readonly();
 
         })->tab('激活返现设置', function ($form) {
+            
+            $form->number('active_cycle', '激活周期')->default(0)->help('激活考核周期,机器开通后当前天数内激活有效');
 
             $form->currency('default_active', __('直推激活'))->default(0)->help('机器激活,机器归属人奖励');
 

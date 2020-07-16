@@ -119,6 +119,34 @@ class HandleTradeInfo implements ShouldQueue
         $this->trade->operate = $this->trade->merchants_sn->operate;
         $this->trade->save();
 
+
+        /**
+         * @version [<vector>] [< 更新机器开通状态和过期状态 >]
+         */
+        if ($this->trade->merchants_sn->open_state == 0) {
+
+            $this->trade->merchants_sn->open_state = 1;
+
+            // 交易订单中的开通时间不为空时，更新开通时间和过期状态
+            if (!empty($this->tradesDeputy->termBindDate)) {
+
+                $openTime = date('Y-m-d H:is', strtotime($this->tradesDeputy->termBindDate));
+                // 商户开通时间
+                $this->trade->merchants_sn->open_time = $openTime;
+
+                // 更新机器过期状态
+                if (!empty($this->trade->merchants_sn->active_end_time) &&
+                     date('Y-m-d H:is', strtotime($openTime . '+1 day')) > $this->trade->merchants_sn->active_end_time) {
+
+                    $this->trade->merchants_sn->overdue_state = 1;
+
+                }
+
+            }
+            
+            $this->trade->merchants_sn->save();
+        }
+
         /**
          * @version [<vector>] [< 实行商户绑定>]
          */
@@ -145,7 +173,7 @@ class HandleTradeInfo implements ShouldQueue
             } else {
 
                 // 完善商户信息
-                if (!empty($merInfo['name']) || !empty($merInfo['phone'])) {
+                if (empty($merInfo->name) || empty($merInfo->phone)) {
 
                     \App\Merchant::where('id', $merInfo->id)->update([
                         'name'          => $this->trade->merchant_name,

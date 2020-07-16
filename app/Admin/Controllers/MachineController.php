@@ -54,9 +54,6 @@ class MachineController extends AdminController
 
         $grid->column('open_time', __('开通时间'))->help('终端机具的开通时间');
 
-        // $grid->column('is_self', __('活动自备机'))->using([ '0' => '不是', '1' => '是'])
-        //         ->dot([ 0 => 'success', 1 => 'danger' ], 'default')->help('是否是活动自备机');
-
         $grid->column('merchants.name', __('商户名称'))->help('终端机具所归属的商户名称');
 
         $grid->column('merchants.phone', __('商户电话'))->help('终端机具所归属的商户电话');
@@ -67,7 +64,11 @@ class MachineController extends AdminController
 
         $grid->column('standard_status', __('达标状态'))->using([ '0' => '默认', '1' => '连续达标', '-1' => '达标中断'])
                 ->dot([ 0 => 'default', 1 => 'success', -1 => 'error'], 'default')->help('终端机具的达标状态');
-        //$grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s');
+
+        $grid->column('overdue_state', __('过期状态'))->using([ '0' => '未过期', '1' => '已过期'])
+                ->dot([ 0 => 'success', 1 => 'default'], 'default')->help('终端机器的过期状态');
+
+        $grid->column('active_end_time', __('开通截止时间'))->help('终端机具所归属的开通截止时间');
 
         $grid->filter(function ($filter) {
             // 去掉默认的id过滤器
