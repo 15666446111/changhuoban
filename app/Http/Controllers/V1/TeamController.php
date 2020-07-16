@@ -60,17 +60,16 @@ class TeamController extends Controller
              */
             $model      = new StatisticController($request->user, 'day');
             // 日交易数据
-            $DayTrade = number_format(($model->getTradeSum() / 100), 2, ".", "," );
+            $DayTrade   = number_format(($model->getTradeSum() / 100), 2, ".", "," );
             // 日激活数据
-            $DayActive= $model->getMachineCount();
+            $DayActive  = $model->getMachineCount();
             // 日商户个数
             $DayMerchant = $model->getNewAddMerchant();
             // 日收益数据
-            $DayIncome= number_format(($model->getCashSum() / 100), 2, ".", "," );
+            $DayIncome  = number_format(($model->getCashSum() / 100), 2, ".", "," );
             // 日伙伴个数
-            $DayTeam  = $model->getNewAddTeamCount();
-            // 日台均交易
-            $DayAvgTrade = number_format( $DayMerchant !=0 ? $DayTrade / $DayMerchant : 0, 2, ".", "," );
+            $DayTeam    = $model->getNewAddTeamCount();
+
 
 
             /**
@@ -87,8 +86,7 @@ class TeamController extends Controller
             $MonthIncome= number_format(($MonthModel->getCashSum() / 100), 2, ".", "," );
             // 日伙伴个数
             $MonthTeam  = $MonthModel->getNewAddTeamCount();
-            // 日台均交易
-            $MonthAvgTrade = number_format( $MonthMerchant != 0 ? $MonthTrade / $MonthMerchant : 0, 2, ".", "," );
+
 
 
             /**
@@ -105,8 +103,6 @@ class TeamController extends Controller
             $CountIncome= number_format(($CountModel->getCashSum() / 100), 2, ".", "," );
             // 日伙伴个数
             $CountTeam  = $CountModel->getNewAddTeamCount();
-            // 日台均交易
-            $CountAvgTrade = number_format( $CountMerchant != 0 ? $CountTrade / $CountMerchant : 0 , 2, ".", "," );
 
 
             return response()->json(['success'=>
@@ -120,7 +116,6 @@ class TeamController extends Controller
                                 'merchant'  =>  $DayMerchant,
                                 'income'    =>  $DayIncome,
                                 'team'      =>  $DayTeam,
-                                'avg_trade' =>  $DayAvgTrade
                             ],
 
                             'month' =>  [
@@ -128,8 +123,7 @@ class TeamController extends Controller
                                 'active'    =>  $MonthActive,
                                 'merchant'  =>  $MonthMerchant,
                                 'income'    =>  $MonthIncome,
-                                'team'      =>  $MonthTeam,
-                                'avg_trade' =>  $MonthAvgTrade
+                                'team'      =>  $MonthTeam
                             ],
 
                             'all'   =>  [
@@ -137,8 +131,7 @@ class TeamController extends Controller
                                 'active'    =>  $CountActive,
                                 'merchant'  =>  $CountMerchant,
                                 'income'    =>  $CountIncome,
-                                'team'      =>  $CountTeam,
-                                'avg_trade' =>  $CountAvgTrade
+                                'team'      =>  $CountTeam
                             ]
                         ]
                     ]
