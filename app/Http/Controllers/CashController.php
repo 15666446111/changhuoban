@@ -246,7 +246,7 @@ class CashController extends Controller
 
         }  catch (\Exception $e) {
 
-            return array('status' => false, 'message' => json_encode($e->getMessage());
+            return array('status' => false, 'message' => json_encode($e->getMessage()));
 
         }
     	
