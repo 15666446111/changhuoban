@@ -96,4 +96,8 @@ Route::group([
     $router->resource('holidays', HolidayController::class);
     // 验证码
     $router->resource('sms-codes', SmsCodeController::class);
+
+
+    // 1.1系统分润
+    $router->resource('money-logs', MoneyLogController::class);
 });

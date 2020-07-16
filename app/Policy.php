@@ -158,6 +158,20 @@ class Policy extends Model
 
 
     /**
+     * @Author    Pudding
+     * @DateTime  2020-07-15
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 关联操盘方]
+     * @return    [type]      [description]
+     */
+    public function operates()
+    {
+        return $this->belongsTo('\App\AdminSetting', 'operate', 'operate_number');
+    }
+
+    
+    /**
      * [merchants 关联活动组结算价]
      * @author Pudding
      * @DateTime 2020-04-10T15:33:52+0800

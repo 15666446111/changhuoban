@@ -23,4 +23,18 @@ class PolicyGroup extends Model
 	{
 		return $this->hasMany('\App\Policy', 'policy_group_id', 'id');
 	}
+
+
+	/**
+	 * @Author    Pudding
+	 * @DateTime  2020-07-15
+	 * @copyright [copyright]
+	 * @license   [license]
+	 * @version   [ 关联操盘方]
+	 * @return    [type]      [description]
+	 */
+	public function operates()
+	{
+		return $this->belongsTo('\App\AdminSetting', 'operate', 'operate_number');
+	}
 }

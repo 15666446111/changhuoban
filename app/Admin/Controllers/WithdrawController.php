@@ -8,6 +8,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Encore\Admin\Widgets\Table;
 use Encore\Admin\Facades\Admin;
+use App\Admin\Selectable\Users;
 use App\Admin\Actions\WithdrawAdopt;
 use App\Admin\Actions\WithdrawReject;
 use Encore\Admin\Controllers\AdminController;
@@ -103,9 +104,45 @@ class WithdrawController extends AdminController
         $grid->filter(function($filter){
             // 去掉默认的id过滤器
             $filter->disableIdFilter();
+
             $filter->column(1/4, function ($filter) {
-                $filter->like('order_no', '订单');
+                $filter->like('order_no', '订单')->placeholder('申请提现的订单编号,模糊匹配');
             });
+
+            $filter->column(1/4, function ($filter) {
+                $filter->equal('type', '类型')->select(['1' => '分润钱包', '2'=> '提现钱包']);
+            });
+
+            $filter->column(1/4, function ($filter) {
+                $filter->equal('state', '审核')->select(['1' => '待审核', '2'=> '审核通过', '3'=> '审核驳回', '4'=> '交易受理中']);
+            });
+
+            $filter->column(1/4, function ($filter) {
+                $filter->equal('make_state', '打款')->select(['1' => '成功', '2'=> '失败']);
+            });
+
+            $filter->column(1/4, function ($filter) {
+                $filter->like('users.account', '账号')->placeholder('申请提现人的登陆账号,模糊匹配');
+            });
+
+            $filter->column(1/4, function ($filter) {
+                $filter->equal('pay_system', '系统')->select(['0' => '未打款', '1'=> '畅伙伴打款', '2'=> '畅捷打款']);
+            });
+
+            $filter->column(1/4, function ($filter) {
+                $filter->equal('pay_type', '方式')->select(['1'=> '人工审核', '2'=> '自动打款(免审)']);
+            });
+
+            // 在这里添加字段过滤器
+            $filter->column(1/3, function ($filter) {
+                $filter->between('created_at', '申请时间')->datetime();
+            });
+
+            $filter->column(1/3, function ($filter) {
+                $filter->between('check_at', '审核时间')->datetime();
+            });
+
+
         });
 
         return $grid;
@@ -169,6 +206,9 @@ class WithdrawController extends AdminController
     protected function form()
     {
         $form = new Form(new Withdraw());
+
+
+        $form->belongsTo('users', Users::class, '提现人');
 
         return $form;
     }

@@ -33,12 +33,11 @@ class AdminShortController extends AdminController
         }
         //$grid->column('id', __('索引'));
         //
-        //$grid->column('template_id', __('短信ID'));
+        $grid->column('operates.company', __('操盘方'))->help('短信所属的操盘方');
         //
         $grid->column('number', __('短信编号'));
 
-        $grid->column('type', __('短信类型'))
-                ->using([ '1' => 'POS服务费', '2' => '通讯（流量卡）费', '3' => 'VIP会员费']);
+        //$grid->column('type', __('短信类型'))->using([ '1' => 'POS服务费', '2' => '通讯（流量卡）费', '3' => 'VIP会员费']);
 
         $grid->column('content', __('短信内容'));
 
@@ -63,6 +62,17 @@ class AdminShortController extends AdminController
         $grid->disableActions();
         
         $grid->disableCreateButton();
+
+        $grid->filter(function($filter){
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+
+            if(Admin::user()->operate == "All"){
+                $filter->column(1/3, function ($filter) {
+                    $filter->equal('operate', '操盘方')->select(\App\AdminSetting::where('type', 1)->pluck('company', 'operate_number as id'));
+                });
+            } 
+        });
 
         return $grid;
     }

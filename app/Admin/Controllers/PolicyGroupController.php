@@ -37,7 +37,7 @@ class PolicyGroupController extends AdminController
         //
         $grid->column('title', __('组名称'))->help('活动组的名称');
 
-        $grid->column('operate', __('操盘方'))->help('活动组所属的操盘方标识');
+        $grid->column('operates.company', __('操盘方'))->help('活动组所属的操盘方标识');
 
         $grid->column('type', __('组类别'))
                 ->using([ '1' => '联盟模式', '2' => '工具模式'])
@@ -62,6 +62,13 @@ class PolicyGroupController extends AdminController
             $filter->column(1/4, function ($filter) {
                 $filter->like('title', '组名');
             });
+            
+            if(Admin::user()->operate == "All"){
+                $filter->column(1/3, function ($filter) {
+                    $filter->equal('operate', '操盘方')->select(\App\AdminSetting::where('type', 1)->pluck('company', 'operate_number as id'));
+                });
+            }
+
         });
 
         return $grid;
