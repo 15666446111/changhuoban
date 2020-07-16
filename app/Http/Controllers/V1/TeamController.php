@@ -53,7 +53,7 @@ class TeamController extends Controller
      */
     public function data(Request $request)
     {
-        /*try{*/
+        try{
 
             /**
              * @version [<vector>] [<获得团队日数据 , 日交易数据 >]
@@ -138,10 +138,10 @@ class TeamController extends Controller
             ]);
 
 
-        /*} catch (\Exception $e) {
+        } catch (\Exception $e) {
 
             return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
 
-        }*/
+        }
     }
 }
