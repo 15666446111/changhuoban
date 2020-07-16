@@ -184,7 +184,7 @@ class MoneyLogController extends AdminController
             $export->column('is_run', function ($value, $original) {
                 if($value == 0) return '返现';
                 if($value == 1) return '分润';
-            )};
+            });
         });
 
         return $grid;
