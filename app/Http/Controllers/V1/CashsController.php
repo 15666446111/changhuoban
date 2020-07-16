@@ -93,7 +93,7 @@ class CashsController extends Controller
                 
                 $data['cash'][] = array(
                     'title' => $dt->year."年".$dt->month."月".$dt->day."日", 
-                    'money' => number_format($value->money / 100, 2, '.', ','),
+                    'money' => number_format($value->money, 2, '.', ','),
                     'week'  => "星期".$weekarray[$dt->dayOfWeek],
                     'list'  => $arrs,
                 );  
