@@ -57,7 +57,7 @@ class MoneyLog extends Model
 
     public function userAgent()
     {
-        return $this->belongsTo('App\Model1\userAgent', 'user_id', 'user_id')->withDefault(['agent_id' => 0]);
+        return $this->belongsTo('App\Model1\UserAgent', 'user_id', 'user_id')->withDefault(['agent_id' => 0]);
     }
 
 }
