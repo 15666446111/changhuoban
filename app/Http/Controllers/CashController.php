@@ -324,7 +324,7 @@ class CashController extends Controller
             $userInfo = \App\User::where('id', $userId)->first(['parent', 'user_group']);
 
             // 用户结算价
-            $settlement = \App\policyGroupSettlement::where('trade_type_id', $tradeTypeId)
+            $settlement = \App\PolicyGroupSettlement::where('trade_type_id', $tradeTypeId)
                             ->where('user_group_id', $userInfo->user_group)
                             ->where('policy_group_id', $this->trade->merchants_sn->policys->policy_groups->id)
                             ->value('set_price');
@@ -371,7 +371,7 @@ class CashController extends Controller
     		$parentUser = \App\User::where('id', $pid)->first(['parent', 'user_group']);
 
     		// 用户结算价
-    		$pUserSettle = \App\policyGroupSettlement::where('trade_type_id', $tradeTypeId)
+    		$pUserSettle = \App\PolicyGroupSettlement::where('trade_type_id', $tradeTypeId)
 							->where('user_group_id', $parentUser->user_group)
 							->where('policy_group_id', $this->trade->merchants_sn->policys->policy_groups->id)
 							->value('set_price');
