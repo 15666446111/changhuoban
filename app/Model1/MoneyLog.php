@@ -60,4 +60,10 @@ class MoneyLog extends Model
         return $this->belongsTo('App\Model1\UserAgent', 'user_id', 'user_id')->withDefault(['agent_id' => 0]);
     }
 
+
+    /*public function trades()
+    {
+        return $this->belongsTo('App\Model1\Activity', 'activity_id', 'id');
+    }*/
+
 }

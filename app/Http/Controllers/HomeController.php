@@ -86,6 +86,14 @@ class HomeController extends Controller
                 '15'=> '积分团队'
             ];
 
+
+
+        $operate = \App\Model1\UserAgent::distinct('agent_id')->pluck('agent_id')->toArray();
+
+        $user    = \App\Model1\User::whereIn('id', $operate)->pluck('user_nickname', 'id')->toArray();
+
+        $user[0] = "平台直属";
+
         $html = '<div style="margin:100px auto; padding: 8px; border: 1px solid gray; background: #EAEAEA; width: %upx">
         <div style="text-align:center; margin-bottom:10px;">共有'.$count.'条数据需要导出</div><div style="padding: 0; background-color: white; border: 1px solid navy; width: %upx"><div id="progress" style="padding: 0; background-color: #FFCC66; border: 0; width: 0px; text-align: center; height: 16px"></div></div><div id="msg" style="font-family: Tahoma; font-size: 9pt;">正在导出...</div><div id="percent" style="position: relative; top: -34px; text-align: center; font-weight: bold; font-size: 8pt">0%%</div></div>';
         
@@ -104,13 +112,15 @@ class HomeController extends Controller
         fputcsv($fp,array(
             '编号', 
             '用户昵称', 
-            '用户账号', 
+            '用户账号',
+            '代理商', 
             '分润描述',
             '总分润金额',
             '本人分润',
             '团队分润',
             '分润返现',
             '分润时间',
+            //'交易金额',
             '品牌',
             '活动',
             '分润分类',
@@ -157,13 +167,15 @@ class HomeController extends Controller
                 fputcsv($fp,array(
                     $value->id, 
                     $value->users->user_nickname, 
-                    $value->users->mobile, 
+                    $value->users->mobile,
+                    $user[$value->userAgents->agent_id], 
                     $value->origin,
                     $value->money,
                     $value->self,
                     $value->team,
                     $value->is_run ? '分润' : '返现',
-                    date('Y-m-d H:i:s', $value->money),
+                    date('Y-m-d H:i:s', $value->add_time),
+                    //$value->
                     $value->brands->name ?? '',
                     $value->activitys->name ?? '',
                     $arrs[$value->type],
