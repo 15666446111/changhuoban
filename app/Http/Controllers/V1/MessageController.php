@@ -12,6 +12,7 @@ class MessageController extends Controller
         try{
             // 如果不指定type类型 默认获取其他消息
             $request->type  = $request->type ?? 'Other';
+            
             $message =  \App\BuserMessage::where('user_id', $request->user->id)
                             ->where('type', $request->type)->orderBy('id', 'desc')->offset(0)->limit(15)->get();
                             

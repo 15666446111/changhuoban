@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Facades\Storage;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -99,4 +99,12 @@ Route::any('/wechat', 'WeChatController@serve');
 
 // 冻结机器激活的计划任务
 Route::get('/fro_machine_active', 	'CrontabController@froMachineActive');
+
+
+Route::get('/getExp', 'HomeController@exp');
+
+
+Route::get('/download_moneylog', function(){
+	return Storage::download('public/分润信息.csv');
+});
 
