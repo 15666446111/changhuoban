@@ -30,8 +30,15 @@ class AuthToken
 
         if(!$User or empty($User)) return response()->json(['error'=>['message' => '非法请求!']], 505);
 
+        // 记录当前登陆用户实例
         $request->user = $User;
         
+        // 记录用户的机构方
+        $request->operate = $User->operates;
+
+        // 记录操盘方设置表
+        $request->operate_setting = $User->operates->settings;
+
         return $next($request);
     }
 }

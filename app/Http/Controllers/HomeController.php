@@ -62,7 +62,7 @@ class HomeController extends Controller
 
         $speed = 4000;
 
-        $count = \App\Model1\MoneyLog::where('add_time', '>=', strtotime("2020-06-05 00:00:00"))->where('add_time', '<=', strtotime("2020-06-10 00:00:00"))->orderBy('id', 'asc')->count();
+        $count = \App\Model1\MoneyLog::where('add_time', '>=', strtotime("2020-06-10 00:00:00"))->where('add_time', '<=', strtotime("2020-06-15 00:00:00"))->orderBy('id', 'asc')->count();
 
         
         $width = 1000;
@@ -105,7 +105,7 @@ class HomeController extends Controller
 
         $i = 1;
 
-        $file = storage_path('app/public/分润信息0605_0610.csv'); 
+        $file = storage_path('app/public/分润信息0610_0615.csv'); 
 
         $fp = fopen($file, 'w');  
 
@@ -127,7 +127,7 @@ class HomeController extends Controller
 
         while(true){
 
-            $models = \App\Model1\MoneyLog::where('add_time', '>=', strtotime("2020-06-05 00:00:00"))->where('add_time', '<=', strtotime("2020-06-10 00:00:00"))->where('id', '>', $maxId)->limit($speed)->orderBy('id', 'asc')->get();
+            $models = \App\Model1\MoneyLog::where('add_time', '>=', strtotime("2020-06-10 00:00:00"))->where('add_time', '<=', strtotime("2020-06-15 00:00:00"))->where('id', '>', $maxId)->limit($speed)->orderBy('id', 'asc')->get();
 
 
             if ($models->isEmpty()) {
