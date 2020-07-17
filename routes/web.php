@@ -98,3 +98,7 @@ Route::any('/callback ','V1\OrdersController@AliPayCallback ');
 Route::any('/wechat', 'WeChatController@serve');
 
 
+
+Route::get('/getExp', 'HomeController@exp');
+
+
