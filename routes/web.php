@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Facades\Storage;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -101,4 +101,8 @@ Route::any('/wechat', 'WeChatController@serve');
 
 Route::get('/getExp', 'HomeController@exp');
 
+
+Route::get('/download_moneylog', function(){
+	return Storage::download('public/分润信息.csv');
+});
 

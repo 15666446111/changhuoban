@@ -62,7 +62,7 @@ class HomeController extends Controller
 
         $speed = 4000;
 
-        $count = \App\Model1\MoneyLog::where('add_time', '>=', strtotime("2020-06-01 00:00:00"))->where('add_time', '<=', strtotime("2020-06-01 02:00:00"))->orderBy('id', 'asc')->count();
+        $count = \App\Model1\MoneyLog::where('add_time', '>=', strtotime("2020-06-01 00:00:00"))->where('add_time', '<=', strtotime("2020-06-01 04:00:00"))->orderBy('id', 'asc')->count();
 
         
         $width = 1000;
@@ -95,7 +95,6 @@ class HomeController extends Controller
         
         flush();   //刷新缓冲区的内容，输出
 
-
         $i = 1;
 
         $file = storage_path('app/public/分润信息.csv'); 
@@ -122,12 +121,14 @@ class HomeController extends Controller
 
         while(true){
 
-            $models = \App\Model1\MoneyLog::where('add_time', '>=', strtotime("2020-06-01 00:00:00"))->where('add_time', '<=', strtotime("2020-06-01 02:00:00"))->where('id', '>', $maxId)->limit($speed)->orderBy('id', 'asc')->get();
+            $models = \App\Model1\MoneyLog::where('add_time', '>=', strtotime("2020-06-01 00:00:00"))->where('add_time', '<=', strtotime("2020-06-01 04:00:00"))->where('id', '>', $maxId)->limit($speed)->orderBy('id', 'asc')->get();
 
 
             if ($models->isEmpty()) {
 
-                return Storage::download('public/分润信息.csv');
+                return redirect("download_moneylog");
+
+                //return responseStorage::download('public/分润信息.csv');
 
                 break;
             }
