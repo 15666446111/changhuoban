@@ -51,11 +51,11 @@ class MoneyLogController extends AdminController
 
         //$grid->column('t_id', __('交易ID'));
 
-        $grid->column('money', __('分润金额'))->label();
+        $grid->column('money', __('分润金额'))
 
-        $grid->column('self', __('本人'))->label('primary');
+        $grid->column('self', __('本人'))
 
-        $grid->column('team', __('团队'))->label('success');
+        $grid->column('team', __('团队'))
 
         $grid->column('is_run', __('描述'))->using(['0' => '返现', '1' => '分润'])->dot(['0' => 'primary', '1' => 'success']);
 
@@ -172,19 +172,6 @@ class MoneyLogController extends AdminController
 
         $grid->tools(function ($tools) {
             $tools->append(new ExportMoney());
-        });
-
-
-        $grid->export(function ($export) {
-
-            $export->filename('分润信息.csv');
-
-            $export->originalValue(['money', 'self', 'team']);
-
-            $export->column('is_run', function ($value, $original) {
-                if($value == 0) return '返现';
-                if($value == 1) return '分润';
-            });
         });
 
         return $grid;
