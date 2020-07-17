@@ -38,15 +38,15 @@ class Withdraw extends Form
 
         $data->rate = $request->rate;
 
-        $data->rate_m = $request->rate_m;
+        $data->rate_m = $request->rate_m * 100;
 
         $data->return_blance = $request->return_blance;
 
-        $data->return_money = $request->return_money;
+        $data->return_money = $request->return_money * 100;
 
-        $data->no_check = $request->no_check;
+        $data->no_check = $request->no_check * 100;
 
-        $data->no_check_return = $request->no_check_return;
+        $data->no_check_return = $request->no_check_return * 100;
 
         $data->operate = Admin::user()->operate;
 
@@ -67,17 +67,17 @@ class Withdraw extends Form
 
         $this->password('withdraw_pass', '提现审核密码')->rules('required')->help('审核提现订单时使用');
 
-        $this->number('rate', '分润提现税点')->rules('required')->help('分润钱包提现时的税点,单位为百分位');
+        $this->number('rate', '分润提现税点')->rules('required')->min(0)->max(20)->help('分润钱包提现时的税点,单位为百分位');
 
-        $this->number('rate_m', '分润提现单笔费用')->rules('required')->help('分润钱包提现时的单笔提现费,单位为百分位');
+        $this->currency('rate_m', '分润提现单笔费用')->rules('required')->help('分润钱包提现时的单笔提现费,单位为元')->symbol('￥');
 
-        $this->number('return_blance', '返现提现税点')->rules('required')->help('返现钱包提现时的税点,单位为百分位');
+        $this->number('return_blance', '返现提现税点')->rules('required')->min(0)->max(20)->help('返现钱包提现时的税点,单位为百分位');
 
-        $this->number('return_money', '返现提现单笔费用')->rules('required')->help('返现钱包提现时的单笔提现费,单位为百分位');
+        $this->currency('return_money', '返现提现单笔费用')->rules('required')->help('返现钱包提现时的单笔提现费,单位为元')->symbol('￥');
 
-        $this->number('no_check', '分润免审核额度')->rules('required')->help('分润钱包提现时,低于此额度不用进行审核,单位 分');
+        $this->currency('no_check', '分润免审核额度')->rules('required')->help('分润钱包提现时,低于此额度不用进行审核,单位为元')->symbol('￥');
 
-        $this->number('no_check_return', '返现免审核额度')->rules('required')->help('返现钱包提现时,低于此额度不用进行审核,单位 分');
+        $this->currency('no_check_return', '返现免审核额度')->rules('required')->help('返现钱包提现时,低于此额度不用进行审核,单位为元')->symbol('￥');
 
     }
 
@@ -100,6 +100,14 @@ class Withdraw extends Form
         $data = \App\Setting::create(['operate' => Admin::user()->operate]);
 
         $data = \App\Setting::where('operate', Admin::user()->operate)->first();
+
+        $data->rate_m = $data->rate_m / 100;
+
+        $data->return_money = $data->return_money / 100;
+
+        $data->no_check = $data->no_check / 100;
+
+        $data->no_check_return = $data->no_check_return / 100;
 
         return $data->toArray();
     }
