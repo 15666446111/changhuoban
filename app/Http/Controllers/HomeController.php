@@ -111,7 +111,6 @@ class HomeController extends Controller
 
         fputcsv($fp,array(
             '编号', 
-            '用户昵称', 
             '用户账号',
             '代理商', 
             '分润描述',
@@ -120,9 +119,6 @@ class HomeController extends Controller
             '团队分润',
             '分润返现',
             '分润时间',
-            //'交易金额',
-            '品牌',
-            '活动',
             '分润分类',
             '终端编号',
             '商户编号'
@@ -166,7 +162,6 @@ class HomeController extends Controller
 
                 fputcsv($fp,array(
                     $value->id, 
-                    $value->users->user_nickname, 
                     $value->users->mobile,
                     $user[$value->userAgents->agent_id], 
                     $value->origin,
@@ -175,15 +170,12 @@ class HomeController extends Controller
                     $value->team,
                     $value->is_run ? '分润' : '返现',
                     date('Y-m-d H:i:s', $value->add_time),
-                    //$value->
-                    $value->brands->name ?? '',
-                    $value->activitys->name ?? '',
                     $arrs[$value->type],
                     $value->sn,
                     $value->c_code
                 ));
             }
-
+            //1590940800。
             $maxId = $models->max(['id']);
 
         }
