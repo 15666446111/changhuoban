@@ -34,7 +34,9 @@ class AdminSettingController extends AdminController
 
         $grid->column('open', __('状态'))->using([ 0 =>'禁止', 1 =>'正常' ], '未知')->dot([ 0 => 'danger', 1 => 'success' ], 'default')->help('操盘或者机构的状态,若禁止 则此操盘或机构下的所有用户都无法登陆app');
 
-        $grid->column('type', __('模式'))->using([ 1 =>'操盘方', 2 =>'机构方' ])->dot([ 1 => 'primary', 2 => 'success' ])->help('此主体的类型, 操盘或者机构');
+        $grid->column('type', __('类型'))->using([ 1 =>'操盘方', 2 =>'机构方' ])->dot([ 1 => 'primary', 2 => 'success' ])->help('此主体的类型, 操盘或者机构');
+
+        $grid->column('pattern', __('模式'))->using([ 1 =>'联盟模式', 2 =>'工具模式' ])->dot([ 1 => 'primary', 2 => 'success' ])->help('操盘方发展的模式,只有主体为操盘方时有效');
 
         $grid->column('company', __('公司'))->help('操盘方或者机构方的公司主体');
 
@@ -53,7 +55,7 @@ class AdminSettingController extends AdminController
             $filter->disableIdFilter();
 
             $filter->column(1/4, function ($filter) {
-                $filter->like('operate_number', '操盘号');
+                $filter->like('company', '主体');
             });
 
             $filter->column(1/4, function ($filter) {

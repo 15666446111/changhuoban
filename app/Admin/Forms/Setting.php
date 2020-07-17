@@ -36,8 +36,6 @@ class Setting extends Form
 
         $data->withdraw_pass = $request->withdraw_pass;
 
-        $data->verify = '0';
-
         $data->rate = $request->rate;
 
         $data->rate_m = $request->rate_m;
@@ -68,8 +66,6 @@ class Setting extends Form
         $this->switch('withdraw_open', '开启提现')->rules('required');
 
         $this->text('withdraw_pass', '提现审核密码')->rules('required')->help('审核提现订单时使用');
-
-        // $this->switch('verify', '是否审核')->rules('required');
 
         $this->number('rate', '分润提现税点')->rules('required')->help('分润钱包提现时的税点,单位为百分位');
 
