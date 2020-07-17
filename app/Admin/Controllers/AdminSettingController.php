@@ -8,6 +8,7 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Illuminate\Support\MessageBag;
+use Illuminate\Database\Eloquent\Collection;
 use Encore\Admin\Controllers\AdminController;
 
 class AdminSettingController extends AdminController
@@ -30,6 +31,18 @@ class AdminSettingController extends AdminController
 
         $grid->model()->latest();
 
+        $grid->model()->collection(function (Collection $collection) {
+
+            // 1. 统计会员信息
+            foreach($collection as $item) {
+                $item->count_user = number_format($item->users->count())."人";
+            }
+
+            // 最后一定要返回集合对象
+            return $collection;
+        });
+
+
         $grid->column('operate_number', __('机构/操盘号'))->help('此列为机构/操盘方的唯一标识,代表此机构或操盘在本系统的标准');
 
         $grid->column('open', __('状态'))->using([ 0 =>'禁止', 1 =>'正常' ], '未知')->dot([ 0 => 'danger', 1 => 'success' ], 'default')->help('操盘或者机构的状态,若禁止 则此操盘或机构下的所有用户都无法登陆app');
@@ -37,6 +50,8 @@ class AdminSettingController extends AdminController
         $grid->column('type', __('类型'))->using([ 1 =>'操盘方', 2 =>'机构方' ])->dot([ 1 => 'primary', 2 => 'success' ])->help('此主体的类型, 操盘或者机构');
 
         $grid->column('pattern', __('模式'))->using([ 1 =>'联盟模式', 2 =>'工具模式' ])->dot([ 1 => 'primary', 2 => 'success' ])->help('操盘方发展的模式,只有主体为操盘方时有效');
+
+        $grid->column('count_user', __('用户统计'))->label('success')->help('该操盘下发展的用户总计.');
 
         $grid->column('company', __('公司'))->help('操盘方或者机构方的公司主体');
 
