@@ -21,7 +21,7 @@ class WithdrawObserver
     	// 如果提现类型的方式为自动审核。免审核
     	if($withdraw->pay_type == "2"){
 
-    		$application = new RepayCjController($model);
+    		$application = new RepayCjController($withdraw);
 
     		$result 	 = $application->auto_apply();
 
