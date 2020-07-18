@@ -25,7 +25,7 @@ class WithdrawObserver
 
     		$result 	 = $application->auto_apply();
 
-    		$withdraw->api_return_data = $withdraw->api_return_data.$result;
+    		$withdraw->api_return_data = $withdraw->api_return_data."---".json_encode($result);
 
     		$withdraw->save();
 
