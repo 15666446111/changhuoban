@@ -202,6 +202,6 @@ class User extends Authenticatable
      */
     public function settings()
     {
-        return $this->hasOne('App\Setting','operate','operate');
+        return $this->hasOne('App\Setting', 'operate','operate');
     }
 }

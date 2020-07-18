@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f0b51d325f8be9e463b39c14f4f19859",
+    "content-hash": "13090ce1c05312f963e64113589e976f",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -239,6 +239,66 @@
             ],
             "description": "支付宝官方 Alipay Easy SDK",
             "time": "2020-05-07T08:57:58+00:00"
+        },
+        {
+            "name": "arrowjustdoit/crontab",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ArrowJustDoIt/crontab.git",
+                "reference": "03a866e804ed873f1c4714bc98e52d6dc1fd2af7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ArrowJustDoIt/crontab/zipball/03a866e804ed873f1c4714bc98e52d6dc1fd2af7",
+                "reference": "03a866e804ed873f1c4714bc98e52d6dc1fd2af7",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "encore/laravel-admin": "~1.6",
+                "guzzlehttp/guzzle": "^6.3",
+                "php": ">=7.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~6.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "ArrowJustDoIt\\Crontab\\CrontabServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "ArrowJustDoIt\\Crontab\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "arrow",
+                    "email": "arrowylq@outlook.com"
+                }
+            ],
+            "description": "Crontab extension for laravel-admin",
+            "homepage": "https://github.com/ArrowJustDoIt/crontab",
+            "keywords": [
+                "crontab",
+                "extension",
+                "laravel-admin"
+            ],
+            "time": "2019-03-20T07:09:21+00:00"
         },
         {
             "name": "asm89/stack-cors",

@@ -48,7 +48,9 @@ class Withdraw extends Form
 
         $data->no_check_return = $request->no_check_return * 100;
 
-        $data->operate = Admin::user()->operate;
+        $data->cash_min = $request->cash_min * 100;
+
+        $data->return_min = $request->return_min * 100;
 
         $data->save();
 
@@ -79,6 +81,10 @@ class Withdraw extends Form
 
         $this->currency('no_check_return', '返现免审核额度')->rules('required')->help('返现钱包提现时,低于此额度不用进行审核,单位为元')->symbol('￥');
 
+        $this->currency('cash_min', '分润最低提现')->rules('required')->help('分润钱包提现时,最少的提现金额')->symbol('￥');
+
+        $this->currency('return_min', '返现最低提现')->rules('required')->help('返现钱包提现时,最少的提现金额')->symbol('￥');
+
     }
 
     /**
@@ -108,6 +114,10 @@ class Withdraw extends Form
         $data->no_check = $data->no_check / 100;
 
         $data->no_check_return = $data->no_check_return / 100;
+
+        $data->cash_min = $data->cash_min / 100;
+
+        $data->return_min = $data->return_min / 100;
 
         return $data->toArray();
     }
