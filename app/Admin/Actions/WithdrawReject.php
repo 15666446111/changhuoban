@@ -25,10 +25,10 @@ class WithdrawReject extends RowAction
 
     		// 增加用户钱包余额
     		if ($model->type == 1) {
-    			\App\UserWallet::where('user_id', $model->user_id)->increment('cash_blance', ($model->money * 100));
+    			\App\UserWallet::where('user_id', $model->user_id)->increment('cash_blance', $model->money);
     		}
     		if ($model->type == 2) {
-    			\App\UserWallet::where('user_id', $model->user_id)->increment('return_blance', ($model->money * 100));
+    			\App\UserWallet::where('user_id', $model->user_id)->increment('return_blance', $model->money);
     		}
 
 			return $this->response()->success('驳回成功')->refresh();
