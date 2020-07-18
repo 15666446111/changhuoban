@@ -173,9 +173,10 @@ class WithdrawController extends Controller
             if(!$request->operate_setting or empty($request->operate_setting)){
                 return response()->json(['error'=>['message' => '机构暂时没有配置提现信息']]);
             }
-
+            
             // 判断是分润钱包还是返现钱包 * 获取提现税点
-            if($request->type == '1'){
+            if($request->type === "1"){
+            	
                 //税点
                 $data['point']		=	$request->operate_setting->rate;
 
