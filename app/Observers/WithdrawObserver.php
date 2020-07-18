@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Withdraw;
+use App\Services\Cj\RepayCjController;
 
 class WithdrawObserver
 {
