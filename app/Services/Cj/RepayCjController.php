@@ -233,9 +233,7 @@ class RepayCjController extends Controller
         if($this->withdraw->withdrawDatas->banklink == "") return ['code' => 10063, 'message' => '收款方联行号不能为空!'];
 
         // 请求代付
-        //$pay = $this->pay($AccountBank, $idCardNo);
-
-        $pay = (object)['code' => 00, 'message' => 111];
+        $pay = $this->pay($AccountBank, $idCardNo);
 
         // 交易受理的情况下 更改订单信息 压入redis
         if($pay->code == "00"){
