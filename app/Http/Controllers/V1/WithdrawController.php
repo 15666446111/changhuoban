@@ -129,7 +129,7 @@ class WithdrawController extends Controller
                 'rate'      => $rate,
                 'rate_m'    => $rate_m,
                 'make_state'=> 0,
-                'pay_type'	=> ($no_check >= ($request->money * 1000)) ? 2 : 1,
+                'pay_type'	=> ($no_check >= ($request->money * 100)) ? 2 : 1,
                 'operate'   => $request->user->operate
             ]);
 
