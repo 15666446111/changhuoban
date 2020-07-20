@@ -206,4 +206,29 @@ class TransferController extends Controller
 
         }
     }
+
+    public function getSnSection(Request $request)
+    {
+        try {
+
+            if (empty($request->begin_sn)) {
+                return response()->json(['error'=>['message' => '缺少必要参数:请选择输入机具起始SN号']]);
+            }
+
+            if (empty($request->end_sn)) {
+                return response()->json(['error'=>['message' => '缺少必要参数:请选择输入机具结束SN号']]);
+            }
+
+            if (!is_numbeic($request->begin_sn) || !is_numbeic($request->end_sn)) {
+                return response()->json(['error'=>['message' => '仅支持SN为整数的机器区间划拨']]);
+            }
+
+            // $list = \App\Machine::where('')
+
+        } catch (\Exception $e) {
+            
+            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
+
+        }
+    }
 }
