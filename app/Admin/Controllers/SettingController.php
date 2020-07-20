@@ -1,10 +1,11 @@
 <?php
 namespace App\Admin\Controllers;
 
-use App\Admin\Forms\Setting;
 use Encore\Admin\Widgets\Tab;
 use Encore\Admin\Layout\Content;
+use App\Admin\Forms\Settings\Base;
 use App\Http\Controllers\Controller;
+use App\Admin\Forms\Settings\Withdraw;
 
 
 class SettingController extends Controller
@@ -13,13 +14,14 @@ class SettingController extends Controller
     {
 
         $forms = [
-            'basic'    => Settings\Basic::class,
-            'site'     => Settings\Site::class,
-            'upload'   => Settings\Upload::class,
+            'base'          => Base::class,
+            'withdraw'      => Withdraw::class,
+            
+ /*         'upload'        => Settings\Upload::class,
             'database' => Settings\Database::class,
-            'develop'  => Settings\Develop::class,
+            'develop'  => Settings\Develop::class,*/
         ];
 
-        return $content->title('操盘方系统设置')->body(/*Tab::forms($forms)*/ new Setting());
+        return $content->title('操盘方系统设置')->body(Tab::forms($forms));
     }
 }

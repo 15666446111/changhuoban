@@ -6,8 +6,8 @@ use App\User;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
-
 use Encore\Admin\Facades\Admin;
+use Illuminate\Database\Eloquent\Collection;
 use Encore\Admin\Controllers\AdminController;
 
 class UserController extends AdminController
@@ -29,7 +29,7 @@ class UserController extends AdminController
         $grid = new Grid(new User());
 
         //$grid->column('id', __('索引'))->sortable();
-        //
+
         $type = false;
 
         if(Admin::user()->operate != "All"){
@@ -41,6 +41,25 @@ class UserController extends AdminController
         }
 
         $grid->model()->latest();
+
+
+        $grid->model()->collection(function (Collection $collection) {
+            // 1. 统计会员信息
+            foreach($collection as $item) {
+                // 总分润金额
+                $item->count_pos  = number_format($item->machines->count())."台";
+
+                // 总分润金额
+                $item->count_cash = number_format($item->cash->sum('cash_money') / 100, 2, ".", ",")."元";
+
+                // 查询团队有多少人
+                $item->count_team = number_format(\App\UserRelation::where('parents', 'like', "%_".$item->id."_%")->count())."人";
+            }
+
+            // 最后一定要返回集合对象
+            return $collection;
+        });
+
 
         $grid->column('avatar', __('头像'))->image('', 30, 30)->help('用户的头像');
 
@@ -64,6 +83,12 @@ class UserController extends AdminController
         $grid->column('wallets.return_blance', __('返现余额'))->display(function($cash){
             return number_format($cash , 2, '.', ',');
         })->label('info')->help('用户返现钱包余额');
+
+        $grid->column('count_pos', __('机器总数'))->label('primary')->help('当前账号下拥有的终端总数');
+
+        $grid->column('count_team', __('团队人数'))->label('primary')->help('当前用户的团队总人数(不包含自己)');
+
+        $grid->column('count_cash', __('总收益'))->label('primary')->help('当前用户在平台总计收益');
 
         $grid->column('last_ip', __('最后登录地址'))->help('用户最后登陆的IP地址');
 

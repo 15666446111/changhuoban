@@ -164,7 +164,20 @@ class RepayCjController extends Controller
      */
     public function auto_apply()
     {
-        return ['code' => 10000, 'message' => 'auto pay'];
+
+        if($this->withdraw->state != "1" ) return ['code' => 10010, 'message' => '该笔订单已经处理过!'];
+
+        if($this->withdraw->make_state != "0" ) return ['code' => 10011, 'message' => '该笔订单已经处理过!'];
+
+        if(!$this->setting or empty($this->setting)) return ['code' => 10031, 'message' => '未找到配置信息!'];
+        
+        if($this->agentId == "") return ['code' => 10033, 'message' => '未找到代付设置参数信息!'];
+
+        if($this->chanKey == "") return ['code' => 10033, 'message' => '未找到代付设置参数信息!'];
+
+        if($this->setting->withdraw_open != "1") return ['code' => 10050, 'message' => '您未开启提现,请在设置中开启提现功能!'];
+
+        return $this->run();
     }
 
     
@@ -220,9 +233,7 @@ class RepayCjController extends Controller
         if($this->withdraw->withdrawDatas->banklink == "") return ['code' => 10063, 'message' => '收款方联行号不能为空!'];
 
         // 请求代付
-        //$pay = $this->pay($AccountBank, $idCardNo);
-
-        $pay = (object)['code' => 00, 'message' => 111];
+        $pay = $this->pay($AccountBank, $idCardNo);
 
         // 交易受理的情况下 更改订单信息 压入redis
         if($pay->code == "00"){

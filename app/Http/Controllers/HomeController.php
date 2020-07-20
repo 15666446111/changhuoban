@@ -62,7 +62,7 @@ class HomeController extends Controller
 
         $speed = 4000;
 
-        $count = \App\Model1\MoneyLog::where('add_time', '>=', strtotime("2020-06-01 00:00:00"))->where('add_time', '<=', strtotime("2020-07-01 00:00:00"))->orderBy('id', 'asc')->count();
+        $count = \App\Model1\MoneyLog::where('add_time', '>=', strtotime("2020-06-25 00:00:00"))->where('add_time', '<=', strtotime("2020-07-01 00:00:00"))->orderBy('id', 'asc')->count();
 
         
         $width = 1000;
@@ -105,13 +105,12 @@ class HomeController extends Controller
 
         $i = 1;
 
-        $file = storage_path('app/public/分润信息.csv'); 
+        $file = storage_path('app/public/分润信息0625_0701.csv'); 
 
         $fp = fopen($file, 'w');  
 
         fputcsv($fp,array(
             '编号', 
-            '用户昵称', 
             '用户账号',
             '代理商', 
             '分润描述',
@@ -120,9 +119,6 @@ class HomeController extends Controller
             '团队分润',
             '分润返现',
             '分润时间',
-            //'交易金额',
-            '品牌',
-            '活动',
             '分润分类',
             '终端编号',
             '商户编号'
@@ -131,7 +127,7 @@ class HomeController extends Controller
 
         while(true){
 
-            $models = \App\Model1\MoneyLog::where('add_time', '>=', strtotime("2020-06-01 00:00:00"))->where('add_time', '<=', strtotime("2020-07-01 00:00:00"))->where('id', '>', $maxId)->limit($speed)->orderBy('id', 'asc')->get();
+            $models = \App\Model1\MoneyLog::where('add_time', '>=', strtotime("2020-06-25 00:00:00"))->where('add_time', '<=', strtotime("2020-07-01 00:00:00"))->where('id', '>', $maxId)->limit($speed)->orderBy('id', 'asc')->get();
 
 
             if ($models->isEmpty()) {
@@ -166,7 +162,6 @@ class HomeController extends Controller
 
                 fputcsv($fp,array(
                     $value->id, 
-                    $value->users->user_nickname, 
                     $value->users->mobile,
                     $user[$value->userAgents->agent_id], 
                     $value->origin,
@@ -175,15 +170,12 @@ class HomeController extends Controller
                     $value->team,
                     $value->is_run ? '分润' : '返现',
                     date('Y-m-d H:i:s', $value->add_time),
-                    //$value->
-                    $value->brands->name ?? '',
-                    $value->activitys->name ?? '',
                     $arrs[$value->type],
                     $value->sn,
                     $value->c_code
                 ));
             }
-
+            //1590940800。
             $maxId = $models->max(['id']);
 
         }

@@ -124,39 +124,39 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->post('/editAvatar', 'V1\SetUserController@editUserInfo');
 
     /**
-     * 添加银行卡结算信息接口
+     * @version [<vector>] [< 添加结算卡信息>]
      */
-    Route::middleware('AuthToken')->post('/createBank', 'V1\SetUserController@insertBank');
+    Route::middleware('AuthToken')->post('/createBank', 'V1\BankController@insertBank');
     
 
     /**
-     * 查询银行卡结算信息接口
+     * @version [<vector>] [< 查询结算卡信息 >]
      */
-    Route::middleware('AuthToken')->get('/getBankInfo', 'V1\SetUserController@selectBank');
+    Route::middleware('AuthToken')->get('/getBankInfo', 'V1\BankController@selectBank');
 
 
     /**
-     * 查询默认银行卡信息接口
+     * @version [<vector>] [< 查询默认银行卡信息接口 >]
      */
-    Route::middleware('AuthToken')->get('/getBankDefault', 'V1\SetUserController@bankDefault');
+    Route::middleware('AuthToken')->get('/getBankDefault', 'V1\BankController@bankDefault');
 
 
     /**
-     * 查询单个银行卡信息接口
+     * @version [<vector>] [< 查询单个银行卡信息接口 >]
      */
-    Route::middleware('AuthToken')->get('/getBankFirst', 'V1\SetUserController@bankFirst');
+    Route::middleware('AuthToken')->get('/getBankFirst', 'V1\BankController@bankFirst');
 
     
     /**
-     * 删除银行卡结算信息接口
+     * @version [<vector>] [< 删除银行卡结算信息接口 >]
      */
-    Route::middleware('AuthToken')->get('/deBank', 'V1\SetUserController@unsetBank');
+    Route::middleware('AuthToken')->get('/deBank', 'V1\BankController@unsetBank');
 
 
     /**
-     * 修改银行卡结算信息接口
+     * @version [<vector>] [< 修改银行卡结算信息接口 >]
      */
-    Route::middleware('AuthToken')->get('/upBank', 'V1\SetUserController@updateBank');
+    Route::middleware('AuthToken')->get('/upBank', 'V1\BankController@updateBank');
 
 
     /**
@@ -365,15 +365,15 @@ Route::prefix('V1')->group(function () {
 
 
     /**
-     * 提现税点接口
+     * @version  [<vector>] [<  获取机构提现配置  >]
      */
-    Route::middleware('AuthToken')->get('/getPoint', 'V1\SetUserController@point');
+    Route::middleware('AuthToken')->get('/getPoint', 'V1\WithdrawController@point');
 
 
     /**
-     * 用户提现接口
+     * @version [<vector>] [< 用户与代理申请提现 >]
      */
-    Route::middleware('AuthToken')->post('/getWithdrawal', 'V1\SetUserController@Withdrawal');
+    Route::middleware('AuthToken')->post('/getWithdrawal', 'V1\WithdrawController@apply');
 
 
     /**

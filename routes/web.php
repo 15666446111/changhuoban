@@ -105,6 +105,6 @@ Route::get('/getExp', 'HomeController@exp');
 
 
 Route::get('/download_moneylog', function(){
-	return Storage::download('public/分润信息.csv');
+	return Storage::download('public/分润信息0625_0701.csv');
 });
 

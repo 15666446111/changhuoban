@@ -44,13 +44,13 @@ class ShareController extends AdminController
 
         $grid->column('share_types.name', __('类型'))->help('此次分享的展示位置');
 
-        $grid->column('sort', __('排序'))->sortable()->label('danger')->help('分享素材的排序权重,值越大 越在前');
+        $grid->column('sort', __('排序'))->sortable()->editable()->label('default')->help('分享素材的排序权重,值越大 越在前');
 
-        $grid->column('code_size', __('二维码大小'))->label('success')->help('分享素材所需要的二维码大小');
+        $grid->column('code_size', __('二维码大小'))->editable()->label('default')->help('分享素材所需要的二维码大小');
 
-        $grid->column('code_x', __('X轴位置'))->label('info')->help('二维码在此素材的X轴位置,单位为像素(px)');
+        $grid->column('code_x', __('X轴位置'))->editable()->label('default')->help('二维码在此素材的X轴位置,单位为像素(px)');
 
-        $grid->column('code_y', __('Y轴位置'))->label('info')->help('二维码在此素材的Y轴位置,单位为像素(px)');
+        $grid->column('code_y', __('Y轴位置'))->editable()->label('default')->help('二维码在此素材的Y轴位置,单位为像素(px)');
 
         $grid->column('verify', __('审核'))->using([ '0' => '待审核', '1' => '正常', '-1' => '拒绝'])
                 ->dot([ 0 => 'danger', 1 => 'success' ], 'default')->help('添加素材之后默认为未审核的状态,由总后台审核后方可展示');

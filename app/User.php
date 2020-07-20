@@ -120,6 +120,21 @@ class User extends Authenticatable
 
     /**
      * @Author    Pudding
+     * @DateTime  2020-07-18
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 关联操盘方 ]
+     * @return    [type]      [description]
+     */
+    public function operates()
+    {
+        return $this->belongsTo('\App\AdminSetting', 'operate', 'operate_number');
+    }
+
+
+
+    /**
+     * @Author    Pudding
      * @DateTime  2020-06-22
      * @copyright [copyright]
      * @license   [license]
@@ -187,6 +202,6 @@ class User extends Authenticatable
      */
     public function settings()
     {
-        return $this->hasOne('App\Setting','operate','operate');
+        return $this->hasOne('App\Setting', 'operate','operate');
     }
 }
