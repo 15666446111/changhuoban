@@ -289,22 +289,27 @@ Route::prefix('V1')->group(function () {
      * 查询用户未绑定终端机器
      */
     Route::middleware('AuthToken')->get('/getUnBoundInfo', 'V1\TransferController@getUnBound');
+
+    /**
+     * 查询用户未绑定终端机器区间
+     */
+    Route::middleware('AuthToken')->get('/getUnBoundSection', 'V1\TransferController@getUnBoundSection');
     
 
     /**
-     * 划拨
+     * 选择划拨
      */
     Route::middleware('AuthToken')->post('/addTransfer', 'V1\TransferController@transfer');
 
 
     /**
-     * 回拨机器列表
+     * 选择回拨机器列表
      */
     Route::middleware('AuthToken')->get('/getBackList', 'V1\TransferController@backList');
 
 
     /**
-     * 回拨
+     * 选择回拨
      */
     Route::middleware('AuthToken')->post('/addBackTransfer', 'V1\TransferController@backTransfer');
 

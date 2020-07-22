@@ -14,7 +14,7 @@ class TransferController extends Controller
     {
 
         try{
-            if(!$request->policy_id)  
+            if(!$request->policy_id)
                 return response()->json(['error'=>['message' => '请选择政策活动!']]);
 
             //获取该用户该政策下未绑定未激活终端机器
@@ -207,7 +207,12 @@ class TransferController extends Controller
         }
     }
 
-    public function getSnSection(Request $request)
+    /**
+     * 获取未绑定sn的区间集合
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function getUnBoundSection(Request $request)
     {
         try {
 
@@ -219,11 +224,37 @@ class TransferController extends Controller
                 return response()->json(['error'=>['message' => '缺少必要参数:请选择输入机具结束SN号']]);
             }
 
-            if (!is_numbeic($request->begin_sn) || !is_numbeic($request->end_sn)) {
+            if (!is_numeric($request->begin_sn) || !is_numeric($request->end_sn)) {
                 return response()->json(['error'=>['message' => '仅支持SN为整数的机器区间划拨']]);
             }
 
-            // $list = \App\Machine::where('')
+            if (empty($request->policy_id)) {
+                return response()->json(['error'=>['message' => '缺少必要参数:活动不能为空']]);
+            }
+
+            $list = \App\Machine::where('user_id', $request->user->id)
+                                ->where('policy_id', $request->policy_id)
+                                ->where('bind_status', 0)
+                                ->whereBetween('sn', [(int)$request->begin_sn, (int)$request->end_sn])
+                                ->pluck('sn');
+
+            $dKey = 0;
+            $data = [];
+
+            foreach ($list as $key => $val) {
+
+                $data[$dKey]['begin_sn'] = $val;
+
+                if (empty($list[$key + 1]) || !empty($list[$key + 1]) && (int)$val + 1 != $list[$key + 1]) {
+
+                    $data[$dKey]['end_sn'] = $val;
+
+                    $dKey++;
+
+                }
+            }
+            
+            return response()->json(['success'=>['message' => '获取成功!', 'data' => $data]]);
 
         } catch (\Exception $e) {
             

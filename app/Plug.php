@@ -17,6 +17,17 @@ class Plug extends Model
 		return $this->belongsTo('App\PlugType', 'type_id', 'id');
 	}
 
+    /**
+     * [admin_users 关联操盘方表]
+     * @author Pudding
+     * @DateTime 2020-07-21T16:49:00+0800
+     * @return   [type]                   [description]
+     */
+    public function admin_users()
+    {
+        return $this->belongsTo('App\AdminUser', 'operate', 'operate');
+    }
+
 
 	/**
 	 * [scopeApiGet 搜索过滤选项]
