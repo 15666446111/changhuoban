@@ -65,7 +65,7 @@ return [
             'driver'        => 'redis',
             'connection'    => 'chb',
             'queue'         => env('REDIS_QUEUE', 'default'),
-            'retry_after'   => 90,
+            'retry_after'   => 300,
             'block_for'     => null,
         ],
 
@@ -75,7 +75,7 @@ return [
             'driver'        => 'redis',
             'connection'    => 'chb_withdraw',
             'queue'         => 'withdraw',
-            'retry_after'   => 90,
+            'retry_after'   => 300,
             'block_for'     => null,
         ],
 
@@ -85,7 +85,7 @@ return [
             'driver'        => 'redis',
             'connection'    => 'chb_trade',
             'queue'         => 'trade',
-            'retry_after'   => 90,
+            'retry_after'   => 300,
             'block_for'     => null,
         ],
 
@@ -94,7 +94,7 @@ return [
             'driver'        => 'redis',
             'connection'    => 'chb_merchant_open',
             'queue'         => 'merchant_open',
-            'retry_after'   => 90,
+            'retry_after'   => 300,
             'block_for'     => null,
         ],
     ],

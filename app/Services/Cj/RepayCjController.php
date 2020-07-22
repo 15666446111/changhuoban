@@ -177,7 +177,9 @@ class RepayCjController extends Controller
 
         if($this->setting->withdraw_open != "1") return ['code' => 10050, 'message' => '您未开启提现,请在设置中开启提现功能!'];
 
-        return $this->run();
+        $run = $this->run();
+        
+        $this->withdraw->api_return_data = json_encode($run);
     }
 
     
@@ -196,6 +198,7 @@ class RepayCjController extends Controller
         ####    检查是否有代付权限
         ####
         $auth = $this->authQuery();
+
         // 未开通代付权限的情况下。去开通代付权限
         if($auth->data->enterprisePaymentStatus != "1"){
             $this->applyAuth();
@@ -508,8 +511,10 @@ class RepayCjController extends Controller
     {
         # 排序
         ksort($postData);
+
         # 密钥链接字符串
         $stringA = $this->chanKey . implode('',$postData);
+
         # 获取签名
         $postData['sign'] = md5($stringA);
         # 获得返回数据
@@ -518,14 +523,20 @@ class RepayCjController extends Controller
         $data = json_decode($data);
 
         if(gettype($data) != "object"){
+            $this->withdraw->api_return_data = json_encode(array('code' => '10090', 'message' => "畅捷代付出错: 返回非对象类型!" ));
+            $this->withdraw->save();
             throw new \Exception(" 畅捷代付出错: 返回非对象类型!");
         } 
 
         if(!$data->code){
+            $this->withdraw->api_return_data = json_encode(array('code' => '10090', 'message' => "畅捷代付出错: 返回非标识码!" ));
+            $this->withdraw->save();
             throw new \Exception(" 畅捷代付出错: 返回非标识码!");
         } 
-
+        //echo json_encode($postData).$this->chanKey."<br/>";
         if($data->code != "00" && $data->code != "20" ){
+            $this->withdraw->api_return_data = json_encode(array('code' => '10090', 'message' => "畅捷代付出错: ".$data->message ));
+            $this->withdraw->save();
             throw new \Exception(" 畅捷代付出错:".$data->message);
         }
         # 

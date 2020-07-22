@@ -36,7 +36,7 @@ class HandleTradeInfo implements ShouldQueue
      *
      * @var int
      */
-    public $timeout = 120;
+    public $timeout = 180;
 
     public function __construct(Trade $params)
     {

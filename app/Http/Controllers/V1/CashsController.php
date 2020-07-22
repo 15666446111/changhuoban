@@ -29,11 +29,25 @@ class CashsController extends Controller
             //本月收益
             $data['revenueMonth'] = \App\Cash::where('user_id', $request->user->id)->whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->sum('cash_money');
 
-            // 查询用户账号余额
-            $data['balance'] = $request->user->wallets->cash_blance + $request->user->wallets->return_blance;
-            
-            // 
-            $list = \App\Cash::where('user_id', $request->user->id);
+
+            // 默认查询一周
+            if(!$request->date){
+
+                $request->begin = Carbon::today()->subDays(7)->toDateTimeString();
+
+                $request->end   = Carbon::now()->toDateTimeString();
+            }else{
+
+                $date = Carbon::createFromFormat('Y-m', $request->date);
+
+                $request->begin = $date->firstOfMonth()->toDateTimeString();
+
+                $request->end   = $date->lastOfMonth()->toDateTimeString();
+            }
+
+
+            $list = \App\Cash::where('user_id', $request->user->id)->whereBetween('created_at', [$request->begin, $request->end]);
+
             // 收益类型
             if($type == 'cash'){
                 $list->whereIn('cash_type', ['1', '2']);
@@ -42,7 +56,6 @@ class CashsController extends Controller
             if($type == 'return'){
                 $list->whereIn('cash_type', ['3','4','5', '6', '7', '8']);
             }
-
 
             if($type == 'other'){
                 $list->whereIn('cash_type', ['10']);
@@ -62,7 +75,7 @@ class CashsController extends Controller
                 $dt = Carbon::parse($value->date);
                 
                 //dd(\App\Cash::where('user_id', $request->user->id)->whereDay('created_at', $value->date)->orderBy('created_at', 'desc')->get());
-                $listdata = \App\Cash::where('user_id', $request->user->id)->whereDate('created_at', $value->date);
+                $listdata = \App\Cash::where('user_id', $request->user->id)->with('trades')->whereDate('created_at', $value->date);
 
                 if($type == 'cash'){
                     $listdata->whereIn('cash_type', ['1', '2']);
@@ -79,18 +92,21 @@ class CashsController extends Controller
                 $listdata = $listdata->orderBy('created_at', 'desc')->get();
 
                 $arrs = [];
+
                 foreach ($listdata as $k => $v) {
                     
                     $arrs[] = [
-                        'id'            =>$v->id,
+                        //'order'         => $v->trades->id,
+                        'id'            => $v->id,
                         'type'          => $v->cash_type, 
                         'money'         => $v->cash_money, 
-                        'sn'            => $v->trades->sn, 
-                        'orderMoney'    => number_format($v->trades->amount / 100, 2, '.', ','),
+                        'sn'            => $v->trades->sn ?? '冻结机器激活', 
+                        'orderMoney'    => isset($v->trades->amount) ? number_format( $v->trades->amount / 100, 2, '.', ',') : '冻结机激活返现',
+                        //'orderMoney'    => $v->trades->amount ? number_format( $v->trades->amount / 100, 2, '.', ',') : "0.00",
                         'date'          => $v->created_at->toDateTimeString(),
                     ];
                 }
-                
+                //dd($arrs);
                 $data['cash'][] = array(
                     'title' => $dt->year."年".$dt->month."月".$dt->day."日", 
                     'money' => number_format($value->money, 2, '.', ','),

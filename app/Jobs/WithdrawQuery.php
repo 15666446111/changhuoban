@@ -33,8 +33,17 @@ class WithdrawQuery implements ShouldQueue
      *
      * @var int
      */
-    public $timeout = 120;
+    public $timeout = 180;
 
+
+    /**
+     * 如果模型缺失即删除任务。
+     *
+     * @var bool
+     */
+    public $deleteWhenMissingModels = true;
+
+    
     /**
      * Create a new job instance.
      *
@@ -72,7 +81,7 @@ class WithdrawQuery implements ShouldQueue
             # 还是已受理的状态 重新压入
             if($result->data->remitStatus == "1"){
 
-                self::dispatch($this->withdraw)/*->onQueue('Withdraw')*/->delay(now()->addMinutes(1));
+                self::dispatch($this->withdraw)->onQueue('withdraw')->delay(now()->addMinutes(15));
 
                 $this->withdraw->remark = $result->data->message;
 

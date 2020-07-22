@@ -41,7 +41,7 @@ class Plug extends Model
      * @DateTime  2020-06-22
      * @copyright [copyright]
      * @license   [license]
-     * @version   [获取头像图片地址]
+     * @version   [获取图片地址]
      * @param     [type]      $value [description]
      * @return    [type]             [description]
      */

@@ -36,8 +36,15 @@ class HandleMachineInfo implements ShouldQueue
      *
      * @var int
      */
-    public $timeout = 120;
+    public $timeout = 180;
 
+
+    /**
+     * 如果模型缺失即删除任务。
+     *
+     * @var bool
+     */
+    public $deleteWhenMissingModels = true;
 
     /**
      * Create a new job instance.
