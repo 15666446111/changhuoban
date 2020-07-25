@@ -68,6 +68,8 @@ class WithdrawController extends AdminController
             return number_format( $money/100, 2, '.', ',');
         })->label('danger')->help('代付系统实际支出金额');
 
+        $grid->column('pay_type', __('提现方式'))->using(['1' => '人工审核', '2' => '自动审核'])->dot([ 1 => 'primary', 2 => 'success' ]);
+
         $grid->column('type', __('提现类型'))->using(['1' => '分润提现', '2' => '返现提现'])->dot([ 1 => 'primary', 2 => 'success' ]);
 
         $grid->column('state', __('提现状态'))->using(['1' => '待审核', '2' => '通过', '3'=>'驳回', '4'=> '交易受理中'])

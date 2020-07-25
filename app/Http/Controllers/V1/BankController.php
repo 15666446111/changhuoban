@@ -307,6 +307,8 @@ class BankController extends Controller
 
         if(!$bankLink) return false;
 
+        if(!$bankLink['data']) return false;
+
         if(empty($bankLink['data']['record'])) return false;
 
         return $bankLink['data']['record'][0]['bankCode'];
