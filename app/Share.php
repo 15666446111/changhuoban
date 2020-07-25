@@ -25,9 +25,9 @@ class Share extends Model
 	 * @return   [type]                          [description]
 	 */
     public function scopeApiGet($query)
-     {
+    {
      	return $query->where('active', '1')->where('verify', '1')->orderBy('sort', 'desc');
-     }
+    }
      
     // 
     /**
