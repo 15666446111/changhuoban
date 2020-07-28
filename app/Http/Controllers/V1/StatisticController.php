@@ -94,9 +94,7 @@ class StatisticController
      */
     public function getNewAddMerchant()
     {
-        
         $Arr =  $this->getMyTeam();
-        
         return \App\Merchant::whereBetween('created_at', [ $this->StartTime,  $this->EndTime])->whereIn('user_id', $Arr)->count();     
     }
 
@@ -128,12 +126,8 @@ class StatisticController
      */
     public function getNewAddTeamCount()
     {
-        $Start = $this->StartTime;
-
-        $End   = $this->EndTime;
-
-        return \App\UserRelation::where('parents', 'like', '%_'.$this->Users->id.'_%')->whereHas('users', function($q) use ($Start, $End){
-                $q->whereBetween('created_at', [ $Start, $End]);
+        return \App\UserRelation::where('parents', 'like', '%_'.$this->Users->id.'_%')->whereHasIn('users', function($q){
+                $q->whereBetween('created_at', [ $this->StartTime, $this->EndTime]);
         })->count();
     }
 
@@ -143,10 +137,8 @@ class StatisticController
      */
     public function getCashSum($rule = 'team')
     {
-        $Arr = $rule == 'team' ? $this->getMyTeam() :  array($this->Users->id);
-
-        return \App\Cash::whereBetween('created_at', [$this->StartTime, $this->EndTime])->whereIn('user_id',$Arr)->sum('cash_money');
-
+        //$Arr = $rule == 'team' ? $this->getMyTeam() :  array($this->Users->id);
+        return \App\Cash::whereBetween('created_at', [$this->StartTime, $this->EndTime])->where('user_id', $this->Users->id)->sum('cash_money');
     }
 
 
@@ -158,8 +150,8 @@ class StatisticController
 
         $Arr =  $this->getMyTeam();
         
-        return \App\Machine::where('activate_state', '1')->whereBetween('created_at', [ 
-                    $this->StartTime,  $this->EndTime])->whereHas('users', function($q) use ($Arr){
+        return \App\Machine::where('activate_state', '1')->whereBetween('activate_time', [ $this->StartTime,  $this->EndTime])
+                ->whereHasIn('users', function($q) use ($Arr){
                         $q->whereIn('id', $Arr);
                     })->count();   
 
