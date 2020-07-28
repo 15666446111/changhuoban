@@ -75,10 +75,16 @@ Route::prefix('V1')->group(function () {
      */
     Route::middleware('AuthToken')->get('/my_team', 'V1\TeamController@index');             // 首页 - 伙伴管理 - 伙伴列表
     Route::middleware('AuthToken')->get('/mine',    'V1\MineController@info');              // 首页 - 伙伴管理 - 伙伴详情
-    Route::middleware('AuthToken')->post('/getTradeDetail', 'V1\TeamController@getDetail');// 首页 - 伙伴管理 - 数据明细
+    Route::middleware('AuthToken')->post('/getTradeDetail', 'V1\TeamController@getDetail'); // 首页 - 伙伴管理 - 数据明细
 
 
 
+
+    /**
+     * @author  [Pudding]  [<755969423@qq.com>]
+     * @version [< 收益信息 >]
+     */
+   Route::middleware('AuthToken')->get('/cashs', 'V1\CashsController@cashsIndex');              // 收益信息
 
 
 
@@ -239,10 +245,6 @@ Route::prefix('V1')->group(function () {
      */
     Route::middleware('AuthToken')->get('/getOrderUser', 'V1\OrdersController@getOrder');
 
-
-    /* 收益页面接口
-    */
-   Route::middleware('AuthToken')->get('/cashs', 'V1\CashsController@cashsIndex');
 
 
    /**

@@ -10,9 +10,14 @@ use App\Http\Controllers\Controller;
 class CashsController extends Controller
 {
     
-     /**
-     * 收益页面接口
-     * 
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-07-28
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 收益栏目 ]
+     * @param     Request     $request [description]
+     * @return    [type]               [description]
      */
     public function cashsIndex(Request $request)
     {
@@ -21,14 +26,16 @@ class CashsController extends Controller
             $type = $request->type ?? 'all';
 
             //总收益
-            $data['revenueAll'] = $request->user->cash->sum('cash_money');
+            $revenueAll = $request->user->cash->sum('cash_money');
+            $data['revenueAll'] = number_format( $revenueAll / 100, 2, '.', ',');
             
             //今日收益
-            $data['revenueDay'] = \App\Cash::where('user_id', $request->user->id)->whereDate('created_at', Carbon::today())->sum('cash_money');
+            $revenueDay = \App\Cash::where('user_id', $request->user->id)->whereDate('created_at', Carbon::today())->sum('cash_money');
+            $data['revenueDay'] = number_format( $revenueDay / 100, 2, '.', ',');
             
             //本月收益
-            $data['revenueMonth'] = \App\Cash::where('user_id', $request->user->id)->whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->sum('cash_money');
-
+            $revenueMonth = \App\Cash::where('user_id', $request->user->id)->whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->sum('cash_money');
+            $data['revenueMonth'] = number_format( $revenueMonth / 100, 2, '.', ',');
 
             // 默认查询一周
             if(!$request->date){
@@ -36,6 +43,7 @@ class CashsController extends Controller
                 $request->begin = Carbon::today()->subDays(7)->toDateTimeString();
 
                 $request->end   = Carbon::now()->toDateTimeString();
+                
             }else{
 
                 $date = Carbon::createFromFormat('Y-m', $request->date);
