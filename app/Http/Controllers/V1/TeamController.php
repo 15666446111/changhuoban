@@ -61,7 +61,7 @@ class TeamController extends Controller
             // 日期。月份参数
             // 本人  团队  传过来的参数为 current 本人 或者 team  团队
             // 日期。
-            $date       = $request->date ?? false;
+            $date       = $request->date ?? 'cur';
             $current    = $request->current ?? 'current';
             $dataType   = $request->data_type ?? 'day';
             $server     = new \App\Http\Controllers\V1\ServerController($dataType, $current, $user, $date );

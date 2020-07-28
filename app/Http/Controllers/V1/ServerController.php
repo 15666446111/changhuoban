@@ -77,7 +77,7 @@ class ServerController extends Controller
 
         switch ($this->dateType) {
             case 'month':
-                $this->StartTime = $date ? Carbon::now()->startOfMonth()->toDateTimeString() : Carbon::createFromFormat('Y-m', $date)->startOfMonth()->toDateTimeString();
+                $this->StartTime = ($date == 'cur') ? Carbon::now()->startOfMonth()->toDateTimeString() : Carbon::createFromFormat('Y-m', $date)->startOfMonth()->toDateTimeString();
                 break;
             case 'day':
                 $this->StartTime = Carbon::today()->toDateTimeString();
@@ -90,7 +90,7 @@ class ServerController extends Controller
                 break;
         }
 
-        $this->EndTime = ($this->dateType == 'month' && $date ) ? Carbon::createFromFormat('Y-m', $date)->addMonth(1)->startOfMonth()->toDateTimeString() : Carbon::now()->toDateTimeString();
+        $this->EndTime = ($this->dateType == 'month' && $date != 'cur' ) ? Carbon::createFromFormat('Y-m', $date)->addMonth(1)->startOfMonth()->toDateTimeString() : Carbon::now()->toDateTimeString();
 
     	$this->Type     = $current;
 
@@ -226,7 +226,7 @@ class ServerController extends Controller
      */
 	public function getMerchants()
 	{
-		return \App\Merchant::whereIn('user_id',$this->team)->count();
+		return \App\Merchant::whereIn('user_id',$this->team)->whereBetween('created_at', [ $this->StartTime,  $this->EndTime])->count();
 	}
 
 
