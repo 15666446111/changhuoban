@@ -35,36 +35,39 @@ Route::prefix('V1')->group(function () {
     Route::post('/forgetPwd',   'V1\LoginController@forget');                               // 忘记密码接口
 
 
+    /**
+     * @author  [Pudding]  [<755969423@qq.com>]
+     * @version [< 首页 >] [<  >]
+     */
+    Route::middleware('AuthToken')->get('/plug', 'V1\PlugController@index');                // 首页 - 轮播图
+    Route::middleware('AuthToken')->get('/notice',  'V1\ArticleController@Notice');         // 首页 - 系统公告
+    Route::middleware('AuthToken')->get('/article', 'V1\ArticleController@Article_detail'); // 首页 - 文章详情
+    Route::middleware('AuthToken')->get('/problem', 'V1\ArticleController@problem');        // 首页 - 常见问题
+    Route::middleware('AuthToken')->get('/index_info', 'V1\IndexController@info');          // 首页 - 信息统计
 
     /**
-     * @version [<获取轮播图接口>] [<description>]
-     * @return  [<返回显示中的轮播图>]
-     * @version [<首页轮播图>] 
+     * @author  [Pudding]  [<755969423@qq.com>]
+     * @version [< 首页 >] [<  分享模块 生成分享海报 >]
      */
-	Route::middleware('AuthToken')->get('/plug', 'V1\PlugController@index');
-
-    /**
-     * @version [<团队扩展分享二维码>] [<description>]
-     * @return  [带二维码的分享海报]   [<description>]
-     * @version [<分享二维码] [<description>]
-     */
-    Route::middleware('AuthToken')->get('/team_share', 'V1\ShareController@team');
-
-    /**
-     * @version [<团队扩展分享二维码>] [<description>]
-     * @return  [带二维码的分享海报]   [<description>]
-     * @version [<分享二维码] [<description>]
-     */
-    Route::middleware('AuthToken')->get('/merchant_share', 'V1\ShareController@merchant');
-
+    Route::middleware('AuthToken')->get('/team_share',      'V1\ShareController@team');          // 首页 - 团队扩展
+    Route::middleware('AuthToken')->get('/merchant_share',  'V1\ShareController@merchant');      // 首页 - 商户注册
 
 
     /**
-     * @version [<APP 首页 统计信息>] [<description>]
-     * @return  [返回 首页中间模块统计信息]   [<description>]
-     * @version [<统计信息] [<description>]
+     * @author  [Pudding]  [<755969423@qq.com>]
+     * @version [< 首页 - 商户登记 >]
      */
-    Route::middleware('AuthToken')->get('/index_info', 'V1\IndexController@info');
+    Route::middleware('AuthToken')->get('/getNoBindMerchant', 'V1\MerchantController@getNoBindList');   // 首页 - 商户登记 - 未绑定列表
+    Route::middleware('AuthToken')->get('/register', 'V1\MerchantController@registers');                // 首页 - 商户登记 - 提交登记资料
+
+
+    /**
+     * @author  [Pudding]  [<755969423@qq.com>]
+     * @version [< 首页 - 商户管理 >]
+     */
+    Route::middleware('AuthToken')->get('/getMerchantsList', 'V1\MerchantController@merchantsList');    // 首页 - 商户管理 - 商户列表
+    Route::middleware('AuthToken')->get('/getMerchantInfo',  'V1\MerchantController@merchantInfo');     // 首页 - 商户管理 - 商户详情
+    Route::middleware('AuthToken')->get('/getMerchantDetails','V1\MerchantController@MerchantDetails'); // 首页 - 商户管理 - 交易明细
 
 
     /**
@@ -81,25 +84,7 @@ Route::prefix('V1')->group(function () {
      * @version [<提现记录信息接口] [<description>]
      */
     Route::middleware('AuthToken')->get('/draw', 'V1\MineController@draw_log');
-
-     /**
-     * @version [<获取系统公告>] [<description>]
-     * @return  [<返回系统公告列表>]
-     * @version [<首页轮播图下方的系统公告>] 
-     */
-    Route::middleware('AuthToken')->get('/notice', 'V1\ArticleController@Notice');
-
-    /***
-     * 文章详情页
-     */
-    Route::middleware('AuthToken')->get('/article', 'V1\ArticleController@Article_detail');
-
-    /**
-     * @version [<获取常见问题>] [<description>]
-    * @return  [<返回常见问题列表>]
-    * @version [<产品使用的常见问题>] 
-    */
-    Route::middleware('AuthToken')->get('/problem', 'V1\ArticleController@problem');
+    
 
     /**
      * 修改个人登录密码
@@ -313,24 +298,9 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/getTransferLog', 'V1\TransferController@transferLog');
 
 
-    /**
-     * @version [<APP 商户登记>] [<description>]
-     * @return  [获取该用户下所有未登记的机器]   [<description>]
-     * @version [<未登记机器获取接口] [<description>]
-     */
-    Route::middleware('AuthToken')->get('/getNoBindMerchant', 'V1\MerchantController@getNoBindList');
 
 
-    /**
-     * 首页商户登记绑定接口
-     */
-    Route::middleware('AuthToken')->get('/register', 'V1\MerchantController@registers');
 
-
-    /**
-     * 商户列表接口
-     */
-    Route::middleware('AuthToken')->get('/getMerchantsList', 'V1\MerchantController@merchantsList');
 
 
      /**
@@ -342,10 +312,6 @@ Route::prefix('V1')->group(function () {
 
 
     
-    /**
-     * 个人商户详情接口
-     */
-    Route::middleware('AuthToken')->get('/getMerchantInfo', 'V1\MerchantController@merchantInfo');
 
 
     /**
@@ -356,10 +322,6 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/getTerminalActiveDetail', 'V1\MerchantController@getActiveDetail');
 
 
-    /**
-     * 查询商户交易明细
-     */
-    Route::middleware('AuthToken')->get('/getMerchantDetails', 'V1\MerchantController@MerchantDetails');
 
 
     /**

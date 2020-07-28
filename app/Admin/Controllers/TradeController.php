@@ -162,14 +162,6 @@ class TradeController extends AdminController
             $filter->column(1/3, function ($filter) {
 
                 $arrs = array();
-
-                $p = \App\Trade::select(['agt_merchant_name'])->distinct('agt_merchant_name')->pluck('agt_merchant_name')->toArray();
-                
-                foreach ($p as $key => $value) {
-                   $arrs[$value] = $value;
-                }
-
-                $filter->equal('agt_merchant_name', '渠道商')->select($arrs);
             });
         });
 

@@ -11,29 +11,23 @@ class MerchantController extends Controller
     
 	/**
 	 * @Author    Pudding
-	 * @DateTime  2020-05-22
-	 * @copyright [商户登记 获取用户所有未登记的机器列表]
+	 * @DateTime  2020-07-28
+	 * @copyright [copyright]
 	 * @license   [license]
-	 * @version   [version]
+	 * @version   [ 首页 - 商户登记 - 获取未绑定列表 ]
 	 * @param     Request     $request [description]
 	 * @return    [type]               [description]
 	 */
     public function getNoBindList(Request $request)
     {
     	try{
-			
             $merchant = \App\Machine::select('sn as merchant_sn')->where('user_id', $request->user->id)->where('bind_status', '0')->get();
             				
            	return response()->json(['success'=>['message' => '获取成功!', 'data' => $merchant]]);
-
     	} catch (\Exception $e) {
-            
             return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
-
         }
 	}
-
-
 
 
 	/**
@@ -41,24 +35,18 @@ class MerchantController extends Controller
 	 * @DateTime  2020-07-06
 	 * @copyright [copyright]
 	 * @license   [license]
-	 * @version   [商户登记接口]
+	 * @version   [ 首页 - 商户登记 - 提交登记资料 ]
 	 * @param     Request     $request [description]
 	 * @return    [type]               [description]
 	 */
     public function registers(Request $request)
     {
         try{ 
-
 			if(!$request->merchant_sn) return response()->json(['error'=>['message' => '缺少必要参数:终端号']]);
-			
             if(!$request->merchant_name) return response()->json(['error'=>['message' => '缺少必要参数:商户名称']]);
-
             if(!$request->merchant_phone) return response()->json(['error'=>['message' => '缺少必要参数:商户电话']]);
-
 			$data = \App\Machine::where('user_id',$request->user->id)->where('sn',$request->merchant_sn)->first();
-			 
 			if(!$data or empty( $data )) return response()->json(['error'=>['message' => '找不到机器!']]);
-
 			$result = \App\Merchant::create([
 				'user_id'	=>	$data->user_id,
 				'code'		=>	-1,
@@ -66,21 +54,13 @@ class MerchantController extends Controller
 				'phone'		=>  $request->merchant_phone,
 				'operate'	=>	$data->operate
 			]);
-
 			$data->merchant_id = $result->id;
-
 			$data->bind_status = 1;
-
 			$data->bind_time = Carbon::now()->toDateTimeString();
-
 			$data->save();
-
             return response()->json(['success'=>['message' => '登记成功!', []]]); 
-
     	} catch (\Exception $e) {
-            
             return response()->json(['error'=>['message' => '系统错误,请联系客服']]);
-
         }
 	}
 
@@ -90,55 +70,115 @@ class MerchantController extends Controller
 	 * @DateTime  2020-07-06
 	 * @copyright [copyright]
 	 * @license   [license]
-	 * @version   [获取我的商户列表]
+	 * @version   [ 首页 - 商户管理 - 商户列表 ]
 	 * @param     Request     $request [description]
 	 * @return    [type]               [description]
 	 */
     public function merchantsList(Request $request)
     {
         try{ 
-
 			$data = \App\Merchant::where('user_id',$request->user->id)->get();
 			
 			$arrs = [];
 
 			if(!$data or empty($data)){ 
-
 				$arrs['Bound'] = array();
-
 			}else{
 
 				foreach($data as $key=>$value){
-
 					$sn = $value->machines->pluck('sn')->toArray();
-
 					$sn = implode('|', $sn);
-
-					// dd($value->merchants);
 					$arrs['Bound'][] = array(
 						'id'				=>		$value->id,
 						'merchant_name'		=>		$value->name,
 						'machine_phone'		=>		$value->phone,
 						'merchant_sn'		=>		$sn,
-						'money'				=>		$value->trades->sum('amount') / 100,
+						'money'				=>		number_format($value->trades->sum('amount') / 100, 2, '.', ','),
 						'merchant_number'	=>		$value->code,
 						'bind_time'			=>		$value->created_at->toDateTimeString()
 					);
 				}
-
 			}
-
 			$arrs['UnBound'] = array();
-            
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $arrs]]); 
-
-   	} catch (\Exception $e) {
-            
+   		} catch (\Exception $e) {
             return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
-
         }
     }
 	
+
+	/**
+	 * @Author    Pudding
+	 * @DateTime  2020-07-06
+	 * @copyright [copyright]
+	 * @license   [license]
+	 * @version   [ 首页 - 商户管理 - 商户详情 ]
+	 * @param     Request     $request [description]
+	 * @return    [type]               [description]
+	 */
+    public function merchantInfo(Request $request)
+    {
+        try{ 
+            if(!$request->id) return response()->json(['error'=>['message' => '缺少必要参数:请选择终端']]);
+            $data=\App\Merchant::where('user_id',$request->user->id)->where('id',$request->id)->first();
+            if(!$data or empty($data)) return response()->json(['error'=>['message' => '没有找到该机器!']]);
+			$arrs = array(
+				'id'					=>	$data->id,
+				'merchant_name'			=>	$data->name,
+				'merchant_phone'		=>	$data->phone,
+				'merchant_sn'			=>	$data->machines->first()->sn,
+				'merchant_code'			=>	$data->code,
+				'active_status'			=>	$data->activate_sn,
+				'time'					=>	$data->created_at->toDateTimeString(),
+			);
+            return response()->json(['success'=>['message' => '获取成功!', 'data' => $arrs]]);   
+    	} catch (\Exception $e) {
+            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
+        }
+	}
+
+	/**
+	 * @Author    Pudding
+	 * @DateTime  2020-07-06
+	 * @copyright [copyright]
+	 * @license   [license]
+	 * @version   [ 首页 - 商户管理 - 交易明细 ]
+	 * @param     Request     $request [description]
+	 */
+    public function MerchantDetails(Request $request)
+    {
+        try{ 
+            if(!$request->merchant) return response()->json(['error'=>['message' => '缺少必要参数:商户号']]);
+            $merchant = \App\Merchant::where('id', $request->merchant)->first();
+            if(!$merchant or empty($merchant)) return response()->json(['error'=>['message' => '该商户不存在！']]);
+
+            switch ($request->data_type) {
+                case 'month':
+                    $StartTime = Carbon::now()->startOfMonth()->toDateTimeString();
+                    break;
+                case 'day':
+                    $StartTime = Carbon::today()->toDateTimeString();
+                    break;
+                case 'count':
+                    $StartTime = Carbon::createFromFormat('Y-m-d H', '1970-01-01 00')->toDateTimeString();
+                    break;
+                default:
+                    $StartTime = Carbon::today()->toDateTimeString();
+                    break;
+            }
+            $EndTime = Carbon::now()->toDateTimeString();
+            $data = \App\Trade::select('cardType as card_type', 'amount as money','trade_time')
+            			->where('merchant_code', $merchant->code)->whereBetween('trade_time', [$StartTime,  $EndTime])
+            			->orderBy('trade_time', 'desc')
+						->get();
+			
+			if($data->isEmpty()) $data = array();
+            return response()->json(['success'=>['message' => '获取成功!', 'data'=>$data]]);
+        } catch (\Exception $e) {
+            return response()->json(['error'=>['message' => '系统错误，请联系客服']]);
+        }
+    }
+
 
 	
 	/**
@@ -233,42 +273,7 @@ class MerchantController extends Controller
 	}
 	
 
-	/**
-	 * @Author    Pudding
-	 * @DateTime  2020-07-06
-	 * @copyright [copyright]
-	 * @license   [license]
-	 * @version   [商户详情]
-	 * @param     Request     $request [description]
-	 * @return    [type]               [description]
-	 */
-    public function merchantInfo(Request $request)
-    {
-        try{ 
 
-            if(!$request->id) return response()->json(['error'=>['message' => '缺少必要参数:请选择终端']]);
-             
-            $data=\App\Merchant::where('user_id',$request->user->id)->where('id',$request->id)->first();
-					
-            if(!$data or empty($data)) return response()->json(['error'=>['message' => '没有找到该机器!']]);
-
-			$arrs = array(
-				'id'					=>	$data->id,
-				'merchant_name'			=>	$data->name,
-				'merchant_phone'		=>	$data->phone,
-				'merchant_sn'			=>	$data->machines->first()->sn,
-				'active_status'			=>	$data->activate_sn,
-				'time'					=>	$data->created_at->toDateTimeString(),
-			);
-            
-            return response()->json(['success'=>['message' => '获取成功!', 'data' => $arrs]]);   
-
-    	} catch (\Exception $e) {
-            
-            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
-
-        }
-	}
 	
 
 	/**
@@ -303,59 +308,6 @@ class MerchantController extends Controller
 	}
 	
 
-	/**
-	 * @Author    Pudding
-	 * @DateTime  2020-07-06
-	 * @copyright [copyright]
-	 * @license   [license]
-	 * @version   [商户交易明细]
-	 * @param     Request     $request [description]
-	 */
-    public function MerchantDetails(Request $request)
-    {
 
-        try{ 
-			
-            if(!$request->merchant) return response()->json(['error'=>['message' => '缺少必要参数:商户号']]);
-            
-            $merchant = \App\Merchant::where('id', $request->merchant)->first();
-
-            if(!$merchant or empty($merchant)) return response()->json(['error'=>['message' => '该商户不存在！']]);
-
-            switch ($request->data_type) {
-                case 'month':
-                    $StartTime = Carbon::now()->startOfMonth()->toDateTimeString();
-                    break;
-                case 'day':
-                    $StartTime = Carbon::today()->toDateTimeString();
-                    break;
-                case 'count':
-                    $StartTime = Carbon::createFromFormat('Y-m-d H', '1970-01-01 00')->toDateTimeString();
-                    break;
-                default:
-                    $StartTime = Carbon::today()->toDateTimeString();
-                    break;
-            }
-
-            $EndTime = Carbon::now()->toDateTimeString();
-
-            $data = \App\Trade::select('cardType as card_type','card_number','trade_type','amount as money','trade_time')
-            			->where('merchant_code', $merchant->code)->whereBetween('created_at', [$StartTime,  $EndTime])
-            			->orderBy('trade_time', 'desc')
-						->get();
-			
-			if($data->isEmpty()){
-				$data = array();
-			}
-
-            return response()->json(['success'=>['message' => '获取成功!', 'data'=>$data]]);
-        
-        } catch (\Exception $e) {
-                
-            return response()->json(['error'=>['message' => '系统错误，请联系客服']]);
-
-        }
-
-    }
 	 
 }

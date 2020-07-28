@@ -38,7 +38,7 @@ class LoginController extends Controller
             $User->save();
 
             $data = \App\AdminUser::where('operate',$User->operate)->first();
-
+            
             $type = $data->type;
 
             $operate = $data->operate;
