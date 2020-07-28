@@ -87,6 +87,12 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->post('/getTradeDetail', 'V1\TeamController@getDetail'); // 首页 - 伙伴管理 - 数据明细
 
 
+    /**
+     * @author  [Pudding]  [<755969423@qq.com>]
+     * @version [< 首页 - 团队信息  >]
+     */
+    Route::middleware('AuthToken')->get('/team_data', 'V1\TeamController@data');
+
 
 
     /**
@@ -155,12 +161,11 @@ Route::prefix('V1')->group(function () {
 
 
 
-    /**
-     * @version [<APP 团队数据>] [<description>]
-     * @return  [团队栏位 团队首页统计数据 日 月 总]   [<description>]
-     * @version [<团队首页统计数据] [<description>]
-     */
-    Route::middleware('AuthToken')->get('/team_data', 'V1\TeamController@data');
+
+
+
+
+
 
 
     /**
@@ -222,17 +227,12 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/getOrderUser', 'V1\OrdersController@getOrder');
 
 
-
-
     /**
      * @version [<APP 获取政策活动列表>] [<description>]
      * @return  [获取平台所有的政策活动]   [<description>]
      * @version [<获取政策后的] [<description>]
      */
     Route::middleware('AuthToken')->get('/getPolicy', 'V1\PolicyController@getPolicy');
-
-
-
 
     /**
      * 查询用户未绑定终端机器
@@ -264,25 +264,12 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/getTransferLog', 'V1\TransferController@transferLog');
 
 
-
-
-
-
-
-
-
-    
-
-
     /**
      * @version [<APP 获取机具活动详情>] [<description>]
      * @return  [机具的达标返现与交易情况]   [<description>]
      * @version [<机具的达标返现情况] [<description>]
      */
     Route::middleware('AuthToken')->get('/getTerminalActiveDetail', 'V1\MerchantController@getActiveDetail');
-
-
-
 
     /**
      * @version  [<vector>] [<  获取机构提现配置  >]
@@ -294,10 +281,6 @@ Route::prefix('V1')->group(function () {
      * @version [<vector>] [< 用户与代理申请提现 >]
      */
     Route::middleware('AuthToken')->post('/getWithdrawal', 'V1\WithdrawController@apply');
-
-
-
-
 
     /**
      * 微信修改订单状态 

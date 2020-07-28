@@ -100,7 +100,6 @@ class TeamController extends Controller
             $DayTeam    = $model->getNewAddTeamCount();
 
 
-
             /**
              * @version [<vector>] [<获得团队月数据 , 月交易数据 >]
              */
