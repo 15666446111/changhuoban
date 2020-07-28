@@ -124,11 +124,8 @@ class CashsController extends Controller
             }
             
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $data]]); 
-
     	} catch (\Exception $e) {
-            
             return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
-
         }
     }
 }

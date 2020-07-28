@@ -181,16 +181,19 @@ class MerchantController extends Controller
 
 	
 	/**
-	 * 机具管理页面接口
+	 * @Author    Pudding
+	 * @DateTime  2020-07-28
+	 * @copyright [copyright]
+	 * @license   [license]
+	 * @version   [ 首页 - 机具管理 - 机具统计信息 ]
+	 * @param     Request     $request [description]
+	 * @return    [type]               [description]
 	 */
 	public function getBind(Request $request)
 	{
-
 		try{
 			//获取用户的伙伴
-			//
 			$userAll = \App\UserRelation::where('parents', 'like', "%\_".$request->user->id."\_%")->pluck('user_id')->toArray();
-			
 			$data=[];
 			if(!$userAll){
 				$data['friend']['all'] = 0;
@@ -206,7 +209,7 @@ class MerchantController extends Controller
 				//查询伙伴已绑定机器总数
 				$data['friend']['Merchant'] = \App\Machine::whereIn('user_id', $userAll)->where('bind_status', '1')->count();
 				//查询伙伴已激活机器总数
-				$data['friend']['Merchant_status'] = \App\Machine::whereIn('user_id', $userAll)->where('open_state', '1')->count();
+				$data['friend']['Merchant_status'] = \App\Machine::whereIn('user_id', $userAll)->where('activate_state', '1')->count();
 				//查询伙伴已达标机器总数
 				$data['friend']['standard_statis'] = \App\Machine::whereIn('user_id', $userAll)->where('standard_status', '1')->count();
 			}
@@ -218,7 +221,7 @@ class MerchantController extends Controller
 			//查询用户已绑定机器总数
 			$data['user']['Merchant'] = \App\Machine::where('user_id', $request->user->id)->where('bind_status', '1')->count();
 			//查询用户已激活机器总数
-			$data['user']['Merchant_status'] = \App\Machine::where('user_id', $request->user->id)->where('open_state', '1')->count();
+			$data['user']['Merchant_status'] = \App\Machine::where('user_id', $request->user->id)->where('activate_state', '1')->count();
 			//查询用户已达标机器总数
 			$data['user']['standard_statis'] = \App\Machine::where('user_id', $request->user->id)->where('standard_status', '1')->count();
 			
@@ -232,43 +235,37 @@ class MerchantController extends Controller
 			$data['count']['Merchant_status']=$data['friend']['Merchant_status']+$data['user']['Merchant_status'];
 			//查询用户已达标机器总数
 			$data['count']['standard_statis']=$data['friend']['standard_statis']+$data['user']['standard_statis'];
-			
+
            	return response()->json(['success'=>['message' => '获取成功!', 'data' => $data]]);
-
     	} catch (\Exception $e) {
-            
             return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
-
 		}
-		
     }
     
 
     /**
-     * 机具详情接口
+     * @Author    Pudding
+     * @DateTime  2020-07-28
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 首页 - 机具管理 - 机具详情 ]
+     * @param     Request     $request [description]
+     * @return    [type]               [description]
      */
     public function getMerchantsTail(Request $request)
     {
         try{
-
             //参数 friends伙伴  count总  user用户
 			$Type = $request->Type;
 			
             if(!$Type) return response()->json(['error'=>['message' => '缺少必要参数:详情类型']]);
 
-            // dd($Type);
             $server = new \App\Http\Controllers\V1\ServersController($Type, $request->user);
-
             $data = $server->getInfo();
-
             return response()->json(['success'=>['message' => '获取成功!', 'data'=>$data]]); 
-
         } catch (\Exception $e) {
-
 			return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
-		
 		}
-
 	}
 	
 
