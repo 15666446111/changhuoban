@@ -69,7 +69,9 @@ class LoginController extends Controller
 
             $res = $appliction->send($request->phone, rand(1000,9999));
 
-            if($res['code'] == '10000')  return response()->json(['success'=>['message' => '发送成功!']]);
+            $res = json_decode($res, true);
+
+            if($res['code'] == 10000)  return response()->json(['success'=>['message' => '发送成功!']]);
 
             return response()->json(['error'=>['message' => $res['message']]]);
         } catch (\Exception $e) {
