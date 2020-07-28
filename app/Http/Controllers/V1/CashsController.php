@@ -43,7 +43,7 @@ class CashsController extends Controller
                 $request->begin = Carbon::today()->subDays(7)->toDateTimeString();
 
                 $request->end   = Carbon::now()->toDateTimeString();
-                
+
             }else{
 
                 $date = Carbon::createFromFormat('Y-m', $request->date);
@@ -107,7 +107,7 @@ class CashsController extends Controller
                         //'order'         => $v->trades->id,
                         'id'            => $v->id,
                         'type'          => $v->cash_type, 
-                        'money'         => $v->cash_money, 
+                        'money'         => number_format($v->cash_money / 100 , 2 , '.', ','), 
                         'sn'            => $v->trades->sn ?? '冻结机器激活', 
                         'orderMoney'    => isset($v->trades->amount) ? number_format( $v->trades->amount / 100, 2, '.', ',') : '冻结机激活返现',
                         //'orderMoney'    => $v->trades->amount ? number_format( $v->trades->amount / 100, 2, '.', ',') : "0.00",
@@ -117,7 +117,7 @@ class CashsController extends Controller
                 //dd($arrs);
                 $data['cash'][] = array(
                     'title' => $dt->year."年".$dt->month."月".$dt->day."日", 
-                    'money' => number_format($value->money, 2, '.', ','),
+                    'money' => number_format($value->money / 100, 2, '.', ','),
                     'week'  => "星期".$weekarray[$dt->dayOfWeek],
                     'list'  => $arrs,
                 );  
