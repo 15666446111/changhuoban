@@ -135,6 +135,7 @@ class ServerController extends Controller
 
         $trade = $this->getTrade();
 
+        $merchansAll = $this->merchansAll();
     	// 返回查询的日期
     	$arrs['date']         = $this->getDate();
 
@@ -151,7 +152,7 @@ class ServerController extends Controller
 		$arrs['merchants']    = $this->getMerchants();
         
         if ($arrs['merchants'] > 0 )
-		    $arrs['Avg']          = number_format(($trade / $arrs['merchants']) / 100, 2, '.', ',');
+		    $arrs['Avg']          = number_format(($trade / $merchansAll) / 100, 2, '.', ',');
     	else
             $arrs['Avg']          = 0;
         
@@ -204,6 +205,15 @@ class ServerController extends Controller
     public function getTemails()
     {
         return \App\Machine::whereIn('user_id',$this->team)->count();
+    }
+
+
+    /**
+     * @version [<vector>] [< 获取已绑定的机具总数 >]
+     */
+    public function merchansAll()
+    {
+        return \App\Machine::whereIn('user_id',$this->team)->where('bind_status', 1)->count();
     }
 
 

@@ -73,9 +73,6 @@ class TeamController extends Controller
     }
 
 
-
-
-
     /**
      * [data  APP栏位 团队 页面数据统计信息]
      * @author Pudding
