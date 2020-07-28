@@ -269,10 +269,15 @@ class ServerController extends Controller
 
         switch ($this->dateType) {
             case 'month':
-                $date = Carbon::now()->year.Carbon::now()->month;
+                if($this->date == 'cur'){
+                    $date = Carbon::now()->year."-".Carbon::now()->month;
+                }else{
+                    $dateInfo = Carbon::createFromFormat('Y-m', $this->date);
+                    $date = $dateInfo->year."-".$dateInfo->month;
+                }
                 break;
             case 'day':
-                $date = Carbon::now()->year.Carbon::now()->month.Carbon::now()->day;
+                $date = Carbon::now()->year."-".Carbon::now()->month.'-'.Carbon::now()->day;
                 break;    
             default:
                 $date = $this->StartTime;
