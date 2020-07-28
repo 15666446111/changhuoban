@@ -91,7 +91,7 @@ Route::prefix('V1')->group(function () {
      * @author  [Pudding]  [<755969423@qq.com>]
      * @version [< 首页 - 团队信息  >]
      */
-    Route::middleware('AuthToken')->get('/team_data', 'V1\TeamController@data');
+    Route::middleware('AuthToken')->get('/team_data', 'V1\TeamController@data');            // 团队 - 团队信息
 
 
 

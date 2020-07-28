@@ -112,7 +112,7 @@ class StatisticController
     {
         $Arr = $rule == 'team' ? $this->getMyTeam() :  array($this->Users->id);
 
-        return \App\Trade::whereBetween('created_at', [ $this->StartTime,  $this->EndTime])
+        return \App\Trade::whereBetween('trade_time', [ $this->StartTime,  $this->EndTime])
                 ->whereHasIn('users', function($q) use ($Arr){
                     $q->whereIn('id', $Arr);
                 })->where('is_repeat', 0)->where('is_invalid', 0)->where('sysRespCode', '00')->sum('amount');
