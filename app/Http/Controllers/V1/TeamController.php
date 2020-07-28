@@ -9,39 +9,71 @@ use Illuminate\Http\Request;
 class TeamController extends Controller
 {	
 	/**
-	 * @version  [<首页伙伴管理接口>]
-	 * @author   Pudding   
-	 * @DateTime 2020-04-08T17:17:40+0800
-	 * @param    Request
-	 * @return   [返回直接下级信息 以及所有下级的人数]
-	 */
+     * @Author    Pudding
+     * @DateTime  2020-07-28
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 首页 - 伙伴管理 -伙伴列表 ]
+     * @param     Request     $request [description]
+     * @return    [type]               [description]
+     */
     public function index(Request $request)
     {
     	try{
             // 获取直接下级信息
             $list = \App\User::where('parent', $request->user->id)
-                        ->select(['id', 'avatar', 'nickname','phone', 'created_at'])->orderBy('created_at', 'desc')->get();
-
+                        ->select(['id', 'avatar', 'nickname', 'phone', 'created_at'])->orderBy('created_at', 'desc')->get();
             // 获取总下级人数
             $Arr = \App\UserRelation::where('parents', 'like', "%_".$request->user->id."_%")->pluck('id')->toArray();
-
             return response()->json(['success'=>
-                    [
-                        'message' => '获取成功!', 
-                        'data' => [
-                            'list'      =>  $list,
-                            'count'     =>  count($list),
-                            'AllCount'  =>  count($Arr),
-                        ]
+                [
+                    'message' => '获取成功!', 
+                    'data' => [
+                        'list'      =>  $list,
+                        'count'     =>  count($list),
+                        'AllCount'  =>  count($Arr),
                     ]
+                ]
             ]);
-
     	} catch (\Exception $e) {
-
             return response()->json(['error'=>['message' => '系统错误,请联系客服']]);
-
         }
     }
+
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-07-28
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 首页 - 伙伴管理 -伙伴详情 -数据明细 ]
+     * @param     Request     $request [description]
+     * @return    [type]               [description]
+     */
+    public function getDetail(Request $request)
+    {
+        try{
+            $user = $request->uid ?? $request->user->id;
+            $user = \App\User::where('id', $user)->first();
+            if(!$user or empty($user)) return response()->json(['error'=>['message' => '无此用户!', 'data'=>[]]]);
+
+            // 按日  按月  day 按照天。 month 按月
+            // 日期。月份参数
+            // 本人  团队  传过来的参数为 current 本人 或者 team  团队
+            // 日期。
+            $date       = $request->date ?? false;
+            $current    = $request->current ?? 'current';
+            $dataType   = $request->data_type ?? 'day';
+            $server     = new \App\Http\Controllers\V1\ServerController($dataType, $current, $user, $date );
+            $data       = $server->getInfo();
+            return response()->json(['success'=>['message' => '获取成功!', 'data'=>$data]]); 
+        } catch (\Exception $e) {
+            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
+        }
+    }
+
+
+
 
 
     /**

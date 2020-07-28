@@ -69,6 +69,18 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/getMerchantInfo',  'V1\MerchantController@merchantInfo');     // 首页 - 商户管理 - 商户详情
     Route::middleware('AuthToken')->get('/getMerchantDetails','V1\MerchantController@MerchantDetails'); // 首页 - 商户管理 - 交易明细
 
+    /**
+     * @author  [Pudding]  [<755969423@qq.com>]
+     * @version [< 首页 - 伙伴管理 >]
+     */
+    Route::middleware('AuthToken')->get('/my_team', 'V1\TeamController@index');             // 首页 - 伙伴管理 - 伙伴列表
+    Route::middleware('AuthToken')->get('/mine',    'V1\MineController@info');              // 首页 - 伙伴管理 - 伙伴详情
+    Route::middleware('AuthToken')->post('/getTradeDetail', 'V1\TradeController@getDetail');// 首页 - 伙伴管理 - 数据明细
+
+
+
+
+
 
     /**
      * @version [<APP 团队数据>] [<description>]
@@ -252,20 +264,6 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/getPolicy', 'V1\PolicyController@getPolicy');
 
 
-     /**
-     * @version [<APP 伙伴信息>] [<description>]
-     * @return  [获取伙伴个人信息]   [<description>]
-     * @version [<伙伴信息接口] [<description>]
-     */
-    Route::middleware('AuthToken')->get('/mine', 'V1\MineController@info');
-
-
-    /**
-     * @version [<APP 首页 伙伴管理>] [<description>]
-     * @return  [首页的伙伴管理直接下级列表]   [<description>]
-     * @version [<伙伴管理] [<description>]
-     */
-    Route::middleware('AuthToken')->get('/my_team', 'V1\TeamController@index');
 
 
     /**
@@ -336,12 +334,6 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->post('/getWithdrawal', 'V1\WithdrawController@apply');
 
 
-    /**
-     * @version [<APP 获取交易详情>] [<description>]
-     * @return  [伙伴管理交易详情]   [<description>]
-     * @version [<获取交易详情] [<description>]
-     */
-    Route::middleware('AuthToken')->post('/getTradeDetail', 'V1\TradeController@getDetail');
 
 
     /**

@@ -51,6 +51,12 @@ class ServerController extends Controller
 	protected $team;
 
 
+    /**
+     * [$date 查询的日期 ]
+     * @var 2020-07
+     */
+    protected $date;
+
 
 	/**
 	 * @Author    Pudding
@@ -62,34 +68,34 @@ class ServerController extends Controller
 	 * @param     [type]      $date     [description]
 	 * @param     [type]      $current  [description]
 	 */
-    public function __construct($dateType, $current, $user)
+    public function __construct($dateType, $current, $user, $date)
     {
 
     	$this->dateType = $dateType;
 
+        $this->date     = $date;
+
         switch ($this->dateType) {
             case 'month':
-                $this->StartTime = Carbon::now()->startOfMonth()->toDateTimeString();
+                $this->StartTime = $date ? Carbon::now()->startOfMonth()->toDateTimeString() : Carbon::createFromFormat('Y-m', $date)->startOfMonth()->toDateTimeString();
                 break;
             case 'day':
                 $this->StartTime = Carbon::today()->toDateTimeString();
                 break;
             case 'all':
-                $this->StartTime = Carbon::createFromFormat('Y-m-d H', '1970-01-01 00')->toDateTimeString();
+                $this->StartTime = Carbon::createFromFormat('Y-m-d', '1970-01-01')->toDateTimeString();
                 break;
             default:
                 $this->StartTime = $time;
                 break;
         }
 
-        $this->EndTime = Carbon::now()->toDateTimeString();
+        $this->EndTime = ($this->dateType == 'month' && $date ) ? Carbon::createFromFormat('Y-m', $date)->addMonth(1)->startOfMonth()->toDateTimeString() : Carbon::now()->toDateTimeString();
 
     	$this->Type     = $current;
 
-    	//
     	$this->user     = $user;
 
-    	//dd($this->user);
     	if($this->Type == "current") 
     		$this->team = array($this->user->id);
 
@@ -140,6 +146,8 @@ class ServerController extends Controller
 		
 		$arrs['friends']      = $this->getFriends();
 
+        $arrs['temails']      = $this->getTemails();
+
 		$arrs['merchants']    = $this->getMerchants();
         
         if ($arrs['merchants'] > 0 )
@@ -162,14 +170,10 @@ class ServerController extends Controller
      */
     public function getTrade()
     {
-    	//DB::connection()->enableQueryLog();#开启执行日志
-
-        $team = $this->team;
-
-    	$select = \App\Trade::whereHas('merchants_sn', function($q) use ($team){
-    		$q->whereIn('user_id', $team);
-    	})->whereBetween('created_at', [ $this->StartTime,  $this->EndTime]);
-
+    	$select = \App\Trade::whereHasIn('merchants_sn', function($q){
+    		$q->whereIn('user_id', $this->team);
+    	})->whereBetween('trade_time', [ $this->StartTime,  $this->EndTime])
+            ->where('is_repeat', 0)->where('is_invalid', 0)->where('sysRespCode', '00');
     	return $select->sum('amount');
     }
 
@@ -184,10 +188,23 @@ class ServerController extends Controller
      */
     public function getActiveCount()
     {
-    	//DB::connection()->enableQueryLog();#开启执行日志
-
-    	return \App\Machine::whereIn('user_id', $this->team)->whereBetween('activate_time', [ $this->StartTime,  $this->EndTime])->count();
+    	return \App\Machine::whereIn('user_id', $this->team)->whereBetween('activate_time', [$this->StartTime, $this->EndTime])->count();
 	}
+
+
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-07-21
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 获取机具总数]
+     * @return    [type]      [description]
+     */
+    public function getTemails()
+    {
+        return \App\Machine::whereIn('user_id',$this->team)->count();
+    }
 
 
 	/**
@@ -195,17 +212,24 @@ class ServerController extends Controller
 	 */
 	public function getFriends()
 	{
-		return \App\UserRelation::where('parents', 'like', '%\_'.$this->user->id.'\_%')->count();
+		return \App\UserRelation::where('parents', 'like', '%\_'.$this->user->id.'\_%')->whereBetween('created_at', [ $this->StartTime,  $this->EndTime])->count();
 	}
 
 
 	/**
-	 * 获取终端号总数
-	 */
+     * @Author    Pudding
+     * @DateTime  2020-07-28
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 获取商户总数 ]
+     * @return    [type]      [description]
+     */
 	public function getMerchants()
 	{
-		return \App\Machine::whereIn('user_id',$this->team)->count();
+		return \App\Merchant::whereIn('user_id',$this->team)->count();
 	}
+
+
 
     /**
      * @Author    Pudding
@@ -217,9 +241,9 @@ class ServerController extends Controller
      */
     public function getIncome()
     {
-    	//DB::connection()->enableQueryLog();#开启执行日志
     	return \App\Cash::whereIn('user_id', $this->team)->whereBetween('created_at', [ $this->StartTime,  $this->EndTime])->sum('cash_money');
     }
+
 
     /**
      * @Author    Pudding
@@ -235,10 +259,10 @@ class ServerController extends Controller
 
         switch ($this->dateType) {
             case 'month':
-                $date = Carbon::now()->year."年".Carbon::now()->month."月";
+                $date = Carbon::now()->year.Carbon::now()->month;
                 break;
             case 'day':
-                $date = Carbon::now()->year."年".Carbon::now()->month."月".Carbon::now()->day."日";
+                $date = Carbon::now()->year.Carbon::now()->month.Carbon::now()->day;
                 break;    
             default:
                 $date = $this->StartTime;

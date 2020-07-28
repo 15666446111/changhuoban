@@ -9,18 +9,18 @@ use Illuminate\Http\Request;
 class MineController extends Controller
 {	
 	/**
-	 * @version  [<我的栏位 获取个人信息>]
-	 * @author   Pudding   
-	 * @DateTime 2020-04-08T17:17:40+0800
-	 * @param    Request
-	 * @return   [type]
-	 */
+     * @Author    Pudding
+     * @DateTime  2020-07-28
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 首页 - 伙伴管理 - 伙伴详情 ]
+     * @param     Request     $request [description]
+     * @return    [type]               [description]
+     */
     public function info(Request $request)
     {
     	try{
-            
             $userFirst = \App\User::where('id',$request->team_user)->first();
-
             $data = [];
             //用户id
             $data['id'] = $userFirst->id;
@@ -40,15 +40,15 @@ class MineController extends Controller
             $data['group'] = $userFirst->group->name;
             //注册时间
             $data['created_at'] = $userFirst->created_at->toDateTimeString();
-
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $data]]);
-
     	} catch (\Exception $e) {
-            
             return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
-
         }
     }
+
+
+
+
 
 
     /**
