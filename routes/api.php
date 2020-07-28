@@ -75,7 +75,7 @@ Route::prefix('V1')->group(function () {
      */
     Route::middleware('AuthToken')->get('/my_team', 'V1\TeamController@index');             // 首页 - 伙伴管理 - 伙伴列表
     Route::middleware('AuthToken')->get('/mine',    'V1\MineController@info');              // 首页 - 伙伴管理 - 伙伴详情
-    Route::middleware('AuthToken')->post('/getTradeDetail', 'V1\TradeController@getDetail');// 首页 - 伙伴管理 - 数据明细
+    Route::middleware('AuthToken')->post('/getTradeDetail', 'V1\TeamController@getDetail');// 首页 - 伙伴管理 - 数据明细
 
 
 
