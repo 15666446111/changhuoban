@@ -53,4 +53,11 @@ class AdminSetting extends Model
     {
         return $this->hasOne('\App\Setting', 'operate', 'operate_number');
     }
+
+
+
+    public function count_users()
+    {
+        return 3;
+    }
 }

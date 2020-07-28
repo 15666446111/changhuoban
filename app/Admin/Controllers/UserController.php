@@ -7,8 +7,12 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Encore\Admin\Facades\Admin;
+use Encore\Admin\Widgets\Table;
 use Illuminate\Database\Eloquent\Collection;
 use Encore\Admin\Controllers\AdminController;
+
+use App\Admin\ShowModel\ShowUserCount;
+
 
 class UserController extends AdminController
 {
@@ -37,28 +41,9 @@ class UserController extends AdminController
             $grid->model()->where('operate', Admin::user()->operate);
 
             $type = \App\AdminSetting::where('operate_number', Admin::user()->operate)->value('pattern');
-
         }
 
         $grid->model()->latest();
-
-
-        $grid->model()->collection(function (Collection $collection) {
-            // 1. 统计会员信息
-            foreach($collection as $item) {
-                // 总分润金额
-                $item->count_pos  = number_format($item->machines->count())."台";
-
-                // 总分润金额
-                $item->count_cash = number_format($item->cash->sum('cash_money') / 100, 2, ".", ",")."元";
-
-                // 查询团队有多少人
-                $item->count_team = number_format(\App\UserRelation::where('parents', 'like', "%_".$item->id."_%")->count())."人";
-            }
-
-            // 最后一定要返回集合对象
-            return $collection;
-        });
 
 
         $grid->column('avatar', __('头像'))->image('', 30, 30)->help('用户的头像');
@@ -68,27 +53,19 @@ class UserController extends AdminController
         $grid->column('account', __('账号'))->copyable()->help('用户的app登陆账号');
 
         if( $type != 2 ){
+
             $grid->column('group.name', __('用户组'))->help('用户所属的用户组,联盟模式独有');
+
+            $grid->column('is_verfity', __('晋升审核'))->bool()->help('每月初的自动晋升,是否审核该用户');
+
+            $grid->column('cur_verfity', __('审核'))->bool()->help('当月是否已经审核');
         }
-        
 
         $grid->column('parent_user.nickname', __('父级'))->help('用户的直属上级');
 
         $grid->column('active', __('状态'))->switch()->help('用户的活动状态,关闭后将无法在app登陆');
 
-        $grid->column('wallets.cash_blance', __('分润余额'))->display(function( $cash){
-            return number_format( $cash , 2, '.', ',');
-        })->label()->help('用户分润钱包余额');
-
-        $grid->column('wallets.return_blance', __('返现余额'))->display(function($cash){
-            return number_format($cash , 2, '.', ',');
-        })->label('info')->help('用户返现钱包余额');
-
-        $grid->column('count_pos', __('机器总数'))->label('primary')->help('当前账号下拥有的终端总数');
-
-        $grid->column('count_team', __('团队人数'))->label('primary')->help('当前用户的团队总人数(不包含自己)');
-
-        $grid->column('count_cash', __('总收益'))->label('primary')->help('当前用户在平台总计收益');
+        $grid->column('user', '统计')->modal('统计信息', ShowUserCount::class);
 
         $grid->column('last_ip', __('最后登录地址'))->help('用户最后登陆的IP地址');
 
@@ -96,7 +73,6 @@ class UserController extends AdminController
 
         $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s')->help('用户注册的时间');
 
-        //$grid->column('updated_at', __('修改时间'))->date('Y-m-d H:i:s');
         $grid->disableCreateButton();
 
         $grid->actions(function ($actions) {
@@ -135,12 +111,16 @@ class UserController extends AdminController
 
         $show = new Show(User::findOrFail($id));
 
+        $type = false;
+
         /**
          * @version [<vector>] [< 如果当前登录的为操盘方 检查当前分享图是否属于此操盘方>]
          */
         if(Admin::user()->operate != "All"){
             $model = User::where('id', $id)->first();
-            if($model->operate != Admin::user()->operate) return abort('403');        
+            if($model->operate != Admin::user()->operate) return abort('403');
+
+            $type = \App\AdminSetting::where('operate_number', Admin::user()->operate)->value('pattern');        
         }
 
         $show->field('nickname', __('昵称'));
@@ -210,6 +190,59 @@ class UserController extends AdminController
 
         });
 
+
+        // 用户的自动晋升记录
+        if( $type != 2 ){
+            $show->auto_promotion_logs('晋升历史', function ($logs) {
+
+                //$articles->setResource('/admin/articles');
+                
+                $logs->model()->latest();
+                
+                $logs->id('索引')->sortable();
+
+                $logs->status('状态')->bool()->help('本次晋升的考核状态');
+
+                $logs->trade_count('上月交易量')->display(function ($money) {
+                    return number_format($money / 100, 2, '.', ',');
+                })->label()->help('上月团队总交易量');
+
+                $logs->column('title', '考核标准')->expand(function ($model) {
+                    if($model->remark != ""){
+                        $data = json_decode($model->remark);
+                        $rows = array();
+                        foreach ($data as $key => $value) {
+                            $rows[] = array( 
+                                $value->id,
+                                "C".$value->group_id, 
+                                number_format($value->trade_count / 100, 2, '.', ','),
+                                $value->created_at,
+                                $value->updated_at
+                            );
+                        }
+                        return new Table(['索引','用户组', '考核交易量', '创建时间', '修改时间'], $rows);
+                    }
+                })->help('考核晋升时的操盘方晋升标准');
+                //$logs->
+
+                $logs->biz('考核备注')->help('考核时程序执行信息');
+
+                $logs->created_at('考核时间')->help('本次考核时间');
+
+                $logs->filter(function ($filter) {
+                    $filter->disableIdFilter();
+                    //$filter->like('title');
+                });
+
+                $logs->disableCreateButton();
+                $logs->batchActions(function ($batch) {
+                    $batch->disableDelete();
+                });
+                $logs->disableActions();
+            });
+        }
+
+
         $show->panel()->tools(function ($tools) {
             $tools->disableEdit();
             $tools->disableDelete();
@@ -226,6 +259,14 @@ class UserController extends AdminController
     {
         $form = new Form(new User());
 
+        /**
+         * @version [<vector>] [< 修改member时 如果不是超级管理员 其他操盘方禁止修改不属于自己的信息>]
+         */
+        if(Admin::user()->operate != "All" && request()->route()->parameters()){
+            $User = \App\User::where('id', request()->route()->parameters()['user'])->first();
+            if($User->operate != Admin::user()->operate) return abort('403'); 
+        }
+
         $form->text('nickname', __('昵称'));
 
         $form->text('account', __('账号'))->readonly();
@@ -235,6 +276,8 @@ class UserController extends AdminController
         $form->select('user_group', __('用户组'))->options(\App\UserGroup::get()->pluck('name', 'id'));
 
         $form->switch('active', __('状态'))->default(1);
+
+        $form->switch('is_verfity', __('自动晋升'))->default(1);
 
         $form->text('last_ip', __('最后登录IP'));
 

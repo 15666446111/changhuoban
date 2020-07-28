@@ -5,26 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-use App\Jobs\WithdrawQuery;
-use App\Services\Cj\RepayCjController;
-
-
 class HomeController extends Controller
 {	
-    protected $withdraw;
+
 	/**
 	 * @version [<vector>] [< 访问项目主目录 处理控制器>]
 	 * @author  [Pudding] <[< 755969423@qq.com >]>
 	 */
     public function index(Request $request)
-    {
-
-
-        $this->withdraw = \App\Withdraw::where('id', 6)->first();
-
-        WithdrawQuery::dispatch($this->withdraw)->onQueue('withdraw');
-
-        
+    {   
         // \App\User::create([
         //     'nickname'      => '测试c1',
         //     'account'       => '15666446115',

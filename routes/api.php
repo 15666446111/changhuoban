@@ -26,17 +26,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
  */
 Route::prefix('V1')->group(function () {
 
-	/**
-	 * @version [<用户登录接口>] [<description>]
-	 * @return  [<返回用户认证的hash令牌>]
-	 * @version [<在所有请求之前请求>] [<所有接口都需使用此接口返回的令牌>]
-	 */
-    Route::post('/login', 'V1\LoginController@login');
-
     /**
-     * @version  [< 忘记密码接口 >]
+     * @author  [Pudding]  [<755969423@qq.com>]
+     * @version [< 用户登陆 / 忘记密码 >] [< 无需token的路由 >]
      */
-    Route::post('/forgetPwd', 'V1\LoginController@forget');
+    Route::post('/login',       'V1\LoginController@login');                                // 用户登陆接口
+    Route::post('/getCode',     'V1\LoginController@getCode');                              // 发送验证码接口
+    Route::post('/forgetPwd',   'V1\LoginController@forget');                               // 忘记密码接口
+
+
 
     /**
      * @version [<获取轮播图接口>] [<description>]

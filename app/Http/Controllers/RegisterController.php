@@ -16,9 +16,7 @@ class RegisterController extends Controller
      */
     public function team(Request $request)
     {
-
         try{
-
             $result = Hashids::decode($request->route('code'));
 
             if(empty($result)) return response()->json(['error'=>['message' => '解密失败!']]);
@@ -30,7 +28,6 @@ class RegisterController extends Controller
             return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
 
         }
-
     }
 
 
@@ -53,7 +50,7 @@ class RegisterController extends Controller
              * @version [<vector>] [< 验证验证码是否正确 >]
              */
             if(!$this->verifyCode($request->register_phone, $request->register_code)){
-                 return back()->withErrors(['验证码不正确或已过期!'])->withInput();
+                return back()->withErrors(['验证码不正确或已过期!'])->withInput();
             }
             
             if($request->register_password !== $request->register_confirm_password)
@@ -87,6 +84,7 @@ class RegisterController extends Controller
     }
 
 
+
     /**
      * Show the application dashboard.  扩展普通用户
      *
@@ -94,9 +92,7 @@ class RegisterController extends Controller
      */
     public function extendUser(Request $request)
     {
-
         try{
-
             $result = Hashids::decode($request->route('code'));
 
             if(empty($result)) return response()->json(['error'=>['message' => '解密失败!']]);
@@ -108,7 +104,6 @@ class RegisterController extends Controller
             return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
 
         }
-
     }
 
 
@@ -208,10 +203,10 @@ class RegisterController extends Controller
             
         } catch (\Exception $e) {
 
-             return json_encode(array('code'=> -999, 'message' => '发送失败!'));
-
+            return json_encode(array('code'=> -999, 'message' => '发送失败!'));
         }
     }
+
 
     /**
      * @Author    Pudding
@@ -237,9 +232,7 @@ class RegisterController extends Controller
                 return false;
             }
 
-            if($codeMsg->code != $code){
-                return false;
-            }
+            if($codeMsg->code != $code) return false;
 
             \App\SmsCode::where('phone', $phone)->update(['is_use' => 1]);
 

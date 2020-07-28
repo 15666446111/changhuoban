@@ -15,9 +15,7 @@ class Order extends Model
 
     // 反向关联产品表
     public function products(){
-
         return $this->belongsTo('App\Product','product_id','id');
-
     }
     
     //反向关联会员表
