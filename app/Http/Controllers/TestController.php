@@ -29,7 +29,7 @@ class TestController extends Controller
     	 * 交易冲正时可能会推送多笔交易，已平台收单应答描述前六位为"原交易已冲正"区分是否为无效的冲正类交易,
     	 * 无效的交易信息不进行保存和处理
     	 */
-    	if ($this->trade->sysRespCode != '00' || substr($this->trade->sysRespDesc, 0, 18) == '原交易已冲正') {
+    	if ($this->trade->sys_resp_code != '00' || substr($this->trade->sys_resp_desc, 0, 18) == '原交易已冲正') {
     		$this->trade->remark = '该交易为无效交易';
     		$this->trade->is_invalid = 1;
             $this->trade->save();
@@ -66,10 +66,10 @@ class TestController extends Controller
 
         /**
          * @version [<vector>] [< 检查是否是重复推送的数据 >]
-         * transDate: 接口推送的交易日期
+         * trans_date: 接口推送的交易日期
          * rrn: 参考号
          */
-        $sameTrade = \App\Trade::where('transDate', $this->trade->transDate)
+        $sameTrade = \App\Trade::where('trans_date', $this->trade->trans_date)
         						->where('rrn', $this->trade->rrn)
         						->where('id', '<>', $this->trade->id)
                                 ->first();

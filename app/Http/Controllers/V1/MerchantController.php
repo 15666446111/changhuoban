@@ -339,7 +339,7 @@ class MerchantController extends Controller
 
             $EndTime = Carbon::now()->toDateTimeString();
 
-            $data = \App\Trade::select('cardType as card_type','card_number','trade_type','amount as money','trade_time')
+            $data = \App\Trade::select('card_type','card_number','trade_type','amount as money','trade_time')
             			->where('merchant_code', $merchant->code)->whereBetween('created_at', [$StartTime,  $EndTime])
             			->orderBy('trade_time', 'desc')
 						->get();

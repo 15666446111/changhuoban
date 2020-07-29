@@ -71,8 +71,10 @@ class RepayCjController extends Controller
      */
     public function __construct( Withdraw $Withdraw )
     {
+        
+        // $this->withdraw = $Withdraw;
 
-        $this->withdraw = $Withdraw;
+        $this->withdraw = \App\Withdraw::where('id', $Withdraw->id)->first();
 
         $this->setting = \App\Setting::where('operate', $this->withdraw->operate)->first();
 

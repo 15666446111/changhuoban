@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddInfosToSettingsTable extends Migration
+class ChangeTraceNoToTradesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class AddInfosToSettingsTable extends Migration
      */
     public function up()
     {
-        Schema::table('settings', function (Blueprint $table) {
+        Schema::table('trades', function (Blueprint $table) {
             
-            $table->integer('cash_min')->default(2000)->comment('分润钱包最少提现金额')->after('no_check_return');
+            $table->string('sysTraceNo', 20)->default('')->change();
+            
+            $table->string('traceNo', 20)->default('')->change();
 
-            $table->integer('return_min')->default(2000)->comment('返现钱包最少提现金额')->after('cash_min');
-            
         });
     }
 
@@ -29,7 +29,7 @@ class AddInfosToSettingsTable extends Migration
      */
     public function down()
     {
-        Schema::table('settings', function (Blueprint $table) {
+        Schema::table('trades', function (Blueprint $table) {
             //
         });
     }

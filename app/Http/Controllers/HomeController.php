@@ -20,20 +20,29 @@ class HomeController extends Controller
     {
 
 
+        $str = '000000';
+
+        $list = \App\Trade::where('id', '>', 0)->get();
+
+        foreach ($list as $key => $val) {
+            
+            $traceNoLength = strlen( $val->traceNo );
+
+            $sysTraceNoLength = strlen( $val->sysTraceNo );
+
+            $val->traceNo = substr($str, 0, 6 - $traceNoLength) . $val->traceNo;
+
+            $val->sysTraceNo = substr($str, 0, 6 - $sysTraceNoLength) . $val->sysTraceNo;
+
+            $val->save();
+            
+        }die;
+
+
         $this->withdraw = \App\Withdraw::where('id', 6)->first();
 
         WithdrawQuery::dispatch($this->withdraw)->onQueue('withdraw');
 
-        
-        // \App\User::create([
-        //     'nickname'      => '测试c1',
-        //     'account'       => '15666446115',
-        //     'phone'         => '15666446115',
-        //     'password'      => "###" . md5(md5('123456' . 'v3ZF87bMUC5MK570QH')),
-        //     'user_group'    => 1,
-        //     'parent'        => 9,
-        //     'operate'       => 'CP1002020041714132163',
-        // ]);
     	return view('login');
     }
 

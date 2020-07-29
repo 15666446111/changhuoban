@@ -177,7 +177,7 @@ class CashController extends AdminController
 
             $trades->field('trades_deputies.tranTime', __('交易时间'));
 
-            $trades->field('tranCode', __('交易类型'))->using([
+            $trades->field('tran_code', __('交易类型'))->using([
                 '020000' => '消费', 
                 '020002' => '消费撤销', 
                 '020003' => '消费冲正',
@@ -203,7 +203,7 @@ class CashController extends AdminController
                 'B' => '标准', 'YN' => '云闪付NFC', 'YM' => '云闪付双免'
             ]);
 
-            $trades->field('cardType', __('交易卡类型'))->using([
+            $trades->field('card_type', __('交易卡类型'))->using([
                 '0' => '借记卡', '1' => '贷记卡'
             ]);
 

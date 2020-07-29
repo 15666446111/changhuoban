@@ -179,7 +179,7 @@ class MachineController extends AdminController
             $trade->column('agt_merchant_name', __('渠道商名称'));
             $trade->column('agt_merchant_level', __('渠道商级别'));
 
-            $trade->column('cardType', __('卡类型'))->using([ '0' => '贷记卡', '1' => '借记卡']);
+            $trade->column('card_type', __('卡类型'))->using([ '0' => '贷记卡', '1' => '借记卡']);
             $trade->column('trade_type', __('交易类型'));
             $trade->column('trade_time', __('交易时间'));
 
