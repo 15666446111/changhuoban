@@ -10,9 +10,14 @@ use App\Http\Controllers\Controller;
 class CashsController extends Controller
 {
     
-     /**
-     * 收益页面接口
-     * 
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-07-28
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 收益栏目 ]
+     * @param     Request     $request [description]
+     * @return    [type]               [description]
      */
     public function cashsIndex(Request $request)
     {
@@ -21,14 +26,16 @@ class CashsController extends Controller
             $type = $request->type ?? 'all';
 
             //总收益
-            $data['revenueAll'] = $request->user->cash->sum('cash_money');
+            $revenueAll = $request->user->cash->sum('cash_money');
+            $data['revenueAll'] = number_format( $revenueAll / 100, 2, '.', ',');
             
             //今日收益
-            $data['revenueDay'] = \App\Cash::where('user_id', $request->user->id)->whereDate('created_at', Carbon::today())->sum('cash_money');
+            $revenueDay = \App\Cash::where('user_id', $request->user->id)->whereDate('created_at', Carbon::today())->sum('cash_money');
+            $data['revenueDay'] = number_format( $revenueDay / 100, 2, '.', ',');
             
             //本月收益
-            $data['revenueMonth'] = \App\Cash::where('user_id', $request->user->id)->whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->sum('cash_money');
-
+            $revenueMonth = \App\Cash::where('user_id', $request->user->id)->whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->sum('cash_money');
+            $data['revenueMonth'] = number_format( $revenueMonth / 100, 2, '.', ',');
 
             // 默认查询一周
             if(!$request->date){
@@ -36,6 +43,7 @@ class CashsController extends Controller
                 $request->begin = Carbon::today()->subDays(7)->toDateTimeString();
 
                 $request->end   = Carbon::now()->toDateTimeString();
+
             }else{
 
                 $date = Carbon::createFromFormat('Y-m', $request->date);
@@ -99,7 +107,7 @@ class CashsController extends Controller
                         //'order'         => $v->trades->id,
                         'id'            => $v->id,
                         'type'          => $v->cash_type, 
-                        'money'         => $v->cash_money, 
+                        'money'         => number_format($v->cash_money / 100 , 2 , '.', ','), 
                         'sn'            => $v->trades->sn ?? '冻结机器激活', 
                         'orderMoney'    => isset($v->trades->amount) ? number_format( $v->trades->amount / 100, 2, '.', ',') : '冻结机激活返现',
                         //'orderMoney'    => $v->trades->amount ? number_format( $v->trades->amount / 100, 2, '.', ',') : "0.00",
@@ -109,18 +117,15 @@ class CashsController extends Controller
                 //dd($arrs);
                 $data['cash'][] = array(
                     'title' => $dt->year."年".$dt->month."月".$dt->day."日", 
-                    'money' => number_format($value->money, 2, '.', ','),
+                    'money' => number_format($value->money / 100, 2, '.', ','),
                     'week'  => "星期".$weekarray[$dt->dayOfWeek],
                     'list'  => $arrs,
                 );  
             }
             
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $data]]); 
-
     	} catch (\Exception $e) {
-            
             return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
-
         }
     }
 }

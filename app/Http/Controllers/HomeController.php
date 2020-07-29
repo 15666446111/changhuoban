@@ -2,47 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-use App\Jobs\WithdrawQuery;
-use App\Services\Cj\RepayCjController;
-
-
 class HomeController extends Controller
 {	
-    protected $withdraw;
+
 	/**
 	 * @version [<vector>] [< 访问项目主目录 处理控制器>]
 	 * @author  [Pudding] <[< 755969423@qq.com >]>
 	 */
     public function index(Request $request)
-    {
-
-
-        $str = '000000';
-
-        $list = \App\Trade::where('id', '>', 0)->get();
-
-        foreach ($list as $key => $val) {
-            
-            $traceNoLength = strlen( $val->traceNo );
-
-            $sysTraceNoLength = strlen( $val->sysTraceNo );
-
-            $val->traceNo = substr($str, 0, 6 - $traceNoLength) . $val->traceNo;
-
-            $val->sysTraceNo = substr($str, 0, 6 - $sysTraceNoLength) . $val->sysTraceNo;
-
-            $val->save();
-            
-        }die;
-
-
-        $this->withdraw = \App\Withdraw::where('id', 6)->first();
-
-        WithdrawQuery::dispatch($this->withdraw)->onQueue('withdraw');
-
+    {   
+        // \App\User::create([
+        //     'nickname'      => '测试c1',
+        //     'account'       => '15666446115',
+        //     'phone'         => '15666446115',
+        //     'password'      => "###" . md5(md5('123456' . 'v3ZF87bMUC5MK570QH')),
+        //     'user_group'    => 1,
+        //     'parent'        => 9,
+        //     'operate'       => 'CP1002020041714132163',
+        // ]);
     	return view('login');
     }
 

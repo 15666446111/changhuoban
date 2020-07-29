@@ -10,16 +10,17 @@ use App\Http\Requests\LoginRequest;
 class LoginController extends Controller
 {	
 	/**
-	 * @version  [<用户登录API接口>]
-	 * @author Pudding   
-	 * @DateTime 2020-04-08T17:17:40+0800
-	 * @param    Request
-	 * @return   [type]
-	 */
+     * @Author    Pudding
+     * @DateTime  2020-07-28
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 用户登陆接口 ]
+     * @param     LoginRequest $request [description]
+     * @return    [type]                [description]
+     */
     public function login(LoginRequest $request)
     {
     	try{
-
     		$User = \App\User::where('account', $request->account)->first();
     		
             if($User->password !=  "###".md5(md5($request->password. 'v3ZF87bMUC5MK570QH'))) 
@@ -37,7 +38,7 @@ class LoginController extends Controller
             $User->save();
 
             $data = \App\AdminUser::where('operate',$User->operate)->first();
-
+            
             $type = $data->type;
 
             $operate = $data->operate;
@@ -45,11 +46,39 @@ class LoginController extends Controller
     		return response()->json(['success'=>['token' => $User->api_token,'operate' => $operate,'type' => $type]]);
 
     	} catch (\Exception $e) {
-
             return response()->json(['error'=>['message' => '系统错误,联系客服!']], 500);
-
         }
     }
+
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-07-28
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 发送验证码接口]
+     * @param     Request     $request [description]
+     * @return    [type]               [description]
+     */
+    public function getCode(Request $request)
+    {
+        try{
+            if(!$request->phone) return response()->json(['error'=>['message' => '请输入您的手机号!']]);
+            // 发送验证码
+            $appliction = new \App\Services\Sms\SendSmsController;
+
+            $res = $appliction->send($request->phone, rand(1000,9999));
+
+            $res = json_decode($res, true);
+
+            if($res['code'] == 10000)  return response()->json(['success'=>['message' => '发送成功!']]);
+
+            return response()->json(['error'=>['message' => $res['message']]]);
+        } catch (\Exception $e) {
+            return response()->json(['error'=>['message' => '系统错误,联系客服!']], 500);
+        }
+    }
+
 
 
     /**
@@ -63,7 +92,6 @@ class LoginController extends Controller
      */
     public function forget(Request $request)
     {
-
         try{
 
             if(!$request->account) return response()->json(['error'=>['message' => '请输入账号!']]);
@@ -74,7 +102,14 @@ class LoginController extends Controller
 
             if($request->password !== $request->password1) return response()->json(['error'=>['message' => '请保持密码一致']]);
 
-            if($request->code !== '8888') return response()->json(['error'=>['message' => '验证码错误']]);
+            if(!$request->code) return response()->json(['error'=>['message' => '请输入验证码']]);
+
+            /**
+             * @version [<vector>] [< 验证验证码是否正确 >]
+             */
+            if(!$this->verifyCode($request->account, $request->code)){
+                return response()->json(['error'=>['message' => '验证码不正确或已过期!']]);
+            }
 
             $user->password = "###" . md5(md5($request->password . 'v3ZF87bMUC5MK570QH'));
 
@@ -83,21 +118,61 @@ class LoginController extends Controller
             return response()->json(['success'=>['message' => '修改成功!', 'data'=>[]]]);
 
         } catch (\Exception $e) {
-
             return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
-
         }
-
     }
 
 
+
     /**
-     * 修改个人登录密码
+     * @Author    Pudding
+     * @DateTime  2020-07-09
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 验证验证码是否正确 ]
+     * @param     [type]      $phone [description]
+     * @param     [type]      $code  [description]
+     * @return    [type]             [description]
+     */
+    public function verifyCode($phone, $code)
+    {
+        try{
+            // 获取到该用户的最后一条可用的验证码
+            $codeMsg = \App\SmsCode::where('phone', $phone)
+                                    ->where('is_use', 0)
+                                    ->where('out_time', '>=', Carbon::now()->toDateTimeString())
+                                    ->orderBy('id', 'desc')->first();
+
+            if(empty($codeMsg) or !$codeMsg){
+                \App\SmsCode::where('phone', $phone)->update(['is_use' => 1]);
+                return false;
+            }
+
+            if($codeMsg->code != $code) return false;
+
+            \App\SmsCode::where('phone', $phone)->update(['is_use' => 1]);
+
+            return true;
+            
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-07-28
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 修改个人密码信息接口 ]
+     * @param     Request     $request [description]
+     * @return    [type]               [description]
      */
     public function editUser(Request $request)
     {
         try{
-
             $User = \App\User::where('id', $request->user->id)->first();
             
             if($User->password !=  "###".md5(md5($request->password. 'v3ZF87bMUC5MK570QH'))) 
@@ -107,16 +182,10 @@ class LoginController extends Controller
 
             $data = $User->save();
 
-            if($data){
-
-                return response()->json(['success'=>['message' => '修改成功!', []]]); 
-
-            }
+            if($data) return response()->json(['success'=>['message' => '修改成功!', []]]);
 
         } catch (\Exception $e){
-
             return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
-
         }
     }
 }

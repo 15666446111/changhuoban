@@ -97,6 +97,16 @@ return [
             'retry_after'   => 300,
             'block_for'     => null,
         ],
+
+
+        // 自动晋升队列
+        'redis' => [
+            'driver'        => 'redis',
+            'connection'    => 'AutoPromotion',
+            'queue'         => 'AutoPromotion',
+            'retry_after'   => 300,
+            'block_for'     => null,
+        ],
     ],
 
     /*

@@ -19,7 +19,6 @@ class ServersController
      */
     protected $user;
 
-
     /**
      * 查询的用户
      */
@@ -72,118 +71,79 @@ class ServersController
         return $arrs;
     }
 
+
     /**
-     * 查询全部机器详情信息
+     * @Author    Pudding
+     * @DateTime  2020-07-28
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 机具列表信息 ]
+     * @return    [type]      [description]
      */
     public function getAllMerchants()
     {
-
-        $select = \App\Machine::select('sn as merchant_sn','bind_status','open_state as active_status','open_time as active_time','bind_time','policy_id')
-        ->whereIn('user_id', $this->team)
-        ->get();
+        $select = \App\Machine::select('sn as merchant_sn','bind_status','activate_state as active_status','activate_time as active_time','bind_time','policy_id')->whereIn('user_id', $this->team)->get();
         $arr = [];
 
         foreach($select as $k=>$v){
-            if(!$v->policys){
-                $arr[] = [
-                    'merchant_sn'   =>  $v->merchant_sn,
-                    'bind_status'   =>  $v->bind_status,
-                    'active_status' =>  $v->active_status,
-                    'active_time'   =>  $v->active_time,
-                    'bind_time'     =>  $v->bind_time,
-                    'policy_id'     =>  $v->policy_id,
-                    'title'         =>  '无活动',
-                ];
-            }else{
-                $arr[] = [
-                    'merchant_sn'   =>  $v->merchant_sn,
-                    'bind_status'   =>  $v->bind_status,
-                    'active_status' =>  $v->active_status,
-                    'active_time'   =>  $v->active_time,
-                    'bind_time'     =>  $v->bind_time,
-                    'policy_id'     =>  $v->policy_id,
-                    'title' => $v->policys->title
-                ];
-            }
-            
+            $arr[] = [
+                'merchant_sn'   =>  $v->merchant_sn,
+                'bind_status'   =>  $v->bind_status,
+                'active_status' =>  $v->active_status,
+                'active_time'   =>  $v->active_time,
+                'bind_time'     =>  $v->bind_time,
+                'policy_id'     =>  $v->policy_id,
+                'title'         =>  empty($v->policys) ? '无活动' :  $v->policys->title
+            ];
         }
-
         return $arr;
     }
+
 
     /**
      * 查询已绑定机器详情信息
      */
     public function getBound()
     {
-        $select = \App\Machine::select('sn as merchant_sn','bind_status','open_state as active_status','open_time as active_time','bind_time','policy_id')
-        ->whereIn('user_id', $this->team)
-        ->where('bind_status',1)
-        ->get();
+        $select = \App\Machine::select('sn as merchant_sn','bind_status','activate_state as active_status','activate_time as active_time','bind_time','policy_id')->whereIn('user_id', $this->team)->where('bind_status',1)->get();
         $arr = [];
-
         foreach($select as $k=>$v){
-            if(!$v->policys){
-                $arr[] = [
-                    'merchant_sn'   =>  $v->merchant_sn,
-                    'bind_status'   =>  $v->bind_status,
-                    'active_status' =>  $v->active_status,
-                    'active_time'   =>  $v->active_time,
-                    'bind_time'     =>  $v->bind_time,
-                    'policy_id'     =>  $v->policy_id,
-                    'title'         =>  '无活动',
-                ];
-            }else{
-                $arr[] = [
-                    'merchant_sn'   =>  $v->merchant_sn,
-                    'bind_status'   =>  $v->bind_status,
-                    'active_status' =>  $v->active_status,
-                    'active_time'   =>  $v->active_time,
-                    'bind_time'     =>  $v->bind_time,
-                    'policy_id'     =>  $v->policy_id,
-                    'title' => $v->policys->title
-                ];
-            }
-            
+            $arr[] = [
+                'merchant_sn'   =>  $v->merchant_sn,
+                'bind_status'   =>  $v->bind_status,
+                'active_status' =>  $v->active_status,
+                'active_time'   =>  $v->active_time,
+                'bind_time'     =>  $v->bind_time,
+                'policy_id'     =>  $v->policy_id,
+                'title'         =>  empty($v->policys) ? '无活动' :  $v->policys->title
+            ];
         }
-        
         return $arr;
     }
+
+
 
     /**
      * 查询未绑定机器详情
      */
     public function getUnBound()
     {
-        $select = \App\Machine::select('sn as merchant_sn','bind_status','open_state as active_status','policy_id')
-        ->whereIn('user_id',  $this->team)
-        ->where('bind_status',0)
-        ->get();
+        $select = \App\Machine::select('sn as merchant_sn','bind_status','activate_state as active_status','activate_time as active_time','bind_time','policy_id')->whereIn('user_id',  $this->team)->where('bind_status',0)->get();
         $arr = [];
-
         foreach($select as $k=>$v){
-            if(!$v->policy_id or $v->policy_id == 0){
-                $arr[] = [
-                    'merchant_sn'   =>  $v->merchant_sn,
-                    'bind_status'   =>  $v->bind_status,
-                    'active_status' =>  $v->active_status,
-                    'policy_id'     =>  $v->policy_id,
-                    'title'         =>  '无活动',
-                ];
-            }else{
-                $arr[] = [
-                    'merchant_sn'   =>  $v->merchant_sn,
-                    'bind_status'   =>  $v->bind_status,
-                    'active_status' =>  $v->active_status,
-                    'policy_id'     =>  $v->policy_id,
-                    'title' => $v->policys->title
-                ];
-            }
-            
+            $arr[] = [
+                'merchant_sn'   =>  $v->merchant_sn,
+                'bind_status'   =>  $v->bind_status,
+                'active_status' =>  $v->active_status,
+                'active_time'   =>  $v->active_time,
+                'bind_time'     =>  $v->bind_time,
+                'policy_id'     =>  $v->policy_id,
+                'title'         =>  empty($v->policys) ? '无活动' :  $v->policys->title
+            ];
         }
-        
         return $arr;
     }
+
 
     /**
      * 查询已激活机器详情
@@ -191,32 +151,19 @@ class ServersController
     public function getBind()
     {
 
-        $select = \App\Machine::select('sn as merchant_sn','open_state as active_status','policy_id')
-        ->whereIn('user_id',  $this->team)
-        ->where('open_state',1)
-        ->get();
-
+        $select = \App\Machine::select('sn as merchant_sn','bind_status','activate_state as active_status','activate_time as active_time','bind_time','policy_id')->whereIn('user_id',  $this->team)->where('open_state',1)->get();
         $arr = [];
-
         foreach($select as $k=>$v){
-            if(!$v->policys){
-                $arr[] = [
-                    'merchant_sn'   =>  $v->merchant_sn,
-                    'active_status' =>  $v->active_status,
-                    'policy_id'     =>  $v->policy_id,
-                    'title'         =>  '无活动',
-                ];
-            }else{
-                $arr[] = [
-                    'merchant_sn'   =>  $v->merchant_sn,
-                    'active_status' =>  $v->active_status,
-                    'policy_id'     =>  $v->policy_id,
-                    'title' => $v->policys->title
-                ];
-            }
-            
+            $arr[] = [
+                'merchant_sn'   =>  $v->merchant_sn,
+                'bind_status'   =>  $v->bind_status,
+                'active_status' =>  $v->active_status,
+                'active_time'   =>  $v->active_time,
+                'bind_time'     =>  $v->bind_time,
+                'policy_id'     =>  $v->policy_id,
+                'title'         =>  empty($v->policys) ? '无活动' :  $v->policys->title
+            ];
         }
-        
         return $arr;
     }
 }

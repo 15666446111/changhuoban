@@ -204,4 +204,10 @@ class User extends Authenticatable
     {
         return $this->hasOne('App\Setting', 'operate','operate');
     }
+
+
+    public function auto_promotion_logs()
+    {
+        return $this->hasMany('\App\AutoPromotionLog', 'user_id', 'id');
+    }
 }
