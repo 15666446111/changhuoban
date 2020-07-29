@@ -74,8 +74,7 @@ class TradeApiController extends Controller
             return json_encode($reData);
         }
 
-        // $dataList = json_decode(json_encode($request->dataList));
-        $dataList = json_decode($request->dataList);
+        $dataList = json_decode(json_encode($request->dataList));
         
         if ($request->dataType == 0) {
             // 商户开通通知处理
@@ -291,8 +290,7 @@ class TradeApiController extends Controller
 
                     } else {
 
-                        // HandleTradeInfo::dispatch($tradeOrder)->onQueue('trade');
-                        HandleTradeInfo::dispatch($tradeOrder);
+                        HandleTradeInfo::dispatch($tradeOrder)->onQueue('trade');
 
                     }
                     
