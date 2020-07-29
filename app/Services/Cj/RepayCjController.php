@@ -454,7 +454,8 @@ class RepayCjController extends Controller
 
         $param = $this->pkcs5_pad($param, $size);
 
-        $rs = openssl_encrypt($param, "DES-EDE3-ECB", $key, OPENSSL_RAW_DATA | OPENSSL_NO_PADDING, null);
+        // $rs = openssl_encrypt($param, "DES-EDE3-ECB", $key, OPENSSL_RAW_DATA | OPENSSL_NO_PADDING, null);
+        $rs = openssl_encrypt($param, "DES-EDE3", $key, OPENSSL_RAW_DATA | OPENSSL_NO_PADDING, null);
 
         $rs = bin2hex($rs);
 
