@@ -262,16 +262,16 @@ class TransferController extends Controller
 
             $data = [];
 
-            $lenth = strlen($request->start);
+            $lenth = strlen($request->begin_sn);
 
-            for($i = $request->start; $i<= $request->end; $i++){
+            for($i = $request->begin_sn; $i<= $request->end_sn; $i++){
                 $i =sprintf("%0".$lenth."d", $i);
                 $data[] = $i;
             }
 
-            $list = \App\Merchant::where('user_id', $request->user->id)
+            $list = \App\Machine::where('user_id', $request->user->id)
                                 ->where('policy_id', $request->policy_id)
-                                ->whereIn('merchant_sn', $data)
+                                ->whereIn('sn', $data)
                                 ->where('bind_status', 0)
                                 ->where('activate_state', 0)
                                 ->pluck('sn');
