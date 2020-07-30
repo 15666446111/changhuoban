@@ -48,22 +48,22 @@ class TransferController extends Controller
 
             if(!$request->friend_id) return response()->json(['error'=>['message' => '缺少必要参数:请选择收货人']]);
 
-            $merchants=\App\Merchant::whereIn('id', $request->id)->where('user_id', $request->user->id)
-                        ->where('activate_state', 0)->where('bind_status', 0)->get();
+            $merchants=\App\Machine::whereIn('id',$request->id)->get();
             
             foreach($merchants as $k=>$v){
-
-                $v->user_id = $request->friend_id;
-                $v->save();
                 
-                \App\Transfer::create([
-                    'old_user_id'   => $request->user->id,
-                    'new_user_id'   => $request->friend_id,
-                    'machine_id'    => $v->id,
-                    'state'         => 1,
-                    'operate'       => $request->user->operate
-                ]);
+                \App\Machine::where('id',$v->id)->where('user_id',$request->user->id)->update(['user_id'=>$request->friend_id]);
 
+            }
+
+            foreach($request->id as $k=>$v){
+                \App\Transfer::create([
+                    'machine_id'    =>  $v,
+                    'old_user_id'   =>  $request->user->id,
+                    'new_user_id'   =>  $request->friend_id,
+                    'state'         =>  $request->state,
+                    'operate'       =>  $request->user->operate
+                ]);
             }
 
             return response()->json(['success'=>['message' => '划拨成功!', 'data'=>[]]]);
