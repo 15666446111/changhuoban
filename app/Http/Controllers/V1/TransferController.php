@@ -185,7 +185,7 @@ class TransferController extends Controller
                 $request->type = 'my_transfer';
                 // my_back 我的回拨
                 // parent_transfer 上级划拨
-                // parent_bank 上级回拨
+                // parent_back 上级回拨
             }
 
             $data = \App\Transfer::where('id', '>=', 1);
@@ -205,7 +205,7 @@ class TransferController extends Controller
             }
 
             // 上级回拨
-            if($request->type == 'parent_bank'){
+            if($request->type == 'parent_back'){
                 $data->where('new_user_id', $request->user->id)->where('state', 2);
             }
 
@@ -218,7 +218,7 @@ class TransferController extends Controller
                     'nickname'      =>  $value->old_user->nickname,
                     'friend_name'   =>  $value->new_user->nickname,
                     'merchant_sn'   =>  $value->machine->sn,
-                    'created_at'    =>  ($request->type == 'my_back' or $request->type == 'parent_bank') ? $value->updated_at->toDateTimeString() : $value->created_at->toDateTimeString()
+                    'created_at'    =>  ($request->type == 'my_back' or $request->type == 'parent_back') ? $value->updated_at->toDateTimeString() : $value->created_at->toDateTimeString()
                 );
             }
             
