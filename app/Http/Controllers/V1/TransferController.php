@@ -274,7 +274,7 @@ class TransferController extends Controller
                                 ->whereIn('sn', $data)
                                 ->where('bind_status', 0)
                                 ->where('activate_state', 0)
-                                ->pluck('sn');
+                                ->get();
             
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $list]]);
 
