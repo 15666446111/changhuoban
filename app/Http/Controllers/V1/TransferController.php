@@ -191,22 +191,22 @@ class TransferController extends Controller
             $data = \App\Transfer::where('id', '>=', 1);
             // 我的划拨
             if($request->type == 'my_transfer'){
-                $data->where('old_user_id', $request->user->id)->where('is_back', 0);
+                $data->where('old_user_id', $request->user->id)->where('state', 1);
             }
 
             // 我的回拨
             if($request->type == 'my_back'){
-                $data->where('old_user_id', $request->user->id)->where('is_back', 1);
+                $data->where('old_user_id', $request->user->id)->where('state', 2);
             }
 
             // 上级划拨
             if($request->type == 'parent_transfer'){
-                $data->where('new_user_id', $request->user->id)->where('is_back', 0);
+                $data->where('new_user_id', $request->user->id)->where('state', 1);
             }
 
             // 上级回拨
             if($request->type == 'parent_bank'){
-                $data->where('new_user_id', $request->user->id)->where('is_back', 1);
+                $data->where('new_user_id', $request->user->id)->where('state', 2);
             }
 
             $list = $data->get();
