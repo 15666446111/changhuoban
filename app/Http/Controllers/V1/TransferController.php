@@ -61,7 +61,7 @@ class TransferController extends Controller
                     'machine_id'    =>  $v,
                     'old_user_id'   =>  $request->user->id,
                     'new_user_id'   =>  $request->friend_id,
-                    'state'         =>  $request->state,
+                    'state'         =>  1,
                     'operate'       =>  $request->user->operate
                 ]);
             }
