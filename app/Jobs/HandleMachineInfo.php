@@ -139,7 +139,7 @@ class HandleMachineInfo implements ShouldQueue
          */
         if ($this->machine->policys->active_type != 1) {
             $this->regContent->remark = '该机器非冻结机器';
-            $this->regContent->state = '2';
+            // $this->regContent->state = '2';
             $this->regContent->save();
             return false;
         }

@@ -181,21 +181,45 @@ class TransferController extends Controller
     {
         try{
 
-            $data = \App\Transfer::orderBy('created_at','desc')->get();
+            if(!$request->type){
+                $request->type = 'my_transfer';
+                // my_back 我的回拨
+                // parent_transfer 上级划拨
+                // parent_bank 上级回拨
+            }
 
-            $arrs = [];
+            $data = \App\Transfer::where('id', '>=', 1);
+            // 我的划拨
+            if($request->type == 'my_transfer'){
+                $data->where('old_user_id', $request->user->id)->where('is_back', 0);
+            }
 
-            foreach($data as $k=>$v){
-                
-                $arrs[] = [
-                    'old_user_id'   =>  $v->old_user_id,
-                    'nickname'      =>  $v->old_user->nickname,
-                    'merchant_sn'   =>  $v->machine->sn,
-                    'state'         =>  $v->state,
-                    'friend_id'     =>  $v->new_user_id,
-                    'friend_name'   =>  $v->new_user->nickname
-                ];
+            // 我的回拨
+            if($request->type == 'my_back'){
+                $data->where('old_user_id', $request->user->id)->where('is_back', 1);
+            }
 
+            // 上级划拨
+            if($request->type == 'parent_transfer'){
+                $data->where('new_user_id', $request->user->id)->where('is_back', 0);
+            }
+
+            // 上级回拨
+            if($request->type == 'parent_bank'){
+                $data->where('new_user_id', $request->user->id)->where('is_back', 1);
+            }
+
+            $list = $data->get();
+
+            $arrs = array();
+
+            foreach ($list as $key => $value) {
+                $arrs[] = array(
+                    'nickname'      =>  $value->old_user->nickname,
+                    'friend_name'   =>  $value->new_user->nickname,
+                    'merchant_sn'   =>  $value->machine->sn,
+                    'created_at'    =>  ($request->type == 'my_back' or $request->type == 'parent_bank') ? $value->updated_at->toDateTimeString() : $value->created_at->toDateTimeString()
+                );
             }
             
             return response()->json(['success'=>['message' => '获取成功!', 'data'=>$arrs]]);
@@ -208,11 +232,15 @@ class TransferController extends Controller
     }
 
     /**
-     * 获取未绑定sn的区间集合
-     * @param  Request $request [description]
-     * @return [type]           [description]
+     * @Author    Pudding
+     * @DateTime  2020-07-23
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 获取区间可划拨列表 ]
+     * @param     Request     $request [description]
+     * @return    [type]               [description]
      */
-    public function getUnBoundSection(Request $request)
+    public function sectionPolicy(Request $request)
     {
         try {
 
@@ -224,37 +252,31 @@ class TransferController extends Controller
                 return response()->json(['error'=>['message' => '缺少必要参数:请选择输入机具结束SN号']]);
             }
 
-            if (!is_numeric($request->begin_sn) || !is_numeric($request->end_sn)) {
-                return response()->json(['error'=>['message' => '仅支持SN为整数的机器区间划拨']]);
-            }
-
             if (empty($request->policy_id)) {
                 return response()->json(['error'=>['message' => '缺少必要参数:活动不能为空']]);
             }
 
-            $list = \App\Machine::where('user_id', $request->user->id)
-                                ->where('policy_id', $request->policy_id)
-                                ->where('bind_status', 0)
-                                ->whereBetween('sn', [(int)$request->begin_sn, (int)$request->end_sn])
-                                ->pluck('sn');
+            if (!is_numeric($request->begin_sn) || !is_numeric($request->end_sn)) {
+                return response()->json(['error'=>['message' => '仅支持SN为整数的机器区间划拨']]);
+            }
 
-            $dKey = 0;
             $data = [];
 
-            foreach ($list as $key => $val) {
+            $lenth = strlen($request->start);
 
-                $data[$dKey]['begin_sn'] = $val;
-
-                if (empty($list[$key + 1]) || !empty($list[$key + 1]) && (int)$val + 1 != $list[$key + 1]) {
-
-                    $data[$dKey]['end_sn'] = $val;
-
-                    $dKey++;
-
-                }
+            for($i = $request->start; $i<= $request->end; $i++){
+                $i =sprintf("%0".$lenth."d", $i);
+                $data[] = $i;
             }
+
+            $list = \App\Merchant::where('user_id', $request->user->id)
+                                ->where('policy_id', $request->policy_id)
+                                ->whereIn('merchant_sn', $data)
+                                ->where('bind_status', 0)
+                                ->where('activate_state', 0)
+                                ->pluck('sn');
             
-            return response()->json(['success'=>['message' => '获取成功!', 'data' => $data]]);
+            return response()->json(['success'=>['message' => '获取成功!', 'data' => $list]]);
 
         } catch (\Exception $e) {
             
