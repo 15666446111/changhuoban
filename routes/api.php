@@ -92,15 +92,15 @@ Route::prefix('V1')->group(function () {
      */
     Route::middleware('AuthToken')->get('/my_team', 'V1\TeamController@index');             // 首页 - 伙伴管理 - 伙伴列表
     Route::middleware('AuthToken')->get('/mine',    'V1\MineController@info');              // 首页 - 伙伴管理 - 伙伴详情
-    Route::middleware('AuthToken')->post('/getTradeDetail', 'V1\TeamController@getDetail'); // 首页 - 伙伴管理 - 数据明细
 
 
     /**
      * @author  [Pudding]  [<755969423@qq.com>]
-     * @version [< 首页 - 团队信息  >]
+     * @version [< 团队信息  >]
      */
     Route::middleware('AuthToken')->get('/team_data', 'V1\TeamController@data');            // 团队 - 团队信息
-
+    Route::middleware('AuthToken')->post('/getTradeDetail', 'V1\TeamController@getDetail'); // 团队 - 业务详情
+    Route::middleware('AuthToken')->get('/getTeamTradeDetail', 'V1\DetailController@TradeDetail');  // 团队-业务详情-交易量
 
 
     /**

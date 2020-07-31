@@ -97,6 +97,15 @@ class Machine extends Model
         return $this->hasMany('\App\CashLog', 'machine_id', 'id');
     }
 
-
+    /**
+     * [merchants 关联冻结记录表]
+     * @author Pudding
+     * @DateTime 2020-07-31
+     * @return   [type]                   [description]
+     */
+    public function frozen_log()
+    {
+        return $this->hasMany('\App\MerchantsFrozenLog', 'sn', 'sn');
+    }
 
 }

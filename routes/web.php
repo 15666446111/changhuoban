@@ -97,8 +97,12 @@ Route::any('/callback ','V1\OrdersController@AliPayCallback ');
 //微信支付服务端
 Route::any('/wechat', 'WeChatController@serve');
 
+/**
+ * 计划任务
+ */
 // 冻结机器激活的计划任务
 Route::get('/fro_machine_active', 	'CrontabController@froMachineActive');
+Route::get('/sim_frozen', 	'CrontabController@simFrozen');
 
 
 Route::get('/getExp', 'HomeController@exp');

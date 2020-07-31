@@ -94,6 +94,38 @@ class CrontabController extends Controller
 		}
 	}
 
+	public function simFrozen()
+	{
+		// 查询需要再次冻结的机具
+		$frozenLog = \App\MerchantFrozenLog::where('type', 2)	// 类型，2:sim服务费
+					->where('state', 1)							// 状态，1冻结成功
+					->where('sim_again_state', 0)				// 下次冻结状态，0未冻结
+					->where('sim_agent_time', '<=', Carbon::now()->toDateTimeString())	// 下次冻结时间
+					->get();
+
+		foreach ($frozenLog as $k => $v) {
+			
+
+		}
+
+
+		// 查询设置了sim服务费金额的活动
+		// $activeIds = \App\Policy::where('sim_charge', '>', 0)->pluck('id');
+
+		// $machineList = \App\Machine::whereIn('policy_id', $activeIds)->get();
+
+		// foreach ($machineList as $key => $value) {
+
+		// 	$smsCode = \App\AdminShort::where('id', $value->sim_short_id)->value('template_id');
+			
+		// 	// 查询冻结金额的代理商返还状态
+		// 	$pmpos = new PmposController($value->merchants->code, $v->sn);
+
+		// 	$data = $pmpos->feeFrozen($value->policys->sim_charge);
+
+		// }
+	}
+
     /**
      * [addUserBalance 增加用户余额 分润余额 分润记录]
      * @param [type]  $userId [用户id]

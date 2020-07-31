@@ -22,12 +22,20 @@ class LoginController extends Controller
     {
     	try{
     		$User = \App\User::where('account', $request->account)->first();
-    		
-            if($User->password !=  "###".md5(md5($request->password. 'v3ZF87bMUC5MK570QH'))) 
-                return response()->json(['error'=>['message' => '账号密码错误']]);
 
-            if($User->active < 1) 
-                return response()->json(['error'=>['message' => '用户访问受限']]); 
+            $adminSetting = \App\AdminSetting::where('operate_number', $User->operate)->first();
+    		
+            if($User->password !=  "###".md5(md5($request->password. 'v3ZF87bMUC5MK570QH'))) {
+                return response()->json(['error'=>['message' => '账号密码错误']]);
+            }
+
+            if($User->active < 1) {
+                return response()->json(['error'=>['message' => '用户访问受限']]);
+            }
+
+            if ($adminSetting->type == 2) {
+                return response()->json(['error'=>['message' => '机构无权限登录']]);
+            }
 
             $User->last_ip  =   $request->getClientIp();
 
@@ -37,13 +45,14 @@ class LoginController extends Controller
 
             $User->save();
 
-            $data = \App\AdminUser::where('operate',$User->operate)->first();
+            // $data = \App\AdminUser::where('operate',$User->operate)->first();
             
-            $type = $data->type;
+            // $type = $data->type;
 
-            $operate = $data->operate;
+            // $operate = $data->operate;
 
-    		return response()->json(['success'=>['token' => $User->api_token,'operate' => $operate,'type' => $type]]);
+
+    		return response()->json(['success'=>['token' => $User->api_token, 'operate' => $User->operate,'type' => $adminSetting->pattern]]);
 
     	} catch (\Exception $e) {
             return response()->json(['error'=>['message' => '系统错误,联系客服!']], 500);
