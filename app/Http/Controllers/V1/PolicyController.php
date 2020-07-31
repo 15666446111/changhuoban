@@ -161,11 +161,97 @@ class PolicyController extends Controller
             return response()->json(['success'=>['message' => '获取成功!', 'data' => $price]]);
 
         } catch (\Exception $e) {
-
             return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
-
         }
     }
+
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-07-31
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 首页 - 伙伴管理 - 设置活动组结算价 ]
+     * @param     Request     $request [description]
+     */
+    public function setPrice(Request $request)
+    {
+        try{
+
+            if(!$request->uid) return response()->json(['error'=>['message' => '缺少伙伴信息!']]);
+            if(!$request->gid) return response()->json(['error'=>['message' => '请选择活动组!']]);
+            if(!$request->set_price) return response()->json(['error'=>['message' => '请设置结算价参数!']]);
+
+
+            $user = \App\User::where('id', $request->uid)->first();
+            if(!$user or empty($user)) return response()->json(['error'=>['message' => '找不到伙伴信息!']]);
+
+            if($user->operate != $request->user->operate)  return response()->json(['error'=>['message' => '无权限!']]);
+            if($user->parent != $request->user->id ) return response()->json(['error'=>['message' => '只能设置直接下级的信息!']]);
+
+
+            $policyGroup = \App\PolicyGroup::where('id', $request->gid)->first();
+            if(!$policyGroup or empty($policyGroup)) return response()->json(['error'=>['message' => '活动组不存在!']]);
+
+            // 只有工具版本才可以获取结算价 设置结算价
+            $setting = \App\AdminSetting::where('operate_number', $request->user->operate)->first();
+            if(!$setting or empty($setting)) return response()->json(['error'=>['message' => '未找到操盘方信息']]); 
+
+            if($setting->pattern != '2') return response()->json(['error'=>['message' => '非工具版本不能设置']]); 
+
+            #1. 首先获取当前会员在这活动组的结算价
+            $userPrice = \App\UserFee::where('user_id', $request->uid)->where('policy_group_id', $request->gid)->first();
+            #2. 获取活动组的结算价默认配置 
+            $defaultPrice = \App\PolicyGroupSettlement::where('policy_group_id', $request->gid)->get();
+            #3. 获取本人的该活动组的配置信息
+            $currPrice = \App\UserFee::where('user_id', $request->user->id)->where('policy_group_id', $request->gid)->first();
+            #3. 如果该会员在活动组不存在结算价， 先添加一条默认的
+            if(!$userPrice or empty($userPrice)){
+                $args = array();
+                foreach ($defaultPrice as $key => $value) {
+                    $args[] = array('index' => $value->trade_type_id, 'price' => $value->default_price);
+                }
+
+                $userPrice = \App\UserFee::create([
+                    'user_id'           =>  $request->uid,
+                    'policy_group_id'   =>  $request->gid,
+                    'price'             =>  json_encode($args),
+                ]);
+            }
+
+
+            $param = json_decode($userPrice->price, true);
+            foreach ($param as $key => $value) {
+                $min = $this->getMinPrice($defaultPrice, $value);
+                $max = $this->getMaxPrice($currPrice, $defaultPrice, $value );
+                if($min == 0 or $max == 0){
+                    return response()->json(['error'=>['message' => '操盘方暂无设置结算价!']]);
+                }
+
+                $price = $this->getSetPrice($request->set_price, $value);
+
+                if($price != 0 && $price != $value['price']){
+                    if($price >= $min && $price <= $max ){
+                        $param[$key]['price'] = $price;
+                    }else return response()->json(['error'=>['message' =>'参数不再合理区间内!']]);
+                }
+            }
+
+            $userPrice->price = json_encode($param);
+            $userPrice->save();
+
+            return response()->json(['success'=>['message' => '设置成功!']]);
+
+        } catch (\Exception $e) {
+            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
+        }
+    }
+
+
+
+
+
+
 
 
 
@@ -188,5 +274,89 @@ class PolicyController extends Controller
             }
         }
         return $fee;
+    }
+
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-07-31
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 获取最低结算价 当前活动的当前交易方式 ]
+     * @param     [type]      $price [description]
+     * @param     [type]      $value [description]
+     * @return    [type]             [description]
+     */
+    public function getMinPrice($price, $value)
+    {   
+        $min = 0;
+        foreach ($price as $key => $v) {
+            if($v->trade_type_id == $value['index']){
+                $min = $v->min_price;
+                break;
+            }
+        }
+        return $min;
+    }
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-07-31
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 获取 交易类型 活动组的 最高结算价 ]
+     * @param     [type]      $curr    [description]
+     * @param     [type]      $default [description]
+     * @param     [type]      $value   [description]
+     * @return    [type]               [description]
+     */
+    public function getMaxPrice($curr, $default, $value)
+    {
+        $max = 0;
+
+        if(empty($curr)){
+
+            foreach ($default as $key => $v) {
+                if($v->trade_type_id == $value['index']){
+                    $max = $v->default_price;
+                    break;
+                }
+            }
+
+        }else{
+
+            $ag = json_decode($curr->price, true);
+            foreach ($ag as $key => $v) {
+                if($v['index'] == $value['index']){
+                    $max = $v->price;
+                    break;
+                }
+            }
+        }
+        return $max;
+    }
+
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-07-31
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [获取设置的结算价]
+     * @param     [type]      $set_price [description]
+     * @param     [type]      $value     [description]
+     * @return    [type]                 [description]
+     */
+    public function getSetPrice($set_price, $value)
+    {
+        $rate = 0;
+
+        foreach ($set_price as $key => $v) {
+            if($v['index'] == $value['index']) {
+                $rate = $value['price'];
+                break;
+            }
+        }
+        return $rate;
     }
 }

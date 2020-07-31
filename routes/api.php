@@ -176,6 +176,7 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/userPolicyGroup', 'V1\PolicyController@getPolicyGroup');      // 首页 - 伙伴管理 - 获取活动组
     Route::middleware('AuthToken')->get('/userPolicy',      'V1\PolicyController@getPolicyList');       // 首页 - 伙伴管理 - 获取活动列表
     Route::middleware('AuthToken')->get('/userPrice',       'V1\PolicyController@getPrice');            // 首页 - 伙伴管理 - 获取结算价
+    Route::middleware('AuthToken')->post('/setUserPrice',   'V1\PolicyController@setPrice');            // 首页 - 伙伴管理 - 设置结算价
 
 
 
