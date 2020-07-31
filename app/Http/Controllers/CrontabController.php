@@ -97,33 +97,78 @@ class CrontabController extends Controller
 	public function simFrozen()
 	{
 		// 查询需要再次冻结的机具
-		$frozenLog = \App\MerchantFrozenLog::where('type', 2)	// 类型，2:sim服务费
-					->where('state', 1)							// 状态，1冻结成功
-					->where('sim_again_state', 0)				// 下次冻结状态，0未冻结
-					->where('sim_agent_time', '<=', Carbon::now()->toDateTimeString())	// 下次冻结时间
+		$frozenLog = \App\MerchantFrozenLog::where('type', 2)
+					->where('state', 1)
+					->where('sim_again_state', 0)
+					->where('sim_agent_time', '<=', Carbon::now()->toDateTimeString())
 					->get();
 
 		foreach ($frozenLog as $k => $v) {
-			
+
+			// 检查机器信息是否存在
+			if (!$v->machine || empty($v->machine)) {
+				$v->return_data = '机具数据异常';
+				$v->save();
+				continue ;
+			}
+
+			// 检查与当前绑定商户是否一致
+			if ($v->merchant_code != $v->machine->merchants->code) {
+				continue ;
+			}
+
+			// 检查当前活动是否设置SIM服务费收取金额
+			if ($v->machine->policys->sim_charge == 0) {
+				$v->return_data = '该机器未设置SIM服务费金额';
+				$v->save();
+				continue ;
+			}
+
+			// 短信模板
+			$smsCode = \App\AdminShort::where('id', $v->machine->policys->sim_short_id)->value('template_id');
+
+			// 发起冻结
+			$pmposModel = new PmposController($v->merchant_code, $v->sn, true);
+
+			$data = $pmposModel->feeFrozen($smsCode, 0, $v->machine->policys->sim_charge);
+
+			$retrunData = json_decode($data['return_data']);
+
+			// 添加冻结记录
+			\App\MerchantFrozenLog::create([
+				'merchant_code'		=> $v->merchant_code,
+				'sn'				=> $v->sn,
+				'type'				=> 2,
+				'frozen_money'		=> $v->machine->policys->sim_charge,
+                'state'             => $returnData->code == '00' ? 1 : 0,
+                'sim_agent_time'	=> $returnData->code == '00' ? Carbon::now()->toDateTimeString() : null,
+				'return_data'       => $data['return_data'],
+                'send_data'         => $data['send_data']
+			]);
+
+			// 冻结成功时，更新冻结状态和机具冻结次数
+			if ($retrunData->code == '00') {
+				
+			}
 
 		}
 
 
 		// 查询设置了sim服务费金额的活动
-		// $activeIds = \App\Policy::where('sim_charge', '>', 0)->pluck('id');
+		$activeIds = \App\Policy::where('sim_charge', '>', 0)->pluck('id');
 
-		// $machineList = \App\Machine::whereIn('policy_id', $activeIds)->get();
+		$machineList = \App\Machine::whereIn('policy_id', $activeIds)->get();
 
-		// foreach ($machineList as $key => $value) {
+		foreach ($machineList as $key => $value) {
 
-		// 	$smsCode = \App\AdminShort::where('id', $value->sim_short_id)->value('template_id');
+			$smsCode = \App\AdminShort::where('id', $value->sim_short_id)->value('template_id');
 			
-		// 	// 查询冻结金额的代理商返还状态
-		// 	$pmpos = new PmposController($value->merchants->code, $v->sn);
+			// 查询冻结金额的代理商返还状态
+			$pmpos = new PmposController($value->merchants->code, $v->sn);
 
-		// 	$data = $pmpos->feeFrozen($value->policys->sim_charge);
+			$data = $pmpos->feeFrozen($value->policys->sim_charge);
 
-		// }
+		}
 	}
 
     /**
