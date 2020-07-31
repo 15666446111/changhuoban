@@ -147,7 +147,17 @@ class Policy extends Model
     public function setInIndirectActiveAttribute($value)
     {
         $this->attributes['in_indirect_active'] =  $value * 100;
-    }    
+    }
+
+
+    public function getSimChargeAttribute($value)
+    {
+        return $value / 100;
+    }
+    public function setSimChargeAttribute($value)
+    {
+        $this->attributes['sim_charge'] =  $value * 100;
+    }
 
 
     /**

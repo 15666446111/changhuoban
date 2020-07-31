@@ -174,7 +174,7 @@ class ServerController extends Controller
     	$select = \App\Trade::whereHasIn('merchants_sn', function($q){
     		$q->whereIn('user_id', $this->team);
     	})->whereBetween('trade_time', [ $this->StartTime,  $this->EndTime])
-            ->where('is_repeat', 0)->where('is_invalid', 0)->where('sysRespCode', '00');
+            ->where('is_repeat', 0)->where('is_invalid', 0)->where('sys_resp_code', '00');
     	return $select->sum('amount');
     }
 

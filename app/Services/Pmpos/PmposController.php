@@ -96,7 +96,7 @@ class PmposController extends Controller
 	 * 商户服务费冻结
 	 * @param [type] $smsCode	短信模板编号
 	 * @param [type] $posCharge	POS服务费金额(元)
-	 * @param [type] $simCharge	VIP会员服务费金额(元)
+	 * @param [type] $simCharge	SIM服务费金额(元)
 	 */
 	public function feeFrozen($smsCode='', $posCharge='0', $simCharge='0')
 	{

@@ -139,7 +139,7 @@ class HandleMachineInfo implements ShouldQueue
          */
         if ($this->machine->policys->active_type != 1) {
             $this->regContent->remark = '该机器非冻结机器';
-            $this->regContent->state = '2';
+            // $this->regContent->state = '2';
             $this->regContent->save();
             return false;
         }
@@ -171,7 +171,7 @@ class HandleMachineInfo implements ShouldQueue
          * 检查机器是否在畅捷一级后台
          * @var [type]
          */
-        if ($this->regContent->config_agent_id != $this->regContent->agentId) {
+        if ($this->regContent->config_agent_id != $this->regContent->agent_id) {
             $this->regContent->remark = '该机器不在您的畅捷一级后台';
             $this->regContent->state = '2';
             $this->regContent->save();

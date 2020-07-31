@@ -59,9 +59,9 @@ class CashController extends Controller
     	// 初始化手续费计算类型
     	$this->feeType = $this->trade->fee_type;
 		// 初始化卡类型
-		$this->cardType = $this->trade->cardType;
+		$this->cardType = $this->trade->card_type;
 		// 初始化交易码
-		$this->tranCode = $this->trade->tranCode;
+		$this->tranCode = $this->trade->tran_code;
     }
 
     /**
@@ -79,7 +79,7 @@ class CashController extends Controller
     	 * 020003: 消费冲正
     	 * T20003: 日结消费冲正
     	 */
-    	if ($this->trade->tranCode == '020003' || $this->trade->tranCode == 'T20003' || $this->trade->tranCode == '024103') {
+    	if ($this->trade->tran_code == '020003' || $this->trade->tran_code == 'T20003' || $this->trade->tran_code == '024103') {
 
             // 对应原交易的交易码 
             // 020000:消费，T20000:日结消费，024100电子现金
@@ -89,11 +89,11 @@ class CashController extends Controller
                 '024103'    => '024100',
             ];
 			// 查询原交易
-    		$originalTrade = \App\Trade::where('transDate', $this->trade->transDate)
-    									->where('traceNo', $this->trade->traceNo)
+    		$originalTrade = \App\Trade::where('trans_date', $this->trade->trans_date)
+    									->where('trace_no', $this->trade->trace_no)
     									->where('merchant_code', $this->trade->merchant_code)
-    									->where('termId', $this->trade->termId)
-    									->where('tranCode', $recTranCode[$this->trade->tranCode])
+    									->where('term_id', $this->trade->term_id)
+    									->where('tran_code', $recTranCode[$this->trade->tran_code])
     									->first();
 
     		if (!empty($originalTrade)) {
@@ -101,9 +101,9 @@ class CashController extends Controller
     			// 手续费计算类型
     			$this->feeType = $originalTrade->fee_type;
     			// 卡类型
-    			$this->cardType = $originalTrade->cardType;
+    			$this->cardType = $originalTrade->card_type;
     			// 交易码
-    			$this->tranCode = $originalTrade->tranCode;
+    			$this->tranCode = $originalTrade->tran_code;
     			// 入账类型，1增加，-1减少
     			$this->entryType = -1;
 
@@ -120,11 +120,11 @@ class CashController extends Controller
     	 * 1.查询原交易：根据当前交易订单的 原交易日期、原交易订单号查询原交易
     	 * 2.计算出原交易的应发分润，减少用户余额并记录。查不到原交易时不进行处理
     	 */
-    	if ($this->trade->tranCode == '020002' ||$this->trade->tranCode == '02Y600' ||$this->trade->tranCode == '024102') {
+    	if ($this->trade->tran_code == '020002' ||$this->trade->tran_code == '02Y600' ||$this->trade->tran_code == '024102') {
     		
     		// 查询原交易
-			$originalTrade = \App\Trade::where('transDate', $this->trade->originalTranDate)
-										->where('rrn', $this->trade->originalRrn)
+			$originalTrade = \App\Trade::where('trans_date', $this->trade->original_tran_date)
+										->where('rrn', $this->trade->original_rrn)
 										->first();
 
 			if (!empty($originalTrade)) {
@@ -132,9 +132,9 @@ class CashController extends Controller
     			// 手续费计算类型
     			$this->feeType = $originalTrade->fee_type;
     			// 卡类型
-    			$this->cardType = $originalTrade->cardType;
+    			$this->cardType = $originalTrade->card_type;
     			// 交易码
-    			$this->tranCode = $originalTrade->tranCode;
+    			$this->tranCode = $originalTrade->tran_code;
     			// 入账类型，1增加，-1减少
     			$this->entryType = -1;
 
@@ -152,13 +152,13 @@ class CashController extends Controller
     	 * 2.根据查询的原撤销类交易查询原交易
     	 * 计算出原交易的应发分润，减少用户余额并记录。查不到原交易时不进行处理
     	 */
-    	if ($this->trade->tranCode == '020023' ||$this->trade->tranCode == '024123') {
+    	if ($this->trade->tran_code == '020023' ||$this->trade->tran_code == '024123') {
     		
     		## 1.查询冲正的原撤销类交易
-    		$revokeOrTrade = \App\Trade::where('transDate', $this->trade->transDate)
-    									->where('traceNo', $this->trade->traceNo)
+    		$revokeOrTrade = \App\Trade::where('trans_date', $this->trade->trans_date)
+    									->where('trace_no', $this->trade->trace_no)
     									->where('merchant_code', $this->trade->merchant_code)
-    									->where('termId', $this->trade->termId)
+    									->where('term_id', $this->trade->term_id)
     									->first();
     		if (empty($revokeOrTrade)) {
     			
@@ -167,8 +167,8 @@ class CashController extends Controller
     		} else {
 
     			## 2.根据查询的原撤销类交易查询原交易
-				$originalTrade = \App\Trade::where('transDate', $revokeOrTrade->originalTranDate)
-											->where('rrn', $revokeOrTrade->originalRrn)
+				$originalTrade = \App\Trade::where('trans_date', $revokeOrTrade->original_tran_date)
+											->where('rrn', $revokeOrTrade->original_rrn)
 											->first();
 
 				if (!empty($originalTrade)) {
@@ -176,9 +176,9 @@ class CashController extends Controller
 	    			// 手续费计算类型
 	    			$this->feeType = $originalTrade->fee_type;
 	    			// 卡类型
-	    			$this->cardType = $originalTrade->cardType;
+	    			$this->cardType = $originalTrade->card_type;
 	    			// 交易码
-	    			$this->tranCode = $originalTrade->tranCode;
+	    			$this->tranCode = $originalTrade->tran_code;
     				// 入账类型，1增加，-1减少
 	    			$this->entryType = 1;
 
@@ -196,7 +196,7 @@ class CashController extends Controller
     	 * 注：借记卡只有手续费计算类型为标准时存在封顶交易
     	 */
         
-    	if ($this->trade->cardType == 0 && $this->trade->fee_type == 'B') {
+    	if ($this->trade->card_type === 0 && $this->trade->fee_type == 'B') {
     		
             // 查询商户当前费率
             $pmposClass = new \App\Services\Pmpos\PmposController($this->trade->merchant_code, $this->trade->sn);
@@ -221,11 +221,22 @@ class CashController extends Controller
     	/**
     	 * @var [查询当前交易对应的交易类型id]
     	 */
-    	$tradeTypeId = \App\TradeType::where('trade_code', 'like', '%' . $this->feeType . '%')
-									->where('card_type', 'like', '%' . $this->cardType . '%')
-									->where('trade_type', 'like', '%' . $this->tranCode . '%')
-                                    ->where('is_top', $this->isTop)
-									->value('id');
+        // 构造查询器
+        $collection = \App\TradeType::where('trade_code', 'like', '%' . $this->feeType . '%')
+                                    ->where('card_type', 'like', '%' . $this->cardType . '%')
+                                    ->where('is_top', $this->isTop);
+
+        if ($this->cardType != null) {
+            $collection->where('trade_type', 'like', '%' . $this->tranCode . '%');
+        }
+
+        $tradeTypeId = $collection->value('id');
+
+    	// $tradeTypeId = \App\TradeType::where('trade_code', 'like', '%' . $this->feeType . '%')
+     //                                ->where('card_type', 'like', '%' . $this->cardType . '%')
+     //                                ->where('trade_type', 'like', '%' . $this->tranCode . '%')
+     //                                ->where('is_top', $this->isTop)
+     //                                ->value('id');
 
     	if (!$tradeTypeId) return array('status' =>false, 'message' => '未配置当前交易类型');
 
@@ -417,28 +428,4 @@ class CashController extends Controller
     	// 增加用户余额
     	\App\UserWallet::where('user_id', $userId)->increment('cash_blance', $money);
     }
-
-    /**
-     * [upgradeGroup 用户升级]
-     * @param  [type] $userId [description]
-     * @return [type]         [description]
-     */
-  //   public function upgradeGroup($userId)
-  //   {
-  //   	// 团队用户id
-  //   	$teamUserIds = \App\UserRelation::where('parents', 'like', '%\_'.$userId.'\_%')
-		// 								->orWhere('user_id', $userId)
-		// 								->select('user_id');
-
-		// // 查询本月 交易成功、非借记卡、有效的团队交易
-		// $Monthdate = date('Ymd', time());
-		// $tradePrice = \App\Trade::where('user_id', 'in', $teamUserIds)
-		// 						->where('card_type', 'in', [1, null])	// 非借记卡
-		// 						->where('transDate', '>', $Monthdate)	// 本月交易
-		// 						->where('sysRespCode', '00'),			// 交易成功
-		// 						->where('is_invalid', 0),				// 非无效交易
-		// 						->where('is_repeat', 0),				// 非重复交易
-		// 						->sum('amount');
-
-  //   }
 }

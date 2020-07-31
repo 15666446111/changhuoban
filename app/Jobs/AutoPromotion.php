@@ -137,10 +137,10 @@ class AutoPromotion implements ShouldQueue
             $team   = \App\UserRelation::where('parents', 'like', '%\_'.$this->user->id.'\_%')->pluck('user_id')->toArray();
             $team[] = $this->user->id;
             $tradeCount = \App\Trade::whereBetween('trade_time', [$this->start,  $this->end])->whereIn('user_id', $team)
-                    ->where('cardType', '!=', '0')
+                    ->where('card_type', '!=', '0')
                     ->where('is_repeat', 0)
                     ->where('is_invalid', 0)
-                    ->where('sysRespCode', '00')
+                    ->where('sys_resp_code', '00')
                     ->sum('amount');
 
             $logs->trade_count = $tradeCount;

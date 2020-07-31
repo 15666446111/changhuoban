@@ -113,7 +113,7 @@ class StatisticController
         return \App\Trade::whereBetween('trade_time', [ $this->StartTime,  $this->EndTime])
                 ->whereHasIn('users', function($q) use ($Arr){
                     $q->whereIn('id', $Arr);
-                })->where('is_repeat', 0)->where('is_invalid', 0)->where('sysRespCode', '00')->sum('amount');
+                })->where('is_repeat', 0)->where('is_invalid', 0)->where('sys_resp_code', '00')->sum('amount');
     }
 
 

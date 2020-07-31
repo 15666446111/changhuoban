@@ -27,4 +27,13 @@ class AdminUser extends Model
     {
     	return $this->belongsTo('\App\AdminSetting', 'operate', 'operate_number');
     }
+
+    /**
+     * 关联轮播图表
+     * @return [type] [description]
+     */
+    public function plugs()
+    {
+        return $this->hasMany('\App\Plug', 'operate', 'operate');
+    }
 }

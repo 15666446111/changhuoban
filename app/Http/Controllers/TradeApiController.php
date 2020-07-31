@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Jobs\HandleTradeInfo;
 use App\Jobs\HandleMachineInfo;
 
@@ -32,7 +33,7 @@ class TradeApiController extends Controller
             ]),
         ]);
 
-        // 同步返回数据
+        // 同步返回的数据
         $reData = [
             'configAgentId' => $request->configAgentId,    // 交易通知配置机构号
             'dataType'      => $request->dataType,         // 推送数据类型，0：助贷通开通通知; 1：交易通知
@@ -74,7 +75,6 @@ class TradeApiController extends Controller
         }
 
         $dataList = json_decode(json_encode($request->dataList));
-        // $dataList = json_decode($request->dataList);
         
         if ($request->dataType == 0) {
             // 商户开通通知处理
@@ -129,6 +129,9 @@ class TradeApiController extends Controller
                     // if ($value->sysRespCode != '00' || $desc == '原交易已冲正') {
                     //     continue;
                     // }
+                    // 交易时间
+                    $tranTime = Carbon::createFromFormat('YmdHis', $value->tranTime)->toDateTimeString();
+
                     $tradeData = [
 
                         // 交易通知配置机构号
@@ -138,19 +141,22 @@ class TradeApiController extends Controller
                         'agt_merchant_id'   => $request->configAgentId,
 
                         // 交易日期
-                        'transDate'         => $request->transDate,
+                        'trans_date'        => $request->transDate,
+
+                        // 交易日期
+                        'trade_time'        => $tranTime,
 
                         // 交易码
-                        'tranCode'          => $value->tranCode,
+                        'tran_code'         => $value->tranCode,
 
                         // 商户直属机构号
-                        'agentId'           => $value->agentId,
+                        'agent_id'          => $value->agentId,
 
                         // 凭证号
-                        'traceNo'           => $value->traceNo ?? 0,
+                        'trace_no'          => $value->traceNo ?? 0,
 
                         // 系统流水号
-                        'sysTraceNo'        => $value->sysTraceNo,
+                        'sys_trace_no'      => $value->sysTraceNo,
 
                         // 参考号
                         'rrn'               => $value->rrn,
@@ -165,10 +171,10 @@ class TradeApiController extends Controller
                         // 052  IC卡无密
                         // 071  闪付凭密
                         // 072  闪付无密
-                        'inputMode'         => $value->inputMode ?? 0,
+                        'input_mode'        => $value->inputMode ?? 0,
 
                         // 卡类型 0:借记卡，1:信用卡
-                        'cardType'          => $value->cardType ?? null,
+                        'card_type'         => $value->cardType ?? null,
 
                         // 商户号
                         'merchant_code'     => $value->merchantId,
@@ -180,7 +186,7 @@ class TradeApiController extends Controller
                         'merchant_name'     => $value->merchantName,
 
                         // 终端号
-                        'termId'            => $value->termId ?? '',
+                        'term_id'           => $value->termId ?? '',
 
                         // 终端SN
                         'sn'                => $value->termSn ?? '',
@@ -200,20 +206,19 @@ class TradeApiController extends Controller
                         'fee_type'          => $value->feeType,
 
                         // 收单平台应答码
-                        'sysRespCode'       => $value->sysRespCode,
+                        'sys_resp_code'     => $value->sysRespCode,
 
                         // 收单平台应答描述
-                        'sysRespDesc'       => $value->sysRespDesc,
+                        'sys_resp_desc'     => $value->sysRespDesc,
 
                         // 原交易日期yyyymmdd
-                        'originalTranDate'  => $value->originalTranDate ?? null,
-                        // 'originalTranDate'  => $value->originalTranDate,
+                        'original_tran_date'=> $value->originalTranDate ?? null,
 
                         // 原交易参考号
-                        'originalRrn'       => $value->originalRrn ?? null,
+                        'original_rrn'      => $value->originalRrn ?? null,
 
                         // 原交易凭证号
-                        'originaltraceNo'   => $value->originaltraceNo ?? null
+                        'original_trace_no' => $value->originaltraceNo ?? null
 
                     ];
 
@@ -243,8 +248,6 @@ class TradeApiController extends Controller
                         'trade_id'          => $tradeOrder->id,
                         // 交易通知推送批次号
                         'sendBatchNo'       => $request->sendBatchNo,
-                        // 交易时间
-                        'tranTime'          => $value->tranTime,
                         // 卡号(带*)
                         'cardNo'            => $value->cardNo ?? '',
                         // 授权码

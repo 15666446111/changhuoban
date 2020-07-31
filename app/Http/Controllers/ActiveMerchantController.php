@@ -63,7 +63,7 @@ class ActiveMerchantController extends Controller
 
 
     	/**
-    	 * @var [检查机器和商户是否归属同一用户和商户激活记录]
+    	 * @var [检查机器和商户是否归属同一用户和商户]
     	 */
     	$merchantInfo = \App\Merchant::where('code', $this->trade->merchant_code)->first();
     	
@@ -111,8 +111,8 @@ class ActiveMerchantController extends Controller
     		// 查询当前机器的累计交易金额
     		$tradePrice = \App\Trade::where('sn', $this->trade->sn)
     								->where('merchant_code', $this->trade->merchant_code)
-									->whereIn('cardType', [1, null])	// 非借记卡
-									->where('sysRespCode', '00')			// 交易成功
+									->whereIn('card_type', [1, null])	// 非借记卡
+									->where('sys_resp_code', '00')			// 交易成功
 									->where('is_invalid', 0)				// 非无效交易
 									->where('is_repeat', 0)				    // 非重复交易
 									->sum('amount');

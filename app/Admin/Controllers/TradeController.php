@@ -59,7 +59,7 @@ class TradeController extends AdminController
 
         $grid->column('trades_deputies.tranTime', __('交易时间'))->help('当前交易订单的交易时间');
 
-        $grid->column('tranCode', __('交易类型'))->using([
+        $grid->column('tran_code', __('交易类型'))->using([
             '020000' => '消费', 
             '020002' => '消费撤销', 
             '020003' => '消费冲正',
@@ -87,7 +87,7 @@ class TradeController extends AdminController
             'YN' =>  'info', 'YM' => 'warning'
         ])->help('当前交易订单的手续费计算类型');
 
-        $grid->column('cardType', __('交易卡类型'))->using([
+        $grid->column('card_type', __('交易卡类型'))->using([
             '0' => '借记卡', '1' => '贷记卡'
         ])->label([
             '0' =>  'warning', '1' => 'success'
@@ -205,7 +205,7 @@ class TradeController extends AdminController
             return date('Y-m-d H:i:s', strtotime($tranTime));
         });
 
-        $show->field('tranCode', __('交易类型'))->using([
+        $show->field('tran_code', __('交易类型'))->using([
             '020000' => '消费', 
             '020002' => '消费撤销', 
             '020003' => '消费冲正',
@@ -232,7 +232,7 @@ class TradeController extends AdminController
             'B' => '标准', 'YN' => '云闪付NFC', 'YM' => '云闪付双免'
         ])->label();
 
-        $show->field('cardType', __('交易卡类型'))->using([
+        $show->field('card_type', __('交易卡类型'))->using([
             '0' => '借记卡', '1' => '贷记卡'
         ])->label();
 
@@ -240,9 +240,9 @@ class TradeController extends AdminController
         
         $show->field('is_send', __('是否分润'))->using(['0' => '否', '1' => '是']);
 
-        $show->field('sysRespCode', __('收单平台应答码'));
+        $show->field('sys_resp_code', __('收单平台应答码'));
 
-        $show->field('sysRespDesc', __('收单平台应答描述'));
+        $show->field('sys_resp_desc', __('收单平台应答描述'));
 
         $show->field('remark', __('本条交易备注'));
 
@@ -311,7 +311,7 @@ class TradeController extends AdminController
         $form->number('merchant_code', __('Merchant code'));
         $form->number('amount', __('Amount'));
         $form->number('settle_amount', __('Settle amount'));
-        $form->switch('cardType', __('CardType'));
+        $form->switch('card_type', __('card_type'));
 
         return $form;
     }

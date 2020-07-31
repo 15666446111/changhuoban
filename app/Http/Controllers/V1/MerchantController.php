@@ -167,7 +167,7 @@ class MerchantController extends Controller
                     break;
             }
             $EndTime = Carbon::now()->toDateTimeString();
-            $data = \App\Trade::select('cardType as card_type', 'sn as merchant_sn','amount as money','trade_time')
+            $data = \App\Trade::select('card_type', 'sn as merchant_sn','amount as money','trade_time')
             			->where('merchant_code', $merchant->code)->whereBetween('trade_time', [$StartTime,  $EndTime])
             			->orderBy('trade_time', 'desc')
 						->get();
@@ -302,8 +302,5 @@ class MerchantController extends Controller
     	return response()->json(['success'=>['message' => '获取成功', 'data' =>$ActiveInfo ]]);
 
 	}
-	
-
-
 	 
 }

@@ -59,6 +59,14 @@ Route::prefix('V1')->group(function () {
      */
     Route::middleware('AuthToken')->get('/getBindAll', 'V1\MerchantController@getBind');        // 首页 - 机具管理 - 机具统计信息
     Route::middleware('AuthToken')->get('/getTail', 'V1\MerchantController@getMerchantsTail');  // 首页 - 机具管理 - 机具详情页面
+    Route::middleware('AuthToken')->get('/getPolicy', 'V1\PolicyController@getPolicy');         // 首页 - 机具管理 - 机具划拨/机具回拨 - 获取政策列表
+    Route::middleware('AuthToken')->get('/getUnBoundInfo', 'V1\TransferController@getUnBound'); // 首页 - 机具管理 - 机具划拨 - 用户未绑定终端机器
+    Route::middleware('AuthToken')->post('/addTransfer', 'V1\TransferController@transfer');     // 首页 - 机具管理 - 机具划拨 - 选择划拨提交
+    Route::middleware('AuthToken')->get('/sectionPolicy', 'V1\TransferController@sectionPolicy'); // 首页 - 机具划拨 - 区间划拨 - 区间查询
+    Route::middleware('AuthToken')->get('/getBackList', 'V1\TransferController@backList');      // 首页 - 机具管理 - 机具回拨 - 选择回拨 - 回拨机器列表
+    Route::middleware('AuthToken')->post('/addBackTransfer', 'V1\TransferController@backTransfer'); // 首页 - 机具管理 - 机具回拨 - 选择回拨 - 选择回拨提交
+    Route::middleware('AuthToken')->get('/getTransferLog', 'V1\TransferController@transferLog');// 首页 - 机具管理 - 调拨记录页面
+
 
     
 
@@ -84,15 +92,15 @@ Route::prefix('V1')->group(function () {
      */
     Route::middleware('AuthToken')->get('/my_team', 'V1\TeamController@index');             // 首页 - 伙伴管理 - 伙伴列表
     Route::middleware('AuthToken')->get('/mine',    'V1\MineController@info');              // 首页 - 伙伴管理 - 伙伴详情
-    Route::middleware('AuthToken')->post('/getTradeDetail', 'V1\TeamController@getDetail'); // 首页 - 伙伴管理 - 数据明细
 
 
     /**
      * @author  [Pudding]  [<755969423@qq.com>]
-     * @version [< 首页 - 团队信息  >]
+     * @version [< 团队信息  >]
      */
     Route::middleware('AuthToken')->get('/team_data', 'V1\TeamController@data');            // 团队 - 团队信息
-
+    Route::middleware('AuthToken')->post('/getTradeDetail', 'V1\TeamController@getDetail'); // 团队 - 业务详情
+    Route::middleware('AuthToken')->get('/getTeamTradeDetail', 'V1\DetailController@TradeDetail');  // 团队-业务详情-交易量
 
 
     /**
@@ -230,41 +238,8 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/getOrderUser', 'V1\OrdersController@getOrder');
 
 
-    /**
-     * @version [<APP 获取政策活动列表>] [<description>]
-     * @return  [获取平台所有的政策活动]   [<description>]
-     * @version [<获取政策后的] [<description>]
-     */
-    Route::middleware('AuthToken')->get('/getPolicy', 'V1\PolicyController@getPolicy');
-
-    /**
-     * 查询用户未绑定终端机器
-     */
-    Route::middleware('AuthToken')->get('/getUnBoundInfo', 'V1\TransferController@getUnBound');
-    
-
-    /**
-     * 划拨
-     */
-    Route::middleware('AuthToken')->post('/addTransfer', 'V1\TransferController@transfer');
 
 
-    /**
-     * 回拨机器列表
-     */
-    Route::middleware('AuthToken')->get('/getBackList', 'V1\TransferController@backList');
-
-
-    /**
-     * 回拨
-     */
-    Route::middleware('AuthToken')->post('/addBackTransfer', 'V1\TransferController@backTransfer');
-
-    
-    /**
-     * 划拨回拨记录
-     */
-    Route::middleware('AuthToken')->get('/getTransferLog', 'V1\TransferController@transferLog');
 
 
     /**

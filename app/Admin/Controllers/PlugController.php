@@ -40,6 +40,9 @@ class PlugController extends AdminController
 
         //倒叙
         //$grid->column('id', __('索引'))->sortable();
+        if (Admin::user()->operate == "All") {
+            $grid->column('admin_users.name', __('操盘方'))->help('轮播图归属操盘方');
+        }
 
         $grid->column('images', __('图片'))->lightbox(['width' => 100, 'height' => 30])->help('轮播图的图片');
 
@@ -90,6 +93,17 @@ class PlugController extends AdminController
             $filter->column(1/4, function ($filter) {
                 $filter->equal('type_id', '类型')->select(\App\PlugType::get()->pluck('name', 'id'));
             }); 
+
+            if(Admin::user()->operate == "All"){
+
+                $filter->column(1/4, function ($filter) {
+
+                    $filter->equal('operate', '操盘')
+                                ->select(\App\AdminUser::where('type', 3)->get()->pluck('name', 'operate'));
+
+                }); 
+
+            }
         });
         
 

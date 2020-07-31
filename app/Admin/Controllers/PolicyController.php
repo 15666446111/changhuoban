@@ -193,6 +193,16 @@ class PolicyController extends AdminController
 
             });
 
+        })->tab('服务费设置', function ($form) {
+
+            $form->currency('sim_charge', __('SIM服务费金额'))->default(0)->help('SIM流量卡费金额');
+
+            $form->number('sim_cycle', __('SIM服务费冻结周期/月'))->default(0)->help('SIM服务费冻结周期/月');
+
+            $form->number('sim_delay', __('SIM服务费冻结延迟月数'))->default(0)->help('SIM服务费延迟扣除月数，开通当前月数后开始扣除');
+
+            $form->select('sim_short_id', __('SIM服务费短信模板'))->options(\App\AdminShort::where('operate', Admin::user()->operate)->where('status', 1)->get()->pluck('number', 'id'));
+
         });
     
         $form->saving(function (Form $form) {

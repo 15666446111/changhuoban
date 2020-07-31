@@ -71,8 +71,10 @@ class RepayCjController extends Controller
      */
     public function __construct( Withdraw $Withdraw )
     {
+        
+        // $this->withdraw = $Withdraw;
 
-        $this->withdraw = $Withdraw;
+        $this->withdraw = \App\Withdraw::where('id', $Withdraw->id)->first();
 
         $this->setting = \App\Setting::where('operate', $this->withdraw->operate)->first();
 
@@ -452,7 +454,8 @@ class RepayCjController extends Controller
 
         $param = $this->pkcs5_pad($param, $size);
 
-        $rs = openssl_encrypt($param, "DES-EDE3-ECB", $key, OPENSSL_RAW_DATA | OPENSSL_NO_PADDING, null);
+        // $rs = openssl_encrypt($param, "DES-EDE3-ECB", $key, OPENSSL_RAW_DATA | OPENSSL_NO_PADDING, null);
+        $rs = openssl_encrypt($param, "DES-EDE3", $key, OPENSSL_RAW_DATA | OPENSSL_NO_PADDING, null);
 
         $rs = bin2hex($rs);
 
