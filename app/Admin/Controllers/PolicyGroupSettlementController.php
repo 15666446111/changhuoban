@@ -69,6 +69,9 @@ class PolicyGroupSettlementController extends AdminController
         $form->text('trade_type_id', __('Trade type id'));
         $form->number('set_price', __('Set price'));
 
+        $form->number('default_price', __('Default price'));
+        $form->number('min_price', __('Min price'));
+
         return $form;
     }
 }

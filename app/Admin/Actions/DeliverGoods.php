@@ -72,13 +72,13 @@ class DeliverGoods extends RowAction
     /* 发货按钮需要提交资料 */
 	public function form()
 	{
-        $user = \App\User::where('operate', Admin::user()->operate)->pluck('nickname', 'id');
+        /*$user = \App\User::where('operate', Admin::user()->operate)->pluck('nickname', 'id');
         $this->select('user', '配送会员')->options($user)->rules('required', ['required' => '请选择配送用户']);
 
         $policyGroups = \App\PolicyGroup::where('operate', Admin::user()->operate)->pluck('title', 'id');
         $this->select('d_title','活动组')->options($policyGroups)->load('d_policy','/api/getAdminUserGroup');
         
-        $this->select('d_policy','活动')->required();
+        $this->select('d_policy','活动')->required();*/
 	}
 
     /**

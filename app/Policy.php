@@ -12,8 +12,7 @@ class Policy extends Model
 	protected $guarded = [];
 	
     protected $casts = [
-        'default_active_set' 	=> 'json',
-        'vip_active_set' 		=> 'json'
+        'default_active_set'    => 'json',
     ];
 
 
@@ -102,7 +101,7 @@ class Policy extends Model
      * @DateTime  2020-06-28
      * @copyright [copyright]
      * @license   [license]
-     * @version   [获取器]
+     * @version   [获取器  直推激活返现 ]
      * @param     [type]      $value [description]
      */
     public function getDefaultActiveAttribute($value)
@@ -114,7 +113,15 @@ class Policy extends Model
         $this->attributes['default_active'] =  $value * 100;
     }    
 
-
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-07-31
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 间推激活奖励 ]
+     * @param     [type]      $value [description]
+     * @return    [type]             [description]
+     */
     public function getIndirectActiveAttribute($value)
     {
         return $value / 100;
@@ -124,7 +131,15 @@ class Policy extends Model
         $this->attributes['indirect_active'] =  $value * 100;
     }    
 
-
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-07-31
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 间间推激活奖励 ]
+     * @param     [type]      $value [description]
+     * @return    [type]             [description]
+     */
     public function getInIndirectActiveAttribute($value)
     {
         return $value / 100;
@@ -143,6 +158,39 @@ class Policy extends Model
     {
         $this->attributes['sim_charge'] =  $value * 100;
     }
+
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-07-31
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 工具模式的激活返现设置 ]
+     * @param     [type]      $value [description]
+     * @return    [type]             [description]
+     */
+    public function getDefaultActiveSetAttribute($value)
+    {
+        if($value != ""){
+            $arrs = json_decode($value, true);
+            foreach ($arrs as $key => $value)
+                $arrs[$key] = $value / 100;
+            return json_encode($arrs);        
+        }else
+            return $value;
+    }
+    public function setDefaultActiveSetAttribute($set)
+    {
+        if(!empty($set)){
+            foreach ($set as $key => $value)
+                $set[$key] = $value * 100;
+            $this->attributes['default_active_set'] = json_encode($set);
+        }else
+            $this->attributes['default_active_set'] = "";
+    }
+
+
+
 
 	/**
 	 * [merchants 关联终端模型]

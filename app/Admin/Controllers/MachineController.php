@@ -102,7 +102,15 @@ class MachineController extends AdminController
             if($actions->row['user_id'] == 0 or $actions->row['user_id'] == null) $actions->add(new DeliverGoods);
         });
 
+
+
+        // 
+        
+
+
         $grid->tools(function ($tools) {
+
+            //$type = \App\MachinesType::where('state', '1')->get()->pluck('name','id');
 
             $tools->append(new ImportMachines());
 

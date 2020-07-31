@@ -9,6 +9,8 @@ use Encore\Admin\Show;
 use Illuminate\Support\MessageBag;
 use Encore\Admin\Facades\Admin;
 use Encore\Admin\Controllers\AdminController;
+
+use App\Admin\Extensions\PromissCheck;
 class PolicyController extends AdminController
 {
     /**
@@ -112,30 +114,47 @@ class PolicyController extends AdminController
 
         $form->tab('基础信息配置', function ($form) {
 
-            $form->switch('active', __('活动状态'))->default(1)->help('关闭活动状态时,配送无法选择此活动,已配送机器分润等不受影响');
-
-            $form->text('title', __('活动标题'));
+            $form->text('title', __('活动标题'))->required();
 
             $form->select('policy_group_id', __('所属活动组'))->options(\App\PolicyGroup::where('operate', Admin::user()->operate)->get()->pluck('title', 'id'));
+
+            $form->switch('active', __('活动状态'))->default(1)->help('关闭活动状态时,配送无法选择此活动,已配送机器分润等不受影响');
 
             $form->hidden('operate', __('Operate'))->readonly();
 
         })->tab('激活返现设置', function ($form) {
-            
+
+
             $form->number('active_cycle', '激活周期')->default(0)->help('激活考核周期,机器开通后当前天数内激活有效');
 
-            $form->currency('default_active', __('直推激活'))->default(0)->help('机器激活,机器归属人奖励');
+            if(PromissCheck::isUnion()){
+                // 联盟模式专属
+                $form->currency('default_active', __('直推激活'))->default(0)->help('机器激活,机器归属人奖励');
+            }
+
 
             $form->currency('indirect_active', __('间推激活'))->default(0)->help('机器激活,上级获得的间推奖励');
+            $form->currency('in_indirect_active', __('间间推激活'))->default(0)->help('机器激活,上上级获得的间推奖励.');
 
-            $form->currency('in_indirect_active', __('间间推激活'))->default(0)->help('机器激活,上上级获得的间推奖励.(单位为分)');
+            if(PromissCheck::isTool()){
+                // 工具模式的激活返现
+                $form->fieldset('激活返现', function (Form $form) {
+                    $form->embeds('default_active_set', '激活返现',function ($form) {
+                        $form->currency('return_money', '最高返现')->default(0)->rules('required')->help('机器激活时,分给上下级最多不超过此金额的激活返现(不包括上面的间推与间间推奖励)');
+                        $form->currency('default_money', '默认返现')->default(0)->rules('required')->help('机器激活时,每个用户的默认的激活返现');
+                    });
+                });
+            }
+
+
 
             $form->select('short_id', __('短信模板'))->options(\App\AdminShort::where('operate', Admin::user()->operate)->where('status', 1)->get()->pluck('number', 'id'));
 
-            $form->select('active_type', __('激活标准'))->options([1 => '冻结激活', 2 => '交易量激活'])->when(1,function (Form $form) { 
-                $form->currency('active_price', __('冻结激活金额'))->symbol('￥')->help('机器激活,上级获得的直推奖励');
+            $form->select('active_type', __('激活标准'))->options([1 => '冻结激活', 2 => '交易量激活'])
+            ->when(1,function (Form $form) { 
+                $form->currency('active_price', __('冻结激活金额'))->symbol('￥')->help('机器激活,需要冻结的交易金额');
             })->when(2,function (Form $form) { 
-                $form->currency('active_price', __('交易量激活金额'))->symbol('￥')->help('机器激活,上级获得的直推奖励');
+                $form->currency('active_price', __('交易量激活金额'))->symbol('￥')->help('机器激活,需满足此交易量,才算激活');
             });
             
             // $form->fieldset('用户激活返现', function (Form $form) {
