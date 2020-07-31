@@ -68,6 +68,8 @@ class AutoPromotionController extends AdminController
 
         });
 
+        $grid->paginate(10);
+
         return $grid;
     }
 

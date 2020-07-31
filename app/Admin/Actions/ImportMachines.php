@@ -78,16 +78,9 @@ class ImportMachines extends Action
      */
     public function html()
     {
-        if(Admin::user()->operate == 'All'){
-
-        }else{
-
-            return <<<HTML
+        return  <<<HTML
         <a class="btn btn-sm btn-default import-machines" style="position:absolute;  right: 350px;"><i class="fa fa-upload" style="margin-right: 3px;"></i>导入仓库</a>
 HTML;
-
-        }
-        
     }
 
     /**

@@ -84,36 +84,64 @@ class PolicyGroupController extends AdminController
     {
         $show = new Show(PolicyGroup::findOrFail($id));
 
+        $model = PolicyGroup::where('id', $id)->first();
+
         if(Admin::user()->operate != "All"){
-            $model = PolicyGroup::where('id', $id)->first();
-            if($model->operate != Admin::user()->operate) return abort('403');        
+            if($model->operate != Admin::user()->operate) return abort('403');    
+
+            $AdminSetting = \App\AdminSetting::where('operate_number', Admin::user()->operate)->first();    
         }
 
         $show->field('title', __('活动组标题'));
+
+        $show->field('type', __('发展模式'))->using([ '1' => '联盟模式', '2' => '工具模式']);
+
+
         $show->field('created_at', __('创建时间'));
         //$show->field('updated_at', __('Updated at'));
 
-        $show->settsprice('结算价设置', function ($settsprice) {
-            $settsprice->resource('/manage/policy-group-settlements');
-            $settsprice->column('user_groups.name', __('用户组'))->help('当前活动组下的当前用户组');
-            $settsprice->column('trade_types.name', __('交易类型'))->help('当前活动组下的当前用户组的结算类型');
-            $settsprice->column('set_price', __('结算价'))->editable()->help('当前活动组下的当前用户组的结算类型的结算底价,单位为十万分位, 例如:万525,填写525');
-            $settsprice->disableCreateButton();
-            $settsprice->disableActions();
+        if($model->type == '1'){
+            $show->settsprice('结算价设置', function ($settsprice) {
+                $settsprice->resource('/manage/policy-group-settlements');
+                $settsprice->column('user_groups.name', __('用户组'))->help('当前活动组下的当前用户组');
+                $settsprice->column('trade_types.name', __('交易类型'))->help('当前活动组下的当前用户组的结算类型');
+                $settsprice->column('set_price', __('结算价'))->editable()->help('当前活动组下的当前用户组的结算类型的结算底价,单位为十万分位, 例如:万525,填写525');
+                $settsprice->disableCreateButton();
+                $settsprice->disableActions();
 
-            $settsprice->filter(function($filter){
-                // 去掉默认的id过滤器
-                $filter->disableIdFilter();
-
-                $filter->column(1/4, function ($filter) {
-                    $filter->equal('user_group_id', '用户组')->select(\App\UserGroup::get()->pluck('name', 'id'));
+                $settsprice->filter(function($filter){
+                    // 去掉默认的id过滤器
+                    $filter->disableIdFilter();
+                    $filter->column(1/4, function ($filter) {
+                        $filter->equal('user_group_id', '用户组')->select(\App\UserGroup::get()->pluck('name', 'id'));
+                    });
+                    $filter->column(1/4, function ($filter) {
+                        $filter->equal('trade_type_id', '结算类型')->select(\App\TradeType::get()->pluck('name', 'id'));
+                    });
                 });
-
-                $filter->column(1/4, function ($filter) {
-                    $filter->equal('trade_type_id', '结算类型')->select(\App\TradeType::get()->pluck('name', 'id'));
-                });
+                $settsprice->paginate(6);
             });
-        });
+        }
+
+        if($model->type == '2'){
+            $show->settsprice('结算价设置', function ($settsprice) {
+                $settsprice->resource('/manage/policy-group-settlements');
+                $settsprice->column('trade_types.name', __('交易类型'))->help('当前活动组下的当前用户组的结算类型');
+                $settsprice->column('default_price', __('默认结算价'))->editable()->help('当前活动组下的当前结算类型的默认结算价, 单位为十万分位, 例如:万525,填写525');
+                $settsprice->column('min_price', __('最低结算价'))->editable()->help('当前活动组下的当前结算类型的最低结算价, 单位为十万分位, 例如:万525,填写525');
+                $settsprice->disableCreateButton();
+                $settsprice->disableActions();
+                $settsprice->filter(function($filter){
+                    // 去掉默认的id过滤器
+                    $filter->disableIdFilter();
+                    $filter->column(1/4, function ($filter) {
+                        $filter->equal('trade_type_id', '结算类型')->select(\App\TradeType::get()->pluck('name', 'id'));
+                    });
+                });
+                $settsprice->paginate(6);
+            });
+        }
+
         return $show;
     }
 
@@ -127,11 +155,12 @@ class PolicyGroupController extends AdminController
         $form = new Form(new PolicyGroup());
 
         $form->text('title', __('活动组标题'));
-        $form->hidden('operate', __('Operate'))->readonly();
+        
         $form->hidden('type', __('Type'))->readonly();
+        
+        $form->hidden('operate', __('Operate'))->readonly();
 
         $form->saving(function (Form $form) {
-            // dd($form->images);
             if($form->isCreating()){
                 $count = PolicyGroup::where('operate', Admin::user()->operate)->count();
                 if($count >= 2 ){
@@ -139,7 +168,9 @@ class PolicyGroupController extends AdminController
                     return back()->with(compact('error'));
                 }
                 $form->operate = Admin::user()->operate;
-                $form->type    = 1;     // 暂时先等于联盟模式
+
+                $AdminSetting = \App\AdminSetting::where('operate_number', Admin::user()->operate)->first();
+                $form->type    = $AdminSetting->pattern;     // 暂时先等于联盟模式
             }
             
         });

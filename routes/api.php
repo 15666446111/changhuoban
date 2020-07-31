@@ -142,8 +142,8 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/getBankInfo', 'V1\BankController@selectBank');        // 我的 - 结算卡 - 查询结算卡
     Route::middleware('AuthToken')->get('/getBankDefault', 'V1\BankController@bankDefault');    // 我的 - 结算卡 - 默认结算卡
     Route::middleware('AuthToken')->get('/getBankFirst', 'V1\BankController@bankFirst');        // 我的 - 结算卡 - 单个结算卡
-    Route::middleware('AuthToken')->get('/deBank', 'V1\BankController@unsetBank');              // 我的 - 计算卡 - 删除结算卡
-    Route::middleware('AuthToken')->get('/upBank', 'V1\BankController@updateBank');             // 我的 - 计算卡 - 修改结算卡
+    Route::middleware('AuthToken')->get('/deBank', 'V1\BankController@unsetBank');              // 我的 - 结算卡 - 删除结算卡
+    Route::middleware('AuthToken')->get('/upBank', 'V1\BankController@updateBank');             // 我的 - 结算卡 - 修改结算卡
 
 
     /**
@@ -161,10 +161,13 @@ Route::prefix('V1')->group(function () {
 
 
 
-
-
-
-
+    /**
+     * @author  [Pudding]  [<755969423@qq.com>]
+     * @version [< 首页 伙伴管理 政策活动 >]
+     */
+    Route::middleware('AuthToken')->get('/userPolicyGroup', 'V1\PolicyController@getPolicyGroup');      // 首页 - 伙伴管理 - 获取活动组
+    Route::middleware('AuthToken')->get('/userPolicy',      'V1\PolicyController@getPolicyList');       // 首页 - 伙伴管理 - 获取活动列表
+    Route::middleware('AuthToken')->get('/userPrice',       'V1\PolicyController@getPrice');            // 首页 - 伙伴管理 - 获取结算价
 
 
 
