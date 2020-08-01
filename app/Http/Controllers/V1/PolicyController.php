@@ -468,7 +468,7 @@ class PolicyController extends Controller
 
         foreach ($set_price as $key => $v) {
             if($v['index'] == $value['index']) {
-                $rate = $value['price'];
+                $rate = $v['price'];
                 break;
             }
         }
