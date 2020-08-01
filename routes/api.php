@@ -167,8 +167,6 @@ Route::prefix('V1')->group(function () {
 
 
 
-
-
     /**
      * @author  [Pudding]  [<755969423@qq.com>]
      * @version [< 首页 伙伴管理 政策活动 >]
@@ -178,6 +176,8 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/userPrice',       'V1\PolicyController@getPrice');            // 首页 - 伙伴管理 - 获取结算价
     Route::middleware('AuthToken')->post('/setUserPrice',   'V1\PolicyController@setPrice');            // 首页 - 伙伴管理 - 设置结算价
 
+    Route::middleware('AuthToken')->get('/getUserActive',   'V1\PolicyController@getActive');           // 首页 - 伙伴管理 - 获取激活返现
+    Route::middleware('AuthToken')->post('/setUserActive',  'V1\PolicyController@setActive');           // 首页 - 伙伴管理 - 设置激活返现
 
 
     /**
