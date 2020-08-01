@@ -3,6 +3,8 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+
+use App\Job\NewSimFrozen;
 use App\Http\Controllers\Controller;
 use App\Services\Pmpos\PmposController;
 
@@ -94,9 +96,47 @@ class CrontabController extends Controller
 		}
 	}
 
-	public function simFrozen()
+	/**
+	 * [流量卡费冻结（已有冻结记录的机具）]
+	 * @return [type] [description]
+	 */
+	public function againSimFrozen()
 	{
-		// 查询需要再次冻结的机具
+		## 首次冻结的机具
+		// 设置了sim服务费金额的活动id集合
+		$activeIds = \App\Policy::where('sim_charge', '>', 0)->pluck('id');
+
+		$machineList = \App\Machine::whereIn('policy_id', $activeIds)
+						->where('sim_frozen_num', 0)
+						->where('bind_status', 1)
+						->where('open_time', '>', 0)
+						->get();
+
+		foreach ($machineList as $k => $v) {
+
+			## 检查是否需要发起冻结
+			// 机具第一次需要冻结的时间
+			$shouldFrozenTime = Carbon::createFromDate('Y-m-d H:i:s', $v->open_time)->addMonth($v->policys->sim_delay)->toDataTimeString();
+
+			if ($shouldFrozenTime > Carbon::now()->toDataTimeString()) {
+				continue ;
+			}
+
+			// 添加冻结记录
+			$frozenLog = \App\MerchantFrozenLog::create([
+				'merchant_code'		=> $v->merchant_code,
+				'sn'				=> $v->sn,
+				'type'				=> 2,
+				'frozen_money'		=> $v->machine->policys->sim_charge * 100,
+                'state'             => 0
+			]);
+
+			// 压入队列中，处理剩下的逻辑
+			NewSimFrozen::dispatch($frozenLog);
+
+		}
+
+		## 二次和二次以后需要冻结的机具
 		$frozenLog = \App\MerchantFrozenLog::where('type', 2)
 					->where('state', 1)
 					->where('sim_again_state', 0)
@@ -107,67 +147,36 @@ class CrontabController extends Controller
 
 			// 检查机器信息是否存在
 			if (!$v->machine || empty($v->machine)) {
-				$v->return_data = '机具数据异常';
+				$v->remark .= '机具数据异常';
 				$v->save();
 				continue ;
 			}
 
 			// 检查与当前绑定商户是否一致
 			if ($v->merchant_code != $v->machine->merchants->code) {
+				$v->remark .= '当前机器与商户已解绑';
+				$v->save();
 				continue ;
 			}
 
 			// 检查当前活动是否设置SIM服务费收取金额
 			if ($v->machine->policys->sim_charge == 0) {
-				$v->return_data = '该机器未设置SIM服务费金额';
+				$v->remark .= '该机器未设置SIM服务费金额';
 				$v->save();
 				continue ;
 			}
 
-			// 短信模板
-			$smsCode = \App\AdminShort::where('id', $v->machine->policys->sim_short_id)->value('template_id');
-
-			// 发起冻结
-			$pmposModel = new PmposController($v->merchant_code, $v->sn, true);
-
-			$data = $pmposModel->feeFrozen($smsCode, 0, $v->machine->policys->sim_charge);
-
-			$retrunData = json_decode($data['return_data']);
-
 			// 添加冻结记录
-			\App\MerchantFrozenLog::create([
+			$frozenLog = \App\MerchantFrozenLog::create([
 				'merchant_code'		=> $v->merchant_code,
 				'sn'				=> $v->sn,
 				'type'				=> 2,
-				'frozen_money'		=> $v->machine->policys->sim_charge,
-                'state'             => $returnData->code == '00' ? 1 : 0,
-                'sim_agent_time'	=> $returnData->code == '00' ? Carbon::now()->toDateTimeString() : null,
-				'return_data'       => $data['return_data'],
-                'send_data'         => $data['send_data']
+				'frozen_money'		=> $v->machine->policys->sim_charge * 100,
+                'state'             => 0
 			]);
 
-			// 冻结成功时，更新冻结状态和机具冻结次数
-			if ($retrunData->code == '00') {
-				
-			}
-
-		}
-
-
-		// 查询设置了sim服务费金额的活动
-		$activeIds = \App\Policy::where('sim_charge', '>', 0)->pluck('id');
-
-		$machineList = \App\Machine::whereIn('policy_id', $activeIds)->get();
-
-		foreach ($machineList as $key => $value) {
-
-			$smsCode = \App\AdminShort::where('id', $value->sim_short_id)->value('template_id');
-			
-			// 查询冻结金额的代理商返还状态
-			$pmpos = new PmposController($value->merchants->code, $v->sn);
-
-			$data = $pmpos->feeFrozen($value->policys->sim_charge);
-
+			// 压入队列中，处理剩下的逻辑
+			NewSimFrozen::dispatch($frozenLog);
 		}
 	}
 
