@@ -249,7 +249,121 @@ class PolicyController extends Controller
 
 
 
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-08-01
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 首页 - 伙伴管理 - 获取激活返现 ]
+     * @param     Request     $request [description]
+     * @return    [type]               [description]
+     */
+    public function getActive(Request $request)
+    {
+        try{
+            if(!$request->uid) return response()->json(['error'=>['message' => '缺少伙伴信息!']]);
+            if(!$request->pid) return response()->json(['error'=>['message' => '请选择活动政策信息!']]);
 
+            $user = \App\User::where('id', $request->uid)->first();
+            if(!$user or empty($user)) return response()->json(['error'=>['message' => '找不到伙伴信息!']]);
+
+            if($user->operate != $request->user->operate)  return response()->json(['error'=>['message' => '无权限!']]);
+            if($user->parent != $request->user->id ) return response()->json(['error'=>['message' => '只能查询直接下级的信息!']]);
+
+            $policy = \App\Policy::where('id', $request->pid)->first();
+            if(!$policy or empty($policy)) return response()->json(['error'=>['message' => '活动政策不存在!']]);
+            $defaultSet = json_decode($policy->default_active_set, true);
+            
+            // 只有工具版本才可以获取激活返现
+            $setting = \App\AdminSetting::where('operate_number', $request->user->operate)->first();
+            if(!$setting or empty($setting)) return response()->json(['error'=>['message' => '未找到操盘方信息']]); 
+            if($setting->pattern != '2') return response()->json(['error'=>['message' => '非工具版本不能设置']]); 
+
+            // 是工具版， 获取当前会员在当前活动的激活返现
+            $price = array();
+            #1. 首先获取当前会员在这活动组的结算价
+            $userActive = \App\UserPolicy::where('user_id', $request->uid)->where('policy_id', $request->pid)->first();
+            #2. 获取本人的该活动组的配置信息
+            $currActive = \App\UserPolicy::where('user_id', $request->user->id)->where('policy_id', $request->pid)->first();
+
+            $price['active']['active_money']      = empty($userActive) ? $defaultSet['default_money'] : $userActive->default_active_set;
+            $price['active']['active_money_min']  = 0;
+            $price['active']['active_money_max']  = empty($currActive) ? $defaultSet['default_money'] : $currActive->default_active_set;
+
+            $price['policy'] = $policy->title;
+
+            return response()->json(['success'=>['message' => '获取成功!', 'data' => $price]]);
+
+        } catch (\Exception $e) {
+            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
+        }
+    }
+
+
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-08-01
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 首页 - 伙伴管理 - 设置激活返现 ]
+     * @param     Request     $request [description]
+     */
+    public function setActive(Request $request)
+    {
+        try{
+            if(!$request->uid) return response()->json(['error'=>['message' => '缺少伙伴信息!']]);
+            if(!$request->pid) return response()->json(['error'=>['message' => '请选择活动政策信息!']]);
+            if(!$request->return_money) return response()->json(['error'=>['message' => '请输入设置的金额!']]);
+            if(!is_numeric($request->return_money)) return response()->json(['error'=>['message' => '激活返现必须为有效金额!']]);
+
+            $user = \App\User::where('id', $request->uid)->first();
+            if(!$user or empty($user)) return response()->json(['error'=>['message' => '找不到伙伴信息!']]);
+
+            if($user->operate != $request->user->operate)  return response()->json(['error'=>['message' => '无权限!']]);
+            if($user->parent != $request->user->id ) return response()->json(['error'=>['message' => '只能查询直接下级的信息!']]);
+
+            $policy = \App\Policy::where('id', $request->pid)->first();
+            if(!$policy or empty($policy)) return response()->json(['error'=>['message' => '活动政策不存在!']]);
+            $defaultSet = json_decode($policy->default_active_set, true);
+            
+            // 只有工具版本才可以获取激活返现
+            $setting = \App\AdminSetting::where('operate_number', $request->user->operate)->first();
+            if(!$setting or empty($setting)) return response()->json(['error'=>['message' => '未找到操盘方信息']]); 
+            if($setting->pattern != '2') return response()->json(['error'=>['message' => '非工具版本不能设置']]); 
+
+            // 是工具版， 获取当前会员在当前活动的激活返现
+            $price = array();
+            #1. 首先获取当前会员在这活动组的结算价
+            $userActive = \App\UserPolicy::where('user_id', $request->uid)->where('policy_id', $request->pid)->first();
+            #1.1 如果没有用户的活动信息 ， 需要新增一条
+            if(!$userActive or empty($userActive)){
+                $userActive = \App\UserPolicy::create([
+                    'user_id'   =>  $request->uid,
+                    'policy_id' =>  $request->pid,
+                    'default_active_set'    =>  $defaultSet['default_money'] * 100,
+                ]);
+            }
+
+            #2. 获取本人的该活动组的配置信息
+            $currActive = \App\UserPolicy::where('user_id', $request->user->id)->where('policy_id', $request->pid)->first();
+
+            $max = empty($currActive) ? $defaultSet['default_money'] : $currActive->default_active_set;
+
+            if($request->return_money >= 0 && $request->return_money <= $max){
+                $userActive->default_active_set = $request->return_money * 100;
+            }else{
+                return response()->json(['error'=>['message' => '激活返现设置不合法']]); 
+            }
+
+            $userActive->save();
+
+            return response()->json(['success'=>['message' => '设置成功!']]);
+
+        } catch (\Exception $e) {
+            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
+        }
+    }
 
 
 
