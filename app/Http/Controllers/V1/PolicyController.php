@@ -176,7 +176,8 @@ class PolicyController extends Controller
      */
     public function setPrice(Request $request)
     {
-        try{
+        /*try{*/
+            return response()->json(['error'=>['message' => '缺少伙伴信息!', 'data' => json_encode($request->set_price)]]);
 
             if(!$request->uid) return response()->json(['error'=>['message' => '缺少伙伴信息!']]);
             if(!$request->gid) return response()->json(['error'=>['message' => '请选择活动组!']]);
@@ -242,9 +243,9 @@ class PolicyController extends Controller
 
             return response()->json(['success'=>['message' => '设置成功!']]);
 
-        } catch (\Exception $e) {
+        /*} catch (\Exception $e) {
             return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
-        }
+        }*/
     }
 
 
