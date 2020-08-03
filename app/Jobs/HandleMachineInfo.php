@@ -171,7 +171,7 @@ class HandleMachineInfo implements ShouldQueue
          * 检查机器是否在畅捷一级后台
          * @var [type]
          */
-        if ($this->regContent->config_agent_id != $this->regContent->agent_id) {
+        if ($this->regContent->config_agent_id != $this->regContent->agentId) {
             $this->regContent->remark = '该机器不在您的畅捷一级后台';
             $this->regContent->state = '2';
             $this->regContent->save();

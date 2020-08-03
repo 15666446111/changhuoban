@@ -67,8 +67,17 @@ class CrontabController extends Controller
 							'type'				=> 1
 						]);
 
+						// 操盘模式
+	                    $pattern = \App\AdminSetting::where('operate_number', $v->operate)->value('pattern');
+
 						// 添加分润记录、更新代理钱包余额
-						$this->addUserBalance($v->user_id, $v->policys->default_active, 3, $v->operate);
+	                    if ($pattern == 1) {
+	                    	// 联盟模式
+	                        $this->addUserBalance($v->user_id, $v->policys->default_active, 3, $v->operate);
+	                    } else {
+	                    	// 工具模式
+	                        $this->toolCashBack($v->user_id, $v->policys->id, $v->policys->default_active_set, $v->operate);
+	                    }
 
 						$pUserId = \App\User::where('id', $v->user_id)->value('parent');
 						
@@ -95,6 +104,41 @@ class CrontabController extends Controller
 
 		}
 	}
+
+    /**
+     * [工具模式直推激活返现]
+     * @param  [type] $userId           [用户id]
+     * @param  [type] $policyId         [活动id]
+     * @param  [type] $defaultActiveSet [活动默认返现设置]
+     * @param  [type] $operate          [操盘号]
+     * @return [type]                   [description]
+     */
+    public function toolCashBack($userId, $policyId, $defaultActiveSet, $operate)
+    {
+        $prevReturnMoney = 0;
+
+        while ($userId > 0) {
+
+            // 用户返现金额
+            $returnMoney = \App\UserPolicy::where('user_id', $userId)->where('policy_id', $policyId)->value('default_active_set');
+
+            // 未设置过用户的返现金额时，按默认激活返现金额处理
+            if (empty($returnMoney)) {
+                $defaultActive = json_decode($defaultActiveSet);
+                $returnMoney = $defaultActive->default_money * 100;
+            }
+
+            $money = ($returnMoney - $prevReturnMoney) / 100;
+
+            if ($money > 0) {
+                $this->addUserBalance($userId, $money, 3, $operate);
+                $prevReturnMoney = $returnMoney;
+            }
+
+            $userId = \App\User::where('id', $userId)->value('parent');
+        }
+        
+    }
 
 	/**
 	 * [流量卡费冻结（已有冻结记录的机具）]

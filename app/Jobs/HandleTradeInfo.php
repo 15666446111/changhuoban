@@ -97,12 +97,12 @@ class HandleTradeInfo implements ShouldQueue
         /**
          * @version [<vector>] [< 检查该机器所属操盘方和畅捷后台是否一致>]
          */
-        $systemCode = \App\AdminSetting::where('operate_number', $this->trade->merchants_sn->operate)->value('system_merchant');
-        if ($systemCode != $this->trade->agt_merchant_id) {
-            $this->trade->remark = '该机器归属操盘方信息有误';
-            $this->trade->save();
-            return false;
-        }
+        // $systemCode = \App\AdminSetting::where('operate_number', $this->trade->merchants_sn->operate)->value('system_merchant');
+        // if ($systemCode != $this->trade->agt_merchant_id) {
+        //     $this->trade->remark = '该机器归属操盘方信息有误';
+        //     $this->trade->save();
+        //     return false;
+        // }
 
         /**
          * @version [<vector>] [< 检查是否是重复推送的数据 >]

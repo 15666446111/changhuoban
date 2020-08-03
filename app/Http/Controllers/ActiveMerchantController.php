@@ -98,9 +98,9 @@ class ActiveMerchantController extends Controller
         // 审核截止时间
         $assessEndTime = strtotime($this->trade->merchants_sn->open_time . '+' . $this->policy->active_cycle . 'day');
         // 设置了考核周期，并且不在考核周期内时，不处理激活
-        if ($this->policy->active_cycle > 0 && time() > $assessEndTime) {
-            return array('status' => false, 'message' => '该机器已过激活截止时间');
-        }
+        // if ($this->policy->active_cycle > 0 && time() > $assessEndTime) {
+        //     return array('status' => false, 'message' => '该机器已过激活考核时间');
+        // }
 
     	## 激活标准大于0时，处理激活
     	if ($this->policy->active_price > 0) {
@@ -138,33 +138,81 @@ class ActiveMerchantController extends Controller
                     'user_id'           => $this->user->id,
                     'type'              => 1
                 ]);
-                
-				// 激活返现金额大于0时，增加用户余余额并添加分润记录
-				if ($this->policy->default_active > 0) {
-                    // 直推激活返现
-					$this->addUserBalance($this->user->id, $this->policy->default_active, 3);
-				}
+
+                // 操盘模式
+                $pattern = \App\AdminSetting::where('operate_number', $this->user->operate)->value('pattern');
+
+                // 直推激活返现
+                if ($pattern == 1) {
+                    // 联盟模式
+                    if ($this->policy->default_active > 0) {
+                        $this->addUserBalance($this->user->id, $this->policy->default_active, 3);
+                        $totalMoney += $this->policy->default_active;
+                    }
+                } else {
+                    // 工具模式
+                    $reMoney = $this->toolCashBack($this->user->id, $this->policy->id);
+                    $totalMoney += $reMoney;
+                }
 				
 				if ($this->user->parent > 0) {
 
                     // 间推激活返现
 					if ($this->policy->indirect_active > 0) {
 						$this->addUserBalance($this->user->parent, $this->policy->indirect_active, 4);
+                        $totalMoney += $this->policy->indirect_active;
 					}
 
                     // 间间推激活返现
                     $ppid = \App\User::where('id', $this->user->parent)->value('parent');
                     if ($ppid > 0 && $this->policy->in_indirect_active > 0) {
                         $this->addUserBalance($ppid, $this->policy->in_indirect_active, 5);
+                        $totalMoney += $this->policy->in_indirect_active;
                     }
 
 				}
 
-                $totalMoney = ($this->policy->default_active + $this->policy->indirect_active + $this->policy->in_indirect_active);
-
                 return array('status' => true, 'message' => '激活成功，返现' . $totalMoney . '元');
 			}
     	}
+    }
+
+    /**
+     * [工具模式直推激活返现]
+     * @param  [type] $userId   [用户id]
+     * @param  [type] $policyId [活动id]
+     * @return [type]           [description]
+     */
+    public function toolCashBack($userId, $policyId)
+    {
+        $totalMoney = 0;
+
+        $prevReturnMoney = 0;
+
+        while ($userId > 0) {
+
+            // 用户返现金额
+            $returnMoney = \App\UserPolicy::where('user_id', $userId)->where('policy_id', $policyId)->value('default_active_set');
+
+            // 未设置过用户的返现金额时，按默认激活返现金额处理
+            if (empty($returnMoney)) {
+                $defaultActive = json_decode($this->policy->default_active_set);
+                $returnMoney = $defaultActive->default_money * 100;
+            }
+
+            $money = ($returnMoney - $prevReturnMoney) / 100;
+
+            if ($money > 0) {
+                $this->addUserBalance($userId, $money, 3);
+
+                $totalMoney += $money;
+                $prevReturnMoney = $returnMoney;
+            }
+
+            $userId = \App\User::where('id', $userId)->value('parent');
+        }
+        
+        return $totalMoney;
     }
 
     /**
