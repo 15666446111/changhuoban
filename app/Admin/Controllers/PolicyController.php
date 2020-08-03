@@ -112,6 +112,15 @@ class PolicyController extends AdminController
     {
         $form = new Form(new Policy());
 
+        /**
+         * @version [<vector>] [< 修改Plug时 如果不是超级管理员 其他操盘方禁止修改不属于自己的信息>]
+         */
+        if(Admin::user()->operate != "All" && request()->route()->parameters()){
+            $avg = Policy::where('id', request()->route()->parameters()['policy'])->first();
+            if($avg->operate != Admin::user()->operate) return abort('403'); 
+        }
+
+
         $form->tab('基础信息配置', function ($form) {
 
             $form->text('title', __('活动标题'))->required();
@@ -132,7 +141,6 @@ class PolicyController extends AdminController
                 $form->currency('default_active', __('直推激活'))->default(0)->help('机器激活,机器归属人奖励');
             }
 
-
             $form->currency('indirect_active', __('间推激活'))->default(0)->help('机器激活,上级获得的间推奖励');
             $form->currency('in_indirect_active', __('间间推激活'))->default(0)->help('机器激活,上上级获得的间推奖励.');
 
@@ -146,8 +154,6 @@ class PolicyController extends AdminController
                 });
             }
 
-
-
             $form->select('short_id', __('短信模板'))->options(\App\AdminShort::where('operate', Admin::user()->operate)->where('status', 1)->get()->pluck('number', 'id'));
 
             $form->select('active_type', __('激活标准'))->options([1 => '冻结激活', 2 => '交易量激活'])
@@ -156,20 +162,6 @@ class PolicyController extends AdminController
             })->when(2,function (Form $form) { 
                 $form->currency('active_price', __('交易量激活金额'))->symbol('￥')->help('机器激活,需满足此交易量,才算激活');
             });
-            
-            // $form->fieldset('用户激活返现', function (Form $form) {
-            //     $form->embeds('default_active_set', '用户激活',function ($form) {
-            //         $form->number('return_money', '最高返现')->default(0)->rules('required')->help('(单位为分)');
-            //         $form->number('default_money', '默认返现')->default(0)->rules('required')->help('(单位为分)');
-            //     });
-            // });
-
-            // $form->fieldset('代理激活返现', function (Form $form) {
-            //     $form->embeds('vip_active_set', '代理激活',function ($form) {
-            //         $form->number('return_money', '最高返现')->default(0)->rules('required')->help('(单位为分)');
-            //         $form->number('default_money', '默认返现')->default(0)->rules('required')->help('(单位为分)');
-            //     });
-            // });
 
         })->tab('达标奖励设置', function ($form) {
 
