@@ -349,7 +349,7 @@ class PolicyController extends Controller
             #2. 获取本人的该活动组的配置信息
             $currActive = \App\UserPolicy::where('user_id', $request->user->id)->where('policy_id', $request->pid)->first();
 
-            $max = empty($currActive) ? $defaultSet['default_money'] : $currActive->default_active_set;
+            $max = empty($currActive) ? $defaultSet['default_money'] * 100 : $currActive->default_active_set;
 
             if($request->return_money >= 0 && $request->return_money <= $max){
                 $userActive->default_active_set = $request->return_money;
