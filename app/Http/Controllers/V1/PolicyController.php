@@ -176,7 +176,7 @@ class PolicyController extends Controller
      */
     public function setPrice(Request $request)
     {
-        /*try{*/
+        try{
             //return response()->json(['error'=>['message' => '缺少伙伴信息!', 'data' => json_encode($request->all())]]);
 
             if(!$request->uid) return response()->json(['error'=>['message' => '缺少伙伴信息!']]);
@@ -243,9 +243,9 @@ class PolicyController extends Controller
 
             return response()->json(['success'=>['message' => '设置成功!']]);
 
-        /*} catch (\Exception $e) {
+        } catch (\Exception $e) {
             return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
-        }*/
+        }
     }
 
 
@@ -287,9 +287,9 @@ class PolicyController extends Controller
             #2. 获取本人的该活动组的配置信息
             $currActive = \App\UserPolicy::where('user_id', $request->user->id)->where('policy_id', $request->pid)->first();
 
-            $price['active']['active_money']      = empty($userActive) ? $defaultSet['default_money'] : $userActive->default_active_set;
+            $price['active']['active_money']      = empty($userActive) ? $defaultSet['default_money'] * 100 : $userActive->default_active_set;
             $price['active']['active_money_min']  = 0;
-            $price['active']['active_money_max']  = empty($currActive) ? $defaultSet['default_money'] : $currActive->default_active_set;
+            $price['active']['active_money_max']  = empty($currActive) ? $defaultSet['default_money'] * 100 : $currActive->default_active_set;
 
             $price['policy'] = $policy->title;
 
@@ -352,7 +352,7 @@ class PolicyController extends Controller
             $max = empty($currActive) ? $defaultSet['default_money'] : $currActive->default_active_set;
 
             if($request->return_money >= 0 && $request->return_money <= $max){
-                $userActive->default_active_set = $request->return_money * 100;
+                $userActive->default_active_set = $request->return_money;
             }else{
                 return response()->json(['error'=>['message' => '激活返现设置不合法']]); 
             }
