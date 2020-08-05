@@ -412,7 +412,7 @@ class MerchantController extends Controller
 
 	public function setRate(Request $request)
 	{
-		// try{
+		try{
             
 			if (empty($request->code)) {
 				return response()->json(['error'=>['message' => '缺少必要参数:商户号']]);
@@ -420,7 +420,7 @@ class MerchantController extends Controller
 			if (!is_array($request->rate)) {
 				return response()->json(['error'=>['message' => '参数需为数组格式']]);
 			}
-
+			
 			// 只有工具版本才可以设置商户费率
             $setting = \App\AdminSetting::where('operate_number', $request->user->operate)->first();
             if(!$setting or empty($setting)) return response()->json(['error'=>['message' => '未找到操盘方信息']]); 
@@ -472,11 +472,12 @@ class MerchantController extends Controller
 					return response()->json(['error'=>['message' => '设置费率不在合理区间内']]);
 				}
 
-				$data[$groupRate->rate_types->type] = bcdiv($v['index'], 100000, 3);
+				$divisor = $groupRate->rate_types->is_top == 1 ? 100000 : 1000;
+				$data[$groupRate->rate_types->type] = bcdiv($v['default_rate'], $divisor, 3);
 
 			}
 
-			$reData = $pmpos->updateNonAudit($data);
+			$reData = json_decode( $pmpos->updateNonAudit($data) );
 
 			if ($reData->code == '00') {
 
@@ -491,11 +492,16 @@ class MerchantController extends Controller
 				]);
 
 				return response()->json(['success'=>['message' => '修改成功']]);
+
+			} else {
+
+				return response()->json(['error'=>['message' => $reData->message]]);
+
 			}
 
-  //       } catch (\Exception $e) {
-		// 	return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
-		// }
+        } catch (\Exception $e) {
+			return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
+		}
 	}
 	 
 }

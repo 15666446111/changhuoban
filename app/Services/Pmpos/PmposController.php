@@ -174,7 +174,8 @@ class PmposController extends Controller
 		$url = '/api/acq-channel-gateway/v1/acq-channel-service/merchant/fee/updateNonAudit';
 
 		$postData = [
-			'token' 			=> $token['data']['token'],
+			'token' 			=> $token,
+			'merchId' 			=> $this->merchId,
 			'cFeeRate' 			=> $param['cFeeRate'],
 			'dFeeRate' 			=> $param['dFeeRate'],
 			'dFeeMax' 			=> $param['dFeeMax'],
@@ -182,8 +183,8 @@ class PmposController extends Controller
 			'alipayFeeRate' 	=> $param['alipayFeeRate'],
 			'ycFreeFeeRate' 	=> $param['ycFreeFeeRate'],
 			'ydFreeFeeRate' 	=> $param['ydFreeFeeRate'],
-			'd0FeeRate' 		=> $param['d0FeeRate'],
-			'd0SingleCashDrawal'=> $param['d0SingleCashDrawal'],
+			// 'd0FeeRate' 		=> $param['d0FeeRate'],
+			// 'd0SingleCashDrawal'=> $param['d0SingleCashDrawal'],
 		];
 
 		$data = $this->send($url, $postData);
