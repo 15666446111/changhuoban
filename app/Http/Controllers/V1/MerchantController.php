@@ -314,6 +314,12 @@ class MerchantController extends Controller
 				return response()->json(['error'=>['message' => '商户信息有误，请重试']]);
 			}
 
+			// 只有工具版本才可以设置商户费率
+            $setting = \App\AdminSetting::where('operate_number', $request->user->operate)->first();
+            if(!$setting or empty($setting)) return response()->json(['error'=>['message' => '未找到操盘方信息']]); 
+
+            if($setting->pattern != '2') return response()->json(['error'=>['message' => '非工具版本不能设置']]);
+
 			// 机具信息
 			$machines = \App\Machine::where('merchant_id', $merInfo->id)->get();
 
@@ -386,6 +392,12 @@ class MerchantController extends Controller
 			if (is_array($request->rate)) {
 				return response()->json(['error'=>['message' => '参数需为数组格式']]);
 			}
+
+			// 只有工具版本才可以设置商户费率
+            $setting = \App\AdminSetting::where('operate_number', $request->user->operate)->first();
+            if(!$setting or empty($setting)) return response()->json(['error'=>['message' => '未找到操盘方信息']]); 
+
+            if($setting->pattern != '2') return response()->json(['error'=>['message' => '非工具版本不能设置']]); 
 
 			// 商户信息
 			$merInfo = \App\Merchant::where('code', $request->code)->first();
