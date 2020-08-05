@@ -481,7 +481,7 @@ class PolicyController extends Controller
             $arrs = array();
             $standard = $policy->default_standard_set;
             foreach ($standard as $key => $value) {
-                $max = empty($currStandard) ? $value['standard_price'] * 100 : $this->getUserStandardPrice($value['index'], $currStandard, $value),
+                $max = empty($currStandard) ? $value['standard_price'] * 100 : $this->getUserStandardPrice($value['index'], $currStandard, $value);
 
                 $min = 0;
                 $price = $this->getStandardPrice($value['index'], $request->standard);
