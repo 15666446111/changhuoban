@@ -459,20 +459,20 @@ class MerchantController extends Controller
 			$data = [];
 			foreach ($request->rate as $k => $v) {
 				
-				if (empty($v->index) || empty($v->default_rate)) {
+				if (empty($v['index']) || empty($v['default_rate'])) {
 					return response()->json(['error'=>['message' => '参数错误']]);
 				}
-				$groupRate = \App\PolicyGroupRate::where('policy_group_id', $policyGroupId)->where('rate_type_id', $v->index)->first();
+				$groupRate = \App\PolicyGroupRate::where('policy_group_id', $policyGroupId)->where('rate_type_id', $v['index'])->first();
 
 				if (!$groupRate || $groupRate->is_abjustable == 0) {
 					return response()->json(['error'=>['message' => '数据异常，请联系客服']]);
 				}
 
-				if ($v->default_rate > $groupRate->max_rate || $v->default_rate < $groupRate->min_rate) {
+				if ($v['default_rate'] > $groupRate->max_rate || $v['default_rate'] < $groupRate->min_rate) {
 					return response()->json(['error'=>['message' => '设置费率不在合理区间内']]);
 				}
 
-				$data[$groupRate->rate_types->type] = bcdiv($v->index, 100000, 3);
+				$data[$groupRate->rate_types->type] = bcdiv($v['index'], 100000, 3);
 
 			}
 
