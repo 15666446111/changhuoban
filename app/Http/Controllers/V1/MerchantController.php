@@ -346,10 +346,7 @@ class MerchantController extends Controller
 			}
 
 			// 需要返回的数据
-			$data = [
-				'policy_group_id'	=> $policyGroupId,
-				'rateList'			=> []
-			];
+			$data = [];
 
 			// 活动组对应的费率信息
 			$groupRate = \App\PolicyGroupRate::where('policy_group_id', $policyGroupId)
@@ -360,7 +357,7 @@ class MerchantController extends Controller
 				foreach ($rateData->data as $rateKey => $rateVal) {
 					
 					if ($rateKey == $v->rate_types->type) {
-						$data['rateList'][] = [
+						$data[] = [
 							'index'				=> $v->rate_type_id,
 							'title'				=> $v->rate_types->type_name,
 							'min_rate'			=> $v->min_rate,
