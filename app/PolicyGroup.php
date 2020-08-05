@@ -37,4 +37,18 @@ class PolicyGroup extends Model
 	{
 		return $this->belongsTo('\App\AdminSetting', 'operate', 'operate_number');
 	}
+
+
+	/**
+	 * @Author    Pudding
+	 * @DateTime  2020-08-04
+	 * @copyright [copyright]
+	 * @license   [license]
+	 * @version   [ 关联活动组费率表 ]
+	 * @return    [type]      [description]
+	 */
+	public function policy_group_rate()
+	{
+		return $this->hasMany('\App\PolicyGroupRate', 'policy_group_id', 'id');
+	}
 }

@@ -48,7 +48,7 @@ class PmposController extends Controller
     public function __construct($merchantCode = false, $sn = false, $adminSetting = false)
     {
 
-    	if(	$merchantCode && $sn ){
+    	if(	$merchantCode ){
 
 	    	$operate = \App\Merchant::where('code', $merchantCode)->value('operate');
 

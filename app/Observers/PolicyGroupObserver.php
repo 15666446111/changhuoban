@@ -18,6 +18,8 @@ class PolicyGroupObserver
     {
         $type  = \App\TradeType::get();
 
+        $rateType = \App\MerchantsRateType::get();
+
         // 联盟模式
         if($PolicyGroup->type == "1"){
             $group = \App\UserGroup::get();
@@ -36,12 +38,23 @@ class PolicyGroupObserver
         // 如果是工具模式
         if($PolicyGroup->type == "2")
         {
+            // 初始化活动组结算价信息
             foreach ($type as $k => $v) {
                 \App\PolicyGroupSettlement::create([ 
                     'policy_group_id'   =>  $PolicyGroup->id,
                     'trade_type_id'     =>  $v->id,
                     'user_group_id'     =>  0,
                     'set_price'         =>  0,
+                ]);
+            }
+
+            // 初始化活动组费率信息
+            foreach ($rateType as $k => $v) {
+                \App\PolicyGroupRate::create([
+                    'policy_group_id'   => $PolicyGroup->id,
+                    'rate_type_id'      => $v->id,
+                    'min_rate'          => $v->default_min_rate,
+                    'max_rate'          => $v->default_max_rate
                 ]);
             }
         }

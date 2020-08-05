@@ -5,6 +5,7 @@ namespace App\Http\Controllers\V1;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use \App\Services\Pmpos\PmposController;
 
 class MerchantController extends Controller
 {
@@ -269,9 +270,6 @@ class MerchantController extends Controller
 	}
 	
 
-
-	
-
 	/**
 	 * @Author    Pudding
 	 * @DateTime  2020-06-07
@@ -301,6 +299,84 @@ class MerchantController extends Controller
 
     	return response()->json(['success'=>['message' => '获取成功', 'data' =>$ActiveInfo ]]);
 
+	}
+
+	/**
+	 * [获取商户费率]
+	 * @param Request $request [description]
+	 */
+	public function MerchantsRate(Request $request)
+	{
+		try{
+            
+			$merInfo = \App\Merchant::where('code', $request->code)->first();
+			if ($merInfo->user_id != $request->user->id) {
+				return response()->json(['error'=>['message' => '商户信息有误，请重试']]);
+			}
+
+			// 活动组id
+			$policyGroupId = 0;
+
+			// 检查商户活动组信息
+			$policyGroupArr = [];
+			$machines = \App\Machine::where('merchant_id', $merInfo->id)->get();
+
+			foreach ($machines as $k => $v) {
+				$policyGroupArr[$v->policys->policy_group_id] = $v->policys->policy_group_id;
+				$policyGroupId = $v->policys->policy_group_id;
+			}
+
+			if (count($policyGroupArr) != 1) {
+				return response()->json(['error'=>['message' => '商户活动组信息有误，请联系客服']]);
+			}
+
+			// 实例化3.0接口类
+			$pmpos = new PmposController($request->code, '');
+
+			// 查询商户费率
+			$rateData = json_decode( $pmpos->getMerchantFee() );
+
+			if ($rateData->code !== '00') {
+				return response()->json(['error'=>['message' => $rateData->message]]);
+			}
+
+			$groupRate = \App\PolicyGroupRate::where('policy_group_id', $policyGroupId)
+							->where('is_abjustable', 1)->get();
+
+			$data = [
+				'policy_group_id'	=> $policyGroupId,
+				'rateList'			=> []
+			];
+			foreach ($groupRate as $k => $v) {
+				
+				foreach ($rateData->data as $rateKey => $rateVal) {
+					
+					if ($rateKey == $v->rate_types->type) {
+						$data['rateList'][] = [
+							'index'				=> $v->rate_type_id,
+							'title'				=> $v->rate_types->type_name,
+							'min_rate'			=> $v->min_rate,
+							'max_rate'			=> $v->max_rate,
+							'is_top'			=> $v->rate_types->is_top,
+							'default_rate'		=> $rateVal * 1000
+						];
+						break;
+					}
+
+				}
+
+			}
+
+			return response()->json(['success'=>['data' => $data]]);
+
+        } catch (\Exception $e) {
+			return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
+		}
+	}
+
+	public function setRate(Request $request)
+	{
+		
 	}
 	 
 }
