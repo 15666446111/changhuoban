@@ -376,7 +376,9 @@ class MerchantController extends Controller
 
 	public function setRate(Request $request)
 	{
-		
+		// if ($request->) {
+		// 	# code...
+		// }
 	}
 	 
 }
