@@ -498,7 +498,7 @@ class PolicyController extends Controller
                 );
             }
 
-            $userStandard->standard = $arrs
+            $userStandard->standard = $arrs;
 
             $userStandard->save();
 
