@@ -86,6 +86,7 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/getMerchantInfo',  'V1\MerchantController@merchantInfo');     // 首页 - 商户管理 - 商户详情
     Route::middleware('AuthToken')->get('/getMerchantDetails','V1\MerchantController@MerchantDetails'); // 首页 - 商户管理 - 交易明细
     Route::middleware('AuthToken')->get('/getMerchantsRate','V1\MerchantController@MerchantsRate'); // 首页 - 商户管理 - 获取商户费率
+    Route::middleware('AuthToken')->get('/setMerchantsRate','V1\MerchantController@setRate'); // 首页 - 商户管理 - 修改商户费率
 
     /**
      * @author  [Pudding]  [<755969423@qq.com>]

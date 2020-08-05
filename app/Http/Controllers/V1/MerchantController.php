@@ -314,12 +314,13 @@ class MerchantController extends Controller
 				return response()->json(['error'=>['message' => '商户信息有误，请重试']]);
 			}
 
+			// 机具信息
+			$machines = \App\Machine::where('merchant_id', $merInfo->id)->get();
+
 			// 活动组id
 			$policyGroupId = 0;
-
 			// 检查商户活动组信息
 			$policyGroupArr = [];
-			$machines = \App\Machine::where('merchant_id', $merInfo->id)->get();
 
 			foreach ($machines as $k => $v) {
 				$policyGroupArr[$v->policys->policy_group_id] = $v->policys->policy_group_id;
@@ -330,23 +331,24 @@ class MerchantController extends Controller
 				return response()->json(['error'=>['message' => '商户活动组信息有误，请联系客服']]);
 			}
 
-			// 实例化3.0接口类
-			$pmpos = new PmposController($request->code, '');
-
 			// 查询商户费率
+			$pmpos = new PmposController($request->code, '');
 			$rateData = json_decode( $pmpos->getMerchantFee() );
 
 			if ($rateData->code !== '00') {
 				return response()->json(['error'=>['message' => $rateData->message]]);
 			}
 
-			$groupRate = \App\PolicyGroupRate::where('policy_group_id', $policyGroupId)
-							->where('is_abjustable', 1)->get();
-
+			// 需要返回的数据
 			$data = [
 				'policy_group_id'	=> $policyGroupId,
 				'rateList'			=> []
 			];
+
+			// 活动组对应的费率信息
+			$groupRate = \App\PolicyGroupRate::where('policy_group_id', $policyGroupId)
+							->where('is_abjustable', 1)->get();
+
 			foreach ($groupRate as $k => $v) {
 				
 				foreach ($rateData->data as $rateKey => $rateVal) {
@@ -376,9 +378,84 @@ class MerchantController extends Controller
 
 	public function setRate(Request $request)
 	{
-		// if ($request->) {
-		// 	# code...
-		// }
+		try{
+            
+			if (empty($request->code)) {
+				return response()->json(['error'=>['message' => '缺少必要参数:商户号']]);
+			}
+			if (is_array($request->rate)) {
+				return response()->json(['error'=>['message' => '参数需为数组格式']]);
+			}
+
+			// 商户信息
+			$merInfo = \App\Merchant::where('code', $request->code)->first();
+			// 机具信息
+			$machines = \App\Machine::where('merchant_id', $merInfo->id)->get();
+
+			if ($merInfo->user_id != $request->user->id) {
+				return response()->json(['error'=>['message' => '商户信息有误，请重试']]);
+			}
+
+			## 检查商户活动组信息
+			$policyGroupArr = [];
+			foreach ($machines as $k => $v) {
+				$policyGroupArr[$v->policys->policy_group_id] = $v->policys->policy_group_id;
+				$policyGroupId = $v->policys->policy_group_id;
+			}
+
+			if (count($policyGroupArr) != 1) {
+				return response()->json(['error'=>['message' => '商户活动组信息有误，请联系客服']]);
+			}
+
+			// 查询商户费率
+			$pmpos = new PmposController($request->code, '');
+			$rateData = json_decode( $pmpos->getMerchantFee() );
+
+			if ($rateData->code !== '00') {
+				return response()->json(['error'=>['message' => $rateData->message]]);
+			}
+
+			## 整理需要修改的费率信息
+			$data = [];
+			foreach ($request->rate as $k => $v) {
+				
+				if (empty($v->index) || empty($v->default_rate)) {
+					return response()->json(['error'=>['message' => '参数错误']]);
+				}
+				$groupRate = \App\PolicyGroupRate::where('policy_group_id', $policyGroupId)->where('rate_type_id', $v->index)->first();
+
+				if (!$groupRate || $groupRate->is_abjustable == 0) {
+					return response()->json(['error'=>['message' => '数据异常，请联系客服']]);
+				}
+
+				if ($v->default_rate > $groupRate->max_rate || $v->default_rate < $groupRate->min_rate) {
+					return response()->json(['error'=>['message' => '设置费率不在合理区间内']]);
+				}
+
+				$data[$groupRate->rate_types->type] = bcdiv($v->index, 100000, 3);
+
+			}
+
+			$reData = $pmpos->updateNonAudit($data);
+
+			if ($reData->code == '00') {
+
+				$newRateData = json_decode( $pmpos->getMerchantFee() );
+				\App\MerchantsRateLog::create([
+					'merchant_code'		=> $request->code,
+					'policy_group_id'	=> $policyGroupId,
+					'original_rate'		=> json_encode( $rateData->data ),
+					'adjust_rate'		=> $newRateData->code == '00' ? json_encode($newRateData->data) : '',
+					'adjust_user_id'	=> $request->user->id,
+					'operate'			=> $request->user->operate
+				]);
+
+				return response()->json(['success'=>['message' => '修改成功']]);
+			}
+
+        } catch (\Exception $e) {
+			return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
+		}
 	}
 	 
 }
