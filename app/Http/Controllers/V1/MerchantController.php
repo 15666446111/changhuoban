@@ -412,7 +412,7 @@ class MerchantController extends Controller
 
 	public function setRate(Request $request)
 	{
-		try{
+		// try{
             
 			if (empty($request->code)) {
 				return response()->json(['error'=>['message' => '缺少必要参数:商户号']]);
@@ -493,9 +493,9 @@ class MerchantController extends Controller
 				return response()->json(['success'=>['message' => '修改成功']]);
 			}
 
-        } catch (\Exception $e) {
-			return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
-		}
+  //       } catch (\Exception $e) {
+		// 	return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
+		// }
 	}
 	 
 }
