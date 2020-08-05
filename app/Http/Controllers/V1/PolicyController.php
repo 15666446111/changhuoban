@@ -372,6 +372,93 @@ class PolicyController extends Controller
 
     /**
      * @Author    Pudding
+     * @DateTime  2020-08-05
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 首页 - 伙伴管理 - 获取激活返现 ]
+     * @param     Request     $request [description]
+     * @return    [type]               [description]
+     */
+    public function getStandard(Request $request)
+    {
+        try{
+            if(!$request->uid) return response()->json(['error'=>['message' => '缺少伙伴信息!']]);
+            if(!$request->pid) return response()->json(['error'=>['message' => '请选择活动政策信息!']]);
+
+            $user = \App\User::where('id', $request->uid)->first();
+            if(!$user or empty($user)) return response()->json(['error'=>['message' => '找不到伙伴信息!']]);
+
+            if($user->operate != $request->user->operate)  return response()->json(['error'=>['message' => '无权限!']]);
+            if($user->parent != $request->user->id ) return response()->json(['error'=>['message' => '只能查询直接下级的信息!']]);
+
+            $policy = \App\Policy::where('id', $request->pid)->first();
+            if(!$policy or empty($policy)) return response()->json(['error'=>['message' => '活动政策不存在!']]);
+            $defaultSet = json_decode($policy->default_active_set, true);
+            
+            // 只有工具版本才可以获取激活返现
+            $setting = \App\AdminSetting::where('operate_number', $request->user->operate)->first();
+            if(!$setting or empty($setting)) return response()->json(['error'=>['message' => '未找到操盘方信息']]); 
+            if($setting->pattern != '2') return response()->json(['error'=>['message' => '非工具版本不能设置']]); 
+
+            // 是工具版， 获取当前会员在当前活动的激活返现
+            $price = array();
+            #1. 首先获取当前会员在这活动组的达标奖励
+            $userStandard = \App\UserPolicy::where('user_id', $request->uid)->where('policy_id', $request->pid)->first();
+            #2. 获取本人的该活动组的配置信息
+            $currStandard = \App\UserPolicy::where('user_id', $request->user->id)->where('policy_id', $request->pid)->first();
+
+            $standard = $policy->default_standard_set;
+            
+            foreach ($standard as $key => $value) {
+                $price[] = array(
+                    'index' =>  $value['index'],
+                    'standard_type' => $value['standard_type'] == 1 ? '连续达标' : '累积达标',
+                    'standard_start'=> $value['standard_start'],
+                    'standard_end'  => $value['standard_end'],
+                    'standard_trade'=> $value['standard_trade'] * 100,
+                    'standard_price'=> empty($userStandard) ? $value['standard_price'] * 100 : $this->getUserStandardPrice($value['index'], $userStandard, $value),
+                    'min'           => 0,
+                    'max'           => empty($currStandard) ? $value['standard_price'] * 100 : $this->getUserStandardPrice($value['index'], $currStandard, $value),
+                );
+                # code...
+            }
+            
+            return response()->json(['success'=>['message' => '获取成功!', 'data' => $price]]);
+
+        } catch (\Exception $e) {
+            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
+        }
+    }
+
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-08-05
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 获取用户的某项达标返现金额 ]
+     * @param     [type]      $index      [description]
+     * @param     [type]      $userPolicy [description]
+     * @return    [type]                  [description]
+     */
+    public function getUserStandardPrice($index, $userPolicy, $value)
+    {
+        $price = 0;
+
+        $standard = $userPolicy->standard;
+
+        foreach ($standard as $key => $v) {
+            if($v['index'] == $index){
+                $price = $v['standard_price'] * 100;
+                break;
+            }
+        }
+
+        return $price == 0 ? $value['standard_price'] * 100 : $price;
+    }
+
+    /**
+     * @Author    Pudding
      * @DateTime  2020-07-31
      * @copyright [copyright]
      * @license   [license]

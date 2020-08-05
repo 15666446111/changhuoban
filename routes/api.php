@@ -175,10 +175,9 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/userPolicy',      'V1\PolicyController@getPolicyList');       // 首页 - 伙伴管理 - 获取活动列表
     Route::middleware('AuthToken')->get('/userPrice',       'V1\PolicyController@getPrice');            // 首页 - 伙伴管理 - 获取结算价
     Route::middleware('AuthToken')->post('/setUserPrice',   'V1\PolicyController@setPrice');            // 首页 - 伙伴管理 - 设置结算价
-
     Route::middleware('AuthToken')->get('/getUserActive',   'V1\PolicyController@getActive');           // 首页 - 伙伴管理 - 获取激活返现
     Route::middleware('AuthToken')->post('/setUserActive',  'V1\PolicyController@setActive');           // 首页 - 伙伴管理 - 设置激活返现
-
+    Route::middleware('AuthToken')->get('/getUserStandard', 'V1\PolicyController@getStandard');         // 首页 - 伙伴管理 - 获取达标奖励
 
     /**
      * @version [<APP 提现记录>] [<description>]
