@@ -476,17 +476,31 @@ class PolicyController extends Controller
             }
 
             #2. 获取本人的该活动组的配置信息
-            $currActive = \App\UserPolicy::where('user_id', $request->user->id)->where('policy_id', $request->pid)->first();
+            $currStandard = \App\UserPolicy::where('user_id', $request->user->id)->where('policy_id', $request->pid)->first();
 
-            $max = empty($currActive) ? $defaultSet['default_money'] * 100 : $currActive->default_active_set;
+            $arrs = array();
+            $standard = $policy->default_standard_set;
+            foreach ($standard as $key => $value) {
+                $max = empty($currStandard) ? $value['standard_price'] * 100 : $this->getUserStandardPrice($value['index'], $currStandard, $value),
 
-            if($request->return_money >= 0 && $request->return_money <= $max){
-                $userActive->default_active_set = $request->return_money;
-            }else{
-                return response()->json(['error'=>['message' => '激活返现设置不合法']]); 
+                $min = 0;
+                $price = $this->getStandardPrice($value['index'], $request->standard);
+                if($price < $min or $price > $max){
+                    return response()->json(['error'=>['message' => '达标返现设置不合法']]);
+                }
+                $arrs[] = array(
+                    'index'             => $value['index'],
+                    'standard_type'     => $value['standard_type'],
+                    'standard_start'    => $value['standard_start'],
+                    'standard_end'      => $value['standard_end'],
+                    'standard_trade'    => $value['standard_trade'] / 100,
+                    'standard_price'    => $price / 100,
+                );
             }
 
-            $userActive->save();
+            $userStandard->standard = $arrs
+
+            $userStandard->save();
 
             return response()->json(['success'=>['message' => '设置成功!']]);
 
@@ -495,6 +509,29 @@ class PolicyController extends Controller
         }
     }
 
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-08-05
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 获取设置的达标返现 ]
+     * @param     [type]      $index [description]
+     * @param     [type]      $param [description]
+     * @return    [type]             [description]
+     */
+    public function getStandardPrice($index, $param)
+    {
+        $price = 0;
+
+        foreach ($param as $key => $value) {
+            if($value['index'] == $index){
+                $price = $value['standard_price'];
+                break;
+            }
+        }
+        return $price;
+    }
 
 
     /**
