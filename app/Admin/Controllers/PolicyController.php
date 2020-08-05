@@ -177,11 +177,7 @@ class PolicyController extends AdminController
 
                 $table->currency('standard_trade', '满足交易')->default(0);
 
-                $table->currency('standard_agent_price', '代理奖励')->default(0);
-
                 $table->currency('standard_price', '本人奖励')->default(0);
-
-                $table->currency('standard_parent_price', '上级奖励')->default(0);
 
             });
 
