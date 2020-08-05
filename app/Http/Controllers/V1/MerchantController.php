@@ -353,6 +353,37 @@ class MerchantController extends Controller
 							->where('is_abjustable', 1)->get();
 
 			foreach ($groupRate as $k => $v) {
+
+				// 最小可设置费率
+				$minRate = $v->min_rate;
+
+				if (!empty($v->rate_types->trade_type_id)) {
+
+					// 根据用户id、交易类型id、、活动组id获取用户结算价
+					$userFeeInfo = \App\UserFee::where('user_id', $request->user->id)
+									->where('policy_group_id', $policyGroupId)->first();
+					
+					if (empty($userFeeInfo)) {
+
+						// 未设置用户结算价时，获取活动组默认结算价
+						$userSettle = \App\PolicyGroupSettlement::where('policy_group_id', $policyGroupId)
+							->where('trade_type_id', $v->rate_types->trade_type_id)->value('default_price');
+
+					} else {
+
+						$price = json_decode($userFeeInfo->price);
+						foreach ($price as $pk => $pv) {
+							if ($pv->index == $v->rate_types->trade_type_id) {
+								$userSettle = $pv->price;
+							}
+						}
+
+					}
+
+					$minRate = max($v->min_rate, $userSettle);
+				}
+				
+
 				
 				foreach ($rateData->data as $rateKey => $rateVal) {
 					
@@ -360,7 +391,7 @@ class MerchantController extends Controller
 						$data[] = [
 							'index'				=> $v->rate_type_id,
 							'title'				=> $v->rate_types->type_name,
-							'min_rate'			=> $v->min_rate,
+							'min_rate'			=> $minRate,
 							'max_rate'			=> $v->max_rate,
 							'is_top'			=> $v->rate_types->is_top,
 							'default_rate'		=> $rateVal * 1000
@@ -386,7 +417,7 @@ class MerchantController extends Controller
 			if (empty($request->code)) {
 				return response()->json(['error'=>['message' => '缺少必要参数:商户号']]);
 			}
-			if (is_array($request->rate)) {
+			if (!is_array($request->rate)) {
 				return response()->json(['error'=>['message' => '参数需为数组格式']]);
 			}
 

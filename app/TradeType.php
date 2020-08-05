@@ -18,6 +18,17 @@ class TradeType extends Model
         return $this->HasMany('\App\PolicyGroupSettlement', 'trade_type_id', 'id');
     }
 
+    /**
+     * [rate_types  关联商户费率类型表]
+     * @author Pudding
+     * @DateTime 2020-08-05
+     * @return   [type]                   [description]
+     */
+    public function rate_types()
+    {
+        return $this->HasMany('\App\MerchantsRateType', 'trade_type_id', 'id');
+    }
+
     // 设置交易标识
     public function getTradeTypeAttribute($value)
     {
