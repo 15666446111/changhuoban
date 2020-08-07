@@ -108,4 +108,17 @@ class Machine extends Model
         return $this->hasMany('\App\MerchantsFrozenLog', 'sn', 'sn');
     }
 
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-08-06
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [关联达标记录表]
+     * @return    [type]      [description]
+     */
+    public function standard_logs()
+    {
+        return $this->hasMany('\App\MerchantsStandard', 'sn', 'sn');
+    }
+
 }

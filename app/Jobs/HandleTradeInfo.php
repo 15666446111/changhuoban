@@ -256,5 +256,24 @@ class HandleTradeInfo implements ShouldQueue
             $this->trade->remark = $this->trade->remark."<br/>激活:".json_encode($e->getMessage());
             $this->trade->save();
         }
+
+        /**
+         * @version [< 达标返现处理 >]
+         */
+        try {
+            $standard = new \App\Http\Controllers\StandardController($this->trade);
+
+            $standardCash = $standard->standard();
+
+            if (!empty($standardCash['message'])) {
+                $this->trade->remark = $this->trade->remark."<br/>达标:".$standardCash['message'];
+            }
+
+            $this->trade->save();
+
+        } catch (\Exception $e) {
+            $this->trade->remark = $this->trade->remark."<br/>达标:".json_encode($e->getMessage());
+            $this->trade->save();
+        }
     }
 }

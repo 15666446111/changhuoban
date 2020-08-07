@@ -354,36 +354,18 @@ class MerchantController extends Controller
 
 			foreach ($groupRate as $k => $v) {
 
-				// 最小可设置费率
+				## 最小可设置费率：不低于活动组设置的最低可设置费率，不低于用户对应的结算价
+				#  最小可设置费率
 				$minRate = $v->min_rate;
 
 				if (!empty($v->rate_types->trade_type_id)) {
 
-					// 根据用户id、交易类型id、、活动组id获取用户结算价
-					$userFeeInfo = \App\UserFee::where('user_id', $request->user->id)
-									->where('policy_group_id', $policyGroupId)->first();
-					
-					if (empty($userFeeInfo)) {
-
-						// 未设置用户结算价时，获取活动组默认结算价
-						$userSettle = \App\PolicyGroupSettlement::where('policy_group_id', $policyGroupId)
-							->where('trade_type_id', $v->rate_types->trade_type_id)->value('default_price');
-
-					} else {
-
-						$price = json_decode($userFeeInfo->price);
-						foreach ($price as $pk => $pv) {
-							if ($pv->index == $v->rate_types->trade_type_id) {
-								$userSettle = $pv->price;
-							}
-						}
-
-					}
+					// 查询用户当前费率对应交易类型的结算价
+					$userSettle = $this->getToolUserSettle($request->user->id, $policyGroupId, $v->rate_types->trade_type_id);
 
 					$minRate = max($v->min_rate, $userSettle);
 				}
 				
-
 				
 				foreach ($rateData->data as $rateKey => $rateVal) {
 					
@@ -410,6 +392,10 @@ class MerchantController extends Controller
 		}
 	}
 
+	/**
+	 * [ 修改商户费率 ]
+	 * @param Request $request [description]
+	 */
 	public function setRate(Request $request)
 	{
 		try{
@@ -462,13 +448,26 @@ class MerchantController extends Controller
 				if (empty($v['index']) || empty($v['default_rate'])) {
 					return response()->json(['error'=>['message' => '参数错误']]);
 				}
+
+				// 活动组费率设置信息
 				$groupRate = \App\PolicyGroupRate::where('policy_group_id', $policyGroupId)->where('rate_type_id', $v['index'])->first();
 
 				if (!$groupRate || $groupRate->is_abjustable == 0) {
 					return response()->json(['error'=>['message' => '数据异常，请联系客服']]);
 				}
 
-				if ($v['default_rate'] > $groupRate->max_rate || $v['default_rate'] < $groupRate->min_rate) {
+				## 最小可设置费率：不低于活动组设置的最低可设置费率，不低于用户对应的结算价
+				#  最小可设置费率
+				$minRate = $groupRate->min_rate;
+
+				if (!empty($groupRate->rate_types->trade_type_id)) {
+					// 查询用户当前费率对应交易类型的结算价
+					$userSettle = $this->getToolUserSettle($request->user->id, $policyGroupId, $groupRate->rate_types->trade_type_id);
+
+					$minRate = max($groupRate->min_rate, $userSettle);
+				}
+				
+				if ($v['default_rate'] > $groupRate->max_rate || $v['default_rate'] < $minRate) {
 					return response()->json(['error'=>['message' => '设置费率不在合理区间内']]);
 				}
 
@@ -503,5 +502,38 @@ class MerchantController extends Controller
 			return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
 		}
 	}
-	 
+	
+	/**
+	 * [ 获取用户结算价（工具模式）]
+     * @param  integer $userId        [用户id]
+     * @param  integer $policyGroupId [活动组id]
+     * @param  integer $tradeTypeId   [交易类型id]
+	 * @return [type]                 [description]
+	 */
+	public function getToolUserSettle($userId=0, $policyGroupId=0, $tradeTypeId=0)
+	{
+		$userSettle = 0;
+
+        // 用户结算价
+        $settleStr = \App\UserFee::where('user_id', $userId)
+                                ->where('policy_group_id', $policyGroupId)
+                                ->value('price');
+
+        if (empty($settleStr)) {
+
+            // 用户没有设置结算价时，获取默认结算价
+            $userSettle = \App\PolicyGroupSettlement::where('policy_group_id', $policyGroupId)
+                                                    ->where('trade_type_id', $tradeTypeId)
+                                                    ->value('default_price');
+
+        } else {
+
+            foreach (json_decode($settleStr) as $k => $v) {
+                if ($v->index == $tradeTypeId) $userSettle = $v->price;
+            }
+
+        }
+
+        return $userSettle;
+	}
 }
