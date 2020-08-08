@@ -13,6 +13,11 @@ use App\Services\Pmpos\PmposController;
  */
 class CrontabController extends Controller
 {
+	/**
+	 * [$tradeOrder 交易记录订单号]
+	 * @var [type]
+	 */
+	protected $tradeOrder;
 	
 	/**
 	 * [froMachineActive 冻结机器激活方法]
@@ -66,6 +71,27 @@ class CrontabController extends Controller
 							'user_id'			=> $v->user_id,
 							'type'				=> 1
 						]);
+
+						// 添加一条虚拟交易订单，只做交易记录的sn和商户号匹配
+						$yCode = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'H', 'I');
+
+            			$order_no = $yCode[intval(date('Y')) - 2011] . strtoupper(dechex(date('m'))) . date('d') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));
+
+						$tradeInfo = \App\Trade::create([
+							'trade_no'			=> $order_no,
+							'user_id'			=> $v->user_id,
+							'machine_id'		=> $v->id,
+							'is_send'			=> 1,
+							'sn'				=> $v->sn,
+							'merchant_code'		=> $v->merchants->code,
+							'trans_date'		=> date('Ymd'),
+							'trade_time'		=> Carbon::now()->toDateTimeString(),
+							'remark'			=> '激活数据虚拟记录',
+							'operate'			=> $v->operate,
+							'sys_resp_code'		=> '',
+							'sys_resp_desc'		=> '',
+						]);
+						$this->tradeOrder = $tradeInfo->trade_no;
 
 						// 操盘模式
 	                    $pattern = \App\AdminSetting::where('operate_number', $v->operate)->value('pattern');
@@ -239,7 +265,8 @@ class CrontabController extends Controller
      * [addUserBalance 增加用户余额 分润余额 分润记录]
      * @param [type]  $userId [用户id]
      * @param [type]  $money  [分润金额(元)]
-     * @param integer $type   [类型，3激活返现(直营)，4激活返现(间推)，5激活返现(间间推)]
+     * @param [type]  $type   [类型，3激活返现(直营)，4激活返现(间推)，5激活返现(间间推)]
+     * @param [type]  $operate [操盘号]
      */
     public function addUserBalance($userId, $money, $type, $operate)
     {
@@ -250,7 +277,8 @@ class CrontabController extends Controller
     		'cash_money'	=> $money * 100,
     		'is_run'		=> 0,
     		'cash_type'		=> $type,
-    		'operate'		=> $operate
+    		'operate'		=> $operate,
+    		'order'			=> $this->tradeOrder
     	]);
     	// 增加用户余额
     	\App\UserWallet::where('user_id', $userId)->increment('return_blance', $money * 100);
