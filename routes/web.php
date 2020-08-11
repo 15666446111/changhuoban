@@ -112,3 +112,7 @@ Route::get('/download_moneylog', function(){
 	return Storage::download('public/分润信息0625_0701.csv');
 });
 
+
+// 原3.0数据迁移
+Route::get('/data_moving', 	'Datamoving\IndexController@index');
+
