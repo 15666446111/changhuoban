@@ -23,7 +23,7 @@ class MoneyLog extends Model
      */
     public function users()
     {
-        return $this->belongsTo('App\Model1\User', 'user_id', 'id');
+        return $this->belongsTo('App\Model1\UserInfo', 'user_id', 'id');
     }
 
 
