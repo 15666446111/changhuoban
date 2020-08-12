@@ -21,7 +21,7 @@ class MoneyLog extends Model
      * @version   [version]
      * @return    [type]      [description]
      */
-    public function user_rela()
+    public function users()
     {
         return $this->belongsTo('\App\Model1\User', 'user_id', 'id');
     }

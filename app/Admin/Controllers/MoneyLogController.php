@@ -29,11 +29,6 @@ class MoneyLogController extends AdminController
     {
         $grid = new Grid(new MoneyLog());
 
-
-        $m  = MoneyLog::first();
-
-        dd($m->user_rela);
-
         $grid->model()->orderBy('add_time', 'desc');
 
         $grid->column('id', __('索引'));
@@ -41,7 +36,7 @@ class MoneyLogController extends AdminController
         $grid->column('users.user_nickname', __('用户昵称'));
 
         $grid->column('users.mobile', __('用户账号'));
-/*
+
         $grid->column('userAgents.agent_id', __('操盘方'))->display(function($agent){
 
             return $agent == "0" ? '平台直属' : \App\Model1\User::where('id', $agent)->value('user_nickname');
@@ -171,7 +166,7 @@ class MoneyLogController extends AdminController
                 $filter->equal('userAgents.agent_id', '操盘方')->select($data);
 
             });
-        });*/
+        });
 
         return $grid;
     }
