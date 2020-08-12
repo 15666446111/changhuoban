@@ -31,6 +31,15 @@ class MoneyLogController extends AdminController
 
         $grid->model()->orderBy('add_time', 'desc');
 
+        /*if(request()->userAgents && request()->userAgents['agent_id'] == '8089'){
+
+            $uid = \App\Model1\UserAgent::distinct('user_id')->pluck('user_id')->toArray();
+
+            //dd( $uid );
+            $grid->model()->whereNotIn('user_id', $uid);
+        }*/
+
+
         $grid->column('id', __('索引'));
 
         $grid->column('users.user_nickname', __('用户昵称'));
@@ -39,7 +48,7 @@ class MoneyLogController extends AdminController
 
         $grid->column('userAgents.agent_id', __('操盘方'))->display(function($agent){
 
-            return $agent == "0" ? '平台直属' : \App\Model1\UserInfo::where('id', $agent)->value('user_nickname');
+            return $agent == "8089" ? '平台直属' : \App\Model1\UserInfo::where('id', $agent)->value('user_nickname');
         
         });
 
@@ -162,8 +171,24 @@ class MoneyLogController extends AdminController
                 $user = \App\Model1\UserAgent::distinct('agent_id')->pluck('agent_id')->toArray();
 
                 $data = \App\Model1\UserInfo::whereIn('id', $user)->pluck('user_nickname', 'id')->toArray();
+
+                $filter->where(function ($query) {
+                    switch ($this->input) {
+                        case '8089':
+                            $uid = \App\Model1\UserAgent::distinct('user_id')->pluck('user_id')->toArray();
+                            $query->whereNotIn('user_id', $uid);
+                            break;
+                        default:
+                            $uid = \App\Model1\UserAgent::where('agent_id', $this->input)->distinct('user_id')->pluck('user_id')->toArray();
+
+                            $query->whereIn('user_id', $uid);
+                            break;
+                    }
+                }, '操盘方')->select($data);
+
                 
-                $filter->equal('userAgents.agent_id', '操盘方')->select($data);
+                //dd($data);
+                //$filter->equal('userAgents.agent_id', '操盘方')->select($data);
 
             });
         });
