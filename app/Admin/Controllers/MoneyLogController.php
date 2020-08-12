@@ -57,7 +57,7 @@ class MoneyLogController extends AdminController
 
         $grid->column('team', __('团队'));
 
-        $grid->column('is_run', __('描述'))->using(['0' => '返现', '1' => '分润'])->dot(['0' => 'primary', '1' => 'success']);
+        $grid->column('is_run', __('描述'))->using(['0' => '返现', '1' => '分润']);
 
         $grid->column('brands.name', __('品牌'));
 

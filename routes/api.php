@@ -68,8 +68,6 @@ Route::prefix('V1')->group(function () {
     Route::middleware('AuthToken')->get('/getTransferLog', 'V1\TransferController@transferLog');// 首页 - 机具管理 - 调拨记录页面
 
 
-    
-
     /**
      * @author  [Pudding]  [<755969423@qq.com>]
      * @version [< 首页 - 商户登记 >]
