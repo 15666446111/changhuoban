@@ -84,7 +84,7 @@ return [
             ]) : [],
         ],
 
-        // 3.0系统数据库
+        // 原3.0系统数据库
         'mysql_3' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
@@ -93,6 +93,27 @@ return [
             'database' => 'chbgj',
             'username' => 'chbgj',
             'password' => 'gj123456',
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => 'pos_',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
+        // 3.0系统数据迁移关联表
+        'mysql_moving' => [
+            'driver' => 'mysql',
+            'url' => env('DATABASE_URL'),
+            'host' => '127.0.0.1',
+            'port' => env('DB_PORT', '3306'),
+            'database' => 'chb_moving',
+            'username' => 'root',
+            'password' => 'root',
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',

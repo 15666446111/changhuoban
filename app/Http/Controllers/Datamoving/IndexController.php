@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Datamoving;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
+use DB;
+use Hash;
+use Session;
 
 class IndexController extends Controller
 {
@@ -14,7 +15,13 @@ class IndexController extends Controller
 	// public $agentIds = [538, 893];
 	public $agentIds = [538];
 
+    // 交易记录表名称
 	public $tradeTable;
+
+    // 原3.0数据库
+    public $databaseOld;
+
+    public $databaseMoving;
 
 	public function __construct()
 	{
@@ -22,6 +29,9 @@ class IndexController extends Controller
 			538 => 'trade_data_qzah',
 			893	=> 'trade_data_qzhy'
 		];
+
+        $databaseOld    = Db::connection('mysql_3');
+        $databaseMoving = Db::connection('mysql_moving');
 	}
 
     public function index()
@@ -40,13 +50,13 @@ class IndexController extends Controller
     public function adminUsers($agentId=0)
     {
     	// 原3.0操盘方用户信息
-    	$agentInfoOld = Db::connection('mysql_3')->table('user')->where('id', $agentId)->first();
+    	$agentInfoOld = $databaseOld->table('user')->where('id', $agentId)->first();
 
     	// 原3.0操盘方设置信息
-    	$roleUserInfoOld = Db::connection('mysql_3')->table('role_user')->where('id', $agentId)->first();
+    	$roleUserInfoOld = $databaseOld->table('role_user')->where('user_id', $agentId)->first();
 
     	// 原3.0操盘方商户注册链接
-    	$merchantRegisterOld = Db::connection('mysql_3')->table('agen_img')->where('agent_id', $agentId)->where('type', 2)->value('url');
+    	$merchantRegisterOld = $databaseOld->table('agen_img')->where('agent_id', $agentId)->where('type', 2)->value('url');
 
     	$no = date('Ymd').substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
 
@@ -65,13 +75,15 @@ class IndexController extends Controller
         ]);
 
         // 创建前台登录账号
-        \App\User::insert([
-            'nickname'  =>  $agentInfoOld->user_nickname,
-            'account'   =>  $agentInfoOld->mobile,
-            'phone'     =>  $agentInfoOld->mobile,
-            'password'  =>  $agentInfoOld->user_pass,
-            'user_group'=>  1,
-            'operate'   =>  $no,
+        $userIdNew = \App\User::insertGetId([
+            'nickname'  	=> $agentInfoOld->user_nickname,
+            'account'   	=> $agentInfoOld->mobile,
+            'phone'     	=> $agentInfoOld->mobile,
+            'password'  	=> $agentInfoOld->user_pass,
+            'user_group'	=> 1,
+            'operate'   	=> $no,
+            'created_at'	=> date('Y-m-d H:i:s', $agentInfoOld->create_time),
+            'update_at'		=> date('Y-m-d H:i:s', time())
         ]);
 
         // 创建操盘方设置信息
@@ -87,33 +99,93 @@ class IndexController extends Controller
         	'company'			=> $agentInfoOld->user_nickname
         ]);
 
-
         ## 添加迁移后信息和原信息的关联信息
+        $databaseMoving->table('admin_users')->insert([
+            'user_id_old'           => $agentInfoOld->id,
+            'admin_user_id_new'     => $adminUser->id,
+            'create_at'             => date('Y-m-d H:i:s', time())
+        ]);
+
+        $this->moveUserAdd($userIdNew, $agentInfoOld->id);
     }
 
     /**
-     * [users 数据迁移]
+     * [users 用户表数据迁移]
      * @param  integer $agentId [description]
      * @return [type]           [description]
      */
     public function users($agentId=0)
     {
-    	$userListOld = Db::connection('mysql_3')->table('user')->where('txt', 'like', "%,$agentId,%")->get();
+    	$userListOld = $databaseOld->table('user')->where('txt', 'like', "%,$agentId,%")->get();
 
-    	$userDatas = [];
     	foreach ($userListOld as $k => $v) {
-    		$userDatas[] = [
-    			'nickname'		=> $v['user_nickname'],
-    			'account'		=> $v['mobile'],
-    			// 'avatar'		=> 				### 头像暂定为默认
-    			'phone'			=> $v['mobile'],
-    			'password'		=> $v['user_pass'],
-    			'user_group'	=> 1,
 
+            // 查询操盘号
+            $adminIdNew = $databaseMoving->table('admin_users')->where('user_id_old', $v->id)->value('admin_user_id_new');
+            $operate = \App\adminUser::where('id', $adminIdNew)->value('operate');
 
-    			// 需要先添加再修改的字段
-    			// 'parent'		=>
-    		];
+            $userIdNew = \App\User::insertGetId([
+                'nickname'      => $v->user_nickname,
+                'account'       => $v->mobile,
+                'phone'         => $v->mobile,
+                'password'      => $v->user_pass,
+                'user_group'    => 1,
+                'operate'       => $operate,
+                'create_at'     => date('Y-m-d H:i:s', $v->create_time),
+                'update_at'     => date('Y-m-d H:i:s', time())
+            ]);
+
+            // 记录新老平台用户关联信息
+            $this->moveUserAdd($userIdNew, $v->id);
+
+            // 同步用户钱包数据
+            $this->userWalletAdd($userIdNew, $v->profitWallet, $v->cashWallet);
+
+            // 同步添加实名认证表数据
+            \App\UserRealname::create(['user_id'   =>  $userIdNew]);
+
+            // 同步添加用户上下级关系表
+            
+
+            // 'avatar'     =>              ### 头像暂定为默认
+			// 需要先添加再修改的字段
+			// 'parent'		=>
     	}
+    }
+
+
+
+
+    /**
+     * [userWalletAdd 添加用户钱包信息]
+     * @param [type] $userId        [新后台用户id]
+     * @param [type] $cashBalance   [分润钱包余额]
+     * @param [type] $returnBalance [返现钱包余额]
+     */
+    public function userWalletAdd($userId, $cashBalance, $returnBalance)
+    {
+        \App\UserWallet::create([
+            'user_id'   => $userId,
+            'cash_blance'   => $cashBalance,
+            'return_blance'   => $returnBalance,
+        ]);
+    }
+
+
+
+
+    /**
+     * [moveUserAdd 新增新后台、老后台用户信息关联信息]
+     * @param  [type] $userIdNew [description]
+     * @param  [type] $oldUserId [description]
+     * @return [type]            [description]
+     */
+    public function moveUserAdd($userIdNew, $oldUserId)
+    {
+        $databaseMoving->table('users')->insert([
+            'user_id_old'     => $oldUserId,
+            'user_id_new'     => $userIdNew,
+            'create_at'       => date('Y-m-d H:i:s', time())
+        ]);
     }
 }

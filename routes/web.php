@@ -115,4 +115,5 @@ Route::get('/download_moneylog', function(){
 
 // 原3.0数据迁移
 Route::get('/data_moving', 	'Datamoving\IndexController@index');
+Route::get('/data_moving_test', 	'Datamoving\AdminUserController@index');
 
