@@ -33,7 +33,7 @@ class MoneyLogController extends AdminController
 
         $grid->column('id', __('索引'));
 
-        $grid->column('users.user_nickname', __('用户昵称'));
+/*        $grid->column('users.user_nickname', __('用户昵称'));
 
         $grid->column('users.mobile', __('用户账号'));
 
@@ -159,10 +159,14 @@ class MoneyLogController extends AdminController
 
             $filter->column(1/3, function ($filter) {
 
+                $user = \App\Model1\UserAgent::distinct('agent_id')->pluck('agent_id')->toArray();
 
+                $data = \App\Model1\User::whereIn('id', $user)->pluck('user_nickname', 'id')->toArray();
+                
+                $filter->equal('userAgents.agent_id', '操盘方')->select($data);
 
             });
-        });
+        });*/
 
         return $grid;
     }
