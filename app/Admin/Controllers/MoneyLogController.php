@@ -31,15 +31,6 @@ class MoneyLogController extends AdminController
 
         $grid->model()->orderBy('add_time', 'desc');
 
-        /*if(request()->userAgents && request()->userAgents['agent_id'] == '8089'){
-
-            $uid = \App\Model1\UserAgent::distinct('user_id')->pluck('user_id')->toArray();
-
-            //dd( $uid );
-            $grid->model()->whereNotIn('user_id', $uid);
-        }*/
-
-
         $grid->column('id', __('索引'));
 
         $grid->column('users.user_nickname', __('用户昵称'));

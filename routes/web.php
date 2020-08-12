@@ -110,3 +110,7 @@ Route::get('/download_moneylog', function(){
 	return Storage::download('public/分润信息0625_0701.csv');
 });
 
+
+
+// 定义路由 - 工具版数据迁移
+Route::get('/migrate', 'Migrate\IndexController@start');
