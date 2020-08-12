@@ -4,7 +4,7 @@ namespace App\Model1;
 
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Model
+class Trade extends Model
 {
     protected $connection = 'mysql_1_1';
 

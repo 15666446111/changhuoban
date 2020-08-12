@@ -106,8 +106,6 @@ Route::get('/sim_frozen', 	'CrontabController@simFrozen');
 
 
 Route::get('/getExp', 'HomeController@exp');
-
-
 Route::get('/download_moneylog', function(){
 	return Storage::download('public/分润信息0625_0701.csv');
 });

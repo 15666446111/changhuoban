@@ -23,7 +23,7 @@ class MoneyLog extends Model
      */
     public function users()
     {
-        return $this->belongsTo('App\Model1\User', 'user_id', 'id');
+        return $this->belongsTo('App\Model1\UserInfo', 'user_id', 'id');
     }
 
 
@@ -57,7 +57,7 @@ class MoneyLog extends Model
 
     public function userAgents()
     {
-        return $this->belongsTo('App\Model1\UserAgent', 'user_id', 'user_id')->withDefault(['agent_id' => 0]);
+        return $this->belongsTo('App\Model1\UserAgent', 'user_id', 'user_id')->withDefault(['agent_id' => 8089]);
     }
 
 

@@ -4,7 +4,7 @@ namespace App\Model1;
 
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Model
+class UserInfo extends Model
 {
     protected $connection = 'mysql_1_1';
 
@@ -25,6 +25,8 @@ class User extends Model
     {
     	return $this->hasMany('\App\Model1\MoneyLog', 'user_id', 'id');
     }
+
+
 
 
     // 操盘方
