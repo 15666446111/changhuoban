@@ -83,8 +83,10 @@ Route::group([
     $router->resource('policy-groups', PolicyGroupController::class);
     // 交易类型管理 有分润
     $router->resource('trade-types', TradeTypeController::class);
-    // 组级别对应活动组的费率
+    // 组级别对应活动组的结算价
     $router->resource('policy-group-settlements', PolicyGroupSettlementController::class);
+    // 活动组对应的费率
+    $router->resource('policy-group-rates', PolicyGroupRateController::class);
     // 活动管理
     $router->resource('policies', PolicyController::class);
 

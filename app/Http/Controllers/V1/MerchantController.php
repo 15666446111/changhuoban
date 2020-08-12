@@ -5,6 +5,7 @@ namespace App\Http\Controllers\V1;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use \App\Services\Pmpos\PmposController;
 
 class MerchantController extends Controller
 {
@@ -269,9 +270,6 @@ class MerchantController extends Controller
 	}
 	
 
-
-	
-
 	/**
 	 * @Author    Pudding
 	 * @DateTime  2020-06-07
@@ -302,5 +300,240 @@ class MerchantController extends Controller
     	return response()->json(['success'=>['message' => '获取成功', 'data' =>$ActiveInfo ]]);
 
 	}
-	 
+
+	/**
+	 * [获取商户费率]
+	 * @param Request $request [description]
+	 */
+	public function MerchantsRate(Request $request)
+	{
+		try{
+            
+			$merInfo = \App\Merchant::where('code', $request->code)->first();
+			if ($merInfo->user_id != $request->user->id) {
+				return response()->json(['error'=>['message' => '商户信息有误，请重试']]);
+			}
+
+			// 只有工具版本才可以设置商户费率
+            $setting = \App\AdminSetting::where('operate_number', $request->user->operate)->first();
+            if(!$setting or empty($setting)) return response()->json(['error'=>['message' => '未找到操盘方信息']]); 
+
+            if($setting->pattern != '2') return response()->json(['error'=>['message' => '非工具版本不能设置']]);
+
+			// 机具信息
+			$machines = \App\Machine::where('merchant_id', $merInfo->id)->get();
+
+			// 活动组id
+			$policyGroupId = 0;
+			// 检查商户活动组信息
+			$policyGroupArr = [];
+
+			foreach ($machines as $k => $v) {
+				$policyGroupArr[$v->policys->policy_group_id] = $v->policys->policy_group_id;
+				$policyGroupId = $v->policys->policy_group_id;
+			}
+
+			if (count($policyGroupArr) != 1) {
+				return response()->json(['error'=>['message' => '商户活动组信息有误，请联系客服']]);
+			}
+
+			// 查询商户费率
+			$pmpos = new PmposController($request->code, '');
+			$rateData = json_decode( $pmpos->getMerchantFee() );
+
+			if ($rateData->code !== '00') {
+				return response()->json(['error'=>['message' => $rateData->message]]);
+			}
+
+			// 需要返回的数据
+			$data = [];
+
+			// 活动组对应的费率信息
+			$groupRate = \App\PolicyGroupRate::where('policy_group_id', $policyGroupId)
+							->where('is_abjustable', 1)->get();
+
+			foreach ($groupRate as $k => $v) {
+
+				## 最小可设置费率：不低于活动组设置的最低可设置费率，不低于用户对应的结算价
+				#  最小可设置费率
+				$minRate = $v->min_rate;
+
+				if (!empty($v->rate_types->trade_type_id)) {
+
+					// 查询用户当前费率对应交易类型的结算价
+					$userSettle = $this->getToolUserSettle($request->user->id, $policyGroupId, $v->rate_types->trade_type_id);
+
+					$minRate = max($v->min_rate, $userSettle);
+				}
+				
+				
+				foreach ($rateData->data as $rateKey => $rateVal) {
+					
+					if ($rateKey == $v->rate_types->type) {
+						$data[] = [
+							'index'				=> $v->rate_type_id,
+							'title'				=> $v->rate_types->type_name,
+							'min_rate'			=> $minRate,
+							'max_rate'			=> $v->max_rate,
+							'is_top'			=> $v->rate_types->is_top,
+							'default_rate'		=> $rateVal * 1000
+						];
+						break;
+					}
+
+				}
+
+			}
+
+			return response()->json(['success'=>['data' => $data]]);
+
+        } catch (\Exception $e) {
+			return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
+		}
+	}
+
+	/**
+	 * [ 修改商户费率 ]
+	 * @param Request $request [description]
+	 */
+	public function setRate(Request $request)
+	{
+		try{
+            
+			if (empty($request->code)) {
+				return response()->json(['error'=>['message' => '缺少必要参数:商户号']]);
+			}
+			if (!is_array($request->rate)) {
+				return response()->json(['error'=>['message' => '参数需为数组格式']]);
+			}
+			
+			// 只有工具版本才可以设置商户费率
+            $setting = \App\AdminSetting::where('operate_number', $request->user->operate)->first();
+            if(!$setting or empty($setting)) return response()->json(['error'=>['message' => '未找到操盘方信息']]); 
+
+            if($setting->pattern != '2') return response()->json(['error'=>['message' => '非工具版本不能设置']]); 
+
+			// 商户信息
+			$merInfo = \App\Merchant::where('code', $request->code)->first();
+			// 机具信息
+			$machines = \App\Machine::where('merchant_id', $merInfo->id)->get();
+
+			if ($merInfo->user_id != $request->user->id) {
+				return response()->json(['error'=>['message' => '商户信息有误，请重试']]);
+			}
+
+			## 检查商户活动组信息
+			$policyGroupArr = [];
+			foreach ($machines as $k => $v) {
+				$policyGroupArr[$v->policys->policy_group_id] = $v->policys->policy_group_id;
+				$policyGroupId = $v->policys->policy_group_id;
+			}
+
+			if (count($policyGroupArr) != 1) {
+				return response()->json(['error'=>['message' => '商户活动组信息有误，请联系客服']]);
+			}
+
+			// 查询商户费率
+			$pmpos = new PmposController($request->code, '');
+			$rateData = json_decode( $pmpos->getMerchantFee() );
+
+			if ($rateData->code !== '00') {
+				return response()->json(['error'=>['message' => $rateData->message]]);
+			}
+
+			## 整理需要修改的费率信息
+			$data = [];
+			foreach ($request->rate as $k => $v) {
+				
+				if (empty($v['index']) || empty($v['default_rate'])) {
+					return response()->json(['error'=>['message' => '参数错误']]);
+				}
+
+				// 活动组费率设置信息
+				$groupRate = \App\PolicyGroupRate::where('policy_group_id', $policyGroupId)->where('rate_type_id', $v['index'])->first();
+
+				if (!$groupRate || $groupRate->is_abjustable == 0) {
+					return response()->json(['error'=>['message' => '数据异常，请联系客服']]);
+				}
+
+				## 最小可设置费率：不低于活动组设置的最低可设置费率，不低于用户对应的结算价
+				#  最小可设置费率
+				$minRate = $groupRate->min_rate;
+
+				if (!empty($groupRate->rate_types->trade_type_id)) {
+					// 查询用户当前费率对应交易类型的结算价
+					$userSettle = $this->getToolUserSettle($request->user->id, $policyGroupId, $groupRate->rate_types->trade_type_id);
+
+					$minRate = max($groupRate->min_rate, $userSettle);
+				}
+				
+				if ($v['default_rate'] > $groupRate->max_rate || $v['default_rate'] < $minRate) {
+					return response()->json(['error'=>['message' => '设置费率不在合理区间内']]);
+				}
+
+				$divisor = $groupRate->rate_types->is_top == 1 ? 100000 : 1000;
+				$data[$groupRate->rate_types->type] = bcdiv($v['default_rate'], $divisor, 3);
+
+			}
+
+			$reData = json_decode( $pmpos->updateNonAudit($data) );
+
+			if ($reData->code == '00') {
+
+				$newRateData = json_decode( $pmpos->getMerchantFee() );
+				\App\MerchantsRateLog::create([
+					'merchant_code'		=> $request->code,
+					'policy_group_id'	=> $policyGroupId,
+					'original_rate'		=> json_encode( $rateData->data ),
+					'adjust_rate'		=> $newRateData->code == '00' ? json_encode($newRateData->data) : '',
+					'adjust_user_id'	=> $request->user->id,
+					'operate'			=> $request->user->operate
+				]);
+
+				return response()->json(['success'=>['message' => '修改成功']]);
+
+			} else {
+
+				return response()->json(['error'=>['message' => $reData->message]]);
+
+			}
+
+        } catch (\Exception $e) {
+			return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
+		}
+	}
+	
+	/**
+	 * [ 获取用户结算价（工具模式）]
+     * @param  integer $userId        [用户id]
+     * @param  integer $policyGroupId [活动组id]
+     * @param  integer $tradeTypeId   [交易类型id]
+	 * @return [type]                 [description]
+	 */
+	public function getToolUserSettle($userId=0, $policyGroupId=0, $tradeTypeId=0)
+	{
+		$userSettle = 0;
+
+        // 用户结算价
+        $settleStr = \App\UserFee::where('user_id', $userId)
+                                ->where('policy_group_id', $policyGroupId)
+                                ->value('price');
+
+        if (empty($settleStr)) {
+
+            // 用户没有设置结算价时，获取默认结算价
+            $userSettle = \App\PolicyGroupSettlement::where('policy_group_id', $policyGroupId)
+                                                    ->where('trade_type_id', $tradeTypeId)
+                                                    ->value('default_price');
+
+        } else {
+
+            foreach (json_decode($settleStr) as $k => $v) {
+                if ($v->index == $tradeTypeId) $userSettle = $v->price;
+            }
+
+        }
+
+        return $userSettle;
+	}
 }

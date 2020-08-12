@@ -443,7 +443,7 @@ class PolicyController extends Controller
             if(!$request->pid) return response()->json(['error'=>['message' => '请选择活动政策信息!']]);
             if(!$request->standard) return response()->json(['error'=>['message' => '请输入设置的参数!']]);
 
-            if(!is_array($request->return_money)) return response()->json(['error'=>['message' => '参数需为数组格式!']]);
+            if(!is_array($request->standard)) return response()->json(['error'=>['message' => '参数需为数组格式!']]);
 
             $user = \App\User::where('id', $request->uid)->first();
             if(!$user or empty($user)) return response()->json(['error'=>['message' => '找不到伙伴信息!']]);

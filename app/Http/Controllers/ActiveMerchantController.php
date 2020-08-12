@@ -185,6 +185,7 @@ class ActiveMerchantController extends Controller
      */
     public function toolCashBack($userId, $policyId)
     {
+        // 总发放金额
         $totalMoney = 0;
 
         $prevReturnMoney = 0;
@@ -203,7 +204,8 @@ class ActiveMerchantController extends Controller
             $money = ($returnMoney - $prevReturnMoney) / 100;
 
             if ($money > 0) {
-                $this->addUserBalance($userId, $money, 3);
+                $type = $userId == $this->user->id ? 3 : 11;
+                $this->addUserBalance($userId, $money, $type);
 
                 $totalMoney += $money;
                 $prevReturnMoney = $returnMoney;

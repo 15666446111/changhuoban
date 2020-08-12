@@ -140,6 +140,21 @@ class PolicyGroupController extends AdminController
                 });
                 $settsprice->paginate(6);
             });
+
+            $show->policy_group_rate('费率设置', function ($groupRate) {
+                $groupRate->resource('/manage/policy-group-rates');
+                $groupRate->column('rate_types.type_name', __('费率类型'))->help('费率类型');
+                $groupRate->column('min_rate', __('最低可设置费率'))->editable()->help('当前活动组下的当前费率类型可设置费率的最小值, 单位为十万分位, 例如:0.53%,填写530');
+                $groupRate->column('max_rate', __('最高可设置费率'))->editable()->help('当前活动组下的当前费率类型可设置费率的最大值, 单位为十万分位, 例如:0.6%,填写600');
+                $groupRate->column('is_abjustable', __('APP内可见'))->switch()->help('关闭APP内可见后，代理在APP中将不能修改当前活动组当前类型的费率信息');
+                $groupRate->disableCreateButton();
+                $groupRate->disableActions();
+                $groupRate->filter(function($filter){
+                    // 去掉默认的id过滤器
+                    $filter->disableIdFilter();
+                });
+                $groupRate->paginate(10);
+            });
         }
 
         return $show;
@@ -163,7 +178,7 @@ class PolicyGroupController extends AdminController
         $form->saving(function (Form $form) {
             if($form->isCreating()){
                 $count = PolicyGroup::where('operate', Admin::user()->operate)->count();
-                if($count >= 2 ){
+                if($count >= 3 ){
                     $error = new MessageBag([ 'title'   => '创建活动组失败', 'message' => '您只能创建最多4个活动组']);
                     return back()->with(compact('error'));
                 }

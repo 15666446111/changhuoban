@@ -62,7 +62,7 @@ class CashsController extends Controller
             }
 
             if($type == 'return'){
-                $list->whereIn('cash_type', ['3','4','5', '6', '7', '8']);
+                $list->whereIn('cash_type', ['3','4','5', '6', '7', '8', '']);
             }
 
             if($type == 'other'){
@@ -90,7 +90,7 @@ class CashsController extends Controller
                 }
     
                 if($type == 'return'){
-                    $listdata->whereIn('cash_type', ['3','4','5', '6', '7', '8']);
+                    $listdata->whereIn('cash_type', ['3','4','5', '6', '7', '8', '9']);
                 }
     
                 if($type == 'other'){
