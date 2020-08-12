@@ -29,6 +29,11 @@ class MoneyLogController extends AdminController
     {
         $grid = new Grid(new MoneyLog());
 
+
+        $m  = MoneyLog::first();
+
+        dd($m->users);
+
         $grid->model()->orderBy('add_time', 'desc');
 
         $grid->column('id', __('索引'));
