@@ -32,7 +32,7 @@ class MoneyLogController extends AdminController
 
         $m  = MoneyLog::first();
 
-        dd($m->users);
+        dd($m->user_rela);
 
         $grid->model()->orderBy('add_time', 'desc');
 

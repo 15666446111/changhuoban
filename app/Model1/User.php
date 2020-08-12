@@ -26,6 +26,8 @@ class User extends Model
     	return $this->hasMany('\App\Model1\MoneyLog', 'user_id', 'id');
     }
 
+    
+
 
     // 操盘方
     public function operate()
