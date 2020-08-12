@@ -39,7 +39,7 @@ class MoneyLogController extends AdminController
 
         $grid->column('userAgents.agent_id', __('操盘方'))->display(function($agent){
 
-            return $agent == "0" ? '平台直属' : \App\Model1\User::where('id', $agent)->value('user_nickname');
+            return $agent == "0" ? '平台直属' : \App\Model1\UserInfo::where('id', $agent)->value('user_nickname');
         
         });
 
@@ -161,7 +161,7 @@ class MoneyLogController extends AdminController
 
                 $user = \App\Model1\UserAgent::distinct('agent_id')->pluck('agent_id')->toArray();
 
-                $data = \App\Model1\User::whereIn('id', $user)->pluck('user_nickname', 'id')->toArray();
+                $data = \App\Model1\UserInfo::whereIn('id', $user)->pluck('user_nickname', 'id')->toArray();
                 
                 $filter->equal('userAgents.agent_id', '操盘方')->select($data);
 
