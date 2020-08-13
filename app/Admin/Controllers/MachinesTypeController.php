@@ -51,7 +51,7 @@ class MachinesTypeController extends AdminController
             // $actions->disableView();
         });
 
-        // $grid->disableCreateButton();
+        $grid->disableCreateButton();
 
         $grid->batchActions(function ($batch) {
             $batch->disableDelete();

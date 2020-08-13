@@ -58,6 +58,48 @@ class IndexController extends Controller
      */
     protected $trade;
 
+
+    /**
+     * [$brandList 原机具型号id对应新机具型号id ]
+     * @var [type]
+     */
+    protected $brandList = [
+        57  => 7,       // 助代通3.0 MF69S
+        58  => 9,       // 助代通3.0 MF919-智能
+        59  => 3,       // 助代通3.0 MP70
+        60  => 4,       // 助代通3.0 H9
+        61  => 2,       // 助代通3.0 MP70-扫码
+        62  => 1,       // 助代通3.0 H9-扫码
+
+        154 => 13,      // 助代通3.0 H9
+        155 => 12,      // 助代通3.0 MP70
+        160 => 14,      // 助代通3.0 MP70 - 扫码
+        161 => 15,      // 助代通3.0 H9-扫码
+
+        66  => 6,      // 活动自备机(全)
+        145 => 6,      // 活动自备机(全)
+        146 => 6,      // 活动自备机(全)
+        147 => 6,      // 活动自备机(全)
+        148 => 6,      // 活动自备机(全)
+        169 => 6,      // 活动自备机(全)
+
+        109 => 5,      // 自备机(全)
+        114 => 5,      // 自备机(全)
+        115 => 5,      // 自备机(全)
+        116 => 5,      // 自备机(全)
+        118 => 5,      // 自备机(全)
+        131 => 5,      // 自备机(全)
+        138 => 5,      // 自备机(全)
+        141 => 5,      // 自备机(全)
+        142 => 5,      // 自备机(全)
+        144 => 5,      // 自备机(全)
+        152 => 5,      // 自备机(全)
+        165 => 5,      // 自备机(全)
+        166 => 5,      // 自备机(全)
+        168 => 5,      // 自备机(全)
+    ];
+
+
     /**
      * [$activeList 原活动id对应新活动id ]
      * @var [type]
@@ -175,6 +217,278 @@ class IndexController extends Controller
 	}
 
 
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-08-13
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 同步钱包信息 ]
+     * @return    [type]      [description]
+     */
+    public function syncWallet()
+    {
+
+        set_time_limit(0);                                  //设置程序执行时间
+        
+        ignore_user_abort(true);                            //设置断开连接继续执行
+        
+        ob_start();                                         //打开输出缓冲控制
+        
+        echo str_repeat(' ',1024*4);                        //字符填充
+
+        $width1 = 1000;
+
+        $html1 = '<div style="margin:100px auto; padding: 8px; border: 1px solid gray; background: #EAEAEA; width: %upx">
+        <div style="text-align:center; margin-bottom:10px;">共有'.count($this->oldUser).'条会员交易数据需要同步</div><div style="padding: 0; background-color: white; border: 1px solid navy; width: %upx"><div id="progress1" style="padding: 0; background-color: #FFCC66; border: 0; width: 0px; text-align: center; height: 16px"></div></div><div id="msg1" style="font-family: Tahoma; font-size: 9pt;">正在处理...</div><div id="percent1" style="position: relative; top: -34px; text-align: center; font-weight: bold; font-size: 8pt">0%%</div></div>';
+
+        echo sprintf($html1, $width1+8, $width1);
+        
+        echo ob_get_clean();                                //获取当前缓冲区内容并清除当前的输出缓冲
+
+        flush();                                            //刷新缓冲区的内容，输出
+
+        $i = 1;
+
+        $error = array();
+
+        foreach ($this->oldUser as $key => $value) 
+        {
+
+            $proportion = $i / count($this->oldUser);
+
+            $msg1 = $i == count($this->oldUser) ? '钱包数据同步完成' : '正在同步第' . $i . '条会员钱包信息';
+            
+            $script1 = '<script>document.getElementById("percent1").innerText="%u%%";document.getElementById("progress1").style.width="%upx";document.getElementById("msg1").innerText="%s";</script>';
+            
+
+            $user = \App\User::where('account', $value->mobile)->first();
+
+            $user->wallets->cash_blance = $value->profitWallet * 100;
+
+            $user->wallets->return_blance = $value->cashWallet * 100;
+
+            $user->wallets->created_at = Carbon::createFromTimeStamp($value->create_time)->toDateTimeString();
+
+            $user->wallets->save();
+
+            echo sprintf($script1, intval($proportion *100 ), intval( $i/count($this->oldUser)*$width1), $msg1);
+
+            $i++;
+
+            echo ob_get_clean();    //获取当前缓冲区内容并清除当前的输出缓冲
+
+            flush();   //刷新缓冲区的内容，输出
+        }
+
+        $this->syncSettlement();
+    }
+
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-08-13
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 用户结算价、用户激活返现信息 ]
+     * @return    [type]      [description]
+     */
+    public function syncSettlement()
+    {
+
+        set_time_limit(0);                                  //设置程序执行时间
+        
+        ignore_user_abort(true);                            //设置断开连接继续执行
+        
+        ob_start();                                         //打开输出缓冲控制
+        
+        echo str_repeat(' ',1024*4);                        //字符填充
+
+        $width4 = 1000;
+
+        $html4 = '<div style="margin:100px auto; padding: 8px; border: 1px solid gray; background: #EAEAEA; width: %upx">
+        <div style="text-align:center; margin-bottom:10px;">共有'.count($this->oldUser).'条会员结算信息需要同步</div><div style="padding: 0; background-color: white; border: 1px solid navy; width: %upx"><div id="progress1" style="padding: 0; background-color: #FFCC66; border: 0; width: 0px; text-align: center; height: 16px"></div></div><div id="msg4" style="font-family: Tahoma; font-size: 9pt;">正在处理...</div><div id="percent1" style="position: relative; top: -34px; text-align: center; font-weight: bold; font-size: 8pt">0%%</div></div>';
+
+        echo sprintf($html4, $width4+8, $width4);
+        
+        echo ob_get_clean();                                //获取当前缓冲区内容并清除当前的输出缓冲
+
+        flush();                                            //刷新缓冲区的内容，输出
+
+        $i = 1;
+
+        $error = array();
+
+        foreach ($this->oldUser as $key => $value) 
+        {
+
+            $proportion = $i / count($this->oldUser);
+
+            $msg4 = $i == count($this->oldUser) ? '钱包数据同步完成' : '正在同步第' . $i . '条会员结算信息';
+            
+            $script1 = '<script>document.getElementById("percent1").innerText="%u%%";document.getElementById("progress1").style.width="%upx";document.getElementById("msg4").innerText="%s";</script>';
+            
+            // 用户结算价信息
+            $priceArr = [];
+            // 用户激活返现信息
+            $activeArr = [];
+
+            foreach ($value as $k => $v) {
+                // 结算价信息
+                if ($v->seId > 0) {
+                    $priceArr[] = [
+                        'index'     => $v->seId,
+                        // $v->seId == 3 为借记卡封顶类型
+                        'price'     => $v->seId == 3 ? bcmul($v->settlement, 100) : bcmul($v->settlement, 100000)
+                    ];
+                } else {
+                    // 活动激活返现信息
+                    \App\UserPolicy::create([
+                        'default_active_set'    => $v->settlement * 100,
+                        'user_id'               => $this->user[$v->user_id],
+                        'policy_id'             => $this->activeList[$v->activityId]
+                    ]);
+                }
+            }
+
+            if (!empty($priceArr)) {
+                \App\UserFee::create([
+                    'user_id'           => $this->user[$v->user_id],
+                    'policy_group_id'   => $this->policyGruopId,
+                    'price'             => json_encode($priceArr)
+                ]);
+            }
+            
+
+
+            echo sprintf($script1, intval($proportion *100 ), intval( $i/count($this->oldUser)*$width4), $msg4);
+
+            $i++;
+
+            echo ob_get_clean();    //获取当前缓冲区内容并清除当前的输出缓冲
+
+            flush();   //刷新缓冲区的内容，输出
+        }
+
+        $this->syncMerchantsBindLog();
+    }
+
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-08-13
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 同步绑定记录表 ]
+     * @return    [type]      [description]
+     */
+    public function syncMerchantsBindLog()
+    {
+
+        set_time_limit(0);                                  //设置程序执行时间
+        
+        ignore_user_abort(true);                            //设置断开连接继续执行
+        
+        ob_start();                                         //打开输出缓冲控制
+        
+        echo str_repeat(' ',1024*4);                        //字符填充
+
+        $width2 = 1000;
+
+        $html2 = '<div style="margin:100px auto; padding: 8px; border: 1px solid gray; background: #EAEAEA; width: %upx">
+        <div style="text-align:center; margin-bottom:10px;">共有'.count($this->oldUser).'条会员商户机具需要迁移</div><div style="padding: 0; background-color: white; border: 1px solid navy; width: %upx"><div id="progress2" style="padding: 0; background-color: #FFCC66; border: 0; width: 0px; text-align: center; height: 16px"></div></div><div id="msg2" style="font-family: Tahoma; font-size: 9pt;">正在处理...</div><div id="percent2" style="position: relative; top: -34px; text-align: center; font-weight: bold; font-size: 8pt">0%%</div></div>';
+
+        echo sprintf($html2, $width2+8, $width2);
+        
+        echo ob_get_clean();                                //获取当前缓冲区内容并清除当前的输出缓冲
+
+        flush();                                            //刷新缓冲区的内容，输出
+
+        $i = 1;
+
+        $error = array();
+
+        foreach ($this->oldUser as $key => $value) 
+        {
+
+            $proportion = $i / count($this->oldUser);
+
+            $msg2 = $i == count($this->oldUser) ? '商户机具数据同步完成' : '正在同步第' . $i . '条会员商户机具信息';
+            
+            $script2 = '<script>document.getElementById("percent2").innerText="%u%%";document.getElementById("progress2").style.width="%upx";document.getElementById("msg2").innerText="%s";</script>';
+            
+
+            foreach ($value->merchants as $k => $v) {
+                $user       = \App\User::where('account', $value->mobile)->first();
+                $active     = "";
+
+                foreach ($v->logs as $a => $b) {
+                    if($b->activation_state == "1") $active = $b->sn;
+                    \App\MerchantsBindLog::create([
+                        'merchant_code' =>  $b->merchantCode,
+                        'sn'            =>  $b->sn,
+                        'bind_state'    =>  $b->untying == 2 ? 0 : $b->untying,
+                        'created_at'    =>  Carbon::createFromTimeStamp($b->add_time)->toDateTimeString()
+                    ]);
+                }
+
+                if($v->merchantNo){
+                    $merchantNew = \App\Merchant::create([
+                        'user_id'   =>  $user->id,
+                        'code'      =>  $v->merchantNo,
+                        'name'      =>  $v->merchantName,
+                        'phone'     =>  $v->merchantPhone,
+                        'activate_sn'=> $active,
+                        'open_time' =>  $v->addTime ? Carbon::createFromTimeStamp($v->addTime)->toDateTimeString() : null ,
+                        'created_at'=>  $v->addTime ? Carbon::createFromTimeStamp($v->addTime)->toDateTimeString() : null ,
+                        'operate'   =>  $this->merchant,
+                    ]);
+                }
+            }
+
+            foreach ($value->housise as $c => $d) {
+
+                $bind = \App\Model3\HouseBindLog::where('sn', $d->sm)->where('untying', 1)->first();
+
+                $merchantId = empty($bind) ? 0 : \App\Merchant::where('code', $bind->merchantCode)->value('id');
+
+
+                \App\Machine::create([
+                    'user_id'       =>  $user->id,
+                    'sn'            =>  $d->sm,
+                    'open_state'    =>  $d->open_state == 2 ? 0 : $d->open_state,
+                    'created_at'    =>  Carbon::createFromTimeStamp($d->add_time)->toDateTimeString(),
+                    'merchant_id'   =>  $merchantId,
+                    'bind_status'   =>  empty($bind) ? 0 : 1,
+                    'bind_time'     =>  empty($bind) ? null : Carbon::createFromTimeStamp($bind->add_time)->toDateTimeString(),
+                    'activate_time' =>  (empty($bind) || $bind->activation_time == "0" || !$bind->activation_time) ? null : Carbon::createFromTimeStamp($bind->activation_time)->toDateTimeString(),
+                    'activate_state'=>  (empty($bind) || $bind->activation_state == 4) ? 0 : $bind->activation_state,
+                    'standard_status' => $d->ac_return_state == 2 ? -1 : 0,
+                    'open_time'     =>  empty($d->opening_time) ? null : Carbon::createFromTimeStamp($d->opening_time)->toDateTimeString(),
+                    'overdue_state' => $d->overdue_state == 2 ? 1 : 0,
+                    'active_end_time' =>  empty($d->activa_end_time) ? null : Carbon::createFromTimeStamp($d->activa_end_time)->toDateTimeString(),
+                    'operate'   => $this->merchant,
+                    'standard_status_lj'=> $d->st_return_state == 2 ? -1 : 0,
+                    'sim_frozen_num' => $d->sim_fro_state,
+                    'policy_id'      => $this->activeList[$d->activity_id],
+                    'style_id'       => $thsi->brandList[$d->brand_id]
+                ]);
+            }
+
+            echo sprintf($script2, intval($proportion *100 ), intval( $i/count($this->oldUser)*$width2), $msg2);
+
+            $i++;
+
+            echo ob_get_clean();    //获取当前缓冲区内容并清除当前的输出缓冲
+
+            flush();   //刷新缓冲区的内容，输出
+        }
+
+        $this->syncTrade();
+    }
+
+
+
 	/**
 	 * @Author    Pudding
 	 * @DateTime  2020-08-13
@@ -288,278 +602,6 @@ class IndexController extends Controller
 
         // $this->syncMerchantsBindLog();
 	}
-
-
-	/**
-	 * @Author    Pudding
-	 * @DateTime  2020-08-13
-	 * @copyright [copyright]
-	 * @license   [license]
-	 * @version   [ 同步绑定记录表 ]
-	 * @return    [type]      [description]
-	 */
-	public function syncMerchantsBindLog()
-	{
-
-        set_time_limit(0);  								//设置程序执行时间
-        
-        ignore_user_abort(true);    						//设置断开连接继续执行
-        
-        ob_start(); 										//打开输出缓冲控制
-        
-        echo str_repeat(' ',1024*4);    					//字符填充
-
-        $width2 = 1000;
-
-        $html2 = '<div style="margin:100px auto; padding: 8px; border: 1px solid gray; background: #EAEAEA; width: %upx">
-        <div style="text-align:center; margin-bottom:10px;">共有'.count($this->oldUser).'条会员商户机具需要迁移</div><div style="padding: 0; background-color: white; border: 1px solid navy; width: %upx"><div id="progress2" style="padding: 0; background-color: #FFCC66; border: 0; width: 0px; text-align: center; height: 16px"></div></div><div id="msg2" style="font-family: Tahoma; font-size: 9pt;">正在处理...</div><div id="percent2" style="position: relative; top: -34px; text-align: center; font-weight: bold; font-size: 8pt">0%%</div></div>';
-
-        echo sprintf($html2, $width2+8, $width2);
-        
-        echo ob_get_clean();    							//获取当前缓冲区内容并清除当前的输出缓冲
-
-        flush();   											//刷新缓冲区的内容，输出
-
-        $i = 1;
-
-        $error = array();
-
-        foreach ($this->oldUser as $key => $value) 
-        {
-
-            $proportion = $i / count($this->oldUser);
-
-            $msg2 = $i == count($this->oldUser) ? '商户机具数据同步完成' : '正在同步第' . $i . '条会员商户机具信息';
-            
-            $script2 = '<script>document.getElementById("percent2").innerText="%u%%";document.getElementById("progress2").style.width="%upx";document.getElementById("msg2").innerText="%s";</script>';
-            
-
-            foreach ($value->merchants as $k => $v) {
-            	$user 		= \App\User::where('account', $value->mobile)->first();
-            	$active  	= "";
-
-            	foreach ($v->logs as $a => $b) {
-					if($b->activation_state == "1") $active = $b->sn;
-					\App\MerchantsBindLog::create([
-						'merchant_code'	=>	$b->merchantCode,
-						'sn'			=>	$b->sn,
-						'bind_state'	=>	$b->untying == 2 ? 0 : $b->untying,
-						'created_at'	=>	Carbon::createFromTimeStamp($b->add_time)->toDateTimeString()
-					]);
-				}
-
-				if($v->merchantNo){
-					$merchantNew = \App\Merchant::create([
-						'user_id'	=>	$user->id,
-						'code'		=>	$v->merchantNo,
-						'name'		=>	$v->merchantName,
-						'phone'		=>	$v->merchantPhone,
-						'activate_sn'=> $active,
-						'open_time' =>  $v->addTime ? Carbon::createFromTimeStamp($v->addTime)->toDateTimeString() : null ,
-						'created_at'=>  $v->addTime ? Carbon::createFromTimeStamp($v->addTime)->toDateTimeString() : null ,
-						'operate'	=>  $this->merchant,
-					]);
-				}
-            }
-
-			foreach ($value->housise as $c => $d) {
-
-				$bind = \App\Model3\HouseBindLog::where('sn', $d->sm)->where('untying', 1)->first();
-
-				$merchantId = empty($bind) ? 0 : \App\Merchant::where('code', $bind->merchantCode)->value('id');
-
-
-				\App\Machine::create([
-					'user_id'		=>	$user->id,
-					'sn'			=>  $d->sm,
-					'open_state'	=>  $d->open_state == 2 ? 0 : $d->open_state,
-					'created_at'	=>  Carbon::createFromTimeStamp($d->add_time)->toDateTimeString(),
-					'merchant_id' 	=>  $merchantId,
-					'bind_status' 	=>  empty($bind) ? 0 : 1,
-					'bind_time'		=>  empty($bind) ? null : Carbon::createFromTimeStamp($bind->add_time)->toDateTimeString(),
-					'activate_time' =>  (empty($bind) || $bind->activation_time == "0" || !$bind->activation_time) ? null : Carbon::createFromTimeStamp($bind->activation_time)->toDateTimeString(),
-					'activate_state'=>  (empty($bind) || $bind->activation_state == 4) ? 0 : $bind->activation_state,
-					'standard_status' => $d->ac_return_state == 2 ? -1 : 0,
-					'open_time'		=>	empty($d->opening_time) ? null : Carbon::createFromTimeStamp($d->opening_time)->toDateTimeString(),
-					'overdue_state'	=> $d->overdue_state == 2 ? 1 : 0,
-					'active_end_time' =>  empty($d->activa_end_time) ? null : Carbon::createFromTimeStamp($d->activa_end_time)->toDateTimeString(),
-					'operate'   => $this->merchant,
-					'standard_status_lj'=> $d->st_return_state == 2 ? -1 : 0,
-					'sim_frozen_num' => $d->sim_fro_state,
-					'policy_id'   	 => $this->activeList[$d->activity_id],
-				]);
-			}
-
-            echo sprintf($script2, intval($proportion *100 ), intval( $i/count($this->oldUser)*$width2), $msg2);
-
-            $i++;
-
-            echo ob_get_clean();    //获取当前缓冲区内容并清除当前的输出缓冲
-
-            flush();   //刷新缓冲区的内容，输出
-        }
-
-        $this->syncTrade();
-	}
-
-
-
-	/**
-	 * @Author    Pudding
-	 * @DateTime  2020-08-13
-	 * @copyright [copyright]
-	 * @license   [license]
-	 * @version   [ 同步钱包信息 ]
-	 * @return    [type]      [description]
-	 */
-	public function syncWallet()
-	{
-
-        set_time_limit(0);  								//设置程序执行时间
-        
-        ignore_user_abort(true);    						//设置断开连接继续执行
-        
-        ob_start(); 										//打开输出缓冲控制
-        
-        echo str_repeat(' ',1024*4);    					//字符填充
-
-        $width1 = 1000;
-
-        $html1 = '<div style="margin:100px auto; padding: 8px; border: 1px solid gray; background: #EAEAEA; width: %upx">
-        <div style="text-align:center; margin-bottom:10px;">共有'.count($this->oldUser).'条会员交易数据需要同步</div><div style="padding: 0; background-color: white; border: 1px solid navy; width: %upx"><div id="progress1" style="padding: 0; background-color: #FFCC66; border: 0; width: 0px; text-align: center; height: 16px"></div></div><div id="msg1" style="font-family: Tahoma; font-size: 9pt;">正在处理...</div><div id="percent1" style="position: relative; top: -34px; text-align: center; font-weight: bold; font-size: 8pt">0%%</div></div>';
-
-        echo sprintf($html1, $width1+8, $width1);
-        
-        echo ob_get_clean();    							//获取当前缓冲区内容并清除当前的输出缓冲
-
-        flush();   											//刷新缓冲区的内容，输出
-
-        $i = 1;
-
-        $error = array();
-
-        foreach ($this->oldUser as $key => $value) 
-        {
-
-            $proportion = $i / count($this->oldUser);
-
-            $msg1 = $i == count($this->oldUser) ? '钱包数据同步完成' : '正在同步第' . $i . '条会员钱包信息';
-            
-            $script1 = '<script>document.getElementById("percent1").innerText="%u%%";document.getElementById("progress1").style.width="%upx";document.getElementById("msg1").innerText="%s";</script>';
-            
-
-			$user = \App\User::where('account', $value->mobile)->first();
-
-			$user->wallets->cash_blance = $value->profitWallet * 100;
-
-			$user->wallets->return_blance = $value->cashWallet * 100;
-
-			$user->wallets->created_at = Carbon::createFromTimeStamp($value->create_time)->toDateTimeString();
-
-			$user->wallets->save();
-
-            echo sprintf($script1, intval($proportion *100 ), intval( $i/count($this->oldUser)*$width1), $msg1);
-
-            $i++;
-
-            echo ob_get_clean();    //获取当前缓冲区内容并清除当前的输出缓冲
-
-            flush();   //刷新缓冲区的内容，输出
-        }
-
-        $this->syncSettlement();
-	}
-
-
-    /**
-     * @Author    Pudding
-     * @DateTime  2020-08-13
-     * @copyright [copyright]
-     * @license   [license]
-     * @version   [ 用户结算价、用户激活返现信息 ]
-     * @return    [type]      [description]
-     */
-    public function syncSettlement()
-    {
-
-        set_time_limit(0);                                  //设置程序执行时间
-        
-        ignore_user_abort(true);                            //设置断开连接继续执行
-        
-        ob_start();                                         //打开输出缓冲控制
-        
-        echo str_repeat(' ',1024*4);                        //字符填充
-
-        $width4 = 1000;
-
-        $html4 = '<div style="margin:100px auto; padding: 8px; border: 1px solid gray; background: #EAEAEA; width: %upx">
-        <div style="text-align:center; margin-bottom:10px;">共有'.count($this->oldUser).'条会员结算信息需要同步</div><div style="padding: 0; background-color: white; border: 1px solid navy; width: %upx"><div id="progress1" style="padding: 0; background-color: #FFCC66; border: 0; width: 0px; text-align: center; height: 16px"></div></div><div id="msg4" style="font-family: Tahoma; font-size: 9pt;">正在处理...</div><div id="percent1" style="position: relative; top: -34px; text-align: center; font-weight: bold; font-size: 8pt">0%%</div></div>';
-
-        echo sprintf($html4, $width4+8, $width4);
-        
-        echo ob_get_clean();                                //获取当前缓冲区内容并清除当前的输出缓冲
-
-        flush();                                            //刷新缓冲区的内容，输出
-
-        $i = 1;
-
-        $error = array();
-
-        foreach ($this->oldUser as $key => $value) 
-        {
-
-            $proportion = $i / count($this->oldUser);
-
-            $msg4 = $i == count($this->oldUser) ? '钱包数据同步完成' : '正在同步第' . $i . '条会员结算信息';
-            
-            $script1 = '<script>document.getElementById("percent1").innerText="%u%%";document.getElementById("progress1").style.width="%upx";document.getElementById("msg4").innerText="%s";</script>';
-            
-            // 用户结算价信息
-            $priceArr = [];
-            // 用户激活返现信息
-            $activeArr = [];
-
-            foreach ($value as $k => $v) {
-                // 结算价信息
-                if ($v->seId > 0) {
-                    $priceArr[] = [
-                        'index'     => $v->seId,
-                        // $v->seId == 3 为借记卡封顶类型
-                        'price'     => $v->seId == 3 ? bcmul($v->settlement, 100) : bcmul($v->settlement, 100000)
-                    ];
-                } else {
-                    // 活动激活返现信息
-                    \App\UserPolicy::create([
-                        'default_active_set'    => $v->settlement * 100,
-                        'user_id'               => $this->user[$v->user_id]
-                        'policy_id'             => $this->activeList[$v->activityId]
-                    ]);
-                }
-            }
-
-            if (!empty($priceArr)) {
-                \App\UserFee::create([
-                    'user_id'           => $this->user[$v->user_id],
-                    'policy_group_id'   => $this->policyGruopId,
-                    'price'             => json_encode($priceArr)
-                ]);
-            }
-            
-
-
-            echo sprintf($script1, intval($proportion *100 ), intval( $i/count($this->oldUser)*$width4), $msg4);
-
-            $i++;
-
-            echo ob_get_clean();    //获取当前缓冲区内容并清除当前的输出缓冲
-
-            flush();   //刷新缓冲区的内容，输出
-        }
-
-        $this->
-        $this->syncMerchantsBindLog();();
-    }
-
 
 
 

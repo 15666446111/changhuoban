@@ -36,6 +36,8 @@ class MachinesStyleController extends AdminController
 
         $grid->column('machines_fact.factory_name', __('所属厂商'))->help('机具型号所属的厂商');
 
+        // $grid->column('machines_fact.machines_types.name', __('所属类型'))->help('机具型号所属的类型');
+
         $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s')->help('机具型号的创建时间');
 
         $grid->column('updated_at', __('修改时间'))->date('Y-m-d H:i:s')->help('机具型号的最后修改时间');
