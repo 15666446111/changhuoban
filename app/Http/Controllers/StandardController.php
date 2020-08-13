@@ -120,7 +120,7 @@ class StandardController extends Controller
 		}
 
 		// 累计达标
-		if ($this->machine->standard_start_lj != -1) {
+		if ($this->machine->standard_status_lj != -1) {
 			foreach ($cumStan as $key => $val) {
 
 				// 查询机器和商户的当前达标是否已发放
@@ -161,7 +161,7 @@ class StandardController extends Controller
 		}
 
 		// 连续达标
-		if ($this->machine->standard_start != -1) {
+		if ($this->machine->standard_status != -1) {
 			foreach ($conStan as $key => $val) {
 				// 查询机器和商户的当前达标是否已发放
 				$machineStanCount = \App\MerchantsStandard::where('sn', $this->trade->sn)->where('index', $val['index'])->count();
@@ -188,7 +188,7 @@ class StandardController extends Controller
 							$trade = $this->SumTradeIf($prevStandardArr['standard_start'], $prevStandardArr['standard_end'], $prevStandardArr['standard_trade'] * 100);
 
 							if(!$trade){
-								$this->machine->standard_statis = -1;
+								$this->machine->standard_status = -1;
 								$this->machine->save();
 								return array('status' => false, 'msg' => '机器上次达标未通过,不发放达标奖励!上次达标条件:机器激活之日起'.$prevStandardArr['standard_start']."-".$prevStandardArr['standard_end']."天内满足".number_format($prevStandardArr['standard_trade'] * 100 , 2, '.', ',')."元交易!");
 							}
@@ -199,7 +199,7 @@ class StandardController extends Controller
 												->where('index', $prevStandardArr['index'])
 												->first();
 							if(!$haveStandardPrev or empty($haveStandardPrev)){
-								$this->machine->standard_statis = -1;
+								$this->machine->standard_status = -1;
 								$this->machine->save();
 								return array('status' => false, 'msg' => '机器上次达标发放信息未找到,不发放达标奖励!上次达标条件:机器激活之日起'.$prevStandardArr['standard_start']."-".$prevStandardArr['standard_end']."天内满足".number_format($prevStandardArr['standard_trade'] * 100 , 2, '.', ',')."元交易!");
 							}

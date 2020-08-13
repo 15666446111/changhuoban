@@ -115,7 +115,3 @@ Route::get('/download_moneylog', function(){
 // 定义路由 - 工具版数据迁移
 Route::get('/migrate', 'Migrate\IndexController@start');
 
-// 原3.0数据迁移
-Route::get('/data_moving', 	'Datamoving\IndexController@index');
-Route::get('/data_moving_test', 	'Datamoving\AdminUserController@index');
-
