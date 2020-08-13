@@ -333,7 +333,7 @@ class IndexController extends Controller
             // 用户激活返现信息
             $activeArr = [];
 
-            foreach ($value as $k => $v) {
+            foreach ($value->settlements as $k => $v) {
                 // 结算价信息
                 if ($v->seId > 0) {
                     $priceArr[] = [
