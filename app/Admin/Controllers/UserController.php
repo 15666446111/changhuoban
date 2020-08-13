@@ -113,17 +113,25 @@ class UserController extends AdminController
 
         $type = false;
 
+
         /**
          * @version [<vector>] [< 如果当前登录的为操盘方 检查当前分享图是否属于此操盘方>]
          */
         if(Admin::user()->operate != "All"){
+
             $model = User::where('id', $id)->first();
+
             if($model->operate != Admin::user()->operate) return abort('403');
 
             $type = \App\AdminSetting::where('operate_number', Admin::user()->operate)->value('pattern');        
         }
 
-        $show->field('nickname', __('昵称'));
+
+            $show->field('nickname', __('昵称'));
+
+
+
+        
 
         $show->field('account', __('账号'));
 

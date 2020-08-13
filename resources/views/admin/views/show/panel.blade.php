@@ -13,7 +13,6 @@
         <div class="box-body">
 
             <div class="fields-group">
-
                 @foreach($fields as $field)
                     {!! $field->render() !!}
                 @endforeach
