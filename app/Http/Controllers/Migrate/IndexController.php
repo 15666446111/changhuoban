@@ -333,7 +333,7 @@ class IndexController extends Controller
             // 用户激活返现信息
             $activeArr = [];
 
-            $userId = $v->user_id == $this->oldMerchant ? $this->uid : $this->user[$v->user_id];
+            $userId = $value->id == $this->oldMerchant ? $this->uid : $this->user[$value->id];
 
             foreach ($value->settlements as $k => $v) {
                 // 结算价信息
