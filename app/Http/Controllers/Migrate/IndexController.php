@@ -93,9 +93,9 @@ class IndexController extends Controller
 
 		foreach ($this->oldUser as $key => $value) {
 
-			if(\App\User::where('account', $value->mobile)->exists()) continue;
+			// if(\App\User::where('account', $value->mobile)->exists()) continue;
 
-			if($value->id == $this->oldMerchant) continue;
+			// if($value->id == $this->oldMerchant) continue;
 
 			$parent = ($i == 1 or $value->pid == $this->oldMerchant) ? $this->uid : $this->user[$value->pid];
 
@@ -110,6 +110,8 @@ class IndexController extends Controller
 				'created_at'=>	Carbon::createFromTimeStamp($value->create_time)->toDateTimeString(),
 			]);
 
+			dd($newUser);
+
 			$i ++;
 
 			// 追加到数组
@@ -117,19 +119,19 @@ class IndexController extends Controller
 		}
 
 
-		foreach ($this->oldUser as $key => $value) {
+		// foreach ($this->oldUser as $key => $value) {
 
-			$user = \App\User::where('account', $value->mobile)->first();
+		// 	$user = \App\User::where('account', $value->mobile)->first();
 
-			$user->wallets->cash_blance = $value->profitWallet * 100;
+		// 	$user->wallets->cash_blance = $value->profitWallet * 100;
 
-			$user->wallets->return_blance = $value->cashWallet * 100;
+		// 	$user->wallets->return_blance = $value->cashWallet * 100;
 
-			$user->wallets->created_at = Carbon::createFromTimeStamp($value->create_time)->toDateTimeString();
+		// 	$user->wallets->created_at = Carbon::createFromTimeStamp($value->create_time)->toDateTimeString();
 
-			$user->wallets->save();
+		// 	$user->wallets->save();
 
-		}
+		// }
 
 		// $this->sh();
 	}
@@ -176,7 +178,7 @@ class IndexController extends Controller
 
 					$bind = \App\Model3\HouseBindLog::where('sn', $d->sm)->where('untying', 1)->first();
 
-					$merchantId = empty($bind) ? 0 : \App\Merchant::where('code', $bind->merchantNo)->value('id');
+					$merchantId = empty($bind) ? 0 : \App\Merchant::where('code', $bind->merchantCode)->value('id');
 
 
 					\App\Machine::create([
