@@ -307,7 +307,7 @@ class IndexController extends Controller
         $width4 = 1000;
 
         $html4 = '<div style="margin:100px auto; padding: 8px; border: 1px solid gray; background: #EAEAEA; width: %upx">
-        <div style="text-align:center; margin-bottom:10px;">共有'.count($this->oldUser).'条会员结算信息需要同步</div><div style="padding: 0; background-color: white; border: 1px solid navy; width: %upx"><div id="progress1" style="padding: 0; background-color: #FFCC66; border: 0; width: 0px; text-align: center; height: 16px"></div></div><div id="msg4" style="font-family: Tahoma; font-size: 9pt;">正在处理...</div><div id="percent1" style="position: relative; top: -34px; text-align: center; font-weight: bold; font-size: 8pt">0%%</div></div>';
+        <div style="text-align:center; margin-bottom:10px;">共有'.count($this->oldUser).'条会员结算信息需要同步</div><div style="padding: 0; background-color: white; border: 1px solid navy; width: %upx"><div id="progress4" style="padding: 0; background-color: #FFCC66; border: 0; width: 0px; text-align: center; height: 16px"></div></div><div id="msg4" style="font-family: Tahoma; font-size: 9pt;">正在处理...</div><div id="percent4" style="position: relative; top: -34px; text-align: center; font-weight: bold; font-size: 8pt">0%%</div></div>';
 
         echo sprintf($html4, $width4+8, $width4);
         
@@ -326,7 +326,7 @@ class IndexController extends Controller
 
             $msg4 = $i == count($this->oldUser) ? '钱包数据同步完成' : '正在同步第' . $i . '条会员结算信息';
             
-            $script1 = '<script>document.getElementById("percent1").innerText="%u%%";document.getElementById("progress1").style.width="%upx";document.getElementById("msg4").innerText="%s";</script>';
+            $script1 = '<script>document.getElementById("percent4").innerText="%u%%";document.getElementById("progress4").style.width="%upx";document.getElementById("msg4").innerText="%s";</script>';
             
             // 用户结算价信息
             $priceArr = [];
@@ -473,7 +473,7 @@ class IndexController extends Controller
                     'standard_status_lj'=> $d->st_return_state == 2 ? -1 : 0,
                     'sim_frozen_num' => $d->sim_fro_state,
                     'policy_id'      => $this->activeList[$d->activity_id],
-                    'style_id'       => $thsi->brandList[$d->brand_id]
+                    'style_id'       => $this->brandList[$d->brand_id]
                 ]);
             }
 
@@ -513,7 +513,7 @@ class IndexController extends Controller
         $width3 = 1000;
 
         $html3 = '<div style="margin:100px auto; padding: 8px; border: 1px solid gray; background: #EAEAEA; width: %upx">
-        <div style="text-align:center; margin-bottom:10px;">共有'.count($this->trade).'条交易数据需要同步</div><div style="padding: 0; background-color: white; border: 1px solid navy; width: %upx"><div id="progress4" style="padding: 0; background-color: #FFCC66; border: 0; width: 0px; text-align: center; height: 16px"></div></div><div id="msg4" style="font-family: Tahoma; font-size: 9pt;">正在处理...</div><div id="percent4" style="position: relative; top: -34px; text-align: center; font-weight: bold; font-size: 8pt">0%%</div></div>';
+        <div style="text-align:center; margin-bottom:10px;">共有'.count($this->trade).'条交易数据需要同步</div><div style="padding: 0; background-color: white; border: 1px solid navy; width: %upx"><div id="progress3" style="padding: 0; background-color: #FFCC66; border: 0; width: 0px; text-align: center; height: 16px"></div></div><div id="msg3" style="font-family: Tahoma; font-size: 9pt;">正在处理...</div><div id="percent3" style="position: relative; top: -34px; text-align: center; font-weight: bold; font-size: 8pt">0%%</div></div>';
 
         echo sprintf($html3, $width3+8, $width3);
         
@@ -530,9 +530,9 @@ class IndexController extends Controller
 
             $proportion = $i / count($this->trade);
 
-            $msg4 = $i == count($this->trade) ? '交易数据同步完成' : '正在同步第' . $i . '条交易数据信息';
+            $msg3 = $i == count($this->trade) ? '交易数据同步完成' : '正在同步第' . $i . '条交易数据信息';
             
-            $script4 = '<script>document.getElementById("percent4").innerText="%u%%";document.getElementById("progress4").style.width="%upx";document.getElementById("msg4").innerText="%s";</script>';
+            $script4 = '<script>document.getElementById("percent3").innerText="%u%%";document.getElementById("progress3").style.width="%upx";document.getElementById("msg3").innerText="%s";</script>';
             
             $deductionTranCode = [
                 '020002'    => '020002',
@@ -593,7 +593,7 @@ class IndexController extends Controller
             ]);
 
 
-            echo sprintf($script4, intval($proportion *100 ), intval( $i/count($this->trade)*$width3), $msg4);
+            echo sprintf($script4, intval($proportion *100 ), intval( $i/count($this->trade)*$width3), $msg3);
 
             $i++;
 
