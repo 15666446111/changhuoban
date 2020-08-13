@@ -240,7 +240,7 @@ class IndexController extends Controller
         $width1 = 1000;
 
         $html1 = '<div style="margin:100px auto; padding: 8px; border: 1px solid gray; background: #EAEAEA; width: %upx">
-        <div style="text-align:center; margin-bottom:10px;">共有'.count($this->oldUser).'条会员交易数据需要同步</div><div style="padding: 0; background-color: white; border: 1px solid navy; width: %upx"><div id="progress1" style="padding: 0; background-color: #FFCC66; border: 0; width: 0px; text-align: center; height: 16px"></div></div><div id="msg1" style="font-family: Tahoma; font-size: 9pt;">正在处理...</div><div id="percent1" style="position: relative; top: -34px; text-align: center; font-weight: bold; font-size: 8pt">0%%</div></div>';
+        <div style="text-align:center; margin-bottom:10px;">共有'.count($this->oldUser).'条会员钱包信息需要同步</div><div style="padding: 0; background-color: white; border: 1px solid navy; width: %upx"><div id="progress1" style="padding: 0; background-color: #FFCC66; border: 0; width: 0px; text-align: center; height: 16px"></div></div><div id="msg1" style="font-family: Tahoma; font-size: 9pt;">正在处理...</div><div id="percent1" style="position: relative; top: -34px; text-align: center; font-weight: bold; font-size: 8pt">0%%</div></div>';
 
         echo sprintf($html1, $width1+8, $width1);
         
@@ -552,7 +552,7 @@ class IndexController extends Controller
                 'user_id'           => $value->user_id == $this->oldMerchant ? $this->uid : $this->user[$value->user_id],
                 'machine_id'        => -1,
                 'is_send'           => $value->is_send,
-                'term_id'           => $value->termId,
+                'term_id'           => !empty($value->termId) ? $value->termId : '',
                 'sn'                => $value->sm,
                 'merchant_name'     => null,
                 'merchant_phone'    => '',
@@ -563,9 +563,9 @@ class IndexController extends Controller
                 'amount'            => $value->j_money * 100 * $addSub,
                 'settle_amount'     => $value->settleAmount * 100 * $addSub,
                 'card_type'         => $value->cardType,
-                'trans_date'        => $value->trans_date,
+                'trans_date'        => $value->j_pydate,
                 'trade_time'        => Carbon::createFromFormat('YmdHis', $value->j_pytime)->toDateTimeString(),
-                'trace_no'          => $value->traceNo,
+                'trace_no'          => !empty($value->traceNo) ? $value->traceNo : '',
                 'remark'            => '',
                 'created_at'        => Carbon::createFromTimeStamp($value->add_time)->toDateTimeString(),
                 'fee_type'          => $value->feeType,
@@ -577,7 +577,7 @@ class IndexController extends Controller
                 'original_rrn'      => $value->originalRrn,
                 'original_trace_no' => null,
                 'sys_resp_code'     => $value->sysRespCode,
-                'sys_resp_desc'     => $value->sysRespDesc,
+                'sys_resp_desc'     => !empty($value->sysRespDesc) ? $value->sysRespDesc : '',
                 'is_repeat'         => 0,
                 'is_invalid'        => 0,
             ]); 

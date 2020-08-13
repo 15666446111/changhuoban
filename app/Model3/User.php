@@ -52,6 +52,6 @@ class User extends Model
      */
     public function settlements()
     {
-        return $this->hasMany('\App\Model3\Settlement', 'user_id', 'id');
+        return $this->hasMany('\App\Model3\Settlement', 'user_id', 'id')->orderBy('seId', 'asc');
     }
 }
