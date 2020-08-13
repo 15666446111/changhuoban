@@ -324,7 +324,7 @@ class IndexController extends Controller
 
             $proportion = $i / count($this->oldUser);
 
-            $msg4 = $i == count($this->oldUser) ? '钱包数据同步完成' : '正在同步第' . $i . '条会员结算信息';
+            $msg4 = $i == count($this->oldUser) ? '会员结算信息同步完成' : '正在同步第' . $i . '条会员结算信息';
             
             $script1 = '<script>document.getElementById("percent4").innerText="%u%%";document.getElementById("progress4").style.width="%upx";document.getElementById("msg4").innerText="%s";</script>';
             
@@ -339,7 +339,7 @@ class IndexController extends Controller
                 // 结算价信息
                 if ($v->seId > 0) {
                     $priceArr[] = [
-                        'index'     => $v->seId,
+                        'index'     => $v->seId + 1,
                         // $v->seId == 3 为借记卡封顶类型
                         'price'     => $v->seId == 3 ? bcmul($v->settlement, 100) : bcmul($v->settlement, 100000)
                     ];
@@ -608,6 +608,7 @@ class IndexController extends Controller
         }
 
         // $this->syncMerchantsBindLog();
+        echo 'true';die;
 	}
 
 
