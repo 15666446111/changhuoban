@@ -333,6 +333,8 @@ class IndexController extends Controller
             // 用户激活返现信息
             $activeArr = [];
 
+            $userId = $v->user_id == $this->oldMerchant ? $this->uid : $this->user[$v->user_id];
+
             foreach ($value->settlements as $k => $v) {
                 // 结算价信息
                 if ($v->seId > 0) {
@@ -345,7 +347,7 @@ class IndexController extends Controller
                     // 活动激活返现信息
                     \App\UserPolicy::create([
                         'default_active_set'    => $v->settlement * 100,
-                        'user_id'               => $this->user[$v->user_id],
+                        'user_id'               => $userId,
                         'policy_id'             => $this->activeList[$v->activityId]
                     ]);
                 }
@@ -353,7 +355,7 @@ class IndexController extends Controller
 
             if (!empty($priceArr)) {
                 \App\UserFee::create([
-                    'user_id'           => $this->user[$v->user_id],
+                    'user_id'           => $userId,
                     'policy_group_id'   => $this->policyGruopId,
                     'price'             => json_encode($priceArr)
                 ]);
@@ -547,7 +549,7 @@ class IndexController extends Controller
             // 创建订单
             $order = \App\Trade::create([
                 'trade_no'          => $value->j_pydate . $value->rrn,
-                'user_id'           => $this->user[$value->user_id],
+                'user_id'           => $value->user_id == $this->oldMerchant ? $this->uid : $this->user[$value->user_id],
                 'machine_id'        => -1,
                 'is_send'           => $value->is_send,
                 'term_id'           => $value->termId,
