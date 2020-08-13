@@ -545,11 +545,16 @@ class IndexController extends Controller
             ];
 
             $addSub = !empty($deductionTranCode[$value->tranCode]) ? -1 : 1;
+            // 归属用戶id
+            $userId = $value->user_id;
+            if ($value->user_id > 0) {
+                $userId = $value->user_id == $this->oldMerchant ? $this->uid : $this->user[$value->user_id];
+            }
 
             // 创建订单
             $order = \App\Trade::create([
                 'trade_no'          => $value->j_pydate . $value->rrn,
-                'user_id'           => $value->user_id == $this->oldMerchant ? $this->uid : $this->user[$value->user_id],
+                'user_id'           => $userId,
                 'machine_id'        => -1,
                 'is_send'           => $value->is_send,
                 'term_id'           => !empty($value->termId) ? $value->termId : '',
