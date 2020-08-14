@@ -80,6 +80,6 @@ class User extends Model
      */
     public function banks()
     {
-        return $this->hasMany('\App\Model3\Bank', 'user_id', 'id');
+        return $this->hasOne('\App\Model3\Bank', 'user_id', 'id');
     }
 }
