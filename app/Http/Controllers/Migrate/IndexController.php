@@ -299,6 +299,8 @@ class IndexController extends Controller
             flush();   //刷新缓冲区的内容，输出
         }
 
+        sleep(1);
+
         $this->syncSettlement();
     }
 
