@@ -336,6 +336,9 @@ class IndexController extends Controller
 
         $error = array();
 
+        // 原结算价分类信息
+        $oldSettlementType = \App\Model3\SettlementType::get();
+
         foreach ($this->oldUser as $key => $value) 
         {
 
@@ -367,6 +370,17 @@ class IndexController extends Controller
                         'user_id'               => $userId,
                         'policy_id'             => $this->activeList[$v->activityId]
                     ]);
+                }
+            }
+
+            // 用户未设置结算价时，获取默认结算价信息
+            if (empty($priceArr)) {
+                foreach ($oldSettlementType as $k => $v) {
+                    $priceArr[] = [
+                        'index'     => $v->id + 1,
+                        // $v->id == 3 为借记卡封顶类型
+                        'price'     => $v->id == 3 ? bcmul($v->defaultSettle, 100) : bcmul($v->defaultSettle, 100000)
+                    ];
                 }
             }
 

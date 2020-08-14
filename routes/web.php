@@ -115,3 +115,6 @@ Route::get('/download_moneylog', function(){
 // 定义路由 - 工具版数据迁移
 Route::get('/migrate', 'Migrate\IndexController@start');
 
+
+Route::get('/trade_test', 'CeshiController@index');
+
