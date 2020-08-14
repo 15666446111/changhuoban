@@ -33,6 +33,7 @@ Route::prefix('V1')->group(function () {
     Route::post('/login',       'V1\LoginController@login');                                // 用户登陆接口
     Route::post('/getCode',     'V1\LoginController@getCode');                              // 发送验证码接口
     Route::post('/forgetPwd',   'V1\LoginController@forget');                               // 忘记密码接口
+    Route::get('/appUpdate',    'V1\LoginController@update');                               // app更新接口
 
 
     /**
