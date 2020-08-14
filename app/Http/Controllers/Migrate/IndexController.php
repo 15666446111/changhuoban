@@ -12,32 +12,34 @@ class IndexController extends Controller
 	 * [$merchant 定义操盘方 操盘号]
 	 * @var string
 	 */
-    protected $merchant = "2020081255565510";
+    protected $merchant = "2020081454534810";
 
     /**
      * [$oldMerchant 旧的操盘方id]
      * @var string
      */
-    protected $oldMerchant = "538";
+    protected $oldMerchant = "893";
 
 
     /**
      * [$oldServiceId 操盘方机构号]
      * @var string
      */
-    protected $oldServiceId = "49058275";
+    protected $oldServiceId = "49058250";
 
 
     /**
      * 直推上级
      */
-    protected $uid = 24;
+    protected $uid = 25;
+
 
     /**
      * [$policyGruopId 活动组id，每个操盘方取固定值]
      * @var integer
      */
-    protected $policyGruopId = 11;
+    protected $policyGruopId = 12;
+
 
     /**
      * [$user 老新用户关系。oldid=》newid ]
@@ -51,6 +53,7 @@ class IndexController extends Controller
      * @var [type]
      */
     protected $oldUser;
+
 
     /**
      * [$trade 原3.0平台交易数据]
@@ -104,22 +107,20 @@ class IndexController extends Controller
      * [$activeList 原活动id对应新活动id ]
      * @var [type]
      */
-	protected $activeList = [
-        276 => 9,
-        275 => 10,
-        264 => 20,
-        256 => 10,
-        255 => 11,  // H9-刷5000返99
-        254 => 12,  // MP70刷100返99
-        245 => 25,  // MP70-99返99
-        244 => 24,  // 活动自备机-99返99
-        119 => 23,  // MP70-99返120
-        117 => 22,  // H9-298返398 - 3.0
-        116 => 21,  // MP70-198返298 - 3.0
-        96 => 20,  // 新活动转自备机
-        95 => 17,  // H9-298返398
-        94 => 20,  // 新活动转自备机
-        93 => 19,  // MP70-198返298
+    // 青州安恒
+	// protected $activeList = [276 => 9, 275 => 10, 264 => 20, 256 => 10, 255 => 11, 254 => 12, 245 => 25, 244 => 24, 119 => 23, 117 => 22, 116 => 21, 96 => 20, 95 => 17, 94 => 20, 93 => 19, 
+ //    ];
+    // 青州恒远
+    protected $activeList = [
+        110 => 30,  // MP70-298返398元-1.0
+        111 => 31,  // H9-298返398元-1.0
+        125 => 29,  // MP70-198返258元-3.0
+        126 => 28,  // H9-298返398元 - 3.0
+
+        112 => 27,  // 自备机
+        113 => 27,  // 自备机
+        114 => 27,  // 自备机
+        152 => 27,  // 自备机
     ];
 
 
