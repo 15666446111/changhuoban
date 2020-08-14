@@ -602,7 +602,7 @@ class IndexController extends Controller
                 'card_type'         => $value->cardType,
                 'trans_date'        => $value->j_pydate,
                 // 'trade_time'        => Carbon::createFromFormat('YmdHis', $value->j_pytime)->toDateTimeString(),
-                'trade_time'        => dump(date('Y-m-d H:i:s', strtotime($value->j_pytime))),
+                'trade_time'        => date('Y-m-d H:i:s', strtotime($value->j_pytime)),
                 'trace_no'          => !empty($value->traceNo) ? $value->traceNo : '',
                 'remark'            => '',
                 'created_at'        => Carbon::createFromTimeStamp($value->add_time)->toDateTimeString(),
