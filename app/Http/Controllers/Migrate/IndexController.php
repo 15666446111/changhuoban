@@ -261,7 +261,7 @@ class IndexController extends Controller
             
             $script1 = '<script>document.getElementById("percent1").innerText="%u%%";document.getElementById("progress1").style.width="%upx";document.getElementById("msg1").innerText="%s";</script>';
             
-
+            // 用户钱包信息
             $user = \App\User::where('account', $value->mobile)->first();
 
             $user->wallets->cash_blance = $value->profitWallet * 100;
@@ -271,6 +271,24 @@ class IndexController extends Controller
             $user->wallets->created_at = Carbon::createFromTimeStamp($value->create_time)->toDateTimeString();
 
             $user->wallets->save();
+
+            // 提现银行卡信息
+            $userId = $value->id == $this->oldMerchant ? $this->uid : $this->user[$value->id];
+
+            if (!empty($value->banks)) {
+                \App\Bank::create([
+                    'user_id'   => $userId,
+                    'user_name' => $value->banks->name,
+                    'bank_name' => $value->banks->bank,
+                    'bank'      => $value->banks->bank_number,
+                    'bank'      => $value->banks->bank_number,
+                    'number'    => $value->banks->number,
+                    'open_bank' => $value->banks->kaihuhang,
+                    'bank_open' => $value->banks->banklink,
+                    'is_default'=> 1
+                ]);
+            }
+            
 
             echo sprintf($script1, intval($proportion *100 ), intval( $i/count($this->oldUser)*$width1), $msg1);
 
@@ -608,13 +626,91 @@ class IndexController extends Controller
         }
 
         // $this->syncMerchantsBindLog();
-        echo 'true';die;
+        echo '迁移完成';die;
 	}
 
 
+    // public function syncWithdraw()
+    // {
+        
+    //     set_time_limit(0);                                  //设置程序执行时间
+        
+    //     ignore_user_abort(true);                            //设置断开连接继续执行
+        
+    //     ob_start();                                         //打开输出缓冲控制
+        
+    //     echo str_repeat(' ',1024*4);                        //字符填充
 
+    //     $width5 = 1000;
 
-	// 后期更新
-	// $user->machines->style_id 	机器型号
+    //     $html5 = '<div style="margin:100px auto; padding: 8px; border: 1px solid gray; background: #EAEAEA; width: %upx">
+    //     <div style="text-align:center; margin-bottom:10px;">共有'.count($this->oldUser).'个会员提现数据需要同步</div><div style="padding: 0; background-color: white; border: 1px solid navy; width: %upx"><div id="progress5" style="padding: 0; background-color: #FFCC66; border: 0; width: 0px; text-align: center; height: 16px"></div></div><div id="msg5" style="font-family: Tahoma; font-size: 9pt;">正在处理...</div><div id="percent5" style="position: relative; top: -34px; text-align: center; font-weight: bold; font-size: 8pt">0%%</div></div>';
 
+    //     echo sprintf($html5, $width5+8, $width5);
+        
+    //     echo ob_get_clean();                                //获取当前缓冲区内容并清除当前的输出缓冲
+
+    //     flush();                                            //刷新缓冲区的内容，输出
+
+    //     $i = 1;
+
+    //     $error = array();
+
+    //     foreach ($this->oldUser as $key => $value) 
+    //     {
+
+    //         $proportion = $i / count($this->oldUser);
+
+    //         $msg5 = $i == count($this->oldUser) ? '会员提现数据同步完成' : '正在同步第' . $i . '个会员提现数据';
+            
+    //         $script1 = '<script>document.getElementById("percent5").innerText="%u%%";document.getElementById("progress5").style.width="%upx";document.getElementById("msg5").innerText="%s";</script>';
+            
+    //         foreach ($value->wallets as $k => $v) {
+
+    //             // 原后台与新后台打款状态关系，oldId => newId
+    //             $stateArr = [
+    //                 1 => 2,
+    //                 2 => 1,
+    //                 3 => 3
+    //             ];
+    //             // 审核时间
+    //             $checkAt = !empty($v->check_time) ? Carbon::createFromTimeStamp($v->check_time)->toDateTimeString() : null;
+    //             // 打款系统
+    //             $paySystem = 0;
+    //             if ($v->money_state == 1) {
+    //                 $paySystem = $v->platform == 2 ? 2 : 1;
+    //             }
+                
+    //             \App\UserWallet::create([
+    //                 'user_id'       => $this->user[$v->user_id],
+    //                 'order_no'      => $v->numbers,
+    //                 'money'         => $v->money * 100,
+    //                 'real_money'    => $v->numbers * 100,
+    //                 'type'          => $v->walletType,
+    //                 'state'         => $stateArr[$v->state],
+    //                 'make_state'    => $v->money_state == 1 ? $v->money_state : 2,
+    //                 'check_at'      => $checkAt,
+    //                 'created_at'    => Carbon::createFromTimeStamp($v->time)->toDateTimeString(),
+    //                 'operate'       => $this->merchant,
+    //                 'pay_system'    => $paySystem,
+    //                 'pay_type'      => $v->automatic == 1 ? 2 : 1,
+    //                 // 'rate'          => $v->numbers,
+    //                 // 'rate_m'        => $v->numbers,
+    //                 'remark'        => !empty($v->reason) ? $v->reason : '',
+    //                 'channle_money' => $v->numbers,
+    //             ]);
+
+    //         }
+
+    //         echo sprintf($script1, intval($proportion *100 ), intval( $i/count($this->oldUser)*$width5), $msg5);
+
+    //         $i++;
+
+    //         echo ob_get_clean();    //获取当前缓冲区内容并清除当前的输出缓冲
+
+    //         flush();   //刷新缓冲区的内容，输出
+    //     }
+
+    //     $this->syncSettlement();
+    // }
 }

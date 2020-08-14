@@ -54,4 +54,32 @@ class User extends Model
     {
         return $this->hasMany('\App\Model3\Settlement', 'user_id', 'id')->orderBy('seId', 'asc');
     }
+
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-08-12
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 用户提现记录表 ]
+     * @return    [type]      [description]
+     */
+    public function withdraws()
+    {
+        return $this->hasMany('\App\Model3\Withdraw', 'user_id', 'id');
+    }
+
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-08-12
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 用户提现银行卡表 ]
+     * @return    [type]      [description]
+     */
+    public function banks()
+    {
+        return $this->hasMany('\App\Model3\Bank', 'user_id', 'id');
+    }
 }
