@@ -170,7 +170,7 @@ class Policy extends Model
     {
         if(!empty($set)){
             foreach ($set as $key => $value)
-                $set[$key] = $value * 100;
+                $set[$key] = $value ? $value * 100 : 0;
             $this->attributes['default_active_set'] = json_encode($set);
         }else
             $this->attributes['default_active_set'] = "";

@@ -378,8 +378,6 @@ class IndexController extends Controller
                 ]);
             }
             
-
-
             echo sprintf($script1, intval($proportion *100 ), intval( $i/count($this->oldUser)*$width4), $msg4);
 
             $i++;
