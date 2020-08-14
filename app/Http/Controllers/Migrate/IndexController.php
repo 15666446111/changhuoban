@@ -149,7 +149,7 @@ class IndexController extends Controller
      */
 	public function start()
 	{
-       
+
         set_time_limit(0);  								//设置程序执行时间
         
         ignore_user_abort(true);    						//设置断开连接继续执行
@@ -599,7 +599,8 @@ class IndexController extends Controller
                 'settle_amount'     => $value->settleAmount * 100 * $addSub,
                 'card_type'         => $value->cardType,
                 'trans_date'        => $value->j_pydate,
-                'trade_time'        => Carbon::createFromFormat('YmdHis', $value->j_pytime)->toDateTimeString(),
+                // 'trade_time'        => Carbon::createFromFormat('YmdHis', $value->j_pytime)->toDateTimeString(),
+                'trade_time'        => dump(date('Y-m-d H:i:s', strtotime($value->j_pytime))),
                 'trace_no'          => !empty($value->traceNo) ? $value->traceNo : '',
                 'remark'            => '',
                 'created_at'        => Carbon::createFromTimeStamp($value->add_time)->toDateTimeString(),
