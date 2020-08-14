@@ -220,9 +220,9 @@ class LoginController extends Controller
             if($appid == $request->appid){
 
                 if($version != $request->version){
-                    return response()->json(['error'=>['success' => '版本更新检查成功!', 'url' => config('base.app_down_url')]]);
+                    return response()->json(['success'=>['success' => '版本更新检查成功!', 'url' => config('base.app_down_url')]]);
                 }else{
-                    return response()->json(['error'=>['success' => '版本更新检查成功!']]);
+                    return response()->json(['success'=>['success' => '版本更新检查成功!']]);
                 }
 
             }else
