@@ -197,4 +197,39 @@ class LoginController extends Controller
             return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
         }
     }
+
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-07-28
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ app更新接口 ]
+     * @param     Request     $request [description]
+     * @return    [type]               [description]
+     */
+    public function update(Request $request)
+    {
+        try{
+            if(!$request->appid or !$request->version) return response()->json(['error'=>['message' => '版本更新检查失败!']]);
+
+            $appid = config('base.appid');
+
+            $version = config('base.app_version');
+
+            if($appid == $request->appid){
+
+                if($version != $request->version){
+                    return response()->json(['error'=>['success' => '版本更新检查成功!', 'url' => config('base.app_down_url')]]);
+                }else{
+                    return response()->json(['error'=>['success' => '版本更新检查成功!']]);
+                }
+
+            }else
+                 return response()->json(['error'=>['message' => '版本检查失败,APP_ID不一致!']]);
+
+        } catch (\Exception $e){
+            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
+        }
+    }
 }
