@@ -149,7 +149,7 @@ class IndexController extends Controller
      */
 	public function start()
 	{
-
+       
         set_time_limit(0);  								//设置程序执行时间
         
         ignore_user_abort(true);    						//设置断开连接继续执行
