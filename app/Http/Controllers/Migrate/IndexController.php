@@ -337,7 +337,7 @@ class IndexController extends Controller
         $error = array();
 
         // 原结算价分类信息
-        $oldSettlementType = \App\SettlementType::get();
+        $oldSettlementType = \App\Model3\SettlementType::get();
 
         foreach ($this->oldUser as $key => $value) 
         {
