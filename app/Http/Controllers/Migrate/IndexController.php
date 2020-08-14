@@ -281,7 +281,6 @@ class IndexController extends Controller
                     'user_name' => $value->banks->name,
                     'bank_name' => $value->banks->bank,
                     'bank'      => $value->banks->bank_number,
-                    'bank'      => $value->banks->bank_number,
                     'number'    => $value->banks->number,
                     'open_bank' => $value->banks->kaihuhang,
                     'bank_open' => $value->banks->banklink,
