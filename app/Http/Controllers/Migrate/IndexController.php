@@ -134,7 +134,7 @@ class IndexController extends Controller
     {
     	$this->oldUser = \App\Model3\User::where('txt', 'like', '%,'.$this->oldMerchant.',%')->orWhere('id', $this->oldMerchant)->orderBy('create_time', 'asc')->get();
 
-    	// $this->trade   = \App\Model3\Trade::orderBy('j_pytime', 'asc')->get();
+    	$this->trade   = \App\Model3\Trade::orderBy('j_pytime', 'asc')->get();
     }
 
 
