@@ -583,6 +583,8 @@ class IndexController extends Controller
                 $userId = $value->user_id == $this->oldMerchant ? $this->uid : $this->user[$value->user_id];
             }
 
+            var_dump($value->j_pytime);
+
             // 创建订单
             $order = \App\Trade::create([
                 'trade_no'          => $value->j_pydate . $value->rrn,
@@ -601,8 +603,7 @@ class IndexController extends Controller
                 'settle_amount'     => $value->settleAmount * 100 * $addSub,
                 'card_type'         => $value->cardType,
                 'trans_date'        => $value->j_pydate,
-                // 'trade_time'        => Carbon::createFromFormat('YmdHis', $value->j_pytime)->toDateTimeString(),
-                'trade_time'        => date('Y-m-d H:i:s', strtotime($value->j_pytime)),
+                'trade_time'        => Carbon::createFromFormat('YmdHis', $value->j_pytime)->toDateTimeString(),
                 'trace_no'          => !empty($value->traceNo) ? $value->traceNo : '',
                 'remark'            => '',
                 'created_at'        => Carbon::createFromTimeStamp($value->add_time)->toDateTimeString(),
