@@ -583,8 +583,6 @@ class IndexController extends Controller
                 $userId = $value->user_id == $this->oldMerchant ? $this->uid : $this->user[$value->user_id];
             }
 
-            var_dump($value->j_pytime);
-
             // 创建订单
             $order = \App\Trade::create([
                 'trade_no'          => $value->j_pydate . $value->rrn,
@@ -619,7 +617,7 @@ class IndexController extends Controller
                 'sys_resp_desc'     => !empty($value->sysRespDesc) ? $value->sysRespDesc : '',
                 'is_repeat'         => 0,
                 'is_invalid'        => 0,
-            ]); 
+            ]);
 
 
             $orderInfo = \App\TradesDeputy::create([
