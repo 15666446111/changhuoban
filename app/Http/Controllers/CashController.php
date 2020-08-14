@@ -449,6 +449,8 @@ class CashController extends Controller
                         // 借记卡封顶类交易，团队分润 = 结算价差
                         $teamMoney = $settleSub;
                     } else {
+                        // 非封顶类交易分润，分润金额 = 手续费 - 交易金额 * 结算价
+                        $formatSettle = bcdiv($settleSub, 100000, 5);
                         // 非借记卡封顶类交易，团队分润 = 交易金额 * 结算价差
                         $teamMoney = bcmul(abs($this->trade->amount), sprintf('%.6f', $formatSettle));
                     }
