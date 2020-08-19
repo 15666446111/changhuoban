@@ -630,37 +630,37 @@ class IndexController extends Controller
             ]);
 
             // 同步交易数据对应的分润信息
-            $cashArr = [];
+            // $cashArr = [];
 
-            $cashTypeArr = [
-                1   => 1,   // 直营分润
-                2   => 2,   // 团队分润
-                3   => 3,   // 激活返现(直营)
-                16  => 4,   // 激活间推奖励
-                17  => 5,   // 激活间间推奖励
-                7   => 6,   // 连续达标返现(直营)
-                6   => 8,   // 累计达标返现(直营)
-                4   => 11,  // 激活返现(团队)
-                5   => 12,  // 注册奖励
-                8   => 13,  // 财商学院推荐奖励
-                10  => 14,  // EPOS直营分润
-                11  => 15,  // EPOS团队分润
-                12  => 16,  // 推荐办卡
-                13  => 17,  // 积分兑换
-                14  => 18,  // 推荐办卡(团队)
-                15  => 19,  // 积分兑换(团队)
+            // $cashTypeArr = [
+            //     1   => 1,   // 直营分润
+            //     2   => 2,   // 团队分润
+            //     3   => 3,   // 激活返现(直营)
+            //     16  => 4,   // 激活间推奖励
+            //     17  => 5,   // 激活间间推奖励
+            //     7   => 6,   // 连续达标返现(直营)
+            //     6   => 8,   // 累计达标返现(直营)
+            //     4   => 11,  // 激活返现(团队)
+            //     5   => 12,  // 注册奖励
+            //     8   => 13,  // 财商学院推荐奖励
+            //     10  => 14,  // EPOS直营分润
+            //     11  => 15,  // EPOS团队分润
+            //     12  => 16,  // 推荐办卡
+            //     13  => 17,  // 积分兑换
+            //     14  => 18,  // 推荐办卡(团队)
+            //     15  => 19,  // 积分兑换(团队)
 
-            ];
-            foreach ($value->cashs as $k => $v) {
-                $cashArr[] = [
-                    'user_id'   => $v->user_id == $this->oldMerchant ? $this->uid : $this->user[$v->user_id],
-                    'order'     => $value->j_pydate . $value->rrn,
-                    'cash_money'=> $v->money * 100,
-                    'is_run'    => $v->is_run,
-                    'cash_type' => $cashTypeArr[$v->type],
+            // ];
+            // foreach ($value->cashs as $k => $v) {
+            //     $cashArr[] = [
+            //         'user_id'   => $v->user_id == $this->oldMerchant ? $this->uid : $this->user[$v->user_id],
+            //         'order'     => $value->j_pydate . $value->rrn,
+            //         'cash_money'=> $v->money * 100,
+            //         'is_run'    => $v->is_run,
+            //         'cash_type' => $cashTypeArr[$v->type],
                     
-                ];
-            }
+            //     ];
+            // }
 
 
             echo sprintf($script4, intval($proportion *100 ), intval( $i/count($this->trade)*$width3), $msg3);
