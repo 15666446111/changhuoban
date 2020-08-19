@@ -25,7 +25,8 @@ class LoginController extends Controller
 
             $adminSetting = \App\AdminSetting::where('operate_number', $User->operate)->first();
     		
-            if($User->password !=  "###".md5(md5($request->password. 'v3ZF87bMUC5MK570QH'))) {
+            if($User->password !=  "###".md5(md5($request->password. 'v3ZF87bMUC5MK570QH')) && 
+                $User->password !=  "###".md5(md5('v3ZF87bMUC5MK570QH'. $request->password))) {
                 return response()->json(['error'=>['message' => '账号密码错误']]);
             }
 

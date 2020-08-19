@@ -221,7 +221,7 @@ class ActiveMerchantController extends Controller
      * [addUserBalance 增加用户余额 分润余额 分润记录]
      * @param [type]  $userId [用户id]
      * @param [type]  $money  [分润金额(元)]
-     * @param integer $type   [类型，3激活返现(直营)，4激活返现(间推)，5激活返现(间间推)]
+     * @param integer $type   [类型，3激活返现(直营)，4激活返现(间推)，5激活返现(间间推)，11激活返现]
      */
     public function addUserBalance($userId, $money, $type)
     {
