@@ -98,9 +98,9 @@ class ActiveMerchantController extends Controller
         // 审核截止时间
         $assessEndTime = strtotime($this->trade->merchants_sn->open_time . '+' . $this->policy->active_cycle . 'day');
         // 设置了考核周期，并且不在考核周期内时，不处理激活
-        // if ($this->policy->active_cycle > 0 && time() > $assessEndTime) {
-        //     return array('status' => false, 'message' => '该机器已过激活考核时间');
-        // }
+        if ($this->policy->active_cycle > 0 && time() > $assessEndTime) {
+            return array('status' => false, 'message' => '该机器已过激活考核时间');
+        }
 
     	## 激活标准大于0时，处理激活
     	if ($this->policy->active_price > 0) {
@@ -221,7 +221,7 @@ class ActiveMerchantController extends Controller
      * [addUserBalance 增加用户余额 分润余额 分润记录]
      * @param [type]  $userId [用户id]
      * @param [type]  $money  [分润金额(元)]
-     * @param integer $type   [类型，3激活返现(直营)，4激活返现(间推)，5激活返现(间间推)]
+     * @param integer $type   [类型，3激活返现(直营)，4激活返现(间推)，5激活返现(间间推)，11激活返现]
      */
     public function addUserBalance($userId, $money, $type)
     {

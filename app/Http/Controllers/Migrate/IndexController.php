@@ -12,32 +12,34 @@ class IndexController extends Controller
 	 * [$merchant 定义操盘方 操盘号]
 	 * @var string
 	 */
-    protected $merchant = "2020081255565510";
+    protected $merchant = "2020081454534810";
 
     /**
      * [$oldMerchant 旧的操盘方id]
      * @var string
      */
-    protected $oldMerchant = "538";
+    protected $oldMerchant = "893";
 
 
     /**
      * [$oldServiceId 操盘方机构号]
      * @var string
      */
-    protected $oldServiceId = "49058275";
+    protected $oldServiceId = "49058250";
 
 
     /**
      * 直推上级
      */
-    protected $uid = 24;
+    protected $uid = 25;
+
 
     /**
      * [$policyGruopId 活动组id，每个操盘方取固定值]
      * @var integer
      */
-    protected $policyGruopId = 11;
+    protected $policyGruopId = 12;
+
 
     /**
      * [$user 老新用户关系。oldid=》newid ]
@@ -51,6 +53,7 @@ class IndexController extends Controller
      * @var [type]
      */
     protected $oldUser;
+
 
     /**
      * [$trade 原3.0平台交易数据]
@@ -104,22 +107,20 @@ class IndexController extends Controller
      * [$activeList 原活动id对应新活动id ]
      * @var [type]
      */
-	protected $activeList = [
-        276 => 9,
-        275 => 10,
-        264 => 20,
-        256 => 10,
-        255 => 11,  // H9-刷5000返99
-        254 => 12,  // MP70刷100返99
-        245 => 25,  // MP70-99返99
-        244 => 24,  // 活动自备机-99返99
-        119 => 23,  // MP70-99返120
-        117 => 22,  // H9-298返398 - 3.0
-        116 => 21,  // MP70-198返298 - 3.0
-        96 => 20,  // 新活动转自备机
-        95 => 17,  // H9-298返398
-        94 => 20,  // 新活动转自备机
-        93 => 19,  // MP70-198返298
+    // 青州安恒
+	// protected $activeList = [276 => 9, 275 => 10, 264 => 20, 256 => 10, 255 => 11, 254 => 12, 245 => 25, 244 => 24, 119 => 23, 117 => 22, 116 => 21, 96 => 20, 95 => 17, 94 => 20, 93 => 19, 
+ //    ];
+    // 青州恒远
+    protected $activeList = [
+        110 => 30,  // MP70-298返398元-1.0
+        111 => 31,  // H9-298返398元-1.0
+        125 => 29,  // MP70-198返258元-3.0
+        126 => 28,  // H9-298返398元 - 3.0
+
+        112 => 27,  // 自备机
+        113 => 27,  // 自备机
+        114 => 27,  // 自备机
+        152 => 27,  // 自备机
     ];
 
 
@@ -297,6 +298,8 @@ class IndexController extends Controller
 
             flush();   //刷新缓冲区的内容，输出
         }
+
+        sleep(1);
 
         $this->syncSettlement();
     }
@@ -614,7 +617,7 @@ class IndexController extends Controller
                 'sys_resp_desc'     => !empty($value->sysRespDesc) ? $value->sysRespDesc : '',
                 'is_repeat'         => 0,
                 'is_invalid'        => 0,
-            ]); 
+            ]);
 
 
             $orderInfo = \App\TradesDeputy::create([
@@ -625,6 +628,39 @@ class IndexController extends Controller
             	'termModel'		=> $value->termModel,
             	'created_at'	=> Carbon::createFromTimeStamp($value->add_time)->toDateTimeString(),
             ]);
+
+            // 同步交易数据对应的分润信息
+            // $cashArr = [];
+
+            // $cashTypeArr = [
+            //     1   => 1,   // 直营分润
+            //     2   => 2,   // 团队分润
+            //     3   => 3,   // 激活返现(直营)
+            //     16  => 4,   // 激活间推奖励
+            //     17  => 5,   // 激活间间推奖励
+            //     7   => 6,   // 连续达标返现(直营)
+            //     6   => 8,   // 累计达标返现(直营)
+            //     4   => 11,  // 激活返现(团队)
+            //     5   => 12,  // 注册奖励
+            //     8   => 13,  // 财商学院推荐奖励
+            //     10  => 14,  // EPOS直营分润
+            //     11  => 15,  // EPOS团队分润
+            //     12  => 16,  // 推荐办卡
+            //     13  => 17,  // 积分兑换
+            //     14  => 18,  // 推荐办卡(团队)
+            //     15  => 19,  // 积分兑换(团队)
+
+            // ];
+            // foreach ($value->cashs as $k => $v) {
+            //     $cashArr[] = [
+            //         'user_id'   => $v->user_id == $this->oldMerchant ? $this->uid : $this->user[$v->user_id],
+            //         'order'     => $value->j_pydate . $value->rrn,
+            //         'cash_money'=> $v->money * 100,
+            //         'is_run'    => $v->is_run,
+            //         'cash_type' => $cashTypeArr[$v->type],
+                    
+            //     ];
+            // }
 
 
             echo sprintf($script4, intval($proportion *100 ), intval( $i/count($this->trade)*$width3), $msg3);
