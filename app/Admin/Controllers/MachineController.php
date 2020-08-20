@@ -100,12 +100,18 @@ class MachineController extends AdminController
             if($actions->row->bind_status){
                 $actions->disableDelete();
             }
+
             $actions->disableEdit();
 
             // 如果机器未发货 显示发货按钮
             if($actions->row['user_id'] == 0 or $actions->row['user_id'] == null) $actions->add(new DeliverGoods);
         });
 
+
+
+        $grid->batchActions(function ($batch) {
+            $batch->disableDelete(false);
+        });
 
 
         // 
