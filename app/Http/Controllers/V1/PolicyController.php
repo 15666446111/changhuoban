@@ -183,7 +183,6 @@ class PolicyController extends Controller
             if(!$request->gid) return response()->json(['error'=>['message' => '请选择活动组!']]);
             if(!$request->set_price) return response()->json(['error'=>['message' => '请设置结算价参数!']]);
 
-
             $user = \App\User::where('id', $request->uid)->first();
             if(!$user or empty($user)) return response()->json(['error'=>['message' => '找不到伙伴信息!']]);
 
@@ -598,7 +597,6 @@ class PolicyController extends Controller
     public function getMinPrice($price, $default, $value)
     {   
         $min = 0;
-
         if(empty($price)){
             foreach ($default as $k => $v) {
                 if($v->trade_type_id == $value['index']){
@@ -607,9 +605,9 @@ class PolicyController extends Controller
                 }
             }
         }else{
-            foreach ($price as $key => $v) {
-                if($v->trade_type_id == $value['index']){
-                    $min = $v['price'];
+            foreach (json_decode($price->price) as $key => $v) {
+                if($v->index == $value['index']){
+                    $min = $v->price;
                     break;
                 }
             }
@@ -632,7 +630,6 @@ class PolicyController extends Controller
     public function getMaxPrice($curr, $default, $value)
     {
         $max = 0;
-
         //if(empty($curr)){
 
             foreach ($default as $key => $v) {
@@ -668,8 +665,7 @@ class PolicyController extends Controller
      */
     public function getSetPrice($set_price, $value)
     {
-        $rate = 0;
-
+        $rate = 0;  
         foreach ($set_price as $key => $v) {
             if($v['index'] == $value['index']) {
                 $rate = $v['price'];
