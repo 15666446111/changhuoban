@@ -42,23 +42,33 @@ Route::post('/trade', 	'TradeApiController@index');
  */
 Route::get('/api/getAdminFactory', 		'AdminApiController@getAdminFactory');
 
-
 /**
  * @version [<vector>] [<后台联动Select 查询符合条件的型号>]
  */
 Route::get('/api/getAdminStyle', 		'AdminApiController@getAdminStyle');
-
 
 /**
  * @version [<vector>] [<后台联动Select 查询符合条件的活动>]
  */
 Route::get('/api/getAdminUserGroup', 		'AdminApiController@getAdminUserGroup');
 
-
 /**
  * @version [<vector>] [<后台联动Select 查询符合条件的活动>]
  */
 Route::get('/api/getMachineSn', 		'AdminApiController@getMachineSn');
+
+/**
+ * @version [<vector>] [<后台联动Select 根据活动组 查询正常的活动 >]
+ */
+Route::get('/api/getPolicys', 			'AdminApiController@getPolicys');
+/**
+ * @version [<vector>] [<后台联动Select 根据操盘方 查询正常的活动组 >]
+ */
+Route::get('/api/getPolicyGroups', 		'AdminApiController@getPolicyGroups');
+
+
+
+
 
 
 /**

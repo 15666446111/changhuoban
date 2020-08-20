@@ -6,6 +6,7 @@ use App\Machine;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Illuminate\Http\Request;
 use Encore\Admin\Widgets\Table;
 use Encore\Admin\Facades\Admin;
 use App\Admin\Actions\DeliverGoods;
@@ -14,7 +15,7 @@ use App\Admin\Actions\MachineHeadTail;
 use App\Admin\Actions\HeadTailDeliverGoods;
 use App\Admin\Actions\ImportDeliverGoods;
 use Encore\Admin\Controllers\AdminController;
-
+use App\Admin\Actions\Machines\ChangeActivity;
 
 class MachineController extends AdminController
 {
@@ -88,21 +89,34 @@ class MachineController extends AdminController
             });
 
             $filter->column(1/4, function ($filter) {
-                $filter->equal('bind_status', '绑定状态')->select(['0' => '未绑定', '1' => '已绑定']);
+                $filter->equal('bind_status', '绑定')->select(['0' => '未绑定', '1' => '已绑定']);
             });
+
+
+            
+
+            $filter->column(1/4, function ($filter) {
+
+                $policyGroupChange = Admin::user()->operate != "All" ? \App\PolicyGroup::where('operate', Admin::user()->operate)->pluck('title', 'id')->toArray() : \App\PolicyGroup::pluck('title', 'id')->toArray();
+
+                $filter->equal('policys.policy_group_id', '政策')->select($policyGroupChange)->load('policy_id', '/api/getPolicys');
+            });
+
+            $filter->column(1/4, function ($filter) {
+                $filter->equal('policy_id', '活动')->select();
+            });
+
 
         });
 
+
         $grid->actions(function ($actions) {
             // 去掉删除 编辑
-            //dd();
-            // 
             if($actions->row->bind_status){
                 $actions->disableDelete();
             }
 
             $actions->disableEdit();
-
             // 如果机器未发货 显示发货按钮
             if($actions->row['user_id'] == 0 or $actions->row['user_id'] == null) $actions->add(new DeliverGoods);
         });
@@ -110,12 +124,13 @@ class MachineController extends AdminController
 
 
         $grid->batchActions(function ($batch) {
+
             $batch->disableDelete(false);
+
+            $batch->add(new ChangeActivity()); // 活动变更
+            
         });
 
-
-        // 
-        
 
 
         $grid->tools(function ($tools) {

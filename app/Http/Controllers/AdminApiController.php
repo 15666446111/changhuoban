@@ -64,4 +64,31 @@ class AdminApiController extends Controller
     }
 
 
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-08-20
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 后台联动菜单 返回某个政策下的活动列表 ]
+     * @param     Request     $request [description]
+     * @return    [type]               [description]
+     */
+    public function getPolicys(Request $request){
+        return  Policy::where('policy_group_id',$request->q)->where('active',1)->get(['title as text','id']);
+    }
+
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-08-20
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 根据 操盘方 获取活动组 ]
+     * @param     Request     $request [description]
+     * @return    [type]               [description]
+     */
+    public function getPolicyGroups(Request $request)
+    {
+        return  \App\PolicyGroup::where('operate', $request->q)->get(['title as text','id']);
+    }
 }
