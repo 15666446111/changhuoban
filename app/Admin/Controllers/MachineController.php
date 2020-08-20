@@ -95,7 +95,11 @@ class MachineController extends AdminController
 
         $grid->actions(function ($actions) {
             // 去掉删除 编辑
-            $actions->disableDelete();
+            //dd();
+            // 
+            if($actions->row->bind_status){
+                $actions->disableDelete();
+            }
             $actions->disableEdit();
 
             // 如果机器未发货 显示发货按钮
