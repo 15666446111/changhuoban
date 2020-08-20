@@ -100,20 +100,35 @@ class AdminSettingController extends AdminController
     {
         $show = new Show(AdminSetting::findOrFail($id));
 
-        $show->field('id', __('Id'));
-        $show->field('operate_number', __('Operate number'));
-        $show->field('company', __('Company'));
-        $show->field('phone', __('Phone'));
-        $show->field('email', __('Email'));
-        $show->field('address', __('Address'));
-        $show->field('alipay_id', __('Alipay id'));
-        $show->field('alipay_sec', __('Alipay sec'));
-        $show->field('alipay_sign', __('Alipay sign'));
-        $show->field('wx_id', __('Wx id'));
+        $show->field('operate_number', __('操盘序号'));
+
+        $show->field('company', __('公司名称'));
+
+        $show->field('phone', __('联系电话'));
+
+        $show->field('email', __('联系邮箱'));
+
+        $show->field('address', __('联系地址'));
+
+        $show->field('created_at', __('入驻时间'));
+
+        $show->divider();
+        $show->divider();
+
+        $show->field('open', __('机构状态'));
+
+        /*$show->field('alipay_id',   __('支付宝APP_ID'));
+        $show->field('alipay_sec',  __('支付宝密钥'));
+        $show->field('alipay_sign', __('支付宝签名'));
+        $show->field('alipay_sign', __('支付宝签名'));*/
+
+        $show->divider();
+        $show->divider();
+
+        /*$show->field('wx_id', __('Wx id'));
         $show->field('wx_sec', __('Wx sec'));
-        $show->field('wx_sign', __('Wx sign'));
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
+        $show->field('wx_sign', __('Wx sign'));*/
+        
 
         return $show;
     }

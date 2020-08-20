@@ -13,6 +13,7 @@ use Encore\Admin\Controllers\AdminController;
 
 use App\Admin\ShowModel\ShowUserCount;
 
+use Encore\Admin\Layout\Content;
 
 class UserController extends AdminController
 {
@@ -113,7 +114,6 @@ class UserController extends AdminController
 
         $type = false;
 
-
         /**
          * @version [<vector>] [< 如果当前登录的为操盘方 检查当前分享图是否属于此操盘方>]
          */
@@ -127,11 +127,7 @@ class UserController extends AdminController
         }
 
 
-            $show->field('nickname', __('昵称'));
-
-
-
-        
+        $show->field('nickname', __('昵称'));
 
         $show->field('account', __('账号'));
 

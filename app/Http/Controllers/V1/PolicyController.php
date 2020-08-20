@@ -151,8 +151,8 @@ class PolicyController extends Controller
                     'index' =>  $value->trade_type_id,
                     'title' =>  $value->trade_types->name,
                     'price' =>  empty($userPrice) ? $value->default_price : $this->getUserPrice(json_decode($userPrice->price, true), $value),
-                    'min'   =>  $value->min_price,
-                    'max'   =>  empty($currPrice) ? $value->default_price : $this->getUserPrice(json_decode($currPrice->price, true), $value),
+                    'min'   =>  empty($currPrice) ? $this->getUserPrice(json_decode($currPrice->price, true) : $value->default_price,
+                    'max'   =>  $value->default_price,
                 );
             }
 
@@ -223,8 +223,11 @@ class PolicyController extends Controller
 
             $param = json_decode($userPrice->price, true);
             foreach ($param as $key => $value) {
-                $min = $this->getMinPrice($defaultPrice, $value);
+
+                $min = $this->getMinPrice($currPrice, $defaultPrice, $value);
+
                 $max = $this->getMaxPrice($currPrice, $defaultPrice, $value );
+
                 if($min == 0 or $max == 0){
                     return response()->json(['error'=>['message' => '操盘方暂无设置结算价!']]);
                 }
@@ -592,15 +595,26 @@ class PolicyController extends Controller
      * @param     [type]      $value [description]
      * @return    [type]             [description]
      */
-    public function getMinPrice($price, $value)
+    public function getMinPrice($price, $default, $value)
     {   
         $min = 0;
-        foreach ($price as $key => $v) {
-            if($v->trade_type_id == $value['index']){
-                $min = $v->min_price;
-                break;
+
+        if(empty($price)){
+            foreach ($default as $k => $v) {
+                if($v->trade_type_id == $value['index']){
+                    $min = $v->default_price;
+                    break;
+                }
+            }
+        }else{
+            foreach ($price as $key => $v) {
+                if($v->trade_type_id == $value['index']){
+                    $min = $v['price'];
+                    break;
+                }
             }
         }
+
         return $min;
     }
 
@@ -619,7 +633,7 @@ class PolicyController extends Controller
     {
         $max = 0;
 
-        if(empty($curr)){
+        //if(empty($curr)){
 
             foreach ($default as $key => $v) {
                 if($v->trade_type_id == $value['index']){
@@ -628,7 +642,7 @@ class PolicyController extends Controller
                 }
             }
 
-        }else{
+/*        }else{
 
             $ag = json_decode($curr->price, true);
             foreach ($ag as $key => $v) {
@@ -637,7 +651,7 @@ class PolicyController extends Controller
                     break;
                 }
             }
-        }
+        }*/
         return $max;
     }
 

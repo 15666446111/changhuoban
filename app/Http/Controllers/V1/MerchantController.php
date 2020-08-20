@@ -308,7 +308,6 @@ class MerchantController extends Controller
 	public function MerchantsRate(Request $request)
 	{
 		try{
-            
 			$merInfo = \App\Merchant::where('code', $request->code)->first();
 			if ($merInfo->user_id != $request->user->id) {
 				return response()->json(['error'=>['message' => '商户信息有误，请重试']]);
@@ -327,12 +326,12 @@ class MerchantController extends Controller
 			$policyGroupId = 0;
 			// 检查商户活动组信息
 			$policyGroupArr = [];
-
+			//dd($machines);
 			foreach ($machines as $k => $v) {
 				$policyGroupArr[$v->policys->policy_group_id] = $v->policys->policy_group_id;
 				$policyGroupId = $v->policys->policy_group_id;
 			}
-
+			//dd($policyGroupId);
 			if (count($policyGroupArr) != 1) {
 				return response()->json(['error'=>['message' => '商户活动组信息有误，请联系客服']]);
 			}

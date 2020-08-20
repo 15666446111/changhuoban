@@ -14,7 +14,9 @@
 
             <div class="fields-group">
                 @foreach($fields as $field)
+                    <div class="col-md-6">
                     {!! $field->render() !!}
+                    </div>
                 @endforeach
             </div>
 
