@@ -2,6 +2,7 @@
 
 namespace App\Admin\Actions\Machines;
 
+use Illuminate\Http\Request;
 use Encore\Admin\Facades\Admin;
 use Encore\Admin\Actions\BatchAction;
 use Illuminate\Database\Eloquent\Collection;
