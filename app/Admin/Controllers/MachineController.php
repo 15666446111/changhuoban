@@ -127,8 +127,9 @@ class MachineController extends AdminController
 
             $batch->disableDelete(false);
 
-            $batch->add(new ChangeActivity()); // 活动变更
-            
+            if(Admin::user()->operate == "All"){
+                $batch->add(new ChangeActivity()); // 活动变更
+            }
         });
 
 
