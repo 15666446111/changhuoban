@@ -10,7 +10,7 @@ class ChangeActivity extends BatchAction
 {
     public $name = '活动变更';
 
-    public function handle(Request $request, Collection $collection)
+    public function handle(Collection $collection, Request $request)
     {
 
         try { 
