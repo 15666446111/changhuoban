@@ -151,7 +151,7 @@ class PolicyController extends Controller
                     'index' =>  $value->trade_type_id,
                     'title' =>  $value->trade_types->name,
                     'price' =>  empty($userPrice) ? $value->default_price : $this->getUserPrice(json_decode($userPrice->price, true), $value),
-                    'min'   =>  empty($currPrice) ? $this->getUserPrice(json_decode($currPrice->price, true) : $value->default_price,
+                    'min'   =>  empty($currPrice) ? $this->getUserPrice(json_decode($currPrice->price, true)) : $value->default_price,
                     'max'   =>  $value->default_price,
                 );
             }
