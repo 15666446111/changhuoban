@@ -9,7 +9,8 @@ class Trade extends Model
     protected $connection = 'mysql_3_1';
 
     // protected $table = 'trade_data_qzah';
-    protected $table = 'trade_data_qzhy';
+    // protected $table = 'trade_data_qzhy';
+    protected $table = 'trade_data_wfab';
 
     // 黑名单
     protected $guarded = [];
