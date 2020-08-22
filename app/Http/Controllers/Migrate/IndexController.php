@@ -12,33 +12,33 @@ class IndexController extends Controller
 	 * [$merchant 定义操盘方 操盘号]
 	 * @var string
 	 */
-    protected $merchant = "2020081454534810";
+    protected $merchant = "2020082153100102";
 
     /**
      * [$oldMerchant 旧的操盘方id]
      * @var string
      */
-    protected $oldMerchant = "893";
+    protected $oldMerchant = "639";
 
 
     /**
      * [$oldServiceId 操盘方机构号]
      * @var string
      */
-    protected $oldServiceId = "49058250";
+    protected $oldServiceId = "49058393";
 
 
     /**
      * 直推上级
      */
-    protected $uid = 25;
+    protected $uid = 193;
 
 
     /**
      * [$policyGruopId 活动组id，每个操盘方取固定值]
      * @var integer
      */
-    protected $policyGruopId = 12;
+    protected $policyGruopId = 15;
 
 
     /**
@@ -112,15 +112,16 @@ class IndexController extends Controller
  //    ];
     // 青州恒远
     protected $activeList = [
-        110 => 30,  // MP70-298返398元-1.0
-        111 => 31,  // H9-298返398元-1.0
-        125 => 29,  // MP70-198返258元-3.0
-        126 => 28,  // H9-298返398元 - 3.0
+        145 => 39,  // 自备机
+        144 => 40,  // 298返120活动
+        143 => 37,  // MP70-0返0
+        120 => 36,  // 新活动转自备机
 
-        112 => 27,  // 自备机
-        113 => 27,  // 自备机
-        114 => 27,  // 自备机
-        152 => 27,  // 自备机
+        101 => 38,  // 活动押金机转自备机
+        100 => 42,  // 3元冻结无返现
+        99 => 43,   // 300返120
+        98 => 41,   // 49返49，刷5000激活，第二月刷5000返20，第三月刷5000返30.
+        97 => 44,   // 198反298
     ];
 
 
@@ -134,6 +135,8 @@ class IndexController extends Controller
     public function __construct()
     {
     	$this->oldUser = \App\Model3\User::where('txt', 'like', '%,'.$this->oldMerchant.',%')->orWhere('id', $this->oldMerchant)->orderBy('create_time', 'asc')->get();
+
+        // dd($this->oldUser);
 
     	$this->trade   = \App\Model3\Trade::orderBy('j_pytime', 'asc')->get();
     }

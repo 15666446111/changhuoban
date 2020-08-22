@@ -106,6 +106,10 @@ class MachineController extends AdminController
                 $filter->equal('policy_id', '活动')->select();
             });
 
+            $filter->column(1/2, function ($filter) {
+                $filter->between('open_time', '开通时间')->datetime();
+            });
+
 
         });
 
