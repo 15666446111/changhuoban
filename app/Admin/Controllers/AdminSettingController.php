@@ -115,21 +115,27 @@ class AdminSettingController extends AdminController
         $show->divider();
         $show->divider();
 
-        $show->field('open', __('机构状态'));
+        $show->field('open', __('机构状态'))->using([0 => '关闭', 1 => '正常']);
+        $show->field('remark', __('关闭原因'));
 
-        /*$show->field('alipay_id',   __('支付宝APP_ID'));
-        $show->field('alipay_sec',  __('支付宝密钥'));
-        $show->field('alipay_sign', __('支付宝签名'));
-        $show->field('alipay_sign', __('支付宝签名'));*/
+        $show->field('type', __('机构模式'))->using([1 => '操盘', 2 => '机构']);
+        $show->field('pattern', __('发展方式'))->using([1 => '联盟模式', 2 => '工具模式']);
 
         $show->divider();
         $show->divider();
 
-        /*$show->field('wx_id', __('Wx id'));
-        $show->field('wx_sec', __('Wx sec'));
-        $show->field('wx_sign', __('Wx sign'));*/
+        $show->field('payment_type', __('代付方式'))->using([1 => '畅伙伴', 2 => '畅捷']);
+
+        $show->field('register_merchant', __('商户注册地址'))->link();
+
+        $show->field('payment_merchant', __('代付商户'));
+
+        $show->field('system_merchant', __('3.0机构编号'));
+
+        $show->field('payment_secret', __('代付密钥'));
+
+        $show->field('system_secret', __('3.0机构密钥'));
         
-
         return $show;
     }
 

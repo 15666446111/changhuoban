@@ -69,7 +69,7 @@ class ShareTypeController extends AdminController
 
         $show->field('name', __('类型'));
 
-        $show->field('active', __('状态'));
+        $show->field('active', __('状态'))->using([0 => '关闭', 1 => '正常']);
 
         $show->field('created_at', __('创建时间'));
 

@@ -118,43 +118,40 @@ class UserController extends AdminController
          * @version [<vector>] [< 如果当前登录的为操盘方 检查当前分享图是否属于此操盘方>]
          */
         if(Admin::user()->operate != "All"){
-
             $model = User::where('id', $id)->first();
-
             if($model->operate != Admin::user()->operate) return abort('403');
-
             $type = \App\AdminSetting::where('operate_number', Admin::user()->operate)->value('pattern');        
         }
 
 
         $show->field('nickname', __('昵称'));
 
+        $show->field('avatar', __('头像'))->image('', 30);
+
+
         $show->field('account', __('账号'));
 
-        $show->field('avatar', __('头像'))->image();
-
-        $show->field('parent', __('上级'));
+        $show->field('parent_user', __('上级'))->as(function ($content) {
+            return $content->nickname;
+        });
 
         $show->field('active', __('状态'))->using([0 => '关闭', 1 => '开启'])->label('info');
+
+        $show->field('group', __('用户组'))->as(function ($content) {
+            return $content->name;
+        });
+
+        $show->field('group', __('用户组'))->as(function ($content) {
+            return $content->name;
+        });
 
         $show->field('last_ip', __('最后登录地址'));
 
         $show->field('last_time', __('最后登录时间'));
 
-        $show->field('created_at', __('创建时间'));
+        $show->field('created_at', __('代理注册时间'));
 
-        //$show->field('updated_at', __('修改时间'));
-        //
-        $show->group('用户组信息', function ($group) {
-
-            $group->name('用户组');
-
-            $group->panel()->tools(function ($tools) {
-                $tools->disableEdit();
-                $tools->disableList();
-                $tools->disableDelete();
-            });
-        });
+        $show->field('updated_at', __('最后修改时间'));
 
 
         $show->wallets('用户钱包信息', function ($wallet) {
@@ -175,23 +172,79 @@ class UserController extends AdminController
         });
 
         $show->realname('实名信息', function ($realname) {
-
             $realname->status('实名状态')->label('success');
-
             $realname->name('姓名');
-
             $realname->idcard('身份证号');
-
             $realname->card_before('身份证正面')->image();
-
             $realname->card_after('身份证反面')->image();
-
+            $realname->created_at('实名认证时间');
             $realname->panel()->tools(function ($tools) {
                 $tools->disableEdit();
                 $tools->disableList();
                 $tools->disableDelete();
             });
+        });
 
+        $show->machines('机器列表', function ($machines) {
+            //$articles->setResource('/admin/articles');
+            $machines->model()->latest();
+            $machines->column('sn', __('终端SN'))->help('终端机具背面的SN序列号');
+            $machines->column('machines_styles.style_name', __('终端类型'))->help('终端机具的所属类型');
+            $machines->column('policys.title', __('所属活动'))->help('终端机具的所属活动');
+            $machines->column('open_state', __('开通状态'))->using([ '0' => '未开通', '1' => '已开通'])
+                                        ->dot([ 0 => 'danger', 1 => 'success' ], 'default')->help('终端机具的开通状态');
+            $machines->column('open_time', __('开通时间'))->help('终端机具的开通时间');
+
+            $machines->column('merchants.name', __('商户名称'))->help('终端机具所归属的商户名称');
+
+            $machines->column('merchants.phone', __('商户电话'))->help('终端机具所归属的商户电话');
+
+            $machines->column('bind_status', __('绑定状态'))->using([ '0' => '未绑定', '1' => '已绑定'])
+                                        ->dot([ 0 => 'default', 1 => 'success' ], 'default')->help('终端机具的绑定状态');
+            $machines->column('bind_time', __('绑定时间'))->help('终端机具所归属的绑定时间');
+            $machines->column('standard_status', __('达标状态'))->using([ '0' => '默认', '1' => '连续达标', '-1' => '达标中断'])
+                                        ->dot([ 0 => 'default', 1 => 'success', -1 => 'error'], 'default')->help('终端机具的达标状态');
+            $machines->column('overdue_state', __('过期状态'))->using([ '0' => '未过期', '1' => '已过期'])
+                                        ->dot([ 0 => 'success', 1 => 'default'], 'default')->help('终端机器的过期状态');
+            $machines->column('active_end_time', __('开通截止时间'))->help('终端机具所归属的开通截止时间');
+
+            $machines->filter(function ($filter) {
+                $filter->disableIdFilter();
+            });
+
+            $machines->disableCreateButton();
+            $machines->batchActions(function ($batch) {
+                $batch->disableDelete();
+            });
+            $machines->disableActions();
+        });
+
+
+        $show->cash('分润信息', function ($cash) {
+            //$articles->setResource('/admin/articles');
+            $cash->model()->latest();
+            $cash->column('trades.sn', __('SN号'))->help('分润的终端机具SN');
+            $cash->column('trades.merchant_code', __('商户号'))->help('分润的终端机具商户号');
+            $cash->column('trades.trade_no', __('交易订单号'))->help('分润的交易订单号');
+            $cash->column('trades.amount', __('交易金额'))->display(function ($money) {
+                return number_format($money / 100, 2, '.', ',');
+            })->label()->help('交易金额');
+            $cash->column('cash_money', __('分润金额'))->display(function ($money) {
+                return number_format($money / 100, 2, '.', ',');
+            })->label()->help('本次分润金额');
+            $cash->column('is_run', __('方式'))->using(['1' => '分润', '0' => '返现'])->help('分润类型,分为分润与返现');
+            $cash->column('cash_type', __('类型'))->using(['1' => '直营分润', '2' => '团队分润','3'=>'激活返现'
+            ,'4'=>'间推激活返现','5'=>'间间推激活返现','6'=>'达标返现','7'=>'二次达标返现','8'=>'三次达标返现','9'=>'财商学院推荐奖励'])->help('分润的详细类型');
+            $cash->column('created_at', __('分润时间'))->help('分润下发的时间');
+            $cash->filter(function ($filter) {
+                $filter->disableIdFilter();
+            });
+
+            $cash->disableCreateButton();
+            $cash->batchActions(function ($batch) {
+                $batch->disableDelete();
+            });
+            $cash->disableActions();
         });
 
 
