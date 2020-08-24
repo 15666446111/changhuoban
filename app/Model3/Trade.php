@@ -41,10 +41,4 @@ class Trade extends Model
     {
         return $this->hasMany('\App\Model3\Cash', 't_id', 'id');
     }
-
-
-    public function getCash($code)
-    {
-        return $this->cashs->where('c_code', $code);
-    }
 }

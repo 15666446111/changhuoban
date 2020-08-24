@@ -9,10 +9,10 @@ use App\Http\Controllers\Controller;
 class IndexController extends Controller
 {
 	/**
-	 * [$merchant 定义操盘方 操盘号]
+	 * [$operate 定义操盘方 操盘号]
 	 * @var string
 	 */
-    protected $merchant = "2020082153100102";
+    protected $operate = "2020082153100102";
 
     /**
      * [$oldMerchant 旧的操盘方id]
@@ -46,6 +46,13 @@ class IndexController extends Controller
      * @var [type]
      */
     protected $user;
+
+
+    /**
+     * [$merchant 老新商户关系。oldid=》newid ]
+     * @var [type]
+     */
+    protected $merchant;
 
 
     /**
@@ -136,9 +143,10 @@ class IndexController extends Controller
     {
     	$this->oldUser = \App\Model3\User::where('txt', 'like', '%,'.$this->oldMerchant.',%')->orWhere('id', $this->oldMerchant)->orderBy('create_time', 'asc')->get();
 
-        // dd($this->oldUser);
+        $tradeField = ['tranCode', 'user_id', 'j_pydate', 'rrn', 'is_send', 'termId', 'sm', 'j_code', 'j_num', 'j_money', 'settleAmount', 'cardType', 'j_pydate', 'j_pytime', 'traceNo', 'add_time', 'feeType', 'platCode', 'inputMode', 'originalTranDate', 'originalRrn', 'sysRespCode', 'sysRespDesc', 'version', 'activeStat', 'merchLevel' ];
+    	$this->trade   = \App\Model3\Trade::orderBy('j_pytime', 'asc')->get($tradeField);
 
-    	$this->trade   = \App\Model3\Trade::orderBy('j_pytime', 'asc')->get();
+        $this->syncTrade();die;
     }
 
 
@@ -200,7 +208,7 @@ class IndexController extends Controller
 				'password'	=>  $value->user_pass,
 				'user_group'=>	1,
 				'parent'	=>	$parent,
-				'operate'	=>	$this->merchant,
+				'operate'	=>	$this->operate,
 				'created_at'=>	Carbon::createFromTimeStamp($value->create_time)->toDateTimeString(),
 			]);
 
@@ -478,8 +486,10 @@ class IndexController extends Controller
                         'activate_sn'=> $active,
                         'open_time' =>  $v->addTime ? Carbon::createFromTimeStamp($v->addTime)->toDateTimeString() : null ,
                         'created_at'=>  $v->addTime ? Carbon::createFromTimeStamp($v->addTime)->toDateTimeString() : null ,
-                        'operate'   =>  $this->merchant,
+                        'operate'   =>  $this->operate,
                     ]);
+
+                    $this->merchant[$v->id] = $merchantNew->id;
                 }
             }
 
@@ -504,7 +514,7 @@ class IndexController extends Controller
                     'open_time'     =>  empty($d->opening_time) ? null : Carbon::createFromTimeStamp($d->opening_time)->toDateTimeString(),
                     'overdue_state' => $d->overdue_state == 2 ? 1 : 0,
                     'active_end_time' =>  empty($d->activa_end_time) ? null : Carbon::createFromTimeStamp($d->activa_end_time)->toDateTimeString(),
-                    'operate'   => $this->merchant,
+                    'operate'   => $this->operate,
                     'standard_status_lj'=> $d->st_return_state == 2 ? -1 : 0,
                     'sim_frozen_num' => $d->sim_fro_state,
                     'policy_id'      => $this->activeList[$d->activity_id],
@@ -531,7 +541,7 @@ class IndexController extends Controller
 	 * @DateTime  2020-08-13
 	 * @copyright [copyright]
 	 * @license   [license]
-	 * @version   [ 同步交易数据 分润数据表 ]
+	 * @version   [ 同步交易数据 分润数据（直营分润、团队分润） ]
 	 * @return    [type]      [description]
 	 */
 	public function syncTrade()
@@ -609,7 +619,7 @@ class IndexController extends Controller
                 'remark'            => '',
                 'created_at'        => Carbon::createFromTimeStamp($value->add_time)->toDateTimeString(),
                 'fee_type'          => $value->feeType,
-                'operate'           => $this->merchant,
+                'operate'           => $this->operate,
                 'tran_code'         => $value->tranCode,
                 'agent_id'          => !empty($value->platCode) ? $value->platCode : '',
                 'input_mode'        => $value->inputMode,
@@ -632,38 +642,43 @@ class IndexController extends Controller
             	'created_at'	=> Carbon::createFromTimeStamp($value->add_time)->toDateTimeString(),
             ]);
 
-            // 同步交易数据对应的分润信息
-            // $cashArr = [];
+            ## 同步交易数据对应的分润信息
+            $cashArr = [];
 
-            // $cashTypeArr = [
-            //     1   => 1,   // 直营分润
-            //     2   => 2,   // 团队分润
-            //     3   => 3,   // 激活返现(直营)
-            //     16  => 4,   // 激活间推奖励
-            //     17  => 5,   // 激活间间推奖励
-            //     7   => 6,   // 连续达标返现(直营)
-            //     6   => 8,   // 累计达标返现(直营)
-            //     4   => 11,  // 激活返现(团队)
-            //     5   => 12,  // 注册奖励
-            //     8   => 13,  // 财商学院推荐奖励
-            //     10  => 14,  // EPOS直营分润
-            //     11  => 15,  // EPOS团队分润
-            //     12  => 16,  // 推荐办卡
-            //     13  => 17,  // 积分兑换
-            //     14  => 18,  // 推荐办卡(团队)
-            //     15  => 19,  // 积分兑换(团队)
+            $cashTypeArr = [
+                1   => 1,   // 直营分润
+                2   => 2,   // 团队分润
+                3   => 3,   // 激活返现(直营)
+                16  => 4,   // 激活间推奖励
+                17  => 5,   // 激活间间推奖励
+                7   => 6,   // 连续达标返现(直营)
+                6   => 8,   // 累计达标返现(直营)
+                4   => 11,  // 激活返现(团队)
+                5   => 12,  // 注册奖励
+                8   => 13,  // 财商学院推荐奖励
+                10  => 14,  // EPOS直营分润
+                11  => 15,  // EPOS团队分润
+                12  => 16,  // 推荐办卡
+                13  => 17,  // 积分兑换
+                14  => 18,  // 推荐办卡(团队)
+                15  => 19,  // 积分兑换(团队)
+            ];
 
-            // ];
             // foreach ($value->cashs as $k => $v) {
-            //     $cashArr[] = [
-            //         'user_id'   => $v->user_id == $this->oldMerchant ? $this->uid : $this->user[$v->user_id],
-            //         'order'     => $value->j_pydate . $value->rrn,
-            //         'cash_money'=> $v->money * 100,
-            //         'is_run'    => $v->is_run,
-            //         'cash_type' => $cashTypeArr[$v->type],
-                    
-            //     ];
+            //     if ($v->c_code == $value->j_code) {
+            //         $cashArr[] = [
+            //             'user_id'   => $v->user_id == $this->oldMerchant ? $this->uid : $this->user[$v->user_id],
+            //             'order'     => $value->j_pydate . $value->rrn,
+            //             'cash_money'=> $v->money * 100,
+            //             'is_run'    => $v->is_run,
+            //             'cash_type' => $cashTypeArr[$v->type],
+            //             'operate'   => $this->operate,
+            //             'created_at'=> Carbon::createFromTimeStamp($v->add_time)->toDateTimeString(),
+            //         ];
+            //     }
             // }
+
+            // \App\Cash::insert($cashArr);
 
 
             echo sprintf($script4, intval($proportion *100 ), intval( $i/count($this->trade)*$width3), $msg3);
@@ -675,9 +690,116 @@ class IndexController extends Controller
             flush();   //刷新缓冲区的内容，输出
         }
 
-        // $this->syncMerchantsBindLog();
-        echo '迁移完成';die;
+        // $this->syncCashs();
 	}
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-08-24
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 同步分润数据（返现、其它） ]
+     * @return    [type]      [description]
+     */
+    // public function syncCashs()
+    // {
+        
+    //     set_time_limit(0);                                  //设置程序执行时间
+        
+    //     ignore_user_abort(true);                            //设置断开连接继续执行
+        
+    //     ob_start();                                         //打开输出缓冲控制
+        
+    //     echo str_repeat(' ',1024*4);                        //字符填充
+
+    //     $width5 = 1000;
+
+    //     // 返现记录
+    //     $cashList = \App\Model3\Cash::where('type', '>', 2)->where('agent_id', $this->oldMerchant)->get();
+
+    //     $html5 = '<div style="margin:100px auto; padding: 8px; border: 1px solid gray; background: #EAEAEA; width: %upx">
+    //     <div style="text-align:center; margin-bottom:10px;">共有'.count($this->cashList).'条返现记录数据需要同步</div><div style="padding: 0; background-color: white; border: 1px solid navy; width: %upx"><div id="progress3" style="padding: 0; background-color: #FFCC66; border: 0; width: 0px; text-align: center; height: 16px"></div></div><div id="msg5" style="font-family: Tahoma; font-size: 9pt;">正在处理...</div><div id="percent3" style="position: relative; top: -34px; text-align: center; font-weight: bold; font-size: 8pt">0%%</div></div>';
+
+    //     echo sprintf($html5, $width5+8, $width5);
+        
+    //     echo ob_get_clean();                                //获取当前缓冲区内容并清除当前的输出缓冲
+
+    //     flush();                                            //刷新缓冲区的内容，输出
+
+    //     $i = 1;
+
+    //     $error = array();
+
+    //     $data = [];
+    //     foreach ($cashList as $key => $value) {
+
+    //         $proportion = $i / count($cashList);
+
+    //         $msg5 = $i == count($cashList) ? '返现记录数据同步完成' : '正在同步第' . $i . '条返现记录数据信息';
+            
+    //         $script5 = '<script>document.getElementById("percent5").innerText="%u%%";document.getElementById("progress5").style.width="%upx";document.getElementById("msg5").innerText="%s";</script>';
+
+    //         // 添加一条虚拟交易订单，只做分润记录的sn和商户号匹配
+    //         $yCode = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'H', 'I', 'J', 'K');
+
+    //         $orderNo = $yCode[intval(date('Y')) - 2011] . strtoupper(dechex(date('m'))) . date('d') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));
+
+    //         $tradeInfo = \App\Trade::create([
+    //             'trade_no'          => $orderNo,
+    //             'user_id'           => $value->user_id,
+    //             'machine_id'        => $this->merchant[$value->id],
+    //             'is_send'           => 1,
+    //             'sn'                => $value->sn,
+    //             'merchant_code'     => $value->c_code,
+    //             'trans_date'        => date('Ymd'),
+    //             'trade_time'        => Carbon::now()->toDateTimeString(),
+    //             'remark'            => '激活数据虚拟记录',
+    //             'operate'           => $this->operate
+    //             'sys_resp_code'     => '',
+    //             'sys_resp_desc'     => '',
+    //         ]);
+
+    //         // 原分润记录的分润类型对应新分润记录表的分润类型，oldCashType => newCashType
+    //         $cashTypeArr = [
+    //             1   => 1,   // 直营分润
+    //             2   => 2,   // 团队分润
+    //             3   => 3,   // 激活返现(直营)
+    //             16  => 4,   // 激活间推奖励
+    //             17  => 5,   // 激活间间推奖励
+    //             7   => 6,   // 连续达标返现(直营)
+    //             6   => 8,   // 累计达标返现(直营)
+    //             4   => 11,  // 激活返现(团队)
+    //             5   => 12,  // 注册奖励
+    //             8   => 13,  // 财商学院推荐奖励
+    //             10  => 14,  // EPOS直营分润
+    //             11  => 15,  // EPOS团队分润
+    //             12  => 16,  // 推荐办卡
+    //             13  => 17,  // 积分兑换
+    //             14  => 18,  // 推荐办卡(团队)
+    //             15  => 19,  // 积分兑换(团队)
+    //         ];
+
+    //         \App\Cash::create([
+    //             'user_id'   => $value->user_id,
+    //             'order'     => $orderNo,
+    //             'cash_money'=> bcmul($value->money, 100),
+    //             'is_run'    => $value->is_run,
+    //             'cash_type' => $cashTypeArr[$value->type],
+    //             'operate'   => $this->operate,
+    //             'created_at'=> Carbon::createFromTimeStamp($v->add_time)->toDateTimeString()
+    //         ]);
+
+    //         echo sprintf($script5, intval($proportion *100 ), intval( $i/count($this->trade)*$width5), $msg5);
+
+    //         $i++;
+
+    //         echo ob_get_clean();    //获取当前缓冲区内容并清除当前的输出缓冲
+
+    //         flush();   //刷新缓冲区的内容，输出
+    //     }
+
+    //     echo '迁移完成';die;
+    // }
 
 
     // public function syncWithdraw()
