@@ -64,29 +64,23 @@ class WithdrawQuery implements ShouldQueue
         ###
         ###   如果订单状态不在受理中 不进行操作
         ###
-        if($this->withdraw->state != "4"){
-            return false;
-        }
+        if($this->withdraw->state != "4") return false;
 
         ###
         ###  执行代付查询
         ###
-        $applition = new RepayCjController($this->withdraw);
+        $applition  = new RepayCjController($this->withdraw);
 
-        $result = $applition->payQuery();
+        $result     = $applition->payQuery();
 
         $this->withdraw->api_return_data = json_encode($result);
 
         if($result->data && $result->data->remitStatus){
             # 还是已受理的状态 重新压入
             if($result->data->remitStatus == "1"){
-
-                self::dispatch($this->withdraw)->onQueue('withdraw')->delay(now()->addMinutes(15));
-
+                $this->dispatch($this->withdraw)->onQueue('withdraw')->delay(now()->addMinutes(10));
                 $this->withdraw->remark = $result->data->message;
-
                 $this->withdraw->save();
-
                 return true; 
             # 转账成功
             }elseif($result->data->remitStatus == "2"){
@@ -110,13 +104,9 @@ class WithdrawQuery implements ShouldQueue
             }
 
         }else{
-
-            self::dispatch($this->withdraw)->onQueue('withdraw')->delay(now()->addMinutes(10));
-
+            $this->dispatch($this->withdraw)->onQueue('withdraw')->delay(now()->addMinutes(10));
             $this->withdraw->remark = "查询错误!";
-
             $this->withdraw->save();
-
             return false;
         }
     }

@@ -7,7 +7,6 @@ use Encore\Admin\Actions\RowAction;
 use App\Services\Cj\RepayCjController;
 use Illuminate\Database\Eloquent\Model;
 
-
 class WithdrawAdopt extends RowAction
 {
     public $name = '提现通过';
@@ -16,32 +15,30 @@ class WithdrawAdopt extends RowAction
     {
         // 处理错误
         try {
-
             if(!$request->pass) return $this->response()->error('请填写提现密码')->refresh();
-
             // 获取当前登陆的操盘方配置
-            
             $application = new RepayCjController($model);
-
             $result = $application->apply( $request->pass );
                 
-            if($result['code'] && $result['code'] == 10000 )
-
+            if($result['code'] && $result['code'] == 10000 ) 
                 return $this->response()->success($result['message'])->refresh();
-
-            else
-
+            else 
                 return $this->response()->error($result['message'])->refresh();
-
         } catch (Exception $e) {
-
             return $this->response()->error('错误:'.$e->getMessage());
-
         }
         
     }
 
 
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-08-22
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 提现审核密码 必填项 ]
+     * @return    [type]      [description]
+     */
     public function form()
     {
      	// 单选框

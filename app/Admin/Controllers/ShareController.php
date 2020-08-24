@@ -99,6 +99,10 @@ class ShareController extends AdminController
 
         $show->field('title', __('标题'));
 
+        $show->field('share_types', __('所属分类'))->as(function ($content) {
+            return $content->name;
+        });
+
         $show->field('active', __('状态'))->using([0 => '关闭', 1 => '开启'])->label('info');
 
         $show->field('images', __('图片'))->image();
@@ -115,16 +119,6 @@ class ShareController extends AdminController
 
         $show->field('updated_at', __('修改时间'));
 
-        $show->share_types('分类信息', function ($type) {
-
-            $type->name('类型名称');
-
-            $type->panel()->tools(function ($tools) {
-                $tools->disableEdit();
-                $tools->disableList();
-                $tools->disableDelete();
-            });
-        });
         return $show;
     }
 

@@ -111,6 +111,10 @@ class ArticleController extends AdminController
 
         $show->field('title', __('标题'));
 
+        $show->field('article_types', __('分类'))->as(function ($content) {
+            return $content->name;
+        });
+
         $show->field('active', __('状态'))->using([0 => '关闭', 1 => '开启'])->label('info');
 
         $show->field('images', __('图片'))->image()->uniqueName();
@@ -126,27 +130,10 @@ class ArticleController extends AdminController
         });
 
         if(Admin::user()->type == "2" or Admin::user()->operate == "All"){
-
             $show->panel()->tools(function ($tools) {
-
                 $tools->disableDelete(false);
-                
             });
-
         }
-
-        $show->article_types('分类信息', function ($type) {
-            $type->name('类型名称');
-            if(Admin::user()->type == "2" or Admin::user()->operate == "All"){
-
-                $type->panel()->tools(function ($tools) {
-                    $tools->disableList();
-                    $tools->disableEdit(false);
-                    $tools->disableDelete(false);
-                });
-
-            }
-        });
 
         return $show;
     }
