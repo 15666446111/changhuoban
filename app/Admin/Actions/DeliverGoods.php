@@ -14,7 +14,7 @@ class DeliverGoods extends RowAction
     public function handle(Model $model, Request $request)
     {
         // $request ...
-        try { 
+        try {
 
             if(!$request->user or !$request->d_policy) return $this->response()->error('参数无效!')->refresh();
         

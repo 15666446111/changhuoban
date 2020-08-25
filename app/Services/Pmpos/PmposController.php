@@ -176,15 +176,15 @@ class PmposController extends Controller
 		$postData = [
 			'token' 			=> $token,
 			'merchId' 			=> $this->merchId,
-			'cFeeRate' 			=> $param['cFeeRate'],
-			'dFeeRate' 			=> $param['dFeeRate'],
-			'dFeeMax' 			=> $param['dFeeMax'],
-			'wechatPayFeeRate' 	=> $param['wechatPayFeeRate'],
-			'alipayFeeRate' 	=> $param['alipayFeeRate'],
-			'ycFreeFeeRate' 	=> $param['ycFreeFeeRate'],
-			'ydFreeFeeRate' 	=> $param['ydFreeFeeRate'],
-			// 'd0FeeRate' 		=> $param['d0FeeRate'],
-			// 'd0SingleCashDrawal'=> $param['d0SingleCashDrawal'],
+			'cFeeRate' 			=> !empty($param['cFeeRate']) ? $param['cFeeRate'] : '',
+			'dFeeRate' 			=> !empty($param['dFeeRate']) ? $param['dFeeRate'] : '',
+			'dFeeMax' 			=> !empty($param['dFeeMax']) ? $param['dFeeMax'] : '',
+			'wechatPayFeeRate' 	=> !empty($param['wechatPayFeeRate']) ? $param['wechatPayFeeRate'] : '',
+			'alipayFeeRate' 	=> !empty($param['alipayFeeRate']) ? $param['alipayFeeRate'] : '',
+			'ycFreeFeeRate' 	=> !empty($param['ycFreeFeeRate']) ? $param['ycFreeFeeRate'] : '',
+			'ydFreeFeeRate' 	=> !empty($param['ydFreeFeeRate']) ? $param['ydFreeFeeRate'] : '',
+			'd0FeeRate' 		=> !empty($param['d0FeeRate']) ? $param['d0FeeRate'] : 0,
+			'd0SingleCashDrawal'=> !empty($param['d0SingleCashDrawal']) ? $param['d0SingleCashDrawal'] : 0,
 		];
 
 		$data = $this->send($url, $postData);

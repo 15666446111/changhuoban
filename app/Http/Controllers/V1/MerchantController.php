@@ -170,6 +170,7 @@ class MerchantController extends Controller
             $EndTime = Carbon::now()->toDateTimeString();
             $data = \App\Trade::select('card_type', 'sn as merchant_sn','amount as money','trade_time')
             			->where('merchant_code', $merchant->code)->whereBetween('trade_time', [$StartTime,  $EndTime])
+            			->where('is_repeat', 0)->where('is_invalid', 0)
             			->orderBy('trade_time', 'desc')
 						->get();
 			if($data->isEmpty()) $data = array();
