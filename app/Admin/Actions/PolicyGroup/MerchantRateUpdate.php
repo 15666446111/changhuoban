@@ -32,8 +32,6 @@ class MerchantRateUpdate extends RowAction
                 // 活动下的商户信息
                 foreach ($value->machines as $k => $v) {
 
-                    dd($v->merchants);
-
                     if ($v->merchant_id > 0 && !empty($v->merchants)) {
 
                         // 压入队列中，处理剩下的逻辑
