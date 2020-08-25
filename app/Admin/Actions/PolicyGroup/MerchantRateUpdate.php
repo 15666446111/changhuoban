@@ -35,7 +35,7 @@ class MerchantRateUpdate extends RowAction
                     if ($v->merchant_id > 0 && !empty($v->merchants)) {
 
                         // 压入队列中，处理剩下的逻辑
-                        MerchantsRateUpdate::dispatch($v, $rateType, $request->rate);die;
+                        MerchantsRateUpdate::dispatch($v, $rateType, $request->rate);
                     }
                 }
 
@@ -47,7 +47,7 @@ class MerchantRateUpdate extends RowAction
                 'price'             => $request->rate,
             ]);
 
-			return $this->response()->success('调整成功')->refresh();
+			return $this->response()->success('请求已压入队列处理')->refresh();
 
     	} catch (Exception $e) {
 
