@@ -146,6 +146,7 @@ class PolicyController extends Controller
             $currPrice = \App\UserFee::where('user_id', $request->user->id)->where('policy_group_id', $request->gid)->first();
             #3. 获取活动组的结算价默认配置 
             $defaultPrice = \App\PolicyGroupSettlement::where('policy_group_id', $request->gid)->get();
+
             foreach ($defaultPrice as $key => $value) {
                 $price['list'][$key] = array(
                     'index' =>  $value->trade_type_id,
@@ -580,6 +581,7 @@ class PolicyController extends Controller
                 break;
             }
         }
+        
         return $fee;
     }
 

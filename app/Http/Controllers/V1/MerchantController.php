@@ -89,12 +89,14 @@ class MerchantController extends Controller
 				foreach($data as $key=>$value){
 					$sn = $value->machines->pluck('sn')->toArray();
 					$sn = implode('|', $sn);
+
+					$totalMoney = $value->trades->where('is_repeat', 0)->where('is_invalid', 0)->sum('amount');
 					$arrs['Bound'][] = array(
 						'id'				=>		$value->id,
 						'merchant_name'		=>		$value->name,
 						'machine_phone'		=>		$value->phone,
 						'merchant_sn'		=>		$sn,
-						'money'				=>		number_format($value->trades->sum('amount') / 100, 2, '.', ','),
+						'money'				=>		number_format($totalMoney / 100, 2, '.', ','),
 						'merchant_number'	=>		$value->code,
 						'bind_time'			=>		$value->created_at->toDateTimeString()
 					);
