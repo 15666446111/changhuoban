@@ -205,6 +205,7 @@ class HandleTradeInfo implements ShouldQueue
 
                     // 更新绑定记录的解绑状态
                     \App\MerchantsBindLog::where('sn', $this->trade->sn)
+                                        ->where('merchant_code', '<>', $this->trade->merchant_code)
                                         ->where('bind_state', 1)
                                         ->update(['bind_state' => 0]);
                 }

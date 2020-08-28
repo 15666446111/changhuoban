@@ -16,6 +16,7 @@ use App\Admin\Actions\HeadTailDeliverGoods;
 use App\Admin\Actions\ImportDeliverGoods;
 use Encore\Admin\Controllers\AdminController;
 use App\Admin\Actions\Machines\ChangeActivity;
+use App\Admin\Actions\Machines\Unbind;
 
 class MachineController extends AdminController
 {
@@ -118,6 +119,8 @@ class MachineController extends AdminController
             // 去掉删除 编辑
             if($actions->row->bind_status){
                 $actions->disableDelete();
+
+                $actions->add(new Unbind);
             }
 
             $actions->disableEdit();
@@ -198,8 +201,8 @@ class MachineController extends AdminController
         $show->field('open_time', __('开通时间'));
         $show->field('open_state', __('开通状态'))->using([ '0' => '未开通', '1' => '已开通']);
         $show->field('is_self', __('是否是自备机'))->using([ '0' => '不是', '1' => '是']);
-        $show->field('machine_name', __('商户名称'));
-        $show->field('machine_phone', __('商户电话'));
+        $show->field('mercahnts.name', __('商户名称'));
+        $show->field('merchants.phone', __('商户电话'));
         // $show->field('created_at', __('Created at'));
         // $show->field('updated_at', __('Updated at'));
         $show->field('machines_styles.style_name', __('所属型号'));
