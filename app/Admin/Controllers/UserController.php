@@ -98,6 +98,27 @@ class UserController extends AdminController
             });            
         });
 
+        $grid->export(function ($export) {
+
+            // 头像和统计列不需要被导出
+            $export->except(['avatar', 'user']);
+
+            $export->originalValue(['nickname', 'account']);
+
+            $export->column('is_verfity', function ($value, $isVerfity) {
+                return $isVerfity == 1 ? '已审核' : '未审核';
+            });
+
+            $export->column('cur_verfity', function ($value, $curVerfity) {
+                return $curVerfity == 1 ? '已审核' : '未审核';
+            });
+
+            $export->column('active', function ($value, $originalActive) {
+                return $originalActive == 1 ? '正常' : '关闭';
+            });
+
+        });
+
         return $grid;
     }
 

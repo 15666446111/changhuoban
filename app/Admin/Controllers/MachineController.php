@@ -137,6 +137,27 @@ class MachineController extends AdminController
         });
 
 
+        $grid->export(function ($export) {
+
+            $export->column('open_state', function ($value, $openState) {
+                return $openState == 1 ? '已开通' : '未开通';
+            });
+
+            $export->column('bind_status', function ($value, $bindStatus) {
+                return $bindStatus == 1 ? '已绑定' : '未绑定';
+            });
+
+            $export->column('standard_status', function ($value, $originalStandard) {
+                $standardStatus = ['0' => '默认', '1' => '连续达标', '-1' => '达标中断'];
+                return $standardStatus[$originalStandard];
+            });
+
+            $export->column('overdue_state', function ($value, $overdueState) {
+                return $overdueState == 1 ? '已过期' : '未过期';
+            });
+
+        });
+
 
         $grid->tools(function ($tools) {
 

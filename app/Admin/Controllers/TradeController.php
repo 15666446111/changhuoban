@@ -165,6 +165,33 @@ class TradeController extends AdminController
             });
         });
 
+
+        $grid->export(function ($export) {
+
+            $export->column('amount', function ($value, $amount) {
+                return number_format($amount / 100, 2, '.', ',');
+            });
+
+            $export->column('settle_amount', function ($value, $settleAmount) {
+                return number_format($settleAmount / 100, 2, '.', ',');
+            });
+
+            $export->column('fee_type', function ($value, $feeType) {
+                $feeTypeRemark = ['B' => '标准', 'YN' => '云闪付NFC', 'YM' => '云闪付双免'];
+                return $feeTypeRemark[$feeType];
+            });
+
+            $export->column('card_type', function ($value, $originalType) {
+                $cardType = ['0' => '借记卡', '1' => '贷记卡'];
+                return !empty($cardType[$originalType]) ? $cardType[$originalType] : '';
+            });
+
+            $export->column('is_send', function ($value, $isSend) {
+                return $isSend == 1 ? '已发放' : '未发放';
+            });
+
+        });
+
         return $grid;
     }
 

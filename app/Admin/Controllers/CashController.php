@@ -122,6 +122,19 @@ class CashController extends AdminController
             
         });
 
+
+        $grid->export(function ($export) {
+
+            $export->column('trades.amount', function ($value, $tradeAmount) {
+                return number_format($tradeAmount / 100, 2, '.', ',');
+            });
+
+            $export->column('cash_money', function ($value, $cashMoney) {
+                return number_format($cashMoney / 100, 2, '.', ',');
+            });
+
+        });
+
         return $grid;
     }
 
