@@ -57,8 +57,6 @@ class TradeController extends AdminController
             return number_format($amount / 100, 2, '.', ',');
         })->label('info')->help('当前交易订单的实际结算金额');
 
-        $grid->column('trades_deputies.tranTime', __('交易时间'))->help('当前交易订单的交易时间');
-
         $grid->column('tran_code', __('交易类型'))->using([
             '020000' => '消费', 
             '020002' => '消费撤销', 
@@ -94,6 +92,8 @@ class TradeController extends AdminController
         ])->help('当前交易订单的交易卡类型');
 
         $grid->column('is_send', __('分润发放'))->bool()->help('当前交易订单是否发放分润');
+
+        $grid->column('trade_time', __('交易时间'))->help('当前交易订单的交易时间');
 
         $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s')->help('当前交易订单的执行时间');
 
