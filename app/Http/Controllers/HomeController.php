@@ -15,33 +15,6 @@ class HomeController extends Controller
 	 */
     public function index(Request $request)
     {
-
-        set_time_limit(0);
-
-        $errArr = [];
-
-        $operateArr = ['2020082153100102', '2020081454534810', '2020081255565510'];
-
-        $machineList = \App\Machine::whereIn('operate', $operateArr)->get(['sn', 'user_id']);
-
-        foreach ($machineList as $key => $value) {
-            
-            if ($value->user_id > 0) {
-                
-                $oldMachine = \App\Model3\House::where('sm', $value->sn)->first();
-
-                $userMobile = \App\Model3\User::where('id', $oldMachine->user_id)->value('mobile');
-
-                if ($userMobile != $value->users->account) {
-                    $errArr[] = $value->sn;
-                }
-
-            }
-
-        }
-
-        dd($errArr);
-
     	return view('login');
     }
 
