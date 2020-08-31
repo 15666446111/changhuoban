@@ -463,8 +463,8 @@ class IndexController extends Controller
             $script2 = '<script>document.getElementById("percent2").innerText="%u%%";document.getElementById("progress2").style.width="%upx";document.getElementById("msg2").innerText="%s";</script>';
             
 
+            $user       = \App\User::where('account', $value->mobile)->first();
             foreach ($value->merchants as $k => $v) {
-                $user       = \App\User::where('account', $value->mobile)->first();
                 $active     = "";
 
                 foreach ($v->logs as $a => $b) {
