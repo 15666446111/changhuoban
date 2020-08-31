@@ -88,9 +88,9 @@ class WithdrawController extends Controller
             	return response()->json(['error'=>['message' => '机构未配置提现费率!']]);
             }
 
-            if( $rate_m === null or $rate_m == ""){
-            	return response()->json(['error'=>['message' => '机构未配置单笔提现费']]);
-            }
+            // if( $rate_m === null or $rate_m == ""){
+            // 	return response()->json(['error'=>['message' => '机构未配置单笔提现费']]);
+            // }
 
             if( $money < $request->money){
             	return response()->json(['error'=>['message' => '钱包可提现余额不足']]);
