@@ -50,6 +50,25 @@ class TransferController extends AdminController
             // 去掉默认的id过滤器
             $filter->disableIdFilter();
             // 在这里添加字段过滤器
+            if(Admin::user()->operate == "All"){
+                $filter->column(1/3, function ($filter) {
+                    $filter->equal('operate', '操盘')->select(\App\AdminSetting::pluck('company as title','operate_number as id')->toArray());
+                });
+            }
+            $userSons = Admin::user()->operate == "All" ? \App\User::pluck('nickname as title', 'id')->toArray() : \App\User::where('operate', Admin::user()->operate)->pluck('nickname as title', 'id')->toArray();
+            $filter->column(1/3, function ($filter) use ($userSons){
+                $filter->equal('old_user_id', '原代理商')->select($userSons);
+            });
+
+            $filter->column(1/3, function ($filter) use ($userSons) {
+                $filter->equal('new_user_id', '新代理商')->select($userSons);
+            });
+
+            $filter->column(1/3, function ($filter) {  
+                $filter->equal('state', '类型')->select([1=> '划拨', 2=>'回拨']);
+            });
+
+
         });
 
         return $grid;

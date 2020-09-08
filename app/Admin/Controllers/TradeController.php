@@ -47,7 +47,9 @@ class TradeController extends AdminController
 
         $grid->column('amount',         __('交易金额'))->display(function($amount){
             return number_format($amount / 100, 2, '.', ',');
-        })->label()->help('当前交易订单的交易金额');
+        })->label()->totalRow(function ($amount) {
+            return "<span class='text-danger text-bold'>¥ ".number_format($amount / 100, 2, '.', ',')." 元</span>";
+        });
 
         // $grid->column('rate_money', __('手续费'))->display(function ($money) {
         //     return number_format($money / 100, 2, '.', ',');
@@ -115,24 +117,35 @@ class TradeController extends AdminController
             $filter->disableIdFilter();
 
             $filter->column(1/3, function ($filter) {
-                $filter->like('trade_no', '订单');
+                $filter->like('trade_no', '交易订单');
             });
             $filter->column(1/3, function ($filter) {
-                $filter->like('sn', 'SN');
+                $filter->like('sn', '终端SN');
             });
             $filter->column(1/3, function ($filter) {
-                $filter->like('merchant_code', '商户');
+                $filter->like('merchant_code', '机器商户');
             });
             $filter->column(1/3, function ($filter) {
-                $filter->equal('is_send', '状态')->select(['0' => '失败', '1' => '成功']);
+                $filter->equal('is_send', '交易状态')->select(['0' => '失败', '1' => '成功']);
             });
             $filter->column(1/3, function ($filter) {
                 $filter->equal('is_send', '分润状态')->select(['0' => '未发放', '1' => '已发放']);
             });
 
+            if(Admin::user()->operate == "All"){
+                $filter->column(1/3, function ($filter) {
+                    $filter->equal('operate', '操盘')->select(\App\AdminSetting::pluck('company as title','operate_number as id')->toArray());
+                });
+            }
+
+            $filter->column(1/3, function ($filter) {
+                $userSons = Admin::user()->operate == "All" ? \App\User::pluck('nickname as title', 'id')->toArray() : \App\User::where('operate', Admin::user()->operate)->pluck('nickname as title', 'id')->toArray();  
+                $filter->equal('user_id', '代理商')->select($userSons);
+            });
+
             // 交易类型
             $filter->column(1/3, function ($filter) {
-                $filter->equal('trade_type', '交易类型')->select([
+                $filter->equal('tran_code', '交易类型')->select([
                     '020000' => '消费', 
                     '020002' => '消费撤销', 
                     '020003' => '消费冲正',
@@ -158,11 +171,7 @@ class TradeController extends AdminController
             $filter->column(1/3, function ($filter) {
                 $filter->between('trade_time', '交易时间')->datetime();
             });
-            
-            $filter->column(1/3, function ($filter) {
 
-                $arrs = array();
-            });
         });
 
         return $grid;

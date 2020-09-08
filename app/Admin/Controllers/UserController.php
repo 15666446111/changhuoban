@@ -66,6 +66,8 @@ class UserController extends AdminController
 
         $grid->column('active', __('状态'))->switch()->help('用户的活动状态,关闭后将无法在app登陆');
 
+        $grid->column('draw_state', __('提现状态'))->switch()->help('用户的提现状态,关闭后将无法提现');
+
         $grid->column('user', '统计')->modal('统计信息', ShowUserCount::class);
 
         $grid->column('last_ip', __('最后登录地址'))->help('用户最后登陆的IP地址');
@@ -95,7 +97,17 @@ class UserController extends AdminController
             });
             $filter->column(1/4, function ($filter) {
                 $filter->like('account', '账号');
-            });            
+            });   
+
+            //dd(Admin::user()->operate);
+            if(Admin::user()->operate == "All"){
+                $filter->column(1/4, function ($filter) {
+                    $filter->equal('operate', '操盘')->select(\App\AdminSetting::pluck('company as title','operate_number as id')->toArray());
+                }); 
+                $filter->column(1/4, function ($filter) {
+                    $filter->equal('draw_state', '提现')->select([ 0=> '关闭', 1=>'正常']);
+                }); 
+            }         
         });
 
         return $grid;
@@ -136,6 +148,8 @@ class UserController extends AdminController
         });
 
         $show->field('active', __('状态'))->using([0 => '关闭', 1 => '开启'])->label('info');
+
+        $show->field('draw_state', __('提现状态'))->using([0 => '关闭', 1 => '开启'])->label('info');
 
         $show->field('group', __('用户组'))->as(function ($content) {
             return $content->name;
@@ -333,6 +347,8 @@ class UserController extends AdminController
         $form->select('user_group', __('用户组'))->options(\App\UserGroup::get()->pluck('name', 'id'));
 
         $form->switch('active', __('状态'))->default(1);
+
+        $form->switch('draw_state', __('提现状态'))->default(1);
 
         $form->switch('is_verfity', __('自动晋升'))->default(1);
 

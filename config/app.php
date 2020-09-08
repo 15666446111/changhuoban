@@ -206,7 +206,6 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         SwooleTW\Http\LaravelServiceProvider::class,
-
     ],
 
     /*

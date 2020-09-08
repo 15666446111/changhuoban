@@ -78,6 +78,12 @@ class MerchantController extends AdminController
                 $filter->like('machines.sn', 'SN')->placeholder('商户所拥有的SN编号,模糊匹配');
             });
 
+            if(Admin::user()->operate == "All"){
+                $filter->column(1/3, function ($filter) {
+                    $filter->equal('operate', '操盘')->select(\App\AdminSetting::pluck('company as title','operate_number as id')->toArray());
+                });
+            }
+
             $filter->column(1/3, function ($filter) {
                 $filter->between('created_at', '开通时间')->datetime();
             });

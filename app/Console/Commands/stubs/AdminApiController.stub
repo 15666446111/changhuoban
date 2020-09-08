@@ -1,0 +1,82 @@
+<?php
+
+namespace App\Http\Controllers{namespace};
+
+use App\Http\Requests{namespace}\{name}Request;
+use App\Repository{namespace}\{name}Repository;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Success;
+
+class {name}Controller extends Controller
+{
+    public ${name}Repository;
+
+    public function __construct({name}Repository ${name}Repository)
+    {
+        $this->{name}Repository = ${name}Repository;
+    }
+    /**
+     * list
+     */
+    public function {name}List(Request $request)
+    {
+        $data = $this->{name}Repository->{name}List($request);
+
+        return Success::success_v2(Success::success,$data);
+    }
+
+
+    /**
+     * 详情
+     */
+    public function {name}Deta(Request $request)
+    {
+        $id = $request->input('id','');
+        if(!$id) return Success::success_v2(Success::id);
+
+        $data = $this->{name}Repository->{name}Deta($request);
+
+        return Success::success_v2(Success::success,$data);
+    }
+
+    /**
+     * 添加
+     */
+    public function {name}Add({name}Request $request)
+    {
+        $code = Success::success;
+
+        $re = $this->{name}Repository->{name}Add($request);
+
+        if($re === false) $code = Success::add;
+
+        return Success::success_v2($code);
+    }
+
+    /**
+     * 修改
+     */
+    public function {name}Up({name}Request $request)
+    {
+        $id = $request->input('id','');
+        if(!$id) return Success::success_v2(Success::id);
+
+        $re = $this->{name}Repository->{name}Up($request);
+
+        $code = $re ? Success::success:Success::update;
+        return Success::success_v2($code);
+    }
+
+    /**
+     * 删除
+     */
+    public function {name}De(Request $request)
+    {
+        $id = $request->input('id','');
+        if(!$id) return Success::success_v2(Success::id);
+        $re = $this->{name}Repository->{name}De($request);
+        $code = $re ? Success::success:Success::delete;
+        return Success::success_v2($code);
+    }
+}

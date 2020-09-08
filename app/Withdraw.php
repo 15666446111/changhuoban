@@ -25,4 +25,17 @@ class Withdraw extends Model
     {
     	return $this->hasOne('App\WithdrawsData', 'order_no', 'order_no');
     }
+
+    /**
+     * @Author    Pudding
+     * @DateTime  2020-09-07
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 关联操盘方]
+     * @return    [type]      [description]
+     */
+    public function operates()
+    {
+        return $this->belongsTo('App\AdminSetting','operate','operate_number');
+    }
 }

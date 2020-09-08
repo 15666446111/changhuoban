@@ -1,0 +1,123 @@
+<?php
+
+namespace App\Repository{namespace};
+
+use Illuminate\Http\Request;
+use {model};
+
+class {name}Repository
+{
+
+    /**
+     * 添加更改字段
+     * @var array
+     */
+    private $field = [
+    ];
+
+    /**
+     * list
+     */
+    public function {name}List(Request $request)
+    {
+        $data = [];
+
+        $paginate = $request->input('paginate',10);
+
+        $query = {model_name}::query();
+
+
+        $data = $query->paginate($paginate);
+
+        return $data;
+    }
+
+    /**
+     * 详情
+     */
+    public function {name}Deta(Request $request)
+    {
+        $data = [];
+        $model = new {model_name}();
+        $data = $model->where('id',$request['id'])->first();
+        return $data;
+    }
+
+    /**
+     * 添加
+     * Created by PhpStorm.
+     * @param Request $request
+     * @return bool
+     */
+    public function {name}Add(Request $request)
+    {
+        $re = true;
+        $at = $request->all();
+        $model = new {model_name}();
+
+        foreach ($this->field as $v)
+        {
+            isset($at[$v])?$model->$v = $at[$v]:null;
+        }
+
+        try {
+            $model->save();
+            $re = true;
+        } catch (\Exception $exception) {
+            $re = false;
+        }
+
+        return $re;
+    }
+
+    /**
+     * 修改
+     * Created by PhpStorm.
+     * @param Request $request
+     * @return bool
+     */
+    public function {name}Up(Request $request)
+    {
+        $re = true;
+        $at = $request->all();
+        $id = $at['id'];
+        $model = new {model_name}();
+
+        $update = [];
+
+        foreach ($this->field as $v)
+        {
+            isset($at[$v])?$update[$v] = $at[$v]:null;
+        }
+
+        try {
+            $model->where('id',$id)->update($update);
+            $re = true;
+        } catch (\Exception $exception) {
+            $re = false;
+        }
+
+        return $re;
+    }
+
+    /**
+     * 删除
+     * Created by PhpStorm.
+     * @param Request $request
+     */
+    public function {name}De(Request $request)
+    {
+        $re = true;
+        $at = $request->all();
+        $id = $at['id'];
+        $model = new {model_name}();
+        try {
+            $model->where('id',$id)->delete();
+            $re = true;
+        } catch (\Exception $exception) {
+            $re = false;
+        }
+
+        return $re;
+    }
+}
