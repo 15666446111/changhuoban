@@ -20,7 +20,8 @@
 			<!-- 默认框 -->
 			<view class="group">
 				<view class="ckeck">
-					<checkbox :checked="item.is_default == 1 ? true : false" disabled="true" color="#ED6E11"><text class="moren">默认</text></checkbox>
+					<checkbox :checked="item.is_default == 1 ? true : false" disabled="true" color="#ED6E11"></checkbox>
+					<text class="moren">默认</text>
 				</view>
 				<!-- 编辑删除 -->
 				<view class="site-for">

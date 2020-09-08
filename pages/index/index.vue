@@ -17,7 +17,7 @@
 		
 		<view class="checkbox">
 			<checkbox-group>
-				<checkbox checked="true">记住密码</checkbox>
+				<checkbox checked="true"></checkbox>记住密码
 			</checkbox-group>
 		</view>
 		
@@ -30,6 +30,12 @@
 				</view>
 			</view>
 		</navigator>
+		
+		<view class="cu-load load-modal" v-if="loadModal.show">
+		   <!-- <view class="cuIcon-emojifill text-orange"></view> -->
+		   <image src="/static/public/loading.png" mode="aspectFit"></image>
+		   <view class="gray-text">{{ loadModal.text }}</view>
+		</view>
 	</view>
 	
 	
@@ -44,6 +50,11 @@ export default {
 	
 	data() {
 		return {
+			loadModal: {
+				show: false,
+				text: '登陆中..'
+			},
+			
 			account: '',
 			password: '',
 			applyText: '<div>345</div>',
@@ -89,7 +100,7 @@ export default {
 		submit() {
 			//验证用户名  验证密码
 			if (!this.validate('password') ) return false; 
-			uni.showToast({ title: '登录中', icon: 'loading', mask: true, duration: 10000 });
+			this.loadModal = { show: true, text: '登录中...' }
 			
 			uni.request({
 				url: 'http://livechb3.changhuoban.com/api/V1/login',
@@ -99,7 +110,9 @@ export default {
 					password: this.password
 				},
 				success: res => {
-					uni.hideToast();
+					
+					console.log(res);
+					this.loadModal.show = false;
 					try {
 						if (res.data.success && res.data.success.token) {
 							uni.setStorageSync('token', res.data.success.token);

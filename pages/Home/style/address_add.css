@@ -1,10 +1,13 @@
-
+page {
+	background-color: #f7f7f7;
+}
 .indexs {
-	width: 90%;
+	width: 94%;
 	background-color: #fff;
-	margin-left: 5%;
+	margin: 0 3%;
 	margin-top: 20rpx;
-	border-radius: 10rpx 10rpx 10rpx 10rpx;
+	border-radius: 8rpx;
+	overflow: hidden;
 }
 
 .selects {
@@ -62,4 +65,15 @@ button {
 	background-color: #ff8c00;
 	border-radius: 40rpx 40rpx 40rpx 40rpx;
 	color: #fff;
+}
+.picker {
+	width: 100%;
+	text-align: left;
+	color: #777;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.default-checkbox {
+	margin-right: 6rpx;
 }

@@ -2,29 +2,15 @@
 	<view>
 		<!-- 选择框 -->
 		<view class="select">
-			<view class="select-view">
-				<view class="select-div">
-					<view class="select-text">类 型</view>
-					<image class="image" src="../../../../static/huoban/xjx.png"></image>
-				</view>
-				<view class="shuxian"></view>
-				<view class="select-div">
-					<view class="select-text">类 型</view>
-					<image class="image" src="../../../../static/huoban/xjx.png"></image>
-				</view>
-			</view>
 			<view class="hengxian"></view>
 			<view class="select-div1">
-				<view class="div-text">全部</view>
-				<view class="shuxian1"></view>
-				<view class="div-text">划拨记录</view>
-				<view class="shuxian1"></view>
-				<view class="div-text">上级回拨</view>
-				<view class="shuxian1"></view>
-				<view class="div-text">我的回拨</view>
+				<view class="div-text" v-for="(item, index) in typeList" :key="index"
+					 :class="currentType == item.type ? 'checked-type' : ''"
+					 @click="switchType(item.type, item.name)"
+						>
+					{{ item.title }}
+				</view>
 			</view>
-			<view class="hengxian"></view>
-			<button>确 定</button>
 		</view>
 		<!--  -->
 		<view class="content">
@@ -33,16 +19,24 @@
 					<view class="content-div">
 						<view class="div">
 							<view class="content-text">调拨用户:{{item.friend_name}}</view>
-							<view class="content-text1">类型:{{item.state == 1 ? '划拨' : '回拨'}}</view>
+							<view class="content-text1" v-if="currentType == 'my_transfer' || currentType == 'parent_transfer'">类型：划拨</view>
+							<view class="content-text1" v-if="currentType == 'my_back' || currentType == 'parent_back'">类型：回拨</view>
 						</view>
 						<view class="div">
 							<view class="name">SN: {{item.merchant_sn }}</view>
-							<view class="time">{{item.created_at}}</view>
+							<view class="time">{{ item.created_at }}</view>
 						</view>
 					</view>
 					<view class="hengxian1"></view>
 				</view>
 			</view>
+		</view>
+		
+		<view v-if="merchantList == '' || merchantList == undefined" class="null-tips">—— 没有调拨记录 ——</view>
+		
+		<view class="cu-load load-modal" v-if="loadModal.show">
+		   <image src="/static/public/loading.png" mode="aspectFit"></image>
+		   <view class="gray-text">{{ loadModal.text }}</view>
 		</view>
 	</view>
 </template>
@@ -52,11 +46,23 @@ import net from '../../../../common/net.js';
 export default {
 	data() {
 		return {
+			loadModal: {
+				show: false,
+				text: '加载中...'
+			},
+			typeList: [
+				{ title: '我的划拨', type: 'my_transfer' },
+				{ title: '我的回拨', type: 'my_back'},
+				{ title: '上级划拨', type: 'parent_transfer'},
+				{ title: '上级回拨', type: 'parent_back'}
+			],
+			currentType: 'my_transfer',
 			merchantList: {}
 		};
 	},
 	
 	onLoad() {
+		this.loadModal.show = true;
 		// 获取划拨回拨记录
 		this.getTransferLog();
 	},
@@ -67,7 +73,12 @@ export default {
 			net({
 				url: '/V1/getTransferLog',
 				method: 'GET',
+				data: {
+					type: this.currentType
+				},
 				success: (res) => {
+					console.log(res);
+					this.loadModal.show = false;
 					if (res.data.success) {
 						this.merchantList = res.data.success.data;
 					} else {
@@ -76,9 +87,18 @@ export default {
 							icon: 'none'
 						})
 					}
-					// console.log(res);
 				}
 			})
+		},
+		
+		switchType(type, title){
+			if (this.currentType == type) {
+				return false;
+			}
+			this.loadModal.show = true;
+			
+			this.currentType = type;
+			this.getTransferLog();
 		}
 	}
 };

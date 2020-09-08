@@ -25,6 +25,11 @@
 		<navigator  hover-class="none"  url="../../bankSet/bankCreate/bankCreate">
 			<button class="bck">添加银行卡</button>
 		</navigator>
+		
+		<view class="cu-load load-modal" v-if="loadModal.show">
+		   <image src="/static/public/loading.png" mode="aspectFit"></image>
+		   <view class="gray-text">{{ loadModal.text }}</view>
+		</view>
 	</view>
 </template>
 
@@ -38,6 +43,10 @@
 		},
 		data() {
 			return {
+				loadModal: {
+					show: false,
+					text: '加载中...'
+				},
 				// 银行卡列表
 				cardList: [],
 				getIntoPage: '',
@@ -50,10 +59,9 @@
 		},
 		
 		onShow() {
+			this.loadModal.show = true;
 			// 获取银行卡列表
 			this.getBankList();
-			// 加载动画
-			uni.showLoading();
 		},
 		
 		methods: {
@@ -63,7 +71,7 @@
 		        	url:"/V1/getBankInfo",
 		            method:'get',
 		            success: (res) => {
-						uni.hideLoading();
+						this.loadModal.show = false;
 						if (res.data.success) {
 							this.cardList = res.data.success.data;
 						} else {
@@ -96,7 +104,7 @@
 					success: (res) => {
 						if (res.confirm) {
 							// 加载动画
-							uni.showLoading();
+							this.loadModal.show = true;
 							
 							net({
 					        	url:"/V1/deBank",
@@ -105,14 +113,14 @@
 									'id' : bankId
 								},
 					            success: (res) => {
-									uni.hideLoading();
+									this.loadModal.show = false;
 									
 									if (res.data.success) {
 										uni.showToast({ title: '删除成功', icon: 'none' });
 										let _this = this;
 										setTimeout(function() {
 											uni.redirectTo({
-												url: './tijiaoyinhangka?pages=' + _this.getIntoPage
+												url: './bankList?pages=' + _this.getIntoPage
 											})
 										}, 1000);
 									} else {

@@ -37,12 +37,17 @@
 				<text style="margin-left:10upx;">元</text>
 			</view>
 			<view class="bview4">
-				<view>提示：手续费{{cashsetUp.rate_m ? cashsetUp.rate_m / 100 : ""}}元，税点{{ cashsetUp.point }}%，单笔提现金额不低于{{ cashsetUp.min_money }}元</view>
+				<view>提示：手续费{{cashsetUp.rate_m ? cashsetUp.rate_m : ""}}元，税点{{ cashsetUp.point }}%，单笔提现金额不低于{{ cashsetUp.min_money }}元</view>
 				<view>提现时间：{{ cashsetUp.point_time }},请注意查收短信或查询提现进度</view>
 			</view>
 		</view>
 
 		<button class="button" @click="setWithdrawal">立即提现</button>
+		
+		<view class="cu-load load-modal" v-if="loadModal.show">
+		   <image src="/static/public/loading.png" mode="aspectFit"></image>
+		   <view class="gray-text">{{ loadModal.text }}</view>
+		</view>
 	</view>
 </template>
 
@@ -57,6 +62,10 @@ export default {
 	},
 	data() {
 		return {
+			loadModal: {
+				show: false,
+				text: '加载中...'
+			},
 			title: 'Hello',
 			startYear: new Date().getFullYear(),
 			selectList: [
@@ -92,9 +101,9 @@ export default {
 	},
 	
 	onLoad() {
+		this.loadModal.show = true;
 		// 获取用户个人信息
 		this.getUserInfo();
-		
 		// 获取默认结算卡信息
 		this.getDefaultCard();
 	},
@@ -104,12 +113,11 @@ export default {
 			this.$refs[str].show();
 		},
 		onConfirm(val) {
+			this.loadModal.show = true;
 			// 获取提现设置信息
 			this.getPoint(val.checkArr.value);
 			this.resultInfo = { ...val };
 			this.balance = val.checkArr.value == 1 ? this.UserInfo.cash_blance : this.UserInfo.return_blance;
-			
-			uni.showLoading();
 		},
 		
 		// 获取用户个人信息
@@ -118,7 +126,6 @@ export default {
 	        	url:"/V1/userInfo",
 	            method:'get',
 	            success: (res) => {
-					// console.log(res);
 					this.UserInfo = res.data.success.data;
 	            }
 	      	})
@@ -131,8 +138,7 @@ export default {
 	            method:'get',
 				data:{type:val},
 	            success: (res) => {
-					uni.hideLoading();
-					// console.log(res);
+					this.loadModal.show = false;
 					if (res.data.success) {
 						this.cashsetUp = res.data.success.data;
 					} else {
@@ -151,6 +157,7 @@ export default {
 	        	url:"/V1/getBankDefault",
 	            method:'get',
 	            success: (res) => {
+					this.loadModal.show = false;
 					this.bankCard = res.data.success.data;
 	            }
 	      	})
@@ -168,18 +175,18 @@ export default {
 				return false;
 			}
 			// 加载动画
-			uni.showLoading();
+			this.loadModal.show = true;
+			
 			net({
 	        	url: "/V1/getWithdrawal",
 	            method: 'POST',
 				data: {
 					'money': this.money,
 					'blance': this.resultInfo.checkArr.value,
-					'bank_id': this.bankCard.id,
-					'reason':''
+					'bank_id': this.bankCard.id
 				},
 	            success: (res) => {
-					uni.hideLoading();
+					this.loadModal.show = false;
 					if (res.data.success) {
 						uni.showToast({
 							title: '提交成功',
@@ -222,7 +229,6 @@ export default {
 			}
 			this.money = this.balance;
 			var settleMoney = this.money * (1 - this.cashsetUp.point * 0.01) / 100;
-			// console.log(settleMoney);
 			this.reachBalance = Math.floor(settleMoney * 100 - this.cashsetUp.rate_m / 100);
 		}
 	}

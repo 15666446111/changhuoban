@@ -31,13 +31,13 @@
 						<view class="detail">
 							<view class="detail-name">{{ item.merchant_name }}</view>
 							<view class="detail-text1">累计交易:</view>
-							<view class="detail-text">{{ item.money > 0 ? item.money : 0 }}</view>
+							<view class="detail-text">{{ item.money }}</view>
 						</view>
 						<view class="SN">SN:{{ item.merchant_sn }}</view>
 
 						<view class="money">
 							<view class="money-text">商户号:{{ item.merchant_number }}</view>
-							<view class="money-time">登记时间：{{ item.bind_time }}</view>
+							<view class="money-time">绑定时间:{{ item.bind_time }}</view>
 						</view>
 					</view>
 					<view class="across"></view>
@@ -55,7 +55,7 @@
 						<view class="detail">
 							<view class="detail-name">{{ item.merchant_name }}</view>
 							<view class="detail-text1">累计交易:</view>
-							<view class="detail-text">{{ item.amount }}</view>
+							<view class="detail-text">{{ item.money }}</view>
 						</view>
 						<view class="SN">SN:{{ item.merchant_sn }}</view>
 
@@ -71,6 +71,11 @@
 				没有未绑定的商户信息~
 			</view>
 		</view>
+		
+		<view class="cu-load load-modal" v-if="loadModal.show">
+		   <image src="/static/public/loading.png" mode="aspectFit"></image>
+		   <view class="gray-text">{{ loadModal.text }}</view>
+		</view>
 	</view>
 </template>
 
@@ -79,6 +84,10 @@ import net from '../../../common/net.js';
 export default {
 	data() {
 		return {
+			loadModal: {
+				show: false,
+				text: '加载中...'
+			},
 			tabIndex: 0,
 			HeadClass: 1,
 			Head:0,
@@ -92,9 +101,9 @@ export default {
 	},
 	
 	onLoad() {
+		this.loadModal.show = true;
 		// 获取商户列表
 		this.getMerchantsList();
-		uni.showLoading();
 	},
 	
 	methods: {
@@ -112,7 +121,7 @@ export default {
 				url: '/V1/getMerchantsList',
 				method: 'GET',
 				success: (res) => {
-					uni.hideLoading();
+					this.loadModal.show = false;
 					if(res.data.success && res.data.success.data){
 						this.bindList = res.data.success.data.Bound;
 						this.unBindList = res.data.success.data.UnBound;

@@ -70,15 +70,23 @@
 }
 
 .time {
-	font-size: 0.9rem;
+	width: 91%;
 	margin-top: 0.2rem;
-	margin-left: 0.4rem;
+	margin-left: 2%;
+	position: relative;
 }
+.calendar-img {
+	position: absolute;
+	top: 0;
+	right: 4%;
+	z-index: 0;
+}
+
 .shu {
   width: 1%;
   height: 30rpx;
   background-color: #FF8C00;
-  margin: 18rpx 20rpx;
+  margin: 18rpx 3%;
 }
 
 

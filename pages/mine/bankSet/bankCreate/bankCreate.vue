@@ -2,63 +2,48 @@
 	<view>
 		<!-- 输入框 -->
 		<view class="indexs">
-			<!-- 第一栏 -->
-			<view class="select">
-				<view class="select-view">
-					<view class="select-name">姓名</view>
-					<input class="select-text" placeholder="请输入您的姓名" v-model="name" >
-				</view>
-				<view class="hengxian"></view>
+			<view class="cu-form-group">
+				<view class="title">姓名</view>
+				<input placeholder="请输入您的姓名" v-model="name" ></input>
 			</view>
-			
+			<view class="cu-form-group">
+				<view class="title">身份证号</view>
+				<input placeholder="请输入您的身份证号" v-model="number" ></input>
+			</view>
+			<view class="cu-form-group">
+				<view class="title">银行</view>
+				<input placeholder="请输入银行名称" v-model="bank_name" ></input>
+			</view>
+			<view class="cu-form-group">
+				<view class="title">银行卡号</view>
+				<input placeholder="请输入银行卡号" v-model="bank" ></input>
+			</view>
+			<view class="cu-form-group">
+				<view class="title">开户行</view>
+				<input placeholder="请输入开户行" v-model="open_bank" ></input>
+			</view>
+			<view class="cu-form-group">
+				<view class="title">省</view>
+				<input placeholder="请输入省" v-model="province" ></input>
+			</view>
+			<view class="cu-form-group">
+				<view class="title">市</view>
+				<input placeholder="请输入市" v-model="city" ></input>
+			</view>
 			<view class="select-view">
-				<view class="select-name">身份证号</view>
-				<input class="select-text" placeholder="请输入您的身份证号" v-model="number" value="" />
-			</view>
-			<view class="hengxian"></view>
-			
-			<view class="select">
-				<view class="select-view">
-					<view class="select-name">银行</view>
-					<input class="select-text" placeholder="请输入银行名称" v-model="bank_name"/>
-				</view>
-				<view class="hengxian"></view>
-				
-				<view class="select-view">
-					<view class="select-name">银行卡号</view>
-					<input class="select-text" placeholder="请输入银行卡号" v-model="bank" value="" />
-				</view>
-				<view class="hengxian"></view>
-				
-				<view class="select-view">
-					<view class="select-name">开户行</view>
-					<input class="select-text" placeholder="请输入开户行" v-model="open_bank"/>
-				</view>
-				<view class="hengxian"></view>
-				
-				<view class="select-view">
-					<view class="select-name">省</view>
-					<input class="select-text" placeholder="请输入省" v-model="province"/>
-				</view>
-				<view class="hengxian"></view>
-				
-				<view class="select-view">
-					<view class="select-name">市</view>
-					<input class="select-text" placeholder="请输入市" v-model="city"/>
-				</view>
-				<view class="hengxian"></view>
-				
-				
-				<view class="select-view">
-					<checkbox-group @change="defaultType">
-						<label>
-							<checkbox class="se-defulat" value="1" color="#FF8C00" />设为默认
-						</label>
-					</checkbox-group>
-				</view>
+				<checkbox-group @change="defaultType">
+					<label>
+						<checkbox class="se-defulat" value="1" color="#FF8C00" />设为默认
+					</label>
+				</checkbox-group>
 			</view>
 		</view>
 		<button @click="submit">确 定</button>
+		
+		<view class="cu-load load-modal" v-if="loadModal.show">
+		   <image src="/static/public/loading.png" mode="aspectFit"></image>
+		   <view class="gray-text">{{ loadModal.text }}</view>
+		</view>
 	</view>
 </template>
 
@@ -68,6 +53,10 @@ import net from '../../../../common/net.js';
 export default {
 	data() {
 		return {
+			loadModal: {
+				show: false,
+				text: '提交中...'
+			},
 			name: '',
 			number: '',
 			bank_name: '',
@@ -144,9 +133,7 @@ export default {
 				return false;
 			}
 			
-			uni.showLoading({
-				mask: true
-			});
+			this.loadModal.show = true;
 			net({
 	        	url: "/V1/createBank",
 	            method: 'POST',
@@ -161,6 +148,7 @@ export default {
 					city: this.city,
 				},
 	            success: (res) => {
+					this.loadModal.show = false;
 					if (res.data.success) {
 						uni.showToast({
 							title: res.data.success.message,
@@ -186,5 +174,8 @@ export default {
 </script>
 
 <style>
-@import url("../../style/settle_card.css");
+	@import url("../../style/settle_card.css");
+	.cu-form-group .title {
+		min-width: calc(4em + 15px);
+	}
 </style>

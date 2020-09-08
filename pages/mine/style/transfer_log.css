@@ -1,9 +1,8 @@
 .select {
 	width: 90%;
-	height: 350rpx;
 	background-color: #ffffff;
 	margin-left: 5%;
-	border-radius: 20rpx;
+	border-radius: 8rpx;
 	margin-top: 2%;
 }
 .select-view {
@@ -20,7 +19,6 @@
 	display: flex;
 	width: 100%;
 	justify-content: center;
-	margin-top: 3%;
 }
 .image {
 	width: 25rpx;
@@ -54,7 +52,11 @@
 	width: 25%;
 	text-align: center;
 	font-size: 30rpx;
-	margin-top: 1%;
+	margin: 20rpx 0;
+	border-right: 1px solid #ddd;
+}
+.div-text-last {
+	border: 0;
 }
 button {
 	background-color: #ff8c00;
@@ -68,7 +70,7 @@ button {
 	width: 90%;
 	background-color: #ffffff;
 	margin-left: 5%;
-	border-radius: 20rpx;
+	border-radius: 8rpx;
 	margin-top: 3%;
 	overflow: hidden;
 }
@@ -113,5 +115,15 @@ button {
 	width: 94%;
 	margin-left: 3%;
 	height: 1px;
-	background-color: #c5c3c3;
+	background-color: #e9e9e9;
+}
+.checked-type {
+	color: #ff8c00;
+}
+.null-tips {
+	width: 100%;
+	height: 100rpx;
+	line-height: 100rpx;
+	text-align: center;
+	color: #999;
 }

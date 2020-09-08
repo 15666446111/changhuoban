@@ -10,7 +10,7 @@
 						<view class="name">账号:{{ UserInfo.account}}</view>
 					</view>
 
-					<view class="ID">昵称:{{ UserInfo.nickname }}  级别:{{ UserInfo.group }}</view>
+					<view class="ID">昵称:{{ UserInfo.nickname }}<text class="user_group" v-if="type === 1"> 级别:{{ UserInfo.group }}</text></view>
 
 				</view>
 			</view>
@@ -26,7 +26,7 @@
 				</view>
 				
 				<view class="earning blance_text">
-					<text style="">{{ UserInfo.blance | numberGSH }}</text>
+					<text style="">{{ UserInfo.blance }}</text>
 				</view>
 				
 				<view class="across"></view>
@@ -34,12 +34,12 @@
 				<view class="eings d-flex">
 					<view class="eings-view">
 						<view style="color: #666;">分润钱包(元)</view>
-						<view style="color: #EE9900;">{{UserInfo.cash_blance | numberGSH }}</view>
+						<view style="color: #EE9900;">{{UserInfo.cash_blance }}</view>
 					</view>
 					<view class="shuxian"></view>
 					<view class="eings-view">
 						<view style="color: #666;">返现钱包(元)</view>
-						<view style="color: #EE9900;">{{UserInfo.return_blance | numberGSH }}</view>
+						<view style="color: #EE9900;">{{UserInfo.return_blance }}</view>
 					</view>
 				</view>
 			</view>
@@ -60,7 +60,7 @@
 					<view class="across"></view>
 				</navigator>
 				
-				<navigator  hover-class="none"  class="url" url="wodedingdan/wodedingdan">
+				<navigator  hover-class="none"  class="url" url="order/order">
 					<view class="div">
 						<image class="div-img" src="/static/wd/sh.png" />
 						<view class="div-text">我的订单</view>
@@ -137,6 +137,11 @@
 			<view class="Bar1"></view>
 		</view>
 		<view style="height: 110upx;"></view>
+		
+		<view class="cu-load load-modal" v-if="loadModal.show">
+		   <image src="/static/public/loading.png" mode="aspectFit"></image>
+		   <view class="gray-text">{{ loadModal.text }}</view>
+		</view>
 	</view>
 </template>
 <script>
@@ -145,6 +150,11 @@ import net from '../../common/net.js';
 export default {
 	data() {
 		return {
+			loadModal: {
+				show: false,
+				text: '加载中...'
+			},
+			type: '',
 			UserInfo: {
 				'headimg' : null,
 				'nickname': null,
@@ -159,15 +169,17 @@ export default {
 		
 	// 初始化数据
 	onLoad(){
-		
-		uni.showLoading();
+		this.type 	= uni.getStorageSync('type');
+	},
+	
+	onShow() {
+		this.loadModal.show = true;
 		this.getUserInfo();
-		
 	},
 	
 	//监听下拉刷新动作的执行方法，每次手动下拉刷新都会执行一次
 	onPullDownRefresh() {
-		uni.showLoading();
+		this.loadModal.show = true;
 		this.getUserInfo();
 		
 	    setTimeout(function () {
@@ -182,8 +194,7 @@ export default {
 	        	url:"/V1/userInfo",
 	            method:'get',
 	            success: (res) => {
-					uni.hideLoading();
-					console.log(res);
+					this.loadModal.show = false;
 					this.UserInfo = res.data.success.data;
 	            }
 	      	})
@@ -228,9 +239,9 @@ export default {
 		},
 	},
 	filters: {
-		numberGSH(value){
-			return value.toFixed(2)
-		}
+		// numberGSH(value){
+		// 	return value.toFixed(2)
+		// }
 	}
 };
 </script>

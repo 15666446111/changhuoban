@@ -4,9 +4,9 @@ page {
 
 /*输入栏*/
 .indexs {
-  width: 96%;
+  width: 94%;
   background-color: #fff;
-  margin-left: 5%;
+  margin: 0 3%;
   margin-top: 20rpx;
   border-radius: 5rpx;
 }

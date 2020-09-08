@@ -1,0 +1,135 @@
+/* 顶部选择 */
+.select {
+	width: 100%;
+	height: 100upx;
+	display: flex;
+	background-color: #fff;
+}
+.select-view {
+	width: 50%;
+	justify-content: center;
+}
+.select-text {
+	width: 50%;
+	height: 100upx;
+	line-height: 100upx;
+	text-align: center;
+	font-size: 30upx;
+}
+.select-text2 {
+	width: 50%;
+	height: 100upx;
+	line-height: 100upx;
+	color: #f98021;
+	border-bottom: 3upx solid #f98021;
+	text-align: center;
+	font-size: 30upx;
+}
+/* 详情栏 */
+
+/* 代理 */
+.agency {
+	width: 25.5%;
+	background-color: #fff;
+}
+.agency-view {
+	text-align: center;
+	width: 100%;
+}
+.agency-text {
+	height: 100upx;
+	line-height: 100upx;
+	font-size: 30upx;
+}
+.agency-text2 {
+	height: 100upx;
+	line-height: 100upx;
+	background-color: #f98021;
+	color: #ffffff;
+	font-size: 30upx;
+}
+.agency-xian {
+	width: 100%;
+	height: 1upx;
+	background-color: #f2f2f2;
+}
+.vertical {
+	width: 0.5%;
+	height: 100%;
+}
+/* 数据 */
+.datas {
+	width: 98%;
+	margin-left: 1%;
+	background-color: #fff;
+}
+.times {
+	width: 100%;
+	height: 80upx;
+	display: flex;
+	background-color: #f2f2f2;
+}
+
+.time {
+	width: 91%;
+	margin-top: 0.2rem;
+	margin-left: 2%;
+	position: relative;
+}
+.calendar-img {
+	position: absolute;
+	top: 0;
+	right: 4%;
+	z-index: 0;
+}
+.shu {
+  width: 1%;
+  height: 30rpx;
+  background-color: #FF8C00;
+  margin: 18rpx 20rpx;
+}
+
+
+.data {
+	width: 100%;
+}
+
+
+.data-s {
+	height: 100upx;
+	display: flex;
+	width: 100%;
+	position: relative;
+	font-size: 28upx;
+}
+
+.image {
+	width: 30upx;
+	height: 30upx;
+	position: absolute;
+	right: 20upx;
+	top: 35upx;
+}
+.deal {
+	margin-left: 3%;
+	height: 100upx;
+	line-height: 100upx;
+	font-size: 30upx;
+}
+.money {
+	position: absolute;
+	right: 2rem;
+	color: #f98021;
+	height: 100upx;
+	line-height: 100upx;
+	font-size: 30upx;
+}
+
+.hengxian {
+	width: 100%;
+	height: 1px;
+	background-color: #e6e6e6;
+}
+.head {
+	border-radius: 8rpx;
+}

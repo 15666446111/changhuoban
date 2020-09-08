@@ -21,6 +21,10 @@
 			
 		</view>
 		
+		<view class="cu-load load-modal" v-if="loadModal.show">
+		   <image src="/static/public/loading.png" mode="aspectFit"></image>
+		   <view class="gray-text">{{ loadModal.text }}</view>
+		</view>
 	</view>
 </template>
 
@@ -31,13 +35,17 @@
 		
 		data() {
 			return {
+				loadModal: {
+					show: false,
+					text: '加载中...'
+				},
 				list: [],
 			}
 		},
 
 		// 初始化数据
 		onLoad(){
-			uni.showLoading();
+			this.loadModal.show = true;
 			this.getShareList();
 		},
 		
@@ -48,7 +56,7 @@
 		        	url:"/V1/wx_share_list",
 		            method:'get',
 		            success: (res) => {
-						uni.hideLoading();
+						this.loadModal.show = false;
 						console.log(res);
 						this.list = res.data.success.data;
 		            }

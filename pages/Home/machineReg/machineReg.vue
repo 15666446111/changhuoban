@@ -41,6 +41,11 @@
 		</view>
 		<button class="button1" @click="submit()">确 认 登 记</button>
 		<!-- <navigator  hover-class="none"  url="shanghuxinxi/shanghuxinxi"><button class="button2">A 类 商 户 入 网</button></navigator> -->
+		
+		<view class="cu-load load-modal" v-if="loadModal.show">
+		   <image src="/static/public/loading.png" mode="aspectFit"></image>
+		   <view class="gray-text">{{ loadModal.text }}</view>
+		</view>
 	</view>
 </template>
 
@@ -49,6 +54,10 @@ import net from '../../../common/net.js';
 export default {
 	data() {
 		return {
+			loadModal: {
+				show: false,
+				text: '加载中...'
+			},
 			merchant_sn: '',
 			merchant_name: '',
 			merchant_phone: '',
@@ -100,7 +109,7 @@ export default {
 				return false;
 			}
 			
-			uni.showLoading();
+			this.loadModal.show = true;
 	
 			net({
 	        	url: "/V1/register",
@@ -109,10 +118,10 @@ export default {
 					merchant_name: this.merchant_name,
 					merchant_phone: this.merchant_phone,
 					merchant_sn: this.merchant_sn,
-					operate:this.operate
+					operate: this.operate
 				},
 	            success: (res) => {
-					uni.hideLoading();
+					this.loadModal.show = false;
 					
 					if (res.data.success) {
 						uni.showToast({ title: '登记成功', icon: 'none',

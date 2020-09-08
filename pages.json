@@ -42,39 +42,45 @@
 				"navigationBarTextStyle": "black"
 			}
 		}, {
-			"path": "pages/team/jinrijiaoyi/jinrijiaoyi",
+			"path": "pages/team/data_details/trade",
 			"style": {
-				"navigationBarTitleText": "今日交易",
+				"navigationBarTitleText": "交易详情",
 				"navigationBarTextStyle": "black"
 			}
 		}, {
-			"path": "pages/team/jihuozongshu/jihuozongshu",
+			"path": "pages/team/data_details/active",
 			"style": {
 				"navigationBarTitleText": "激活总数",
 				"navigationBarTextStyle": "black"
 			}
 		}, {
-			"path": "pages/team/huobanzongshu/huobanzongshu",
+			"path": "pages/team/data_details/temail",
+			"style": {
+				"navigationBarTitleText": "机具总数",
+				"navigationBarTextStyle": "black"
+			}
+		}, {
+			"path": "pages/team/data_details/profit",
+			"style": {
+				"navigationBarTitleText": "收益总数",
+				"navigationBarTextStyle": "black"
+			}
+		}, {
+			"path": "pages/team/data_details/team_user",
 			"style": {
 				"navigationBarTitleText": "伙伴总数",
 				"navigationBarTextStyle": "black"
 			}
 		}, {
-			"path": "pages/team/shouyizongshu/shouyizongshu",
+			"path": "pages/team/data_details/average_trade",
 			"style": {
-				"navigationBarTitleText": "收益总数",
+				"navigationBarTitleText": "台均交易",
 				"navigationBarTextStyle": "black"
 			}
 		}, {
 			"path": "pages/team/shanghuzongshu/shanghuzongshu",
 			"style": {
 				"navigationBarTitleText": "商户总数",
-				"navigationBarTextStyle": "black"
-			}
-		}, {
-			"path": "pages/team/taijunjiaoyi/taijunjiaoyi",
-			"style": {
-				"navigationBarTitleText": "台均交易",
 				"navigationBarTextStyle": "black"
 			}
 		}, {
@@ -96,9 +102,27 @@
 				"navigationBarTextStyle": "black"
 			}
 		}, {
-			"path": "pages/Home/huobanguanli/fenruencanshu/fenruencanshu",
+			"path": "pages/Home/huobanguanli/policy_details/type_list",
+			"style": {
+				"navigationBarTitleText": "设置类型",
+				"navigationBarTextStyle": "black"
+			}
+		}, {
+			"path": "pages/Home/huobanguanli/policy_details/share_profit",
 			"style": {
 				"navigationBarTitleText": "分润参数",
+				"navigationBarTextStyle": "black"
+			}
+		}, {
+			"path": "pages/Home/huobanguanli/policy_details/policy_details",
+			"style": {
+				"navigationBarTitleText": "活动列表",
+				"navigationBarTextStyle": "black"
+			}
+		}, {
+			"path": "pages/Home/huobanguanli/policy_details/return_cash",
+			"style": {
+				"navigationBarTitleText": "返现参数",
 				"navigationBarTextStyle": "black"
 			}
 		}, {
@@ -175,7 +199,7 @@
 			}
 		}
 		, {
-			"path": "pages/Home/shanghuguanli/feilvcanshu/feilvcanshu",
+			"path": "pages/Home/shanghuguanli/rate_details/rate_details",
 			"style": {
 				"navigationBarTitleText": "费率参数",
 				"navigationBarTextStyle": "black"
@@ -190,12 +214,6 @@
 			"path": "pages/Home/shanghuguanli/machineFirst/machineFirst",
 			"style": {
 				"navigationBarTitleText": "商户信息",
-				"navigationBarTextStyle": "black"
-			}
-		},  {
-			"path": "pages/team/TemailCount/TemailCount",
-			"style": {
-				"navigationBarTitleText": "机具总数",
 				"navigationBarTextStyle": "black"
 			}
 		}, {
@@ -263,13 +281,13 @@
 			"path": "pages/mine/xiaoxitongzhi/xiaoxitongzhi",
 			"style": {}
 		}, {
-			"path": "pages/mine/wodedingdan/wodedingdan",
+			"path": "pages/mine/order/order",
 			"style": {}
 		}, {
 			"path": "pages/mine/machinesInfo/machinesInfo",
 			"style": {}
 		}, {
-			"path": "pages/mine/machinesInfo/callSet/callSet",
+			"path": "pages/mine/machinesInfo/callSet/call_set",
 			"style": {}
 		}, {
 			"path": "pages/mine/machinesInfo/callSet/call_back",
@@ -314,7 +332,7 @@
 			"path": "pages/Home/machineReg/machineChoice/machineChoice",
 			"style": {}
 		}, {
-			"path": "pages/mine/machinesInfo/qujianhuabo/qujianhuabo",
+			"path": "pages/mine/machinesInfo/section/section_transfer",
 			"style": {}
 		}, {
 			"path": "pages/mine/machinesInfo/xuanzehuabo/xuanzehuabo",

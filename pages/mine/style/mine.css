@@ -183,3 +183,8 @@
 	right: 40upx;
 	position: absolute;
 }
+
+.user_group {
+	display: inline-block;
+	margin-left: 10rpx;
+}

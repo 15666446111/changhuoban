@@ -1,44 +1,46 @@
 <template>
 	<view class="ID">
 		<view class="indexs">
-			<view class="select">
-				<view class="select-view">
-					<view class="select-name">收货人：</view>
-					<input class="select-text" placeholder="请填写姓名" v-model="name" />
-				</view>
-				<view class="hengxian"></view>
-				<view class="select-view">
-					<view class="select-name">联系电话：</view>
-					<input class="select-text" placeholder="请填写手机号码" v-model="tel" />
-				</view>
-				<view class="hengxian"></view>
-				<view class="select-view1">
-					<view class="select-name">所在地区：</view>
-					<view class="tab select-text1" @tap="toggleTab('region')">{{ resultInfo.result }}</view>
-					<w-picker
-						mode="region"
-						:defaultVal="regionDval"
-						:areaCode="['11', '1101', '110101']"
-						:hideArea="false"
-						@confirm="onConfirm"
-						ref="region"
-						:timeout="true"
-					></w-picker>
-				</view>
-				<view class="hengxian"></view>
-				<view class="select-view">
-					<view class="select-name">详细地址：</view>
-					<input class="select-text" placeholder="请填写详细地址" v-model="detail"/>
-				</view>
+			
+			<view class="cu-form-group">
+				<view class="title">收货人</view>
+				<input placeholder="请填写姓名" v-model="name" ></input>
 			</view>
-		</view>
-		<view class="ckeck">
-			<checkbox-group @change="defaultCheck">
-				<checkbox checked="true" value="1" color="#ED6E11"><text class="moren">默认</text></checkbox>
-			</checkbox-group>
+			<view class="cu-form-group">
+				<view class="title">联系电话</view>
+				<input placeholder="请填写手机号码" v-model="tel" ></input>
+			</view>
+			<view class="cu-form-group">
+				<view class="title">所在地区</view>
+				<view class="w-picker picker" @tap="toggleTab('region')">{{ resultInfo.result }}</view>
+				<w-picker
+					mode="region"
+					:defaultVal="regionDval"
+					:areaCode="['11', '1101', '110101']"
+					:hideArea="false"
+					@confirm="onConfirm"
+					ref="region"
+					:timeout="true"
+				></w-picker>
+			</view>
+			<view class="cu-form-group">
+				<view class="title">详细地址</view>
+				<input placeholder="请填写详细地址" v-model="detail" ></input>
+			</view>
+			<view class="cu-form-group">
+				<checkbox-group @change="defaultCheck">
+					<checkbox checked="true" value="1" color="#ED6E11" class="default-checkbox"></checkbox>
+					<text class="moren">默认</text>	
+				</checkbox-group>
+			</view>
 		</view>
 
 		<view><button @click="addressAdd">保 存</button></view>
+		
+		<view class="cu-load load-modal" v-if="loadModal.show">
+		   <image src="/static/public/loading.png" mode="aspectFit"></image>
+		   <view class="gray-text">{{ loadModal.text }}</view>
+		</view>
 	</view>
 </template>
 
@@ -53,6 +55,11 @@ export default {
 	},
 	data() {
 		return {
+			loadModal: {
+				show: false,
+				text: '提交中...'
+			},
+			
 			title: 'Hello',
 			startYear: new Date().getFullYear(),
 			regionDval: ['北京市', '市辖区', '东城区'],
@@ -101,7 +108,7 @@ export default {
 				return false;
 			}
 			
-			uni.showLoading();
+			this.loadModal.show = true;
 			
 			net({
 				url: '/V1/addressAdd',
@@ -116,7 +123,7 @@ export default {
 					'is_default' : this.is_default,
 				},
 				success: (res) => {
-					uni.hideLoading();
+					this.loadModal.show = false;
 					try{
 						if (res.data.success) {
 							uni.showToast({
@@ -151,6 +158,9 @@ export default {
 </script>
 
 <style>
-@import url("../../style/address_add.css");
+	@import url("../../style/address_add.css");
+	.cu-form-group .title {
+		min-width: calc(4em + 15px);
+	}
 </style>
 

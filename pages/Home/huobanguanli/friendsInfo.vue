@@ -31,6 +31,11 @@
 				暂无伙伴数据哦～
 			</view>
 		</view>
+		
+		<view class="cu-load load-modal" v-if="loadModal.show">
+		   <image src="/static/public/loading.png" mode="aspectFit"></image>
+		   <view class="gray-text">{{ loadModal.text }}</view>
+		</view>
 	</view>
 </template>
 
@@ -40,11 +45,16 @@ import net from '../../../common/net.js';
 export default {
 	data() {
 		return {
+			loadModal: {
+				show: false,
+				text: '加载中...'
+			},
 			team: [],
 		};
 	},
 	
 	onLoad(){
+		this.loadModal.show = true;
 		// 获取我的下级列表
 		this.getTeamList();
 	},
@@ -55,7 +65,7 @@ export default {
 	        	url:"/V1/my_team",
 	            method:'get',
 	            success: (res) => {
-					console.log(res)
+					this.loadModal.show = false;
 					this.team = res.data.success.data.list;
 	            } 
 	      	})

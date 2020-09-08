@@ -136,6 +136,10 @@
 		
 		<view style="height: 130upx;"></view>
 		
+		<view class="cu-load load-modal" v-if="loadModal.show">
+		   <image src="/static/public/loading.png" mode="aspectFit"></image>
+		   <view class="gray-text">{{ loadModal.text }}</view>
+		</view>
 	</view>
 </template>
 
@@ -146,6 +150,10 @@ export default {
 	
 	data() {
 		return {
+			loadModal: {
+				show: false,
+				text: '加载中...'
+			},
 			TeamInfo:{
 				day:{
 					trade: 0.01,
@@ -176,7 +184,7 @@ export default {
 	
 	// 页面加载的时候初始化数据
 	onLoad(){
-		uni.showLoading();
+		this.loadModal.show = true;
 		// 获取展示数据 团队信息
 		this.getTeamInfo();
 	},
@@ -189,7 +197,7 @@ export default {
 	        	url:"/V1/team_data",
 	            method:'get',
 	            success: (res) => {
-					uni.hideLoading();
+					this.loadModal.show = false;
 					if(res.data.success){
 						this.TeamInfo = res.data.success.data;
 					}else

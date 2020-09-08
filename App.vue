@@ -10,6 +10,11 @@
 @import url('/common/common.css');
 /* 全局图标样式*/
 @import '/common/iconfont.css';
+
+/* colorui */
+@import 'colorui/main.css';
+@import 'colorui/icon.css';
+
 uni-checkbox .uni-checkbox-input {
 	border-radius: 50% !important;
 	color: #ffffff !important;
@@ -40,9 +45,43 @@ uni-checkbox .uni-checkbox-input.uni-checkbox-input-checked:after {
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 	-webkit-touch-callout: none;
 	-webkit-user-drag: none;
-	-webkit-user-select: none;
+	/* -webkit-user-select: none; */
 	-ms-user-select: none;
 	-ms-touch-action: none;
 	-moz-user-select: -moz-none;
 }
 </style>
+<script>
+	export default {
+		onLaunch: function () {
+			//#ifdef APP-PLUS  
+			var server = "http://livechb3.changhuoban.com/api/V1/appUpdate"; //检查更新地址  
+			var req = { //升级检测数据
+				"appid": plus.runtime.appid,
+				"version": plus.runtime.version
+			};
+			console.log(req);
+			
+			uni.request({
+				url: server,
+				data: req,
+				success: (res) => {
+					// if (res.statusCode == 200 &amp;&amp; res.data.status === 1) {
+					if (res.data.success && res.data.success.url != undefined) {
+						uni.showModal({ //提醒用户更新
+							title: "更新提示",
+							content: '系统优化',
+							success: (result) => {
+								if (result.confirm) {
+									plus.runtime.openURL(res.data.success.url);
+								}
+							}
+						})
+					}
+				}
+			})  
+			//#endif  
+		}
+	};
+	
+</script>

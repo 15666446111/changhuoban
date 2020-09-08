@@ -5,7 +5,7 @@
 			<view class="titlebar">
 				<view class="rise">
 					<view class="rise-head">
-						<image :src=UserInfo.heading class="head" />
+						<image :src="UserInfo.heading" class="head" />
 						<view class="name">{{ UserInfo.nickname }}</view>
 						<!-- <view class="shiming">
 							<image class="shiming-image" src="../../../../static/xz1.png" />
@@ -15,7 +15,7 @@
 							<view class="zhanghao">账号:{{ UserInfo.account }}</view>
 						</view>
 						
-						<view class="">
+						<view class="" v-if="type === 1">
 							<view class="zhanghao">级别:{{ UserInfo.group }}</view>
 						</view>
 					</view>
@@ -48,19 +48,22 @@
 				</view>
 			</view>
 		</navigator>
-		<view class="backgroundColor" v-if="type!==3">
+		<view class="backgroundColor" v-if="type === 2">
 			<view class="data">
 				<view class="phone">设置政策信息</view>
 			</view>
 			<view class="dara-xian"></view>
-				<navigator v-for="(item, index) in PolicyList" :key="index" :url="'../fenruencanshu/fenruencanshu?pid=' + item.id + '&uid=' + UserInfo.id">
-					<view class="data">
-						<view class="phone">{{item.title}}</view>
-						<view class="mark">设置</view>
-					</view>
-				</navigator>
-			
-			
+			<navigator v-for="(item, index) in PolicyList" :key="index" :url="'../policy_details/share_profit?gid=' + item.id + '&uid=' + UserInfo.id">
+				<view class="data">
+					<view class="phone">{{item.title}}</view>
+					<view class="mark">设置</view>
+				</view>
+			</navigator>
+		</view>
+		
+		<view class="cu-load load-modal" v-if="loadModal.show">
+		   <image src="/static/public/loading.png" mode="aspectFit"></image>
+		   <view class="gray-text">{{ loadModal.text }}</view>
 		</view>
 	</view>
 </template>
@@ -71,6 +74,10 @@ import net from '../../../../common/net.js';
 export default {
 	data() {
 		return {
+			loadModal: {
+				show: false,
+				text: '加载中...'
+			},
 			UserInfo: {},
 			PolicyList: [],
 			type: ''
@@ -80,10 +87,11 @@ export default {
 	onLoad: function (options){
 		this.type 	= uni.getStorageSync('type');
 		
+		this.loadModal.show = true;
 		// 获取伙伴信息
 		this.getUserInfo(options.user);
 		// 获取政策信息
-		this.getPolicyList();
+		this.getPolicyList(options.user);
 	},
 	
 	methods: {
@@ -95,7 +103,7 @@ export default {
 					team_user: user,
 				},
 	            success: (res) => {
-					console.log(res);
+					this.loadModal.show = false;
 					this.UserInfo = res.data.success.data;
 	            },
 				fail: () => { console.log("22") },
@@ -103,12 +111,25 @@ export default {
 	      	})
 		},
 		
-		getPolicyList(){
+		getPolicyList(userId){
 			net({
-	        	url:"/V1/getPolicy",
-	            method:'GET',
-	            success: (res) => {
-					this.PolicyList = res.data.success.data;
+				url:"/V1/userPolicyGroup",
+				method:'GET',
+				data: { uid: userId },
+				success: (res) => {
+					console.log(res);
+					this.loadModal.show = false;
+					
+					if (res.data.success) {
+						this.PolicyList = res.data.success.data;
+					} else {
+						uni.showToast({
+							title: res.data.error.message,
+							icon: 'none',
+							position: 'bottom'
+						})
+					}
+					
 	            },
 				fail: () => { console.log("22") },
 				complete: () => { console.log("33") }

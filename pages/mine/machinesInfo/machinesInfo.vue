@@ -90,7 +90,7 @@
 		</view>
 		<view class="class-view3">
 			<view class="view-text">
-				<navigator  hover-class="none"  url="callSet/callSet">
+				<navigator  hover-class="none"  url="callSet/call_set">
 					<image src="../../../static/jjhb.png" class="image"></image>
 					<view class="figure">机具划拨</view>
 				</navigator>
@@ -105,10 +105,10 @@
 			</view>
 			<view class="shuxian1"></view>
 			<view class="view-text">
-				<!-- <navigator  hover-class="none"  url="callLog/callLog"> -->
+				<navigator  hover-class="none"  url="callLog/callLog">
 					<image src="../../../static/hbjl.png" class="image"></image>
 					<view class="figure">调拨记录</view>
-				<!-- </navigator> -->
+				</navigator>
 			</view>
 			<!-- <view class="shuxian1"></view>
 			<view class="view-text">
@@ -117,6 +117,11 @@
 					<view class="figure">终端定价</view>
 				</navigator>
 			</view> -->
+		</view>
+		
+		<view class="cu-load load-modal" v-if="loadModal.show">
+		   <image src="/static/public/loading.png" mode="aspectFit"></image>
+		   <view class="gray-text">{{ loadModal.text }}</view>
 		</view>
 	</view>
 </template>
@@ -127,14 +132,18 @@ import net from '../../../common/net.js';
 export default {
 	data() {
 		return {
+			loadModal: {
+				show: false,
+				text: '加载中...'
+			},
 			merchantData: []
 		};
 	},
 	
 	onShow() {
+		this.loadModal.show = true;
 		// 获取机器数据
 		this.getMerchantData();
-		uni.showLoading();
 	},
 	
 	methods: {
@@ -144,7 +153,7 @@ export default {
 				url: '/V1/getBindAll',
 				method: 'GET',
 				success: (res) => {
-					uni.hideLoading();
+					this.loadModal.show = false;
 					if (res.data.success) {
 						this.merchantData = res.data.success.data;
 					} else {

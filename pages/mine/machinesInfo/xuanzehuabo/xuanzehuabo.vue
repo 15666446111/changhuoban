@@ -20,6 +20,11 @@
 		
 		<view style="height: 100upx"></view>
 		<view class="button" @click="transfer">确 认 划 拨<text>({{tranNum}})</text></view>
+		
+		<view class="cu-load load-modal" v-if="loadModal.show">
+		   <image src="/static/public/loading.png" mode="aspectFit"></image>
+		   <view class="gray-text">{{ loadModal.text }}</view>
+		</view>
 	</view>
 </template>
 
@@ -29,6 +34,10 @@ import net from '../../../../common/net.js';
 export default {
 	data() {
 		return {
+			loadModal: {
+				show: false,
+				text: '加载中...'
+			},
 			// 被划拨人id
 			partnerId: '',
 			// 政策id
@@ -44,8 +53,8 @@ export default {
 		this.partnerId = options.uid;
 		this.policyId = options.policy_id;
 		// 获取可划拨终端列表
+		this.loadModal.show = true;
 		this.getUnBoundInfo(this.policyId);
-		console.log(options);
 	},
 	
 	methods: {
@@ -56,6 +65,7 @@ export default {
 	            method: 'get',
 				data: { policy_id: policyId },
 	            success: (res) => {
+					this.loadModal.show = false;
 					this.policy = res.data.success.data;
 	            }
 	      	})
@@ -79,7 +89,7 @@ export default {
 				return false;
 			}
 			
-			uni.showLoading();
+			this.loadModal.show = true;
 			net({
 	        	url:"/V1/addTransfer",
 	            method: 'POST',
@@ -89,8 +99,7 @@ export default {
 					state: 1
 				},
 	            success: (res) => {
-					console.log(res);
-					uni.hideLoading();
+					this.loadModal.show = false;
 					
 					var _this = this;
 					if (res.data.success) {

@@ -2,7 +2,7 @@
     "name" : "畅伙伴",
     "appid" : "__UNI__7268560",
     "description" : "畅伙伴3.0是一款分享赚钱自用省钱的app",
-    "versionName" : "1.0.0",
+    "versionName" : "2.0.1",
     "versionCode" : "100",
     "transformPx" : false,
     /* 5+App特有相关 */
@@ -62,6 +62,12 @@
                 "ad" : {},
                 "payment" : {
                     "alipay" : {}
+                },
+                "share" : {
+                    "weixin" : {
+                        "appid" : "wx1a2b2fae7251449e",
+                        "UniversalLinks" : ""
+                    }
                 }
             },
             "icons" : {
@@ -143,6 +149,12 @@
     },
     "h5" : {
         "title" : "畅伙伴",
-        "domain" : ""
+        "domain" : "http://chbweb3.changhuoban.com",
+        "devServer" : {
+            "https" : false
+        },
+        "router" : {
+            "mode" : "hash"
+        }
     }
 }

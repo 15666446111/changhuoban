@@ -16,6 +16,11 @@
 		<view v-if="policy.length == 0" style="padding-top: 200rpx; color:#999; font-size: 32rpx; text-align: center;">
 			暂无可选的活动～
 		</view>
+		
+		<view class="cu-load load-modal" v-if="loadModal.show">
+		   <image src="/static/public/loading.png" mode="aspectFit"></image>
+		   <view class="gray-text">{{ loadModal.text }}</view>
+		</view>
 	</view>
 </template>
 
@@ -24,12 +29,16 @@ import net from '../../../../common/net.js';
 export default {
 	data() {
 		return {
+			loadModal: {
+				show: false,
+				text: '加载中...'
+			},
 			policy: []
 		};
 	},
 	
 	onLoad() {
-		uni.showLoading()
+		this.loadModal.show = true;
 		this.getPolicyList();
 	},
 	methods: {
@@ -39,7 +48,7 @@ export default {
 	        	url:"/V1/getPolicy",
 	            method: 'get',
 	            success: (res) => {
-					uni.hideLoading()
+					this.loadModal.show = false;
 					if(res.data.success && res.data.success.data)
 						this.policy = res.data.success.data;
 					else

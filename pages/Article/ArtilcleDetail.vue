@@ -16,6 +16,11 @@
 			<image src="/static/no-data.jpeg" mode="widthFix"></image>
 		</view>
 		
+		<view class="cu-load load-modal" v-if="loadModal.show">
+		   <!-- <view class="cuIcon-emojifill text-orange"></view> -->
+		   <image src="/static/public/loading.png" mode="aspectFit"></image>
+		   <view class="gray-text">{{ loadModal.text }}</view>
+		</view>
 	</view>
 	
 </template>
@@ -26,13 +31,18 @@
 	export default {
 		data() {
 			return {
+				loadModal: {
+					show: false,
+					text: '加载中...'
+				},
+				
 				article: {ci : 0 }
 			};
 		},
 		
 		// 页面初始化执行
 		onLoad(options){
-			uni.showLoading()
+			this.loadModal.show = true;
 			this.getArticle(options.aid);
 		},
 		
@@ -43,8 +53,7 @@
 		            method:'get',
 					data:{aid:aid},
 		            success: (res) => {
-						console.log(res.data.success.data);
-						uni.hideLoading()
+						this.loadModal.show = false;
 						if(res.data.success && res.data.success.data){
 							this.article = res.data.success.data;
 						}else{

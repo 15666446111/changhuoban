@@ -53,7 +53,7 @@ const net = function(options) {
 				}
 				// token失效时，跳转登录页面
 				if (res.statusCode == 505) {
-					uni.showToast({ title: res.data.error.message, icon: 'none', mask: true, position: 'bottom'})
+					uni.showToast({ title: '登录失效', icon: 'none', mask: true, position: 'bottom'})
 					setTimeout(function() {
 						uni.redirectTo({ url: '/pages/index/index' })
 					}, 1000);

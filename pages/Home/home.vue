@@ -42,6 +42,10 @@
 			<navigator url=".."></navigator>
 		</view>
 		
+		<view class="cu-load load-modal" v-if="loadModal.show">
+		   <image src="/static/public/loading.png" mode="aspectFit"></image>
+		   <view class="gray-text">{{ loadModal.text }}</view>
+		</view>
 	</view>
 </template>
 
@@ -60,6 +64,10 @@ export default {
 	
 	data() {
 		return {
+			loadModal: {
+				show: false,
+				text: '加载中...'
+			},
 			// 轮播图
 			swipers: [],
 			// 公告信息
@@ -90,6 +98,7 @@ export default {
 	
 	// 页面初始化执行
 	onLoad(){
+		this.loadModal.show = true;
 		// 获取轮播图
 		this.getSwipers();
 		// 获取公告信息
@@ -122,6 +131,8 @@ export default {
 	            success: (res) => {
 					if (res.data.success && res.data.success.data) this.swipers = res.data.success.data;
 					else uni.showToast({ title: res.data.error.message, icon: 'none' });
+					
+					this.loadModal.show = false;
 	            }
 	      	})
 		},

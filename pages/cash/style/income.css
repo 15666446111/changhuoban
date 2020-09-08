@@ -77,7 +77,8 @@
 	margin-left: 5%;
 	margin-top: 6%;
 	display: flex;
-	justify-content: center;
+	/* justify-content: center; */
+	justify-content: left;
 	border-radius: 10upx 10upx 10upx 10upx;
 }
 .dis-div {
@@ -178,4 +179,25 @@
 	color: #666;
 	position: absolute;
 	right: 11%;
+}
+.date-select {
+	width: 100%;
+	height: 80rpx;
+	text-align: right;
+}
+.screen {
+	padding: 0 20rpx;
+}
+.type-title {
+	height: 80rpx;
+	line-height: 80rpx;
+}
+.triangle {
+	width: 24rpx;
+	margin-left: 8rpx;
+}
+.cash-data{
+	min-width: 200rpx;
+	display: flex;
+	align-items:center;
 }

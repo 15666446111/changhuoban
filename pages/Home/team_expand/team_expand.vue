@@ -10,6 +10,11 @@
 		<view style="height: 100%;  display: flex; justify-content: center;align-items: center; background-color: #f5f5f5;" v-if="!this.images">
 			<image src="/static/no-data.jpeg" mode="widthFix"></image>
 		</view>
+		
+		<view class="cu-load load-modal" v-if="loadModal.show">
+		   <image src="/static/public/loading.png" mode="aspectFit"></image>
+		   <view class="gray-text">{{ loadModal.text }}</view>
+		</view>
 	</view>
 </template>
 
@@ -18,11 +23,18 @@ import net from '../../../common/net.js';
 
 export default {
 	data() {
-		return { images: "images" , data: true};
+		return {
+			loadModal: {
+				show: false,
+				text: '加载中...'
+			},
+			images: "images",
+			data: true,
+		};
 	},
 	
 	onLoad() {
-		uni.showLoading()
+		this.loadModal.show = true;
 		this.getMerchantPic();
 	},
 	
@@ -34,7 +46,7 @@ export default {
 	        	url:"/V1/team_share",
 	            method:'get',
 	            success: (res) => {
-					uni.hideLoading()
+					this.loadModal.show = false;
 					if (res.data.success && res.data.success.data.link) { 
 						this.images = res.data.success.data.link;
 					} else {

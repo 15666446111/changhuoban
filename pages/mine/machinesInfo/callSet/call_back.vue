@@ -23,8 +23,8 @@
 			</view>
 			<view class="bottom">
 				<view class="bview">
-					<view class="cancel"><view>区间划拨</view></view>
-					<view class="confirm" @click="transfer">选择回拨</view>
+					<!-- <view class="cancel"><view>区间划拨</view></view> -->
+					<view class="cancel" style="width: 100%;" @click="transfer">选择回拨</view>
 				</view>
 			</view>
 		</view>

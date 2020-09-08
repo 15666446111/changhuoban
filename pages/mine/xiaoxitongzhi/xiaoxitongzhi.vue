@@ -1,58 +1,65 @@
 <template>
-	<section class="Tabs-Page">
-		<s-tabs :effect="true" v-model="activeTab" @change="change" :nav-per-view="5">
+	<view>
+		<section class="Tabs-Page">
+			<s-tabs :effect="true" v-model="activeTab" @change="change" :nav-per-view="5">
 
-			<s-tab title="注册">
-				<view class="bviews" v-for="(item,index) in Register" :key="item.id">
-					<view class="bview1">
-						<view class="title">{{ item.title }}</view>
-						<view class="time">{{ item.created_at }}</view>
-						<text class="text">{{ item.message_text }}</text>
+				<s-tab title="注册">
+					<view class="bviews" v-for="(item,index) in Register" :key="item.id">
+						<view class="bview1">
+							<view class="title">{{ item.title }}</view>
+							<view class="time">{{ item.created_at }}</view>
+							<text class="text">{{ item.message_text }}</text>
+						</view>
 					</view>
-				</view>
-			</s-tab>
-			
-			<s-tab title="订单">
-				<view class="bviews" v-for="(item,index) in Order" :key="item.id">
-					<view class="bview1">
-						<view class="title">{{ item.title }}</view>
-						<view class="time">{{ item.created_at }}</view>
-						<text class="text">{{ item.message_text }}</text>
+				</s-tab>
+				
+				<s-tab title="订单">
+					<view class="bviews" v-for="(item,index) in Order" :key="item.id">
+						<view class="bview1">
+							<view class="title">{{ item.title }}</view>
+							<view class="time">{{ item.created_at }}</view>
+							<text class="text">{{ item.message_text }}</text>
+						</view>
 					</view>
-				</view>
-			</s-tab>
-			
-			<s-tab title="收益">
-				<view class="bviews" v-for="(item,index) in Income" :key="item.id">
-					<view class="bview1">
-						<view class="title">{{ item.title }}</view>
-						<view class="time">{{ item.created_at }}</view>
-						<text class="text">{{ item.message_text }}</text>
+				</s-tab>
+				
+				<s-tab title="收益">
+					<view class="bviews" v-for="(item,index) in Income" :key="item.id">
+						<view class="bview1">
+							<view class="title">{{ item.title }}</view>
+							<view class="time">{{ item.created_at }}</view>
+							<text class="text">{{ item.message_text }}</text>
+						</view>
 					</view>
-				</view>
-			</s-tab>
-			
-			<s-tab title="实名">
-				<view class="bviews" v-for="(item,index) in Realname" :key="item.id">
-					<view class="bview1">
-						<view class="title">{{ item.title }}</view>
-						<view class="time">{{ item.created_at }}</view>
-						<text class="text">{{ item.message_text }}</text>
+				</s-tab>
+				
+				<s-tab title="实名">
+					<view class="bviews" v-for="(item,index) in Realname" :key="item.id">
+						<view class="bview1">
+							<view class="title">{{ item.title }}</view>
+							<view class="time">{{ item.created_at }}</view>
+							<text class="text">{{ item.message_text }}</text>
+						</view>
 					</view>
-				</view>
-			</s-tab>
-			
-			<s-tab title="其他">
-				<view class="bviews" v-for="(item,index) in Other" :key="item.id">
-					<view class="bview1">
-						<view class="title">{{ item.title }}</view>
-						<view class="time">{{ item.created_at }}</view>
-						<text class="text">{{ item.message_text }}</text>
+				</s-tab>
+				
+				<s-tab title="其他">
+					<view class="bviews" v-for="(item,index) in Other" :key="item.id">
+						<view class="bview1">
+							<view class="title">{{ item.title }}</view>
+							<view class="time">{{ item.created_at }}</view>
+							<text class="text">{{ item.message_text }}</text>
+						</view>
 					</view>
-				</view>
-			</s-tab>
-		</s-tabs>
-	</section>
+				</s-tab>
+			</s-tabs>
+		</section>
+		
+		<view class="cu-load load-modal" v-if="loadModal.show">
+		   <image src="/static/public/loading.png" mode="aspectFit"></image>
+		   <view class="gray-text">{{ loadModal.text }}</view>
+		</view>
+	</view>
 </template>
 
 <script>
@@ -68,6 +75,10 @@ export default {
 	
 	data() {
 		return {
+			loadModal: {
+				show: false,
+				text: '加载中...'
+			},
 			tabIndex: 0,
 			srcollinto: '',
 			scrollH: 500,
@@ -85,8 +96,8 @@ export default {
 	},
 	
 	onLoad() {
+		this.loadModal.show = true;
 		this.getMessage(this.arr[this.index]);
-		// this.getMessage('Register');
 	},
 	
 	methods: {
@@ -95,6 +106,7 @@ export default {
 				return false;
 			}
 			
+			this.loadModal.show = true;
 			this.getMessage(this.arr[this.index])
 		},		
 		
@@ -104,7 +116,7 @@ export default {
 	            { type:  type},
 	      	)
 			.then((res) => {
-				// console.log(res);
+				this.loadModal.show = false;
 				if(type == 'Register'){
 					this.Register = res.data.success.data;
 				}

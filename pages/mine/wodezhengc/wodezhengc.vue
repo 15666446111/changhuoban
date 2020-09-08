@@ -1,5 +1,5 @@
 <template>
-	<view class="backgroundColor"v-if="type!==3">
+	<view class="backgroundColor" v-if="type === 2">
 		<view class="data"><view class="phone">我的政策：</view></view>
 		<view class="dara-xian"></view>
 		<navigator  hover-class="none"  class="data-list" :url="'zhengceyemian/zhengceyemian?pid=' + item.id + '&uid=' + uid" v-for="(item, index) in policyList" :key="index">

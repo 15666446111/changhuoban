@@ -15,7 +15,7 @@
 			<view class="user-name-view">
 				<view class="iconfont iconsafetycertificate"></view>
 				<input class="user-inpu" placeholder="动态验证码" type="number"  v-model="code" />
-				<view class="auth" v-model="code" @click="getCode">{{codeTime>0?codeTime+'s后发送' : "获取验证码"}}</view>
+				<view class="auth" @click="getCode">{{codeTime>0?codeTime+'s后发送' : "获取验证码"}}</view>
 			</view>
 			<view class="user-name-view">
 				<view class="iconfont iconlock"></view>
@@ -29,6 +29,11 @@
 		
 		<button class="registerButton" @click="submit">立即重置</button>
 		
+		<view class="cu-load load-modal" v-if="loadModal.show">
+		   <!-- <view class="cuIcon-emojifill text-orange"></view> -->
+		   <image src="/static/public/loading.png" mode="aspectFit"></image>
+		   <view class="gray-text">{{ loadModal.text }}</view>
+		</view>
 	</view>
 </template>
 
@@ -36,6 +41,11 @@
 export default {
 	data() {
 		return {
+			loadModal: {
+				show: false,
+				text: ''
+			},
+			
 			code:'',
 			codeTime:0,
 			account: '',
@@ -44,12 +54,12 @@ export default {
 			
 			//验证规则
 			rules: {
-				// account: [
-				// 	{
-				// 		rule: /^1[356789]\d{9}$/,
-				// 		msg: '手机号格式不正确'
-				// 	}
-				// ],
+				account: [
+					{
+						rule: /^1[356789]\d{9}$/,
+						msg: '手机号格式不正确'
+					}
+				],
 				password: [
 					{
 						rule: /^.{6,16}$/,
@@ -86,33 +96,55 @@ export default {
 		
 		
 		//验证码倒计时
-			getCode(){
-				if(this.codeTime>0){
-					return;
-				}
-				this.codeTime=60
-				let timer =setInterval(()=>{
-					if(this.codeTime>=1){
-						this.codeTime--
-					}else{
-						this.codeTime=0
-						clearInterval(timer)
+		getCode(){
+			if(this.codeTime>0){
+				return;
+			}
+			if (!this.validate('account')){
+				return false;
+			};
+			this.loadModal.show = true;
+			
+			uni.request({
+				url: 'http://livechb3.changhuoban.com/api/V1/getCode',
+				method: 'POST',
+				data: { phone: this.account },
+				success: res => {
+					this.loadModal.show = false;
+					
+					if (res.data.success) {
+						uni.showToast({ title: '发送成功', icon: 'none', position: 'bottom' });
+						
+						this.codeTime=60
+						let timer = setInterval(()=>{
+							if(this.codeTime>=1){
+								this.codeTime--
+							}else{
+								this.codeTime=0
+								clearInterval(timer)
+							}
+						},1000)
+					} else {
+						uni.showToast({ title: res.data.error.message, icon: 'none' });
 					}
-				},1000)
-			},
-			//表单验证
-			validata(){
-				//手机号正则
-				var mPattern = /^1[34578]\d{9}$/; 
-				//输出 true
-				console.log((mPattern.test(this.phone)));
-			},
+				}
+			});
+			
+			
+		},
+		//表单验证
+		validata(){
+			//手机号正则
+			var mPattern = /^1[34578]\d{9}$/; 
+			//输出 true
+			console.log((mPattern.test(this.phone)));
+		},
 		submit(){
 			//表单验证
 			//验证用户名
-			// if (!this.validate('account')){
-			// 	return false;
-			// };
+			if (!this.validate('account')){
+				return false;
+			};
 			//验证密码
 			if (!this.validate('password')){
 				return false;

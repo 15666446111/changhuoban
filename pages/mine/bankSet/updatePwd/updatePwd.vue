@@ -10,6 +10,11 @@
 		</view>
 
 		<button class="psy" @click="submit">确定</button>
+		
+		<view class="cu-load load-modal" v-if="loadModal.show">
+		   <image src="/static/public/loading.png" mode="aspectFit"></image>
+		   <view class="gray-text">{{ loadModal.text }}</view>
+		</view>
 	</view>
 </template>
 
@@ -19,6 +24,11 @@ import net from '../../../../common/net.js';
 	export default {
 		data() {
 			return {
+				loadModal: {
+					show: false,
+					text: '提交中...'
+				},
+				
 				oldPass: '',
 				newPass: '',
 				newPassAgain: '',
@@ -78,6 +88,8 @@ import net from '../../../../common/net.js';
 					return false;
 				};
 				
+				this.loadModal.show = true;
+				
 				net({
 		        	url:"/V1/setUserPwd",
 		            method:'get',
@@ -86,6 +98,8 @@ import net from '../../../../common/net.js';
 						newPassword: this.newPass
 					},
 		            success: (res) => {
+						this.loadModal.show = false;
+						
 						if (res.data.success) {
 							uni.showToast({
 								title: res.data.success.message,

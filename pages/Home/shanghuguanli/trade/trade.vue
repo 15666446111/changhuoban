@@ -4,23 +4,32 @@
 			<ms-dropdown-item v-model="value1" :list="list1"></ms-dropdown-item>
 			<ms-dropdown-item v-model="value2" :list="list"></ms-dropdown-item>
 		</ms-dropdown-menu>		
-		<view class="detail" v-if="tradeData.length != 0">
+		<view class="detail">
 			<view class="detail-view" v-for="(item, index) in tradeData" :key="index">
-				<view class="datail-name">{{ item.card_type }}/{{ item.card_number }}</view>
+				<view class="datail-name">
+					<view class="datail-name-l">SN:{{ item.merchant_sn }} </view>
+					<view class="datail-name-r"></view>
+				</view>
 				<view class="datail-way">
-					<view class="datail-text">{{ item.trade_type }}</view>
-					<view class="datail-text1">{{ item.money / 100 }}</view>
+					<!-- <view class="datail-text">{{ item.card_type }}/{{ item.card_number }}</view> -->
+					<view class="datail-text"></view>
 				</view>
 				<view class="datail-time">
 					<view class="datail-text">时间：{{ item.trade_time }}</view>
+					<view class="datail-text1">{{ (item.money / 100).toLocaleString() }}</view>
 					<!-- <view class="datail-text2">交易成功</view> -->
 				</view>
 			</view>
-			<view class="hengxian"></view>
+			<!-- <view class="hengxian"></view> -->
 		</view>
 		
 		<view v-if="tradeData.length == 0" style="color: #999; font-size: 32rpx; padding-top: 200rpx; text-align: center;">
 			暂无交易数据～
+		</view>
+		
+		<view class="cu-load load-modal" v-if="loadModal.show">
+		   <image src="/static/public/loading.png" mode="aspectFit"></image>
+		   <view class="gray-text">{{ loadModal.text }}</view>
 		</view>
 	</view>
 </template>
@@ -37,6 +46,10 @@
 		},
 		data() {
 			return {
+				loadModal: {
+					show: false,
+					text: '加载中...'
+				},
 				list: [
 					{
 						text: '全部',
@@ -71,14 +84,14 @@
 		// watch: {
 		// },
 		onLoad(options) {
-			uni.showLoading();
+			this.loadModal.show = true;
 			this.merchant = options.merchant;
 			// 获取交易数据
 			this.getTradeList(options.merchant, 'day');
 		},
 		watch:{
 			value2(val){
-				uni.showLoading();
+				this.loadModal.show = true;
 				if(val == 0){
 					this.getTradeList(this.merchant, 'count');
 				}
@@ -114,12 +127,13 @@
 						data_type: data_type
 					},
 					success: (res) => {
-						console.log(res);
-						uni.hideLoading();
+						this.loadModal.show = false;
 						if (res.data.success) {
 							this.tradeData = res.data.success.data;
 						} else {
-							uni.showToast({ title: res.data.error.message, icon: 'none',
+							uni.showToast({
+								title: res.data.error.message,
+								icon: 'none',
 								position: 'bottom'
 							})
 						}

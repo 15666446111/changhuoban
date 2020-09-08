@@ -37,7 +37,10 @@
 			暂无可选伙伴～
 		</view>
 		
-		<!-- <button type="default" class="optPartner">确定</button> -->
+		<view class="cu-load load-modal" v-if="loadModal.show">
+		   <image src="/static/public/loading.png" mode="aspectFit"></image>
+		   <view class="gray-text">{{ loadModal.text }}</view>
+		</view>
 	</view>
 </template>
 <script>
@@ -45,6 +48,10 @@ import net from '../../../../common/net.js';
 export default {
 	data() {
 		return {
+			loadModal: {
+				show: false,
+				text: '加载中...'
+			},
 			partnerList: {},
 			userInfo: {},
 			partnerId: '',
@@ -52,6 +59,7 @@ export default {
 	},
 	
 	onLoad() {
+		this.loadModal.show = true;
 		// 获取下级用户列表（包括自己）
 		this.getTeamUser();
 	},
@@ -63,10 +71,12 @@ export default {
 				url: '/V1/my_team',
 				method: 'GET',
 				success: (res) => {
-					if(res.data.success)
+					this.loadModal.show = false;
+					if(res.data.success) {
 						this.partnerList = res.data.success.data.list;
-					else
+					} else {
 						uni.showToast({ title: res.data.error.message, icon: 'none' });
+					}
 				}
 			})
 		},

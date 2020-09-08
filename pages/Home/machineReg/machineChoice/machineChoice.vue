@@ -22,6 +22,11 @@
 		</radio-group>
 		
 		<button class="term-define" @click="define">确定</button>
+		
+		<view class="cu-load load-modal" v-if="loadModal.show">
+		   <image src="/static/public/loading.png" mode="aspectFit"></image>
+		   <view class="gray-text">{{ loadModal.text }}</view>
+		</view>
 	</view>
 </template>
 
@@ -31,6 +36,10 @@ import net from '../../../../common/net.js';
 export default {
 	data() {
 		return {
+			loadModal: {
+				show: false,
+				text: '加载中...'
+			},
 			// 机器列表
 			termList: [],
 			// 终端号
@@ -39,7 +48,7 @@ export default {
 	},
 	
 	onLoad() {
-		uni.showLoading();
+		this.loadModal.show = true;
 		
 		// 获取终端信息
 		this.getTermList();
@@ -52,8 +61,7 @@ export default {
 	        	url:"/V1/getNoBindMerchant",
 	            method:'get',
 	            success: (res) => {
-					console.log(res);
-					uni.hideLoading();
+					this.loadModal.show = false;
 					if(res.data.success && res.data.success.data)
 						this.termList = res.data.success.data;
 					else
@@ -73,9 +81,6 @@ export default {
 			
 			prevPage.$vm.merchant_sn = this.merchant_sn;
 			uni.navigateBack();
-			// uni.redirectTo({
-			// 	url: "../shanghudengji?terminal=" + this.terminal
-			// })
 		}
 		
 		

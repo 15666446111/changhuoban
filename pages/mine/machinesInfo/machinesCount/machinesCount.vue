@@ -13,8 +13,7 @@
 					:key="index" 
 					class="views" 
 					:id="tabIndex == index ? 'v1' : ''"
-					@click="changTab(index)" 
-					style="height:70upx;"
+					@click="changTab(index)"
 					>
 					{{item.name}}
 				</view>
@@ -39,6 +38,11 @@
 				暂无数据～
 			</view>
 		</view>
+		
+		<view class="cu-load load-modal" v-if="loadModal.show">
+		   <image src="/static/public/loading.png" mode="aspectFit"></image>
+		   <view class="gray-text">{{ loadModal.text }}</view>
+		</view>
 	</view>
 </template>
 
@@ -47,6 +51,10 @@ import net from '../../../../common/net.js';
 export default {
 	data() {
 		return {
+			loadModal: {
+				show: false,
+				text: '加载中...'
+			},
 			typeList: [
 				{'name': '全部', 'value': 0},
 				{'name': '已绑定', 'value': 1},
@@ -61,6 +69,7 @@ export default {
 	},
 	
 	onLoad(options) {
+		this.loadModal.show = true;
 		// 获取机具列表
 		this.getMerchantList(options.type);
 	},
@@ -90,7 +99,7 @@ export default {
 				method: 'GET',
 				data: { Type: type },
 				success: (res) => {
-					console.log(res);
+					this.loadModal.show = false;
 					if (res.data.success) {
 						this.merchantList = res.data.success.data;
 						this.list = this.merchantList.AllMerchants;

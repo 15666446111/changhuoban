@@ -1,12 +1,14 @@
 
 button {
-	width: 70%;
-	margin-left: 15%;
-	margin-top: 100rpx;
+	width: 60%;
+	height: 72rpx;
+	line-height: 72rpx;
+	margin-left: 20%;
+	margin-top: 20rpx;
 	background-color: #f0ad4e;
 	color: #ffffff;
-	font-weight: 800;
-	border-radius: 7px 7px 7px 7px;
+	border-radius: 7px;
+	font-size: 32rpx;
 }
 .fr_top {
 	width: 100%;
@@ -17,6 +19,7 @@ button {
 	/* 	border-radius: 10px 10px 10px 10px; */
 	box-shadow: #ddd 3px 3px 8px 3px;
 	margin-top: 2%;
+	justify-content: center;
 }
 .view_p {
 	font-size: 0.7rem;
@@ -24,6 +27,7 @@ button {
 	width: 60%;
 	margin-top: 2%;
 	margin-left: 2%;
+	
 }
 
 .fr_iamge {
@@ -31,19 +35,19 @@ button {
 	height: 1.4rem;
 	display: flex;
 	margin-top: 1.2%;
-	margin-left: 8%;
+	/* margin-left: 8%; */
 }
 /* 调整信息 */
 .body {
 	width: 100%;
-	background-color: white;
 	margin-top: 2%;
-	box-shadow: #ddd 3px 3px 8px 3px;
+	background-color: #fff;
+	/* box-shadow: #ddd 3px 3px 8px 3px; */
 }
 
 .view_h1 {
 	text-align: center;
-	height: 2rem;
+	/* height: 2rem; */
 	overflow: hidden;
 }
 .text {
@@ -110,14 +114,13 @@ button {
 .view_s {
 	color: #f98021;
 	font-size: 0.6rem;
-	margin-left: 6%;
+	margin-left: 4%;
 	margin-top: 2%;
 }
 .view_p3 {
 	text-align: center;
 	width: 20%;
 }
-/**/
 .body2 {
 	width: 100%;
 	background-color: white;
@@ -145,4 +148,66 @@ button {
 	border-radius: 0.3rem;
 	margin-top: 2rem;
 	font-size: 0.9rem;
+}
+.view_p4 {
+	width: 54%;
+}
+.view_standard {
+	font-size: 26rpx;
+}
+.trade-text {
+	font-size: 26rpx;
+	color: #f98021;
+}
+.profit {
+	background-color: #fff;
+	padding-bottom: 50rpx;
+}
+
+.backgroundColor {
+	width: 100%;
+	margin-top: 3%;
+	border-radius: 0.2rem 0.2rem 0.2rem 0.2rem;
+	/* box-shadow: #d9d9d9 0 0 4px 0; */
+}
+.data {
+	display: flex;
+	background-color: #fff;
+	height: 100upx;
+	position: relative;
+}
+
+.mark {
+	position: absolute;
+	color: #ed6e11;
+	right: 6%;
+	top: 25%;
+	font-size: 28upx;
+}
+.phone {
+	margin-top: 3.5%;
+	margin-left: 5%;
+	font-size: 28upx;
+}
+.dara-xian {
+	width: 94%;
+	height: 1px;
+	margin-left: 3%;
+	background-color: #f1f1f1;
+}
+.data-list {
+	border-bottom: 1px solid #f1f1f1;
+}
+.policy {
+	margin: 20rpx 0 100rpx;
+	background-color: #fff;
+}
+.type-title {
+	height: 80rpx;
+	line-height: 60rpx;
+}
+.tips {
+	margin: 24rpx 5%;
+	font-size: 26rpx;
+	color: #f98021;
 }

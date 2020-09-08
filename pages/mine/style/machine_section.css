@@ -1,0 +1,146 @@
+uni-page {
+	overflow: hidden;
+}
+
+.button{
+	position: fixed;
+	width: 100%;
+	background-color: #ff8c00;
+	bottom: 0px;
+	height: 90upx;
+	text-align: center;
+	line-height: 90upx;
+	color: #fff;
+	font-size: 35upx;
+}
+/* SN选择 */
+.start-over {
+	background-color: #ffffff;
+	width: 92%;
+	margin-left: 4%;
+	margin-top: 20upx;
+	overflow: hidden;
+	box-shadow: #efe9e9 3px 3px 8px 3px;
+	border-radius: 7px 7px 7px 7px;
+	height: 430upx;
+}
+.select {
+	width: 100%;
+	height: 100upx;
+	line-height: 100upx;
+	position: relative;
+	display: flex;
+}
+.select-name {
+	font-size: 33upx;
+	margin-left: 30upx;
+	color: #333;
+}
+.select-img {
+	width: 60rpx;
+	height: 60rpx;
+	position: absolute;
+	top: 20upx;
+	right: 10upx;
+}
+.select-xian {
+	width: 100%;
+	height: 1upx;
+	background-color: #f1f1f1;
+}
+.hint {
+	color: #999;
+	text-align: center;
+	height: 90upx;
+	line-height: 80upx;
+}
+.select-button{
+	background-color: #ff8c00;
+	color: #fff;
+	width: 60%;
+	margin-left:20%;
+	height: 70upx;
+	text-align: center;
+	line-height: 70upx;
+	font-size: 35upx;
+}
+/* SN显示 */
+.show {
+	background-color: #ffffff;
+	width: 92%;
+	height: 600rpx;
+	margin-left: 4%;
+	margin-top: 20upx;
+	overflow: hidden;
+	overflow-y: auto;
+	box-shadow: #efe9e9 3px 3px 8px 3px;
+	border-radius: 7px 7px 7px 7px;
+}
+.show-title {
+	display: flex;
+	width: 100%;
+	height: 70upx;
+	line-height: 70upx;
+}
+.title-name {
+	width: 40%;
+	text-align: center;
+	font-size: 30upx;
+}
+.title-text {
+	width: 20%;
+	text-align: center;
+	font-size: 30upx;
+}
+.amount {
+	width: 20%;
+	display: flex;
+	position: relative;
+	text-align: center;
+	height: 80upx;
+	line-height: 80upx;
+}
+.sn-amount {
+	width: 70%;
+	height: 80upx;
+	line-height: 80upx;
+}
+.sn-img {
+	width: 40upx;
+	height: 40upx;
+	position: absolute;
+	right: 20upx;
+	top: 18upx;
+}
+.show-sn {
+	width: 100%;
+	display: flex;
+	height: 80upx;
+	line-height: 80upx;
+}
+.sn-name {
+	width: 40%;
+	text-align: center;
+	height: 80upx;
+	line-height: 80upx;
+}
+.sn-input {
+	height: 100%;
+}
+.checkbox-view {
+	width: 92%;
+	height: 100upx;
+	line-height: 100upx;
+	border-radius: 15upx 15upx 15upx 15upx;
+	position: relative;
+	margin: 0 4%;
+	border-bottom: 1px solid #eee;
+}
+.checkbox-text {
+	font-size: 31upx;
+	color: #333;
+}
+.checkbox {
+	position: absolute;
+	right: 0;	
+}

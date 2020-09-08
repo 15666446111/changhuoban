@@ -20,6 +20,11 @@
 		
 		<view style="height: 100upx"></view>
 		<view class="button" @click="transfer">确 认 回 拨<text>({{tranNum}})</text></view>
+		
+		<view class="cu-load load-modal" v-if="loadModal.show">
+		   <image src="/static/public/loading.png" mode="aspectFit"></image>
+		   <view class="gray-text">{{ loadModal.text }}</view>
+		</view>
 	</view>
 </template>
 
@@ -29,6 +34,10 @@ import net from '../../../../common/net.js';
 export default {
 	data() {
 		return {
+			loadModal: {
+				show: false,
+				text: '加载中...'
+			},
 			// 被回拨人id
 			partnerId: '',
 			// 政策id
@@ -44,8 +53,8 @@ export default {
 		this.partnerId = options.uid;
 		this.policyId = options.policy_id;
 		// 获取可回拨终端列表
+		this.loadModal.show = true;
 		this.getBackList(this.policyId);
-		console.log(options);
 	},
 	
 	methods: {
@@ -59,6 +68,7 @@ export default {
 					friend_id: this.partnerId,
 				},
 	            success: (res) => {
+					this.loadModal.show = false;
 					this.policy = res.data.success.data;
 	            }
 	      	})
@@ -66,7 +76,6 @@ export default {
 		
 		// 选择终端
 		optTerminal(e){
-			// console.log(e.target.value.length);
 			this.termIds = e.target.value;
 			this.tranNum = e.target.value.length;
 		},
@@ -83,6 +92,7 @@ export default {
 			}
 			var friend_id = [this.partnerId];
 			
+			this.loadModal.show = true;
 			net({
 	        	url:"/V1/addBackTransfer",
 	            method: 'POST',
@@ -92,7 +102,7 @@ export default {
 					state: 2
 				},
 	            success: (res) => {
-					console.log(res);
+					this.loadModal.show = false;
 					var _this = this;
 					if (res.data.success) {
 						uni.showToast({

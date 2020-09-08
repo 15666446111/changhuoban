@@ -2,62 +2,49 @@
 	<view>
 		<!-- 输入框 -->
 		<view class="indexs">
-			<!-- 第一栏 -->
-			<view class="select">
-				<view class="select-view">
-					<view class="select-name">姓名</view>
-					<input class="select-text" placeholder="请输入您的姓名" v-model="BankInfo.user_name" >
-				</view>
-				<view class="hengxian"></view>
-			</view>
 			
-			<view class="select-view">
-				<view class="select-name">身份证号</view>
-				<input class="select-text" placeholder="请输入您的身份证号" v-model="BankInfo.number" value="123" />
+			<view class="cu-form-group">
+				<view class="title">姓名</view>
+				<input placeholder="请输入您的姓名" v-model="BankInfo.user_name" ></input>
 			</view>
-			<view class="hengxian"></view>
-			
-			<view class="select">
-				<view class="select-view">
-					<view class="select-name">银行</view>
-					<input class="select-text" placeholder="请输入银行名称" v-model="BankInfo.bank_name"/>
-				</view>
-				<view class="hengxian"></view>
-				
-				<view class="select-view">
-					<view class="select-name">银行卡号</view>
-					<input class="select-text" placeholder="请输入银行卡号" v-model="BankInfo.bank" value="" />
-				</view>
-				<view class="hengxian"></view>
-				
-				<view class="select-view">
-					<view class="select-name">开户行</view>
-					<input class="select-text" placeholder="请输入开户行" v-model="BankInfo.open_bank"/>
-				</view>
-				<view class="hengxian"></view>
-				
-				<view class="select-view">
-					<view class="select-name">省</view>
-					<input class="select-text" placeholder="请输入省" v-model="BankInfo.province"/>
-				</view>
-				<view class="hengxian"></view>
-				
-				<view class="select-view">
-					<view class="select-name">市</view>
-					<input class="select-text" placeholder="请输入市" v-model="BankInfo.city"/>
-				</view>
-				<view class="hengxian"></view>
-				
-				<view class="select-view"> 
-					<checkbox-group @change="defaultType">
-						<label>
-							<checkbox class="se-defulat" value="1" color="#FF8C00" :checked="this.BankInfo.is_default == 1 ? true : false" />设为默认
-						</label>
-					</checkbox-group>
-				</view>
+			<view class="cu-form-group">
+				<view class="title">身份证号</view>
+				<input placeholder="请输入您的身份证号" v-model="BankInfo.number" ></input>
+			</view>
+			<view class="cu-form-group">
+				<view class="title">银行</view>
+				<input placeholder="请输入银行名称" v-model="BankInfo.bank_name" ></input>
+			</view>
+			<view class="cu-form-group">
+				<view class="title">银行卡号</view>
+				<input placeholder="请输入银行卡号" v-model="BankInfo.bank" ></input>
+			</view>
+			<view class="cu-form-group">
+				<view class="title">开户行</view>
+				<input placeholder="请输入开户行" v-model="BankInfo.open_bank" ></input>
+			</view>
+			<view class="cu-form-group">
+				<view class="title">省</view>
+				<input placeholder="请输入省" v-model="BankInfo.province" ></input>
+			</view>
+			<view class="cu-form-group">
+				<view class="title">市</view>
+				<input placeholder="请输入市" v-model="BankInfo.city" ></input>
+			</view>
+			<view class="select-view"> 
+				<checkbox-group @change="defaultType">
+					<label>
+						<checkbox class="se-defulat" value="1" color="#FF8C00" :checked="this.BankInfo.is_default == 1 ? true : false" />设为默认
+					</label>
+				</checkbox-group>
 			</view>
 		</view>
 		<button @click="submit">确 定</button>
+		
+		<view class="cu-load load-modal" v-if="loadModal.show">
+		   <image src="/static/public/loading.png" mode="aspectFit"></image>
+		   <view class="gray-text">{{ loadModal.text }}</view>
+		</view>
 	</view>
 </template>
 
@@ -67,6 +54,10 @@ import net from '../../../../common/net.js';
 export default {
 	data() {
 		return {
+			loadModal: {
+				show: false,
+				text: '提交中...'
+			},
 			id: '',
 			
 			BankInfo: []
@@ -76,9 +67,7 @@ export default {
 	onLoad(option) {
 		this.id = option.card_id;
 		
-		// loading提示框
-		uni.showLoading();
-		
+		this.loadModal.show = true;
 		// 获取银行卡信息
 		this.getBankInfo();
 	},
@@ -93,7 +82,7 @@ export default {
 					id: this.id,
 				},
 	            success: (res) => {
-					uni.hideLoading();
+					this.loadModal.show = false;
 					if (res.data.success) {
 						this.BankInfo = res.data.success.data;
 						console.log(this.BankInfo);
@@ -148,7 +137,7 @@ export default {
 				return false;
 			}
 			
-			uni.showLoading();
+			this.loadModal.show = true;
 			
 			net({
 	        	url: "/V1/upBank",
@@ -165,7 +154,7 @@ export default {
 					city: this.BankInfo.city,
 				},
 	            success: (res) => {
-					uni.hideLoading();
+					this.loadModal.show = false;
 					if (res.data.success) {
 						uni.showToast({
 							title: res.data.success.message,
@@ -190,5 +179,8 @@ export default {
 </script>
 
 <style>
-@import url("../../style/settle_card.css");
+	@import url("../../style/settle_card.css");
+	.cu-form-group .title {
+		min-width: calc(4em + 15px);
+	}
 </style>
