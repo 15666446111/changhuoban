@@ -9,6 +9,9 @@ use Encore\Admin\Show;
 use Illuminate\Support\MessageBag;
 use Encore\Admin\Facades\Admin;
 use Encore\Admin\Controllers\AdminController;
+
+use App\Admin\Actions\PolicyGroup\SettlementUpdate;
+use App\Admin\Actions\PolicyGroup\MerchantRateUpdate;
 class PolicyGroupController extends AdminController
 {
     /**
@@ -130,7 +133,7 @@ class PolicyGroupController extends AdminController
                 $settsprice->column('default_price', __('默认结算价'))->editable()->help('当前活动组下的当前结算类型的默认结算价, 单位为十万分位, 例如:万525,填写525');
                 $settsprice->column('min_price', __('最低结算价'))->editable()->help('当前活动组下的当前结算类型的最低结算价, 单位为十万分位, 例如:万525,填写525');
                 $settsprice->disableCreateButton();
-                $settsprice->disableActions();
+                // 
                 $settsprice->filter(function($filter){
                     // 去掉默认的id过滤器
                     $filter->disableIdFilter();
@@ -138,6 +141,22 @@ class PolicyGroupController extends AdminController
                         $filter->equal('trade_type_id', '结算类型')->select(\App\TradeType::get()->pluck('name', 'id'));
                     });
                 });
+
+                if(Admin::user()->operate != "All"){
+                    $settsprice->disableActions();
+                } else {
+                    $settsprice->actions(function ($actions) {
+                        // 去掉删除
+                        $actions->disableDelete();
+                        // 去掉编辑
+                        $actions->disableEdit();
+                        // 去掉显示
+                        $actions->disableView();
+
+                        $actions->add( new SettlementUpdate() );
+                    });
+                }
+
                 $settsprice->paginate(6);
             });
 
@@ -147,12 +166,29 @@ class PolicyGroupController extends AdminController
                 $groupRate->column('min_rate', __('最低可设置费率'))->editable()->help('当前活动组下的当前费率类型可设置费率的最小值, 单位为十万分位, 例如:0.53%,填写530');
                 $groupRate->column('max_rate', __('最高可设置费率'))->editable()->help('当前活动组下的当前费率类型可设置费率的最大值, 单位为十万分位, 例如:0.6%,填写600');
                 $groupRate->column('is_abjustable', __('APP内可见'))->switch()->help('关闭APP内可见后，代理在APP中将不能修改当前活动组当前类型的费率信息');
+
                 $groupRate->disableCreateButton();
-                $groupRate->disableActions();
+                // $groupRate->disableActions();
                 $groupRate->filter(function($filter){
                     // 去掉默认的id过滤器
                     $filter->disableIdFilter();
                 });
+
+                if(Admin::user()->operate != "All"){
+                    $groupRate->disableActions();
+                } else {
+                    $groupRate->actions(function ($actions) {
+                        // 去掉删除
+                        $actions->disableDelete();
+                        // 去掉编辑
+                        $actions->disableEdit();
+                        // 去掉显示
+                        $actions->disableView();
+
+                        $actions->add( new MerchantRateUpdate() );
+                    });
+                }
+                
                 $groupRate->paginate(10);
             });
         }

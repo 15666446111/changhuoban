@@ -221,11 +221,17 @@ class HandleMachineInfo implements ShouldQueue
                 }
             }
 
-            // 添加绑定记录
-            \App\MerchantsBindLog::create([
-                'merchant_code'     => $this->regContent->merchantId,
-                'sn'                => $this->regContent->termSn
-            ]);
+            $bingLogInfo = \App\MerchantsBindLog::where('merchant_code', $this->regContent->merchantId)
+                                                ->where('sn', $this->regContent->termSn)
+                                                ->first();
+            // 没有绑定记录，或者当前机器和商户已解绑时，添加新的绑定记录
+            if (empty($bingLogInfo) || $bingLogInfo->bind_state == 0) {
+                \App\MerchantsBindLog::create([
+                    'merchant_code'     => $this->regContent->merchantId,
+                    'sn'                => $this->regContent->termSn
+                ]);
+            }
+            
 
         } catch (\Exception $e) {
             $this->regContent->remark .= '商户绑定:' . json_encode($e->getMessage());

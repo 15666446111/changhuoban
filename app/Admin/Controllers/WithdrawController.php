@@ -41,12 +41,13 @@ class WithdrawController extends AdminController
 
         $grid->column('users.nickname', __('提现用户'))->help('提现人昵称');
 
-        $grid->column('withdrawDatas.bank', '银行信息')->modal('提现卡信息', function ($model) {
-            return new Table(['姓名', '身份证号', '银行', '开户行', '联行号', '预留手机'], [ [
-                // $model->withdrawDatas->username, $model->withdrawDatas->idcard, $model->withdrawDatas->bank, 
-                // $model->withdrawDatas->bank_open, $model->withdrawDatas->banklink, $model->withdrawDatas->phone
-            ] ]);
-        })->help('提现人的提现卡资料');
+        $grid->column('withdrawDatas.bank', '银行信息')->help('提现人的提现卡资料');
+        // ->modal('提现卡信息', function ($model) {
+        //     return new Table(['姓名', '身份证号', '银行', '开户行', '联行号', '预留手机'], [ [
+        //         // $model->withdrawDatas->username, $model->withdrawDatas->idcard, $model->withdrawDatas->bank, 
+        //         // $model->withdrawDatas->bank_open, $model->withdrawDatas->banklink, $model->withdrawDatas->phone
+        //     ] ]);
+        // })->help('提现人的提现卡资料');
 
         if(Admin::user()->operate == "All"){
             $grid->column('operates.company', __('所属操盘'))->help('操盘方标识');
@@ -155,6 +156,48 @@ class WithdrawController extends AdminController
                 $filter->between('check_at', '审核时间')->datetime();
             });
 
+        });
+        
+
+        $grid->export(function ($export) {
+
+            $export->column('money', function ($value, $money) {
+                return number_format($money / 100 , 2, '.', ',');
+            });
+
+            $export->column('real_money', function ($value, $realMoney) {
+                return number_format($realMoney / 100, 2, '.', ',');
+            });
+
+            $export->column('rate', function ($value, $rate) {
+                return number_format($rate / 100, 2, '.', ',');
+            });
+
+            $export->column('rate_m', function ($value, $handFee) {
+                return number_format($handFee / 100, 2, '.', ',');
+            });
+
+            $export->column('channle_money', function ($value, $channleMoney) {
+                return number_format($channleMoney / 100, 2, '.', ',');
+            });
+
+            $export->column('pay_type', function ($value, $payType) {
+                return $payType == 2 ? '自动审核' : '人工审核';
+            });
+
+            $export->column('type', function ($value, $type) {
+                return $type == 1 ? '分润提现' : '返现提现';
+            });
+
+            $export->column('state', function ($value, $originalState) {
+                $state = ['1' => '待审核', '2' => '通过', '3'=>'驳回', '4'=> '交易受理中'];
+                return !empty($state[$originalState]) ? $state[$originalState] : '';
+            });
+
+            $export->column('make_state', function ($value, $originalMakeState) {
+                $makeState = ['0' => '待处理', '1' => '已打款', '2' => '打款失败'];
+                return !empty($makeState[$originalMakeState]) ? $makeState[$originalMakeState] : '';
+            });
 
         });
 

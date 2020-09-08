@@ -59,8 +59,6 @@ class TradeController extends AdminController
             return number_format($amount / 100, 2, '.', ',');
         })->label('info')->help('当前交易订单的实际结算金额');
 
-        $grid->column('trades_deputies.tranTime', __('交易时间'))->help('当前交易订单的交易时间');
-
         $grid->column('tran_code', __('交易类型'))->using([
             '020000' => '消费', 
             '020002' => '消费撤销', 
@@ -96,6 +94,8 @@ class TradeController extends AdminController
         ])->help('当前交易订单的交易卡类型');
 
         $grid->column('is_send', __('分润发放'))->bool()->help('当前交易订单是否发放分润');
+
+        $grid->column('trade_time', __('交易时间'))->help('当前交易订单的交易时间');
 
         $grid->column('created_at', __('创建时间'))->date('Y-m-d H:i:s')->help('当前交易订单的执行时间');
 
@@ -170,6 +170,33 @@ class TradeController extends AdminController
             // 在这里添加字段过滤器
             $filter->column(1/3, function ($filter) {
                 $filter->between('trade_time', '交易时间')->datetime();
+            });
+
+        });
+
+
+        $grid->export(function ($export) {
+
+            $export->column('amount', function ($value, $amount) {
+                return number_format($amount / 100, 2, '.', ',');
+            });
+
+            $export->column('settle_amount', function ($value, $settleAmount) {
+                return number_format($settleAmount / 100, 2, '.', ',');
+            });
+
+            $export->column('fee_type', function ($value, $feeType) {
+                $feeTypeRemark = ['B' => '标准', 'YN' => '云闪付NFC', 'YM' => '云闪付双免'];
+                return $feeTypeRemark[$feeType];
+            });
+
+            $export->column('card_type', function ($value, $originalType) {
+                $cardType = ['0' => '借记卡', '1' => '贷记卡'];
+                return !empty($cardType[$originalType]) ? $cardType[$originalType] : '';
+            });
+
+            $export->column('is_send', function ($value, $isSend) {
+                return $isSend == 1 ? '已发放' : '未发放';
             });
 
         });

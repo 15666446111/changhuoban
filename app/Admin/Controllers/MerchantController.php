@@ -89,6 +89,14 @@ class MerchantController extends AdminController
             });
         });
 
+        $grid->export(function ($export) {
+
+            $export->column('trade_amount', function ($value, $tradeAmount) {
+                return number_format($tradeAmount / 100, 2, '.', ',');
+            });
+
+        });
+
         // 禁用添加按钮
         $grid->disableCreateButton();
 

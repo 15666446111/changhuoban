@@ -92,12 +92,14 @@ class MerchantController extends Controller
 				foreach($data as $key=>$value){
 					$sn = $value->machines->pluck('sn')->toArray();
 					$sn = implode('|', $sn);
+
+					$totalMoney = $value->trades->where('is_repeat', 0)->where('is_invalid', 0)->sum('amount');
 					$arrs['Bound'][] = array(
 						'id'				=>		$value->id,
 						'merchant_name'		=>		$value->name,
 						'machine_phone'		=>		$value->phone,
 						'merchant_sn'		=>		$sn,
-						'money'				=>		number_format($value->trades->sum('amount') / 100, 2, '.', ','),
+						'money'				=>		number_format($totalMoney / 100, 2, '.', ','),
 						'merchant_number'	=>		$value->code,
 						'bind_time'			=>		$value->created_at ? $value->created_at->toDateTimeString() : null
 					);
@@ -173,6 +175,7 @@ class MerchantController extends Controller
             $EndTime = Carbon::now()->toDateTimeString();
             $data = \App\Trade::select('card_type', 'sn as merchant_sn','amount as money','trade_time')
             			->where('merchant_code', $merchant->code)->whereBetween('trade_time', [$StartTime,  $EndTime])
+            			->where('is_repeat', 0)->where('is_invalid', 0)
             			->orderBy('trade_time', 'desc')
 						->get();
 			if($data->isEmpty()) $data = array();

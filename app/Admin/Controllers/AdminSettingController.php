@@ -87,6 +87,25 @@ class AdminSettingController extends AdminController
                 
         });
 
+        $grid->export(function ($export) {
+
+            $export->column('open', function ($value, $originalOpen) {
+                $openState = [0 => '禁止', 1 => '正常'];
+                return !empty($openState[$originalOpen]) ? $openState[$originalOpen] : '未知';
+            });
+
+            $export->column('type', function ($value, $originalType) {
+                $type = [1 =>'操盘方', 2 =>'机构方'];
+                return $type[$originalType];
+            });
+
+            $export->column('pattern', function ($value, $originalPattern) {
+                $pattern = [1 =>'联盟模式', 2 =>'工具模式'];
+                return $pattern[$originalPattern];
+            });
+
+        });
+
         return $grid;
     }
 

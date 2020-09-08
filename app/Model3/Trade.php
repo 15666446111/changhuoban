@@ -9,8 +9,8 @@ class Trade extends Model
     protected $connection = 'mysql_3_1';
 
     // protected $table = 'trade_data_qzah';
-    // protected $table = 'trade_data_qzhy';
-    protected $table = 'trade_data_wfab';
+    protected $table = 'trade_data_qzhy';
+    // protected $table = 'trade_data_wfab';
 
     // 黑名单
     protected $guarded = [];
@@ -40,11 +40,5 @@ class Trade extends Model
     public function cashs()
     {
         return $this->hasMany('\App\Model3\Cash', 't_id', 'id');
-    }
-
-
-    public function getCash($code)
-    {
-        return $this->cashs->where('c_code', $code);
     }
 }

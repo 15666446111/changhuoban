@@ -45,7 +45,7 @@ class CrontabController extends Controller
 
 			$data = json_decode( $pmpos->recordQuery() );
 
-			if ($data->code == '00') {
+			if ($data->code == '00' && !empty($data->data->amtList)) {
 				
 				foreach ($data->data->amtList as $key => $value) {
 
@@ -73,7 +73,7 @@ class CrontabController extends Controller
 						]);
 
 						// 添加一条虚拟交易订单，只做交易记录的sn和商户号匹配
-						$yCode = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'H', 'I');
+						$yCode = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'H', 'I', 'J', 'K');
 
             			$order_no = $yCode[intval(date('Y')) - 2011] . strtoupper(dechex(date('m'))) . date('d') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));
 
