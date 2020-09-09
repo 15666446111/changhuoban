@@ -3,13 +3,13 @@
 namespace App\Admin\Controllers;
 
 use App\Model1\MoneyLog;
-use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use App\Admin\Filters\TimestampBetween;
+use Encore\Admin\Controllers\AdminController;
 
-use App\Admin\Actions\Export\ExportMoney;
+use App\Admin\Actions\Export\Export1MoneyLog;
 
 class MoneyLogController extends AdminController
 {
@@ -183,6 +183,12 @@ class MoneyLogController extends AdminController
 
             });
         });
+
+        $excel = new Export1MoneyLog();
+
+        $excel->setAttr(['id', 'sn'], ['id', 'sn']);
+
+        $grid->exporter($excel);
 
         return $grid;
     }

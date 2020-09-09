@@ -49,6 +49,11 @@ class WithdrawController extends AdminController
         //     ] ]);
         // })->help('提现人的提现卡资料');
 
+        if(Admin::user()->operate == "All"){
+            $grid->column('operates.company', __('所属操盘'))->help('操盘方标识');
+        }
+        
+
         $grid->column('money', __('提现金额'))->display(function( $cash){
             return number_format( $cash / 100 , 2, '.', ',');
         })->label()->help('用户申请的提现金额');
@@ -135,6 +140,12 @@ class WithdrawController extends AdminController
             $filter->column(1/4, function ($filter) {
                 $filter->equal('pay_type', '方式')->select(['1'=> '人工审核', '2'=> '自动打款(免审)']);
             });
+
+            if(Admin::user()->operate == "All"){
+                $filter->column(1/4, function ($filter) {
+                    $filter->equal('operate', '操盘')->select(\App\AdminSetting::pluck('company as title','operate_number as id')->toArray());
+                });
+            }
 
             // 在这里添加字段过滤器
             $filter->column(1/3, function ($filter) {

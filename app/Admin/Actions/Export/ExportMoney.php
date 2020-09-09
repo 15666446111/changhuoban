@@ -82,27 +82,6 @@ class ExportMoney extends Action
 
             session()->save();
 
-
-/*            $result = $list->chunk(4000, function($data) use ( $count){
-
-                
-                foreach ($data as $key => $value) {
-
-                    $proportion = $this->cur / $count;
-
-                    $msg = $this->cur == $count ? '导出完成' : '正在导出第' . $this->cur . '条信息';
-
-                    session()->put('exp_message', $msg);
-
-                    session()->save();
-
-                    $this->cur ++; 
-                }
-
-                
-
-            });*/
-
         } catch (ValidationException $validationException) {
 
             return Response::withException($validationException);

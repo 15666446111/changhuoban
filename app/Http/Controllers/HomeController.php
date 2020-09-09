@@ -35,6 +35,12 @@ class HomeController extends Controller
     public function exp(Request $request)
     {
 
+        $start = "2020-07-01 00:00:00";
+
+        $end   = "2020-07-06 00:00:00";
+
+        $file  = "0701_0706";
+
         set_time_limit(0);  //设置程序执行时间
         
         ignore_user_abort(true);    //设置断开连接继续执行
@@ -51,7 +57,7 @@ class HomeController extends Controller
 
         $speed = 4000;
 
-        $count = \App\Model1\MoneyLog::where('add_time', '>=', strtotime("2020-06-25 00:00:00"))->where('add_time', '<=', strtotime("2020-07-01 00:00:00"))->orderBy('id', 'asc')->count();
+        $count = \App\Model1\MoneyLog::where('add_time', '>=', strtotime($start))->where('add_time', '<=', strtotime($end))->orderBy('id', 'asc')->count();
 
         
         $width = 1000;
@@ -79,7 +85,7 @@ class HomeController extends Controller
 
         $operate = \App\Model1\UserAgent::distinct('agent_id')->pluck('agent_id')->toArray();
 
-        $user    = \App\Model1\User::whereIn('id', $operate)->pluck('user_nickname', 'id')->toArray();
+        $user    = \App\Model1\UserInfo::whereIn('id', $operate)->pluck('user_nickname', 'id')->toArray();
 
         $user[0] = "平台直属";
 
@@ -94,7 +100,7 @@ class HomeController extends Controller
 
         $i = 1;
 
-        $file = storage_path('app/public/分润信息0625_0701.csv'); 
+        $file = storage_path('app/public/分润信息'.$file.'.csv'); 
 
         $fp = fopen($file, 'w');  
 
@@ -116,14 +122,12 @@ class HomeController extends Controller
 
         while(true){
 
-            $models = \App\Model1\MoneyLog::where('add_time', '>=', strtotime("2020-06-25 00:00:00"))->where('add_time', '<=', strtotime("2020-07-01 00:00:00"))->where('id', '>', $maxId)->limit($speed)->orderBy('id', 'asc')->get();
+            $models = \App\Model1\MoneyLog::where('add_time', '>=', strtotime($start))->where('add_time', '<=', strtotime($end))->where('id', '>', $maxId)->limit($speed)->orderBy('id', 'asc')->get();
 
 
             if ($models->isEmpty()) {
 
                 return redirect("download_moneylog");
-
-                //return responseStorage::download('public/分润信息.csv');
 
                 break;
             }

@@ -32,6 +32,9 @@ class CashController extends AdminController
         }
         
         $grid->model()->latest();
+
+        //$money = $grid->sum('cash_money');
+        //dd($money);
         //$grid->column('id', __('索引'));
         $grid->column('users.nickname', __('会员昵称'))->help('分润所归属的用户昵称');
         $grid->column('users.account', __('会员账号'))->help('分润所归属的用户账号');
@@ -41,9 +44,16 @@ class CashController extends AdminController
         $grid->column('trades.amount', __('交易金额'))->display(function ($money) {
             return number_format($money / 100, 2, '.', ',');
         })->label()->help('交易金额');
+        /*$grid->column('cash_money', __('分润金额'))->display(function ($money) {
+            return number_format($money / 100, 2, '.', ',');
+        })->label()->help('本次分润金额');*/
+
         $grid->column('cash_money', __('分润金额'))->display(function ($money) {
             return number_format($money / 100, 2, '.', ',');
-        })->label()->help('本次分润金额');
+        })->label()->totalRow(function ($amount) {
+            return "<span class='text-danger text-bold'>¥ ".number_format($amount / 100, 2, '.', ',')." 元</span>";
+        });
+
         $grid->column('is_run', __('方式'))->using(['1' => '分润', '0' => '返现'])->help('分润类型,分为分润与返现');
         $grid->column('cash_type', __('类型'))->using(['1' => '直营分润', '2' => '团队分润','3'=>'激活返现'
         ,'4'=>'间推激活返现','5'=>'间间推激活返现','6'=>'达标返现','7'=>'二次达标返现','8'=>'三次达标返现','9'=>'财商学院推荐奖励'])->help('分润的详细类型');
@@ -64,15 +74,19 @@ class CashController extends AdminController
             $filter->disableIdFilter();
 
             $filter->column(1/3, function ($filter) {
-                $filter->like('order', '订单')->placeholder('交易的订单编号,模糊匹配');
+                $filter->like('order', '交易订单')->placeholder('交易的订单编号,模糊匹配');
             });
 
             $filter->column(1/3, function ($filter) {
-                $filter->like('users.account', '账号')->placeholder('分润的代理登陆账号,模糊匹配');
+                $filter->like('users.account', '分润账号')->placeholder('分润的代理登陆账号,模糊匹配');
             });
 
             $filter->column(1/3, function ($filter) {
                 $filter->like('trades.merchant_code', '交易商户')->placeholder('交易的商户号编号,模糊匹配');
+            });
+
+            $filter->column(1/3, function ($filter) {
+                $filter->like('trades.sn', '交易SN')->placeholder('交易的SN编号,模糊匹配');
             });
 
             // 分润类型
@@ -114,6 +128,19 @@ class CashController extends AdminController
                     '02Y600' => '银联二维码撤销'
                 ]);
             });
+
+
+            if(Admin::user()->operate == "All"){
+                $filter->column(1/3, function ($filter) {
+                    $filter->equal('operate', '操盘')->select(\App\AdminSetting::pluck('company as title','operate_number as id')->toArray());
+                });
+            }
+
+            $filter->column(1/3, function ($filter) {
+                $userSons = Admin::user()->operate == "All" ? \App\User::pluck('nickname as title', 'id')->toArray() : \App\User::where('operate', Admin::user()->operate)->pluck('nickname as title', 'id')->toArray();  
+                $filter->equal('user_id', '代理商')->select($userSons);
+            });
+
 
             // 在这里添加字段过滤器
             $filter->column(1/3, function ($filter) {

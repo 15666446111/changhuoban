@@ -76,38 +76,52 @@ class MachineController extends AdminController
             // 去掉默认的id过滤器
             $filter->disableIdFilter();
 
-            $filter->column(1/4, function ($filter) {
-                $filter->like('sn', 'SN');
+            $filter->column(1/3, function ($filter) {
+                $filter->like('sn', '终端SN');
             });
 
-            $filter->column(1/4, function ($filter) {
-                $filter->equal('open_state', '开通')->select(['0' => '未开通', '1' => '已开通']);
+            $filter->column(1/3, function ($filter) {
+                $filter->equal('open_state', '是否开通')->select(['0' => '未开通', '1' => '已开通']);
             });
 
-            $filter->column(1/4, function ($filter) {
+            $filter->column(1/3, function ($filter) {
                 $data = Admin::user()->operate == "All" ? array() : array('operate' => Admin::user()->operate);
-                $filter->equal('user_id', '代理')->select(\App\User::where($data)->get()->pluck('nickname', 'id'));
+                $filter->equal('user_id', '代理商')->select(\App\User::where($data)->get()->pluck('nickname', 'id'));
             });
 
-            $filter->column(1/4, function ($filter) {
-                $filter->equal('bind_status', '绑定')->select(['0' => '未绑定', '1' => '已绑定']);
+            $filter->column(1/3, function ($filter) {
+                $filter->equal('bind_status', '是否绑定')->select(['0' => '未绑定', '1' => '已绑定']);
             });
 
-
-            
-
-            $filter->column(1/4, function ($filter) {
+            $filter->column(1/3, function ($filter) {
 
                 $policyGroupChange = Admin::user()->operate != "All" ? \App\PolicyGroup::where('operate', Admin::user()->operate)->pluck('title', 'id')->toArray() : \App\PolicyGroup::pluck('title', 'id')->toArray();
 
-                $filter->equal('policys.policy_group_id', '政策')->select($policyGroupChange)->load('policy_id', '/api/getPolicys');
+                $filter->equal('policys.policy_group_id', '所属政策')->select($policyGroupChange)->load('policy_id', '/api/getPolicys');
             });
 
-            $filter->column(1/4, function ($filter) {
-                $filter->equal('policy_id', '活动')->select();
+            $filter->column(1/3, function ($filter) {
+                $filter->equal('policy_id', '所属活动')->select();
             });
 
-            $filter->column(1/2, function ($filter) {
+
+            if(Admin::user()->operate == "All"){
+                $filter->column(1/3, function ($filter) {
+                    $filter->equal('operate', '操盘')->select(\App\AdminSetting::pluck('company as title','operate_number as id')->toArray());
+                });
+            }
+
+            /*$filter->equal('policys.policy_group_id', '所属政策')->select($policyGroupChange)->load('policy_id', '/api/getPolicys');
+            $filter->column(1/3, function ($filter) {
+                $filter->equal('policy_id', '所属活动')->select();
+            });*/
+
+
+            $filter->column(1/3, function ($filter) {
+                $filter->between('open_time', '开通时间')->datetime();
+            });
+
+            $filter->column(1/3, function ($filter) {
                 $filter->between('open_time', '开通时间')->datetime();
             });
 

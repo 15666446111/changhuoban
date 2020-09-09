@@ -78,7 +78,10 @@ class MerchantController extends Controller
     public function merchantsList(Request $request)
     {
         try{ 
-			$data = \App\Merchant::where('user_id',$request->user->id)->get();
+
+        	$page = $request->page ?? 1;
+
+			$data = \App\Merchant::where('user_id', $request->user->id)->orderBy('created_at', 'desc')/*->offset($page * 10 - 10)->limit(10)*/->get();
 			
 			$arrs = [];
 
@@ -98,7 +101,7 @@ class MerchantController extends Controller
 						'merchant_sn'		=>		$sn,
 						'money'				=>		number_format($totalMoney / 100, 2, '.', ','),
 						'merchant_number'	=>		$value->code,
-						'bind_time'			=>		$value->created_at->toDateTimeString()
+						'bind_time'			=>		$value->created_at ? $value->created_at->toDateTimeString() : null
 					);
 				}
 			}

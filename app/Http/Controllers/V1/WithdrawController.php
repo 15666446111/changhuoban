@@ -53,6 +53,10 @@ class WithdrawController extends Controller
             	 return response()->json(['error'=>['message' => '请设置您的预留手机号']]);
             }
 
+            if(!$request->user->draw_state){
+                 return response()->json(['error'=>['message' => '您的账户已冻结,请联系您的上级代理商']]);
+            }
+
             // 1 是分润钱包提现。2是返现钱包提现
             if($request->blance == '1'){
 
