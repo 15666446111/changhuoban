@@ -84,9 +84,9 @@ class WithdrawController extends Controller
             }
            
             // 
-            if( $rate === null ){
-            	return response()->json(['error'=>['message' => '机构未配置提现费率!']]);
-            }
+            // if( $rate === null ){
+            // 	return response()->json(['error'=>['message' => '机构未配置提现费率!']]);
+            // }
 
             // if( $rate_m === null or $rate_m == ""){
             // 	return response()->json(['error'=>['message' => '机构未配置单笔提现费']]);
