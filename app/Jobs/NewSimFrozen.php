@@ -64,7 +64,7 @@ class NewSimFrozen implements ShouldQueue
         $this->machine = \App\Machine::where('sn', $frozenLog->sn)->first();
 
         // 初始化活动信息
-        $this->policy = $this->machine->policy;
+        $this->policy = $this->machine->policys;
     }
 
     /**
