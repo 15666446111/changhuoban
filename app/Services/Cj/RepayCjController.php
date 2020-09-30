@@ -637,26 +637,6 @@ class RepayCjController extends Controller
         $pad = $blocksize - (strlen($text) % $blocksize);
         return $text . str_repeat(chr($pad), $pad);
     }
-    /**
-     * @Author    Pudding
-     * @DateTime  2020-07-02
-     * @copyright [copyright]
-     * @license   [license]
-     * @version   [pkcs5_unpad 移除填充]
-     * @param     [type]      $text [description]
-     * @return    [type]            [description]
-     */
-    function pkcs5_unpad($text)
-    {
-        $pad = ord($text{strlen($text) - 1});
-        if ($pad > strlen($text)) {
-            return false;
-        }
-        if (strspn($text, chr($pad), strlen($text) - $pad) != $pad) {
-            return false;
-        }
-        return substr($text, 0, -1 * $pad);
-    }
 
 
 
