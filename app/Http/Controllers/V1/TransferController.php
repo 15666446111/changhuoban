@@ -48,14 +48,6 @@ class TransferController extends Controller
 
             if(!$request->friend_id) return response()->json(['error'=>['message' => '缺少必要参数:请选择收货人']]);
 
-            // $merchants=\App\Machine::whereIn('id',$request->id)->get();
-            
-            // foreach($merchants as $k=>$v){
-                
-            //     \App\Machine::where('id',$v->id)->where('user_id',$request->user->id)->update(['user_id'=>$request->friend_id]);
-
-            // }
-
             foreach($request->id as $k=>$v){
 
                 $re = \App\Machine::where('id', $v)->where('user_id', $request->user->id)->update(['user_id' => $request->friend_id]);

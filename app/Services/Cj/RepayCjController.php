@@ -246,7 +246,21 @@ class RepayCjController extends Controller
                 WithdrawQuery::dispatch($this->withdraw)->onQueue('withdraw')->delay(now()->addMinutes(10));
                 return ['code' => 10000, 'message' => "代付交易已受理,订单状态会在10分钟内自动同步更新!"];
 
-            }else{
+            } elseif ($pay['code'] == "20010") {
+                
+                $this->withdraw->state = -1;
+
+                $this->withdraw->check_at = Carbon::now()->toDateTimeString();
+
+                $this->withdraw->channle_money = $this->cjPrice;
+
+                $this->withdraw->api_return_data = json_encode($pay);
+
+                $this->withdraw->save();
+
+                return ['code' => 10000, 'message' => "代付交易已受理,因十一假期原因，代付系统拥堵，提现将在24小时内到账"];
+
+            } else{
                 // 请求代付失败
                 return ['code' => 10099, 'message' => $pay['message'] ];
             }
@@ -507,7 +521,7 @@ class RepayCjController extends Controller
             throw new \Exception(" 畅伙伴代付出错: 返回非标识码!");
         } 
         //echo json_encode($postData).$this->chanKey."<br/>";
-        if($content['code'] != "200" ){
+        if($content['code'] != "200" && $content['code'] != "20010"){
             $this->withdraw->api_return_data = json_encode(array('code' => '10090', 'message' => "畅伙伴代付出错: ".$content['msg'] ));
             $this->withdraw->save();
             throw new \Exception(" 畅伙伴代付出错:".$content['msg']);
