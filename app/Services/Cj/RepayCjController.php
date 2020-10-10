@@ -123,13 +123,15 @@ class RepayCjController extends Controller
             $this->desc    =  "工作日:畅伙伴代付扣单笔提现费:".number_format( $this->chbPrice /100 ,2, '.', ',')."元!";
         }else{
 
-            if($this->isHoliday){
-                $this->cjPrice =    $this->withdraw->real_money;
-                $this->desc    =    "节假日:".$holiday->title."/畅捷代付不扣单笔提现费!";
-            }else{
-                $this->cjPrice =  $this->withdraw->real_money + $this->price;
-                $this->desc    =  "工作日:畅捷代付扣单笔提现费:".number_format( $this->price /100 ,2, '.', ',')."元!";
-            }
+            $this->cjPrice =  $this->withdraw->real_money + $this->price;
+            $this->desc    =  "工作日:畅捷代付扣单笔提现费:".number_format( $this->price /100 ,2, '.', ',')."元!";
+            // if($this->isHoliday){
+            //     $this->cjPrice =    $this->withdraw->real_money;
+            //     $this->desc    =    "节假日:".$holiday->title."/畅捷代付不扣单笔提现费!";
+            // }else{
+            //     $this->cjPrice =  $this->withdraw->real_money + $this->price;
+            //     $this->desc    =  "工作日:畅捷代付扣单笔提现费:".number_format( $this->price /100 ,2, '.', ',')."元!";
+            // }
         }
     }
 
@@ -507,7 +509,7 @@ class RepayCjController extends Controller
             throw new \Exception(" 畅伙伴代付出错: 返回非标识码!");
         } 
         //echo json_encode($postData).$this->chanKey."<br/>";
-        if($content['code'] != "200" && $content['code'] != "20010"){
+        if($content['code'] != "200"){
             $this->withdraw->api_return_data = json_encode(array('code' => '10090', 'message' => "畅伙伴代付出错: ".$content['msg'] ));
             $this->withdraw->save();
             throw new \Exception(" 畅伙伴代付出错:".$content['msg']);
