@@ -17,12 +17,6 @@ class WithdrawAdopt extends RowAction
         try {
             if(!$request->pass) return $this->response()->error('请填写提现密码')->refresh();
 
-            // 添加一条虚拟交易订单，只做交易记录的sn和商户号匹配
-            $yCode = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'H', 'I', 'J', 'K');
-
-            $order_no = $yCode[intval(date('Y')) - 2011] . strtoupper(dechex(date('m'))) . date('d') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));
-
-            $model->order_no = $order_no;
             $model->save();
             // 获取当前登陆的操盘方配置
             $application = new RepayCjController($model);
