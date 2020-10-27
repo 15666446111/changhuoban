@@ -35,7 +35,7 @@ class HomeController extends Controller
     public function exp(Request $request)
     {
 
-        $start = "2020-07-01 00:00:00";
+        $start = "2020-09-01 00:00:00";
 
         $end   = "2020-07-06 00:00:00";
 
