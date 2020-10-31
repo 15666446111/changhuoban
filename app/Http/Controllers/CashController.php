@@ -290,7 +290,8 @@ class CashController extends Controller
 
                         if ($this->isTop == 1) {
                             // 借记卡封顶类交易，团队分润 = 结算价差
-                            $teamMoney = $val['differSettle'] / 1000;
+                            // $teamMoney = $val['differSettle'] / 1000;
+                            $teamMoney = $val['differSettle'];
                         } else {
                             // 非封顶类交易，团队分润 = 交易金额 * 结算价差
                             $formatSettle = bcdiv($val['differSettle'], 100000, 5);
@@ -337,7 +338,8 @@ class CashController extends Controller
             // 计算应发的第一笔分润
             if ($this->isTop == 1) {
                 // 借记卡封顶类交易分润，分润金额 = 手续费-结算价
-                $cashMoney = $this->handFee - ($settlement / 1000);
+                // $cashMoney = $this->handFee - ($settlement / 1000);
+                $cashMoney = $this->handFee - $settlement;
             } else {
                 // 非封顶类交易分润，分润金额 = 手续费 - 交易金额 * 结算价
                 $formatSettle = bcdiv($settlement, 100000, 5);

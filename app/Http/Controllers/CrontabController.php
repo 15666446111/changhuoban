@@ -150,7 +150,7 @@ class CrontabController extends Controller
             $returnMoney = \App\UserPolicy::where('user_id', $returnUserId)->where('policy_id', $policyId)->value('default_active_set');
 
             // 未设置过用户的返现金额时，按默认激活返现金额处理
-            if (empty($returnMoney)) {
+            if (!isset($returnMoney)) {
                 $defaultActive = json_decode($defaultActiveSet);
                 $returnMoney = $defaultActive->default_money * 100;
             }
