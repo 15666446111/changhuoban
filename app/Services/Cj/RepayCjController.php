@@ -123,13 +123,15 @@ class RepayCjController extends Controller
             $this->desc    =  "工作日:畅伙伴代付扣单笔提现费:".number_format( $this->chbPrice /100 ,2, '.', ',')."元!";
         }else{
 
-            if($this->isHoliday){
-                $this->cjPrice =    $this->withdraw->real_money;
-                $this->desc    =    "节假日:".$holiday->title."/畅捷代付不扣单笔提现费!";
-            }else{
-                $this->cjPrice =  $this->withdraw->real_money + $this->price;
-                $this->desc    =  "工作日:畅捷代付扣单笔提现费:".number_format( $this->price /100 ,2, '.', ',')."元!";
-            }
+            $this->cjPrice =  $this->withdraw->real_money + $this->price;
+            $this->desc    =  "工作日:畅捷代付扣单笔提现费:".number_format( $this->price /100 ,2, '.', ',')."元!";
+            // if($this->isHoliday){
+            //     $this->cjPrice =    $this->withdraw->real_money;
+            //     $this->desc    =    "节假日:".$holiday->title."/畅捷代付不扣单笔提现费!";
+            // }else{
+            //     $this->cjPrice =  $this->withdraw->real_money + $this->price;
+            //     $this->desc    =  "工作日:畅捷代付扣单笔提现费:".number_format( $this->price /100 ,2, '.', ',')."元!";
+            // }
         }
     }
 
@@ -246,7 +248,7 @@ class RepayCjController extends Controller
                 WithdrawQuery::dispatch($this->withdraw)->onQueue('withdraw')->delay(now()->addMinutes(10));
                 return ['code' => 10000, 'message' => "代付交易已受理,订单状态会在10分钟内自动同步更新!"];
 
-            }else{
+            } else {
                 // 请求代付失败
                 return ['code' => 10099, 'message' => $pay['message'] ];
             }
@@ -507,7 +509,7 @@ class RepayCjController extends Controller
             throw new \Exception(" 畅伙伴代付出错: 返回非标识码!");
         } 
         //echo json_encode($postData).$this->chanKey."<br/>";
-        if($content['code'] != "200" ){
+        if($content['code'] != "200"){
             $this->withdraw->api_return_data = json_encode(array('code' => '10090', 'message' => "畅伙伴代付出错: ".$content['msg'] ));
             $this->withdraw->save();
             throw new \Exception(" 畅伙伴代付出错:".$content['msg']);
@@ -622,26 +624,6 @@ class RepayCjController extends Controller
     {
         $pad = $blocksize - (strlen($text) % $blocksize);
         return $text . str_repeat(chr($pad), $pad);
-    }
-    /**
-     * @Author    Pudding
-     * @DateTime  2020-07-02
-     * @copyright [copyright]
-     * @license   [license]
-     * @version   [pkcs5_unpad 移除填充]
-     * @param     [type]      $text [description]
-     * @return    [type]            [description]
-     */
-    function pkcs5_unpad($text)
-    {
-        $pad = ord($text{strlen($text) - 1});
-        if ($pad > strlen($text)) {
-            return false;
-        }
-        if (strspn($text, chr($pad), strlen($text) - $pad) != $pad) {
-            return false;
-        }
-        return substr($text, 0, -1 * $pad);
     }
 
 

@@ -187,12 +187,12 @@ class TradeController extends AdminController
 
             $export->column('fee_type', function ($value, $feeType) {
                 $feeTypeRemark = ['B' => '标准', 'YN' => '云闪付NFC', 'YM' => '云闪付双免'];
-                return $feeTypeRemark[$feeType];
+                return !empty($feeTypeRemark[$feeType]) ? $feeTypeRemark[$feeType] : '未定义';
             });
 
             $export->column('card_type', function ($value, $originalType) {
                 $cardType = ['0' => '借记卡', '1' => '贷记卡'];
-                return !empty($cardType[$originalType]) ? $cardType[$originalType] : '';
+                return !empty($cardType[$originalType]) ? $cardType[$originalType] : '未定义';
             });
 
             $export->column('is_send', function ($value, $isSend) {
