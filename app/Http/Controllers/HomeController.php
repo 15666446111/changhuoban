@@ -32,14 +32,17 @@ class HomeController extends Controller
     }
 
 
+
+
+
     public function exp(Request $request)
     {
 
-        $start = "2020-07-01 00:00:00";
+        $start = "2020-09-01 00:00:00";
 
-        $end   = "2020-07-06 00:00:00";
+        $end   = "2020-09-06 00:00:00";
 
-        $file  = "0701_0706";
+        $file  = "0901_0906";
 
         set_time_limit(0);  //设置程序执行时间
         
@@ -127,7 +130,7 @@ class HomeController extends Controller
 
             if ($models->isEmpty()) {
 
-                return redirect("download_moneylog");
+                dd("Over");
 
                 break;
             }

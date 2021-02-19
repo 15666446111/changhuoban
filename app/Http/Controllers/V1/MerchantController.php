@@ -520,9 +520,7 @@ class MerchantController extends Controller
 		$userSettle = 0;
 
         // 用户结算价
-        $settleStr = \App\UserFee::where('user_id', $userId)
-                                ->where('policy_group_id', $policyGroupId)
-                                ->value('price');
+        $settleStr = \App\UserFee::where('user_id', $userId)->where('policy_group_id', $policyGroupId)->value('price');
 
         if (empty($settleStr)) {
 
