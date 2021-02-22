@@ -76,7 +76,6 @@ class TradeApiController extends Controller
         }
 
         $dataList = json_decode(json_encode($request->dataList));
-        // $dataList = json_decode($request->dataList);
         
         // 卡妈妈交易数据转发
         if ($request->configAgentId == '49059502') {
