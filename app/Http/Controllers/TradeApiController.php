@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Jobs\HandleTradeInfo;
 use App\Jobs\HandleMachineInfo;
 
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use App\Http\Controllers\TestController;
 
@@ -71,12 +72,24 @@ class TradeApiController extends Controller
             $reData['responseCode'] = '01';
             $reData['responseDesc'] = '验签失败';
             $reData['revTime'] = date('YmdHis', time());
-            return json_encode($reData);
+            return response()->json($reData);
         }
 
         $dataList = json_decode(json_encode($request->dataList));
         // $dataList = json_decode($request->dataList);
         
+        // 卡妈妈交易数据转发
+        if ($request->configAgentId == '49059502') {
+            $kmmUrl = 'http://kmm.changhuoban.com/public/getList/transaction';
+            $client     = new Client();
+            $response   = $client->request('POST', $kmmUrl, [
+                'json'  =>  json_decode(json_encode($request->all(), JSON_UNESCAPED_UNICODE), true),
+            ]);
+            $content    = json_decode($response->getBody()->getContents(), true);
+
+            return response()->json($content);
+        }
+
         if ($request->dataType == 0) {
             // 商户开通通知处理
             try{
@@ -311,6 +324,6 @@ class TradeApiController extends Controller
             }
         }
         
-        return json_encode($reData);
+        return response()->json($reData);
     }
 }
