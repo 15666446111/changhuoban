@@ -265,7 +265,7 @@ class HandleMachineInfo implements ShouldQueue
                 'send_data'         => $data['send_data']
             ]);
 
-            $this->regContent->remark .= '服务费冻结:' . json_encode($returnData);
+            $this->regContent->remark .= '服务费冻结:' . json_encode($returnData, JSON_UNESCAPED_UNICODE);
             $this->regContent->state = $returnData->code == '00' ? 1 : 2;
             $this->regContent->save();
 

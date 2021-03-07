@@ -86,6 +86,12 @@ class TradeApiController extends Controller
             ]);
             $content    = json_decode($response->getBody()->getContents(), true);
 
+            // 转发到新平台
+            $kmmNewUrl = 'http://kmm.op-server.com/trade';
+            $client->request('POST', $kmmNewUrl, [
+                'json'  =>  json_decode(json_encode($request->all(), JSON_UNESCAPED_UNICODE), true),
+            ]);
+
             return response()->json($content);
         }
 
