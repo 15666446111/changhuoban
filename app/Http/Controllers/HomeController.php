@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -15,6 +16,36 @@ class HomeController extends Controller
 	 */
     public function index(Request $request)
     {
+        // $applation = new \App\Services\Pmpos\PmposController(900475157220311, '00002402066688035219');
+
+        // dd($applation->recordQuery());
+
+        // $agentCodes = [49069739, 49069709, 49065662];
+
+        // $list = \App\RegNoticeContent::whereIn('config_agent_id', $agentCodes)->where('state', 0)->where('remark', null)->get();
+
+        // $orderList = [];
+
+        // $noticeList = [];
+
+        // foreach ($list as $key => $value) {
+
+        //     $orderNo = $value->merchantId . $value->termSn;
+
+        //     if (!in_array($orderNo, $orderList)) {
+
+        //         $noticeList[] = $value;
+
+        //         $orderList[] = $orderNo;
+            
+        //     }
+
+        // }
+
+        // foreach ($noticeList as $key => $value) {
+        //     \App\Jobs\HandleMachineInfo::dispatch($value);
+        // }
+
     	return view('login');
     }
 

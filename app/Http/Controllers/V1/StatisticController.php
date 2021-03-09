@@ -80,7 +80,7 @@ class StatisticController
     {
         $user_id[] = \App\User::where('id',$this->Users->id)->first()->id;
 
-        $userInfo = \App\UserRelation::where('parents', 'like', "%_".$this->Users->id."_%")->pluck('user_id')->toArray();
+        $userInfo = \App\UserRelation::where('parents', 'like', "%\_".$this->Users->id."\_%")->pluck('user_id')->toArray();
 
         return array_merge($user_id, $userInfo);
     }
@@ -126,7 +126,7 @@ class StatisticController
      */
     public function getNewAddTeamCount()
     {
-        return \App\UserRelation::where('parents', 'like', '%_'.$this->Users->id.'_%')->whereHasIn('users', function($q){
+        return \App\UserRelation::where('parents', 'like', '%\_'.$this->Users->id.'\_%')->whereHasIn('users', function($q){
                 $q->whereBetween('created_at', [ $this->StartTime, $this->EndTime]);
         })->count();
     }

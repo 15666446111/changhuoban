@@ -267,7 +267,7 @@ class PmposController extends Controller
 		if($data->code == "00"){
 			return $data->data->token;
 		}else
-			throw new Exception("token error", 1);
+			throw new \Exception("token error", 1);
 	}
 
 

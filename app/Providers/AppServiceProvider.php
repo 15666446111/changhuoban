@@ -55,6 +55,9 @@ class AppServiceProvider extends ServiceProvider
 
         // 新增活动组的时候 监听创建各个用户组的各个结算价设置 仅限联盟模式
         \App\PolicyGroup::observe(\App\Observers\PolicyGroupObserver::class);
+        
+        // 工具版 操盘方 设置结算价。默认为最低结算价
+        \App\PolicyGroupSettlement::observe(\App\Observers\policyGroupSettlementObServer::class);
 
 
         // 用户或者代理提现。如果是免审核 自动审核 进入监听处理

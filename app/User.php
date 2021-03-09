@@ -79,6 +79,16 @@ class User extends Authenticatable
 
 
     /**
+     * [< 关联用户上级关系表 >]
+     * @return [type] [description]
+     */
+    public function relation()
+    {
+        return $this->hasOne('\App\UserRelation', 'user_id', 'id');
+    }
+
+
+    /**
      * [machines 用户关联机具列表]
      * @author Pudding
      * @DateTime 2020-04-22T17:38:09+0800
