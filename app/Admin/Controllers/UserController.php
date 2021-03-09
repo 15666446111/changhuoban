@@ -49,9 +49,14 @@ class UserController extends AdminController
 
         $grid->column('avatar', __('头像'))->image('', 30, 30)->help('用户的头像');
 
-        $grid->column('nickname', __('昵称'))->copyable()->help('用户的昵称,可在app修改');
+        $grid->column('nickname', __('昵称'))->help('用户的昵称,可在app修改')->display(function($phone){
+            return preg_replace('/(\d{3})\d{4}(\d{4})/', '$1****$2', $phone);
+        });
 
-        $grid->column('account', __('账号'))->copyable()->help('用户的app登陆账号');
+        $grid->column('account', __('账号'))->help('用户的app登陆账号')->display(function($phone){
+
+            return preg_replace('/(\d{3})\d{4}(\d{4})/', '$1****$2', $phone);
+        });
 
         if( $type != 2 ){
 
@@ -62,7 +67,10 @@ class UserController extends AdminController
             $grid->column('cur_verfity', __('审核'))->bool()->help('当月是否已经审核');
         }
 
-        $grid->column('parent_user.nickname', __('父级'))->help('用户的直属上级');
+        $grid->column('parent_user.nickname', __('父级'))->help('用户的直属上级')->display(function($phone){
+
+            return preg_replace('/(\d{3})\d{4}(\d{4})/', '$1****$2', $phone);
+        });
 
         $grid->column('active', __('状态'))->switch()->help('用户的活动状态,关闭后将无法在app登陆');
 
@@ -112,10 +120,12 @@ class UserController extends AdminController
 
         $grid->export(function ($export) {
 
-            // 头像和统计列不需要被导出
-            $export->except(['avatar', 'user']);
+            $export->filename('代理信息');
 
-            $export->originalValue(['nickname', 'account']);
+            // 头像和统计列不需要被导出
+            $export->except(['avatar', 'user', 'settprice']);
+
+            $export->originalValue(['realname.status', 'draw_state']);
 
             $export->column('is_verfity', function ($value, $isVerfity) {
                 return $isVerfity == 1 ? '已审核' : '未审核';

@@ -37,15 +37,21 @@ class MerchantController extends AdminController
 
         //$grid->column('id', __('索引'));
 
-        $grid->column('users.nickname', __('代理昵称'))->help('终端机具商户的所属代理昵称');
+        $grid->column('users.nickname', __('代理昵称'))->help('终端机具商户的所属代理昵称')->display(function($phone){
+            return preg_replace('/(\d{3})\d{4}(\d{4})/', '$1****$2', $phone);
+        });
 
-        $grid->column('users.account', __('代理账号'))->help('终端机具商户的所属代理账号');
+        $grid->column('users.account', __('代理账号'))->help('终端机具商户的所属代理账号')->display(function($phone){
+            return preg_replace('/(\d{3})\d{4}(\d{4})/', '$1****$2', $phone);
+        });
 
         $grid->column('code', __('商户号'))->help('终端机具商户的商户号');
 
         $grid->column('name', __('商户名称'))->help('终端机具商户的商户名称');
 
-        $grid->column('phone', __('商户电话'))->help('终端机具商户的商户电话');
+        $grid->column('phone', __('商户电话'))->help('终端机具商户的商户电话')->display(function($phone){
+            return preg_replace('/(\d{3})\d{4}(\d{4})/', '$1****$2', $phone);
+        });
 
         $grid->column('trade_amount', __('累计交易金额'))->display(function ($money) {
             return number_format($money / 100, 2, '.', ',');
@@ -91,9 +97,12 @@ class MerchantController extends AdminController
 
         $grid->export(function ($export) {
 
-            $export->column('trade_amount', function ($value, $tradeAmount) {
-                return number_format($tradeAmount / 100, 2, '.', ',');
-            });
+            $export->filename('商户信息');
+
+            // 头像和统计列不需要被导出
+            $export->except(['users.account', 'rate_info', 'settprice']);
+
+            $export->originalValue(['verfity_state']);
 
         });
 
