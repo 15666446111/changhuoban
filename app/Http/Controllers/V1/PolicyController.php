@@ -318,7 +318,7 @@ class PolicyController extends Controller
         try{
             if(!$request->uid) return response()->json(['error'=>['message' => '缺少伙伴信息!']]);
             if(!$request->pid) return response()->json(['error'=>['message' => '请选择活动政策信息!']]);
-            if(!$request->return_money) return response()->json(['error'=>['message' => '请输入设置的金额!']]);
+            if(!isset($request->return_money)) return response()->json(['error'=>['message' => '请输入设置的金额!']]);
             if(!is_numeric($request->return_money)) return response()->json(['error'=>['message' => '激活返现必须为有效金额!']]);
 
             $user = \App\User::where('id', $request->uid)->first();
