@@ -55,7 +55,9 @@ class AdminSettingController extends AdminController
 
         $grid->column('company', __('公司'))->help('操盘方或者机构方的公司主体');
 
-        $grid->column('phone', __('联系电话'))->help('操盘方或者机构方负责人联系电话');
+        $grid->column('phone', __('联系电话'))->help('操盘方或者机构方负责人联系电话')->display(function($phone){
+            return preg_replace('/(\d{3})\d{4}(\d{4})/', '$1****$2', $phone);
+        });
 
         $grid->column('email', __('公司邮箱'))->help('操盘方或者机构方联系邮箱,发送统计报表,信息等');
 
@@ -88,6 +90,10 @@ class AdminSettingController extends AdminController
         });
 
         $grid->export(function ($export) {
+
+            $export->filename('机构操盘表');
+
+            $export->except(['count_user']);
 
             $export->column('open', function ($value, $originalOpen) {
                 $openState = [0 => '禁止', 1 => '正常'];

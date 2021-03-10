@@ -37,27 +37,25 @@ class TradeController extends AdminController
 
         // $grid->column('rrn', __('参考号'))->help('交易订单的参考号,畅捷支付的参考号');
 
-        $grid->column('users.nickname', __('所属代理'))->help('交易订单所归属的代理昵称');
+        $grid->column('users.nickname', __('所属代理'))->help('交易订单所归属的代理昵称')->display(function($phone){
+            return preg_replace('/(\d{3})\d{4}(\d{4})/', '$1****$2', $phone);
+        });
 
         $grid->column('sn', __('机器序列号'))->help('交易订单所归属的终端机具SN');
 
         $grid->column('merchant_code',  __('商户号'))->help('交易订单所归属的商户号');
 
-        $grid->column('agt_merchant_id', __('渠道商机构号'))->help('交易订单所归属的渠道商机构号');
+        $grid->column('agt_merchant_id', __('渠道号'))->help('交易订单所归属的渠道商机构号');
 
         $grid->column('amount',         __('交易金额'))->display(function($amount){
             return number_format($amount / 100, 2, '.', ',');
-        })->label()->totalRow(function ($amount) {
+        })->totalRow(function ($amount) {
             return "<span class='text-danger text-bold'>¥ ".number_format($amount / 100, 2, '.', ',')." 元</span>";
         });
 
-        // $grid->column('rate_money', __('手续费'))->display(function ($money) {
-        //     return number_format($money / 100, 2, '.', ',');
-        // })->label('warning')->filter('range')->help('当前交易订单的手续费');
-
         $grid->column('settle_amount', __('结算金额'))->display(function($amount){
             return number_format($amount / 100, 2, '.', ',');
-        })->label('info')->help('当前交易订单的实际结算金额');
+        })->help('当前交易订单的实际结算金额');
 
         $grid->column('tran_code', __('交易类型'))->using([
             '020000' => '消费', 
@@ -81,13 +79,13 @@ class TradeController extends AdminController
             '02Y600' => '银联二维码撤销'
         ])->help('当前交易订单的交易类型');
 
-        $grid->column('fee_type', __('手续费计算类型'))->using([
+        $grid->column('fee_type', __('手续费类型'))->using([
             'B' => '标准', 'YN' => '云闪付NFC', 'YM' => '云闪付双免'
         ])->label([
             'YN' =>  'info', 'YM' => 'warning'
         ])->help('当前交易订单的手续费计算类型');
 
-        $grid->column('card_type', __('交易卡类型'))->using([
+        $grid->column('card_type', __('卡类型'))->using([
             '0' => '借记卡', '1' => '贷记卡'
         ])->label([
             '0' =>  'warning', '1' => 'success'

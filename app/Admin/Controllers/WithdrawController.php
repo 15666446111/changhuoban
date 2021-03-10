@@ -39,7 +39,9 @@ class WithdrawController extends AdminController
         
         $grid->column('order_no', __('提现订单'))->help('提现订单的流水号,由系统自动生成');
 
-        $grid->column('users.nickname', __('提现用户'))->help('提现人昵称');
+        $grid->column('users.nickname', __('提现用户'))->help('提现人昵称')->display(function($phone){
+            return preg_replace('/(\d{3})\d{4}(\d{4})/', '$1****$2', $phone);
+        });
 
         $grid->column('withdrawDatas.bank', '银行信息')->help('提现人的提现卡资料');
         // ->modal('提现卡信息', function ($model) {
@@ -161,6 +163,8 @@ class WithdrawController extends AdminController
 
         $grid->export(function ($export) {
 
+            $export->filename('提现信息');
+            
             $export->column('money', function ($value, $money) {
                 return number_format($money / 100 , 2, '.', ',');
             });

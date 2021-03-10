@@ -36,21 +36,22 @@ class CashController extends AdminController
         //$money = $grid->sum('cash_money');
         //dd($money);
         //$grid->column('id', __('索引'));
-        $grid->column('users.nickname', __('会员昵称'))->help('分润所归属的用户昵称');
-        $grid->column('users.account', __('会员账号'))->help('分润所归属的用户账号');
+        $grid->column('users.nickname', __('会员昵称'))->help('分润所归属的用户昵称')->display(function($phone){
+            return preg_replace('/(\d{3})\d{4}(\d{4})/', '$1****$2', $phone);
+        });
+        $grid->column('users.account', __('会员账号'))->help('分润所归属的用户账号')->display(function($phone){
+            return preg_replace('/(\d{3})\d{4}(\d{4})/', '$1****$2', $phone);
+        });
         $grid->column('trades.sn', __('SN号'))->help('分润的终端机具SN');
         $grid->column('trades.merchant_code', __('商户号'))->help('分润的终端机具商户号');
         $grid->column('trades.trade_no', __('交易订单号'))->help('分润的交易订单号');
         $grid->column('trades.amount', __('交易金额'))->display(function ($money) {
             return number_format($money / 100, 2, '.', ',');
-        })->label()->help('交易金额');
-        /*$grid->column('cash_money', __('分润金额'))->display(function ($money) {
-            return number_format($money / 100, 2, '.', ',');
-        })->label()->help('本次分润金额');*/
+        })->help('交易金额');
 
         $grid->column('cash_money', __('分润金额'))->display(function ($money) {
             return number_format($money / 100, 2, '.', ',');
-        })->label()->totalRow(function ($amount) {
+        })->totalRow(function ($amount) {
             return "<span class='text-danger text-bold'>¥ ".number_format($amount / 100, 2, '.', ',')." 元</span>";
         });
 
@@ -149,8 +150,9 @@ class CashController extends AdminController
             
         });
 
-
         $grid->export(function ($export) {
+
+            $export->filename('分润信息');
 
             $export->column('trades.amount', function ($value, $tradeAmount) {
                 return number_format($tradeAmount / 100, 2, '.', ',');
@@ -158,6 +160,14 @@ class CashController extends AdminController
 
             $export->column('cash_money', function ($value, $cashMoney) {
                 return number_format($cashMoney / 100, 2, '.', ',');
+            });
+
+            $export->column('trades.sn', function ($value, $sn) {
+                return "\t" . $sn . "\t";
+            });
+
+            $export->column('is_run', function ($value, $is_run) {
+                return $is_run == 1 ? '分润' : '返现';
             });
 
         });

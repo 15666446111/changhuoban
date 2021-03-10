@@ -50,7 +50,9 @@ class MachineController extends AdminController
 
         $grid->column('policys.title', __('所属活动'))->help('终端机具的所属活动');
 
-        $grid->column('users.nickname', __('所属代理'))->help('终端机具所属的账号昵称');
+        $grid->column('users.nickname', __('所属代理'))->help('终端机具所属的账号昵称')->display(function($phone){
+            return preg_replace('/(\d{3})\d{4}(\d{4})/', '$1****$2', $phone);
+        });
 
         $grid->column('open_state', __('开通状态'))->using([ '0' => '未开通', '1' => '已开通'])->dot([ 0 => 'danger', 1 => 'success' ], 'default')->help('终端机具的开通状态');
 
@@ -111,12 +113,6 @@ class MachineController extends AdminController
                 });
             }
 
-            /*$filter->equal('policys.policy_group_id', '所属政策')->select($policyGroupChange)->load('policy_id', '/api/getPolicys');
-            $filter->column(1/3, function ($filter) {
-                $filter->equal('policy_id', '所属活动')->select();
-            });*/
-
-
             $filter->column(1/3, function ($filter) {
                 $filter->between('open_time', '开通时间')->datetime();
             });
@@ -124,7 +120,6 @@ class MachineController extends AdminController
             $filter->column(1/3, function ($filter) {
                 $filter->between('open_time', '开通时间')->datetime();
             });
-
 
         });
 
@@ -155,6 +150,12 @@ class MachineController extends AdminController
 
 
         $grid->export(function ($export) {
+
+            $export->filename('机具信息');
+
+            $export->column('sn', function ($value, $sn) {
+                return "\t" . $sn . "\t";
+            });
 
             $export->column('open_state', function ($value, $openState) {
                 return $openState == 1 ? '已开通' : '未开通';
