@@ -79,12 +79,12 @@ class TradeApiController extends Controller
         
         // 卡妈妈交易数据转发
         if ($request->configAgentId == '49059502') {
-            $kmmUrl = 'http://kmm.changhuoban.com/public/getList/transaction';
-            $client     = new Client();
-            $response   = $client->request('POST', $kmmUrl, [
-                'json'  =>  json_decode(json_encode($request->all(), JSON_UNESCAPED_UNICODE), true),
-            ]);
-            $content    = json_decode($response->getBody()->getContents(), true);
+            // $kmmUrl = 'http://kmm.changhuoban.com/public/getList/transaction';
+            // $client     = new Client();
+            // $response   = $client->request('POST', $kmmUrl, [
+            //     'json'  =>  json_decode(json_encode($request->all(), JSON_UNESCAPED_UNICODE), true),
+            // ]);
+            // $content    = json_decode($response->getBody()->getContents(), true);
 
             // 转发到新平台
             // $kmmNewUrl = 'http://kmm.op-server.com/trade';
@@ -92,7 +92,7 @@ class TradeApiController extends Controller
             //     'json'  =>  json_decode(json_encode($request->all(), JSON_UNESCAPED_UNICODE), true),
             // ]);
 
-            return response()->json($content);
+            // return response()->json($content);
         }
 
         if ($request->dataType == 0) {
