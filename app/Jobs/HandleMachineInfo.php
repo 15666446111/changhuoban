@@ -277,5 +277,40 @@ class HandleMachineInfo implements ShouldQueue
             return false;
 
         }
+
+        /**
+         * 流量卡费冻结
+         */
+        try {
+
+            // 检查是否设置流量卡冻结
+            if ($this->machine->policys->sim_charge <= 0) {
+                return false;
+            }
+            
+            // 创建流量卡冻结记录
+            $forzenLog = \App\MerchantsFrozenLog::create([
+                'merchant_code'     => $this->regContent->merchantId,
+                'sn'                => $this->regContent->termSn,
+                'type'              => 2,
+                'frozen_money'      => $this->machine->policys->sim_charge * 100,
+                'state'             => 0,
+                'sim_agent_time'    => Carbon::now()->addMonth($this->machine->policys->sim_delay)->toDateTimeString(),
+                'send_data'         => '',
+                'return_data'       => ''
+            ]);
+
+            // 未设置延迟扣款时间时，发起扣款
+            if ($this->machine->policys->sim_delay == 0) {
+                \App\Jobs\SimFrozen::dispatch($forzenLog)->onQueue('SimFrozen');
+            }
+
+        } catch (Exception $e) {
+            
+            $this->regContent->remark .= '流量卡费冻结Catch:' . json_encode($e->getMessage());
+            $this->regContent->save();
+            return false;
+
+        }
     }
 }

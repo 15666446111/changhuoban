@@ -170,96 +170,92 @@ class CrontabController extends Controller
         
     }
 
-	/**
-	 * [流量卡费冻结]
-	 * @return [type] [description]
-	 */
-	public function simFrozen()
-	{
-		## 首次冻结的机具
-		// 设置了sim服务费金额的活动id集合
-		$activeIds = \App\Policy::where('sim_charge', '>', 0)->pluck('id');
+	// public function simFrozen()
+	// {
+	// 	## 首次冻结的机具
+	// 	// 设置了sim服务费金额的活动id集合
+	// 	$activeIds = \App\Policy::where('sim_charge', '>', 0)->pluck('id');
 
-		$machineList = \App\Machine::whereIn('policy_id', $activeIds)
-						->where('sim_frozen_num', 0)
-						->where('bind_status', 1)
-						->where('open_time', '>', 0)
-						->get();
+	// 	$machineList = \App\Machine::whereIn('policy_id', $activeIds)
+	// 					->where('sim_frozen_num', 0)
+	// 					->where('bind_status', 1)
+	// 					->where('open_time', '>', 0)
+	// 					->get();
 
-		foreach ($machineList as $k => $v) {
+	// 	foreach ($machineList as $k => $v) {
 
-			## 检查是否需要发起冻结
-			// 机具第一次需要冻结的时间
-			$shouldFrozenTime = (new Carbon)->setTimeFromTimeString($v->open_time)->addMonth($v->policys->sim_delay)->toDateTimeString();
+	// 		## 检查是否需要发起冻结
+	// 		// 机具第一次需要冻结的时间
+	// 		$shouldFrozenTime = (new Carbon)->setTimeFromTimeString($v->open_time)->addMonth($v->policys->sim_delay)->toDateTimeString();
 
-			if ($shouldFrozenTime > Carbon::now()->toDateTimeString()) {
-				continue ;
-			}
+	// 		if ($shouldFrozenTime > Carbon::now()->toDateTimeString()) {
+	// 			continue ;
+	// 		}
 
-			// 添加冻结记录
-			$frozenLog = \App\MerchantsFrozenLog::create([
-				'merchant_code'		=> $v->merchants->code,
-				'sn'				=> $v->sn,
-				'type'				=> 2,
-				'frozen_money'		=> $v->policys->sim_charge * 100,
-                'state'             => 0,
-                'send_data'			=> '',
-                'return_data'		=> '',
-			]);
+	// 		// 添加冻结记录
+	// 		$frozenLog = \App\MerchantsFrozenLog::create([
+	// 			'merchant_code'		=> $v->merchants->code,
+	// 			'sn'				=> $v->sn,
+	// 			'type'				=> 2,
+	// 			'frozen_money'		=> $v->policys->sim_charge * 100,
+ //                'state'             => 0,
+ //                'send_data'			=> '',
+ //                'return_data'		=> '',
+	// 		]);
 
-			$frozenLog->pid = $v->id;
+	// 		$frozenLog->pid = $v->id;
 
-			// 压入队列中，处理剩下的逻辑
-			NewSimFrozen::dispatch($frozenLog);
+	// 		// 压入队列中，处理剩下的逻辑
+	// 		NewSimFrozen::dispatch($frozenLog);
 
-		}
+	// 	}
 
-		## 二次和二次以上需要冻结的机具
-		$frozenLog = \App\MerchantsFrozenLog::where('type', 2)
-					->where('state', 1)
-					->where('sim_agent_state', 0)
-					->where('sim_agent_time', '<=', Carbon::now()->toDateTimeString())
-					->get();
+	// 	## 二次和二次以上需要冻结的机具
+	// 	$frozenLog = \App\MerchantsFrozenLog::where('type', 2)
+	// 				->where('state', 1)
+	// 				->where('sim_agent_state', 0)
+	// 				->where('sim_agent_time', '<=', Carbon::now()->toDateTimeString())
+	// 				->get();
 
-		foreach ($frozenLog as $k => $v) {
+	// 	foreach ($frozenLog as $k => $v) {
 
-			// 检查机器信息是否存在
-			if (!$v->machine || empty($v->machine)) {
-				$v->remark .= '机具数据异常';
-				$v->save();
-				continue ;
-			}
+	// 		// 检查机器信息是否存在
+	// 		if (!$v->machine || empty($v->machine)) {
+	// 			$v->remark .= '机具数据异常';
+	// 			$v->save();
+	// 			continue ;
+	// 		}
 
-			// 检查与当前绑定商户是否一致
-			if ($v->merchant_code != $v->machine->merchants->code) {
-				$v->remark .= '当前机器与商户已解绑';
-				$v->save();
-				continue ;
-			}
+	// 		// 检查与当前绑定商户是否一致
+	// 		if ($v->merchant_code != $v->machine->merchants->code) {
+	// 			$v->remark .= '当前机器与商户已解绑';
+	// 			$v->save();
+	// 			continue ;
+	// 		}
 
-			// 检查当前活动是否设置SIM服务费收取金额
-			if ($v->policys->sim_charge == 0) {
-				$v->remark .= '该机器未设置SIM服务费金额';
-				$v->save();
-				continue ;
-			}
+	// 		// 检查当前活动是否设置SIM服务费收取金额
+	// 		if ($v->policys->sim_charge == 0) {
+	// 			$v->remark .= '该机器未设置SIM服务费金额';
+	// 			$v->save();
+	// 			continue ;
+	// 		}
 
-			// 添加冻结记录
-			$frozenLog = \App\MerchantsFrozenLog::create([
-				'merchant_code'		=> $v->merchant_code,
-				'sn'				=> $v->sn,
-				'type'				=> 2,
-				'frozen_money'		=> $v->machine->policys->sim_charge * 100,
-                'state'             => 0,
-                'send_data'			=> '',
-                'return_data'		=> '',
-			]);
-			$frozenLog->pid = $v->id;
+	// 		// 添加冻结记录
+	// 		$frozenLog = \App\MerchantsFrozenLog::create([
+	// 			'merchant_code'		=> $v->merchant_code,
+	// 			'sn'				=> $v->sn,
+	// 			'type'				=> 2,
+	// 			'frozen_money'		=> $v->machine->policys->sim_charge * 100,
+ //                'state'             => 0,
+ //                'send_data'			=> '',
+ //                'return_data'		=> '',
+	// 		]);
+	// 		$frozenLog->pid = $v->id;
 
-			// 压入队列中，处理剩下的逻辑
-			NewSimFrozen::dispatch($frozenLog);
-		}
-	}
+	// 		// 压入队列中，处理剩下的逻辑
+	// 		NewSimFrozen::dispatch($frozenLog);
+	// 	}
+	// }
 
     /**
      * [addUserBalance 增加用户余额 分润余额 分润记录]

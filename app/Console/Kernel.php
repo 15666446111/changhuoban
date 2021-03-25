@@ -32,6 +32,9 @@ class Kernel extends ConsoleKernel
                 })->update(['cur_verfity' => 0]);
          });
 
+        // 流量卡费冻结，每天8:40执行
+        $schedule->command('Sim:Deducp')->dailyAt('08:40');
+
         // $schedule->command('inspire')->hourly();
     }
 
