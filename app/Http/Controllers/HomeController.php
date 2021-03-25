@@ -45,7 +45,7 @@ class HomeController extends Controller
         // foreach ($noticeList as $key => $value) {
         //     \App\Jobs\HandleMachineInfo::dispatch($value);
         // }
-        
+
     	return view('login');
     }
 

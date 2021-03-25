@@ -293,7 +293,7 @@ class HandleMachineInfo implements ShouldQueue
                 'merchant_code'     => $this->regContent->merchantId,
                 'sn'                => $this->regContent->termSn,
                 'type'              => 2,
-                'frozen_money'      => $this->machine->policys->sim_charge * 100,
+                'frozen_money'      => $this->machine->policys->sim_charge,
                 'state'             => 0,
                 'sim_agent_time'    => Carbon::now()->addMonth($this->machine->policys->sim_delay)->toDateTimeString(),
                 'send_data'         => '',

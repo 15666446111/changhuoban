@@ -90,7 +90,7 @@ class SimFrozen implements ShouldQueue
         }
 
         // 检查短信模板是否配置
-        $smsCode = \App\AdminShort::where('id', $this->policy->sim_short_id)->value('template_id');
+        $smsCode = \App\AdminShort::where('id', $this->policy->sim_short_id)->value('number');
         if (empty($smsCode)) {
             $this->frozenLog->remark = '未配置短信模板';
             $this->frozenLog->save();
@@ -131,7 +131,7 @@ class SimFrozen implements ShouldQueue
                 'merchant_code'     => $this->machine->merchants->code,
                 'sn'                => $this->frozenLog->sn,
                 'type'              => 2,
-                'frozen_money'      => $this->machine->policys->sim_charge * 100,
+                'frozen_money'      => $this->machine->policys->sim_charge,
                 'state'             => 0,
                 'sim_agent_time'    => Carbon::now()->addMonth($this->machine->policys->sim_cycle)->toDateTimeString(),
                 'send_data'         => '',
