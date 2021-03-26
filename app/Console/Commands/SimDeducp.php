@@ -20,7 +20,7 @@ class SimDeducp extends Command
      *
      * @var string
      */
-    protected $description = '流量卡冻结';
+    protected $description = '流量卡费冻结';
 
     /**
      * Create a new command instance.
@@ -40,11 +40,11 @@ class SimDeducp extends Command
     public function handle()
     {
 
-        $startTime = Carbon::today();
+        $startTime = Carbon::yesterday()->toDateTimeString();
 
-        $endTime   = Carbon::tomorrow();
+        $endTime   = Carbon::today()->toDateTimeString();
 
-        // 当日的待发起冻结订单
+        // 昨天应发起冻结的订单
         $frozenLog = \App\MerchantsFrozenLog::where('type', 2)->where('state', 0)->whereBetween('sim_agent_time', [$startTime, $endTime])->get();
 
         foreach ($frozenLog as $key => $value) {
