@@ -191,6 +191,8 @@ class PolicyController extends AdminController
 
             $form->select('sim_short_id', __('SIM服务费短信模板'))->options(\App\AdminShort::where('operate', Admin::user()->operate)->where('status', 1)->get()->pluck('number', 'id'));
 
+            $form->currency('sim_cashback', __('SIM流量卡费返现金额'))->default(0)->help('SIM流量卡费返现金额');
+
         });
     
         $form->saving(function (Form $form) {

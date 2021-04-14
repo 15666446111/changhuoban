@@ -149,6 +149,25 @@ class Policy extends Model
 
     /**
      * @Author    Pudding
+     * @DateTime  2021-03-30
+     * @copyright [copyright]
+     * @license   [license]
+     * @version   [ 流量卡返现费用 ]
+     * @param     [type]      $value [description]
+     * @return    [type]             [description]
+     */
+    public function getSimBackcashAttribute($value)
+    {
+        return $value / 100;
+    }
+    public function setSimBackcashAttribute($value)
+    {
+        $this->attributes['sim_cashback'] =  $value * 100;
+    }
+
+
+    /**
+     * @Author    Pudding
      * @DateTime  2020-07-31
      * @copyright [copyright]
      * @license   [license]

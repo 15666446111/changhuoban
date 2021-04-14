@@ -71,7 +71,7 @@ class PmposController extends Controller
     		return array('status' =>false, 'message' => '操盘方3.0机构号未设置');
     	}
 
-    	if (empty($adminSetting->system_merchant)) {
+    	if (empty($adminSetting->system_secret)) {
     		return array('status' =>false, 'message' => '操盘方3.0渠道秘钥未设置');
     	}
 

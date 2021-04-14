@@ -257,23 +257,22 @@ class BankController extends Controller
      */
     public function openBank($bank_name, $card, $province, $city)
     {
-        $host = "https://cnaps.market.alicloudapi.com";
-        $path = "/lianzhuo/querybankaps";
+        $host = "https://lianhang.shumaidata.com";
+        $path = "/lianhang";
         $method = "GET";
-        $appcode = "2b98c225a8d24644959f3c7bcec08e23";//AppCode
+        $appcode = "2b98c225a8d24644959f3c7bcec08e23";
         $headers = array();
         array_push($headers, "Authorization:APPCODE " . $appcode);
 
         $data = [
             'bank'      => $bank_name,
-            'card'      => $card,
+            'bankcard'  => $card,
             'city'      => $city,
             'province'  => $province,
         ];
         $querys = http_build_query($data , '' , '&');
 
         $bodys = "";
-
         $url = $host . $path . "?" . $querys;
 
         $curl = curl_init();
@@ -282,37 +281,23 @@ class BankController extends Controller
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($curl, CURLOPT_FAILONERROR, false);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_HEADER, true);
-        if (1 == strpos("$".$host, "https://"))
-        {
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-        }
-
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($curl, CURLOPT_FAILONERROR, false);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        //设定返回信息中是否包含响应信息头，启用时会将头文件的信息作为数据流输出，true 表示输出信息头, false表示不输出信息头
+        //如果需要将字符串转成json，请将 CURLOPT_HEADER 设置成 false
         curl_setopt($curl, CURLOPT_HEADER, false);
         if (1 == strpos("$".$host, "https://"))
         {
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
         }
-        $data = curl_exec($curl);
 
-        $bankLink = json_decode($data,true);
+        $bankLink = json_decode(curl_exec($curl), true);
 
         if(!$bankLink) return false;
 
         if(!$bankLink['data']) return false;
 
-        if(empty($bankLink['data']['record'])) return false;
+        if(empty($bankLink['data']['result']['record'])) return false;
 
-        return $bankLink['data']['record'][0]['bankCode'];
+        return $bankLink['data']['result']['record'][0]['bankcode'];
     }
-
-
 }

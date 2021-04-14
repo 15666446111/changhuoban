@@ -223,11 +223,11 @@ class CashController extends Controller
     	 */
         // 构造查询器
         $collection = \App\TradeType::where('trade_code', 'like', '%' . $this->feeType . '%')
-                                    ->where('card_type', 'like', '%' . $this->cardType . '%')
+                                    ->where('trade_type', 'like', '%' . $this->tranCode . '%')
                                     ->where('is_top', $this->isTop);
 
         if ($this->cardType != null) {
-            $collection->where('trade_type', 'like', '%' . $this->tranCode . '%');
+            $collection->where('card_type', 'like', '%' . $this->cardType . '%');
         }
 
         $tradeTypeId = $collection->value('id');

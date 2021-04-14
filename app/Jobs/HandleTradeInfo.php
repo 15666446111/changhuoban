@@ -56,6 +56,16 @@ class HandleTradeInfo implements ShouldQueue
     {
 
         /**
+         * @version [<vector>] [< 检查是否是已分润订单 >]
+         * @var [type]
+         */
+        if ($this->trade->is_send == 1) {
+            $this->trade->remark    .= '该交易已处理分润';
+            $this->trade->save();
+            return false;
+        }
+
+        /**
          * @version [<vector>] [< 判断是否是成功交易>]
          * $desc == '原交易已冲正'       无效冲正类交易
          * 交易冲正时可能会推送多笔交易，已平台收单应答描述前六位为"原交易已冲正"区分是否为无效的冲正类交易,
