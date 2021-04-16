@@ -134,28 +134,6 @@ class HandleMachineInfo implements ShouldQueue
         }
 
         /**
-         * 检查是否是按冻结状态激活的机器
-         * @var [type]
-         */
-        if ($this->machine->policys->active_type != 1) {
-            $this->regContent->remark = '该机器非冻结机器';
-            // $this->regContent->state = '2';
-            $this->regContent->save();
-            return false;
-        }
-
-        /**
-         * 检查是否设置冻结金额
-         * @var [type]
-         */
-        if ($this->machine->policys->active_price == 0) {
-            $this->regContent->remark = '该机器未设置冻结金额';
-            $this->regContent->state = '2';
-            $this->regContent->save();
-            return false;
-        }
-
-        /**
          * 检查机器归属操盘方和畅捷后台是否一致
          * @var [type]
          */
@@ -231,7 +209,6 @@ class HandleMachineInfo implements ShouldQueue
                     'sn'                => $this->regContent->termSn
                 ]);
             }
-            
 
         } catch (\Exception $e) {
             $this->regContent->remark .= '商户绑定:' . json_encode($e->getMessage());
@@ -240,34 +217,48 @@ class HandleMachineInfo implements ShouldQueue
         }
 
         /**
-         * 发起冻结
+         * 按冻结状态激活的机器,发起冻结
          */
         try {
 
-            // 短信模板编号
-            $simCharge = \App\AdminShort::where('id', $this->machine->policys->short_id)->value('number');
+            if ($this->machine->policys->active_type != 1) {
+                $this->regContent->remark = '该机器非冻结机器';
+                $this->regContent->save();
+            } else {
 
-            // 发起冻结
-            $pmpos = new PmposController($this->regContent->merchantId, $this->regContent->termSn);
+                // 检查是否设置冻结金额
+                if ($this->machine->policys->active_price == 0) {
+                    $this->regContent->remark = '该机器未设置冻结金额';
+                    $this->regContent->state = '2';
+                    $this->regContent->save();
+                    return false;
+                }
 
-            $data = $pmpos->feeFrozen($simCharge, $this->machine->policys->active_price, 0);
+                // 短信模板编号
+                $simCharge = \App\AdminShort::where('id', $this->machine->policys->short_id)->value('number');
 
-            $returnData = json_decode($data['return_data']);
+                // 发起冻结
+                $pmpos = new PmposController($this->regContent->merchantId, $this->regContent->termSn);
 
-            // 添加冻结记录
-            \App\MerchantsFrozenLog::create([
-                'merchant_code'     => $this->regContent->merchantId,
-                'sn'                => $this->regContent->termSn,
-                'type'              => 1,
-                'frozen_money'      => $this->machine->policys->active_price,
-                'state'             => $returnData->code == '00' ? 1 : 0,
-                'return_data'       => $data['return_data'],
-                'send_data'         => $data['send_data']
-            ]);
+                $data = $pmpos->feeFrozen($simCharge, $this->machine->policys->active_price, 0);
 
-            $this->regContent->remark .= '服务费冻结:' . json_encode($returnData, JSON_UNESCAPED_UNICODE);
-            $this->regContent->state = $returnData->code == '00' ? 1 : 2;
-            $this->regContent->save();
+                $returnData = json_decode($data['return_data']);
+
+                // 添加冻结记录
+                \App\MerchantsFrozenLog::create([
+                    'merchant_code'     => $this->regContent->merchantId,
+                    'sn'                => $this->regContent->termSn,
+                    'type'              => 1,
+                    'frozen_money'      => $this->machine->policys->active_price,
+                    'state'             => $returnData->code == '00' ? 1 : 0,
+                    'return_data'       => $data['return_data'],
+                    'send_data'         => $data['send_data']
+                ]);
+
+                $this->regContent->remark .= '服务费冻结:' . json_encode($returnData, JSON_UNESCAPED_UNICODE);
+                $this->regContent->state = $returnData->code == '00' ? 1 : 2;
+                $this->regContent->save();
+            }
 
         } catch (\Exception $e) {
 
