@@ -16,6 +16,9 @@ class AuthToken
      */
     public function handle($request, Closure $next)
     {
+
+        return response()->json(['error'=>['message' => '服务器维护，暂停运营，联系电话：15588837001', 'data' => ['disabled' => true]]]);
+
         if(!$request->header('Authorization')){
             return response()->json(['error'=>['message' => '非法请求!']]);
         }

@@ -233,4 +233,20 @@ class LoginController extends Controller
             return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
         }
     }
+
+    public function disabledInfo(Request $request)
+    {
+        try {
+
+            $data = [
+                'disabled'  => true,
+                'message'   => '服务器维护，暂停运营，联系电话：15588837001'
+            ];
+
+            return response()->json(['success'=>['data' => $data]]);
+
+        } catch (Exception $e) {
+            return response()->json(['error'=>['message' => '系统错误,联系客服!']]);
+        }
+    }
 }

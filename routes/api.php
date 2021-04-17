@@ -34,6 +34,7 @@ Route::prefix('V1')->group(function () {
     Route::post('/getCode',     'V1\LoginController@getCode');                              // 发送验证码接口
     Route::post('/forgetPwd',   'V1\LoginController@forget');                               // 忘记密码接口
     Route::get('/appUpdate',    'V1\LoginController@update');                               // app更新接口
+    Route::get('/disabledInfo', 'V1\LoginController@disabledInfo');                         // 是否禁用（临时添加）
 
 
     /**
