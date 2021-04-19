@@ -234,6 +234,11 @@ class LoginController extends Controller
         }
     }
 
+    /**
+     * [disabledInfo app禁用状态]
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
     public function disabledInfo(Request $request)
     {
         try {

@@ -17,8 +17,6 @@ class AuthToken
     public function handle($request, Closure $next)
     {
 
-        return response()->json(['error'=>['message' => '服务器维护，暂停运营，联系电话：15588837001', 'data' => ['disabled' => true]]]);
-
         if(!$request->header('Authorization')){
             return response()->json(['error'=>['message' => '非法请求!']]);
         }
@@ -32,6 +30,10 @@ class AuthToken
         $User = \App\User::where('api_token', $Bearer)->where('active', '>=', 1)->first();
 
         if(!$User or empty($User)) return response()->json(['error'=>['message' => '非法请求!']], 505);
+
+        if ($User->operate != '2021041297485155') {
+            return response()->json(['error'=>['message' => '服务器维护，暂停运营，联系电话：15588837001', 'data' => ['disabled' => true]]]);
+        }
 
         // 记录当前登陆用户实例
         $request->user = $User;
